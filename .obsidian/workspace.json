@@ -1,0 +1,153 @@
+{
+  "main": {
+    "id": "60b8299faf85f038",
+    "type": "split",
+    "children": [
+      {
+        "id": "c52096d6efb87416",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6c58574abfbca73d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "md/浏览器同源策略及跨域的解决方法.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "ed097fdebc12aa2b",
+    "type": "split",
+    "children": [
+      {
+        "id": "9b29e4b458786c00",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "29ee314a0e17a397",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "fd83814a9a37217e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "48c7b86416776bad",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 243.5
+  },
+  "right": {
+    "id": "c998dc817f697143",
+    "type": "split",
+    "children": [
+      {
+        "id": "9d511b6d55a26686",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1c9094602b34e07c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "md/浏览器同源策略及跨域的解决方法.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "2f3b3b6fc2c9fbf4",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "md/浏览器同源策略及跨域的解决方法.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "2c12efb070f2852a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "e345afbe4a3d8094",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "md/浏览器同源策略及跨域的解决方法.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "workspaces:管理工作区布局": false
+    }
+  },
+  "active": "1c9094602b34e07c",
+  "lastOpenFiles": [
+    "未命名.canvas",
+    "md/浏览器同源策略及跨域的解决方法.md"
+  ]
+}
