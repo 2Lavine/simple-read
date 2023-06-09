@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "c52096d6efb87416",
+        "id": "dc453cc5fdff9b50",
         "type": "tabs",
         "children": [
           {
-            "id": "6c58574abfbca73d",
+            "id": "4df2549f80d65ff9",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/浏览器同源策略及跨域的解决方法.md",
+                "file": "md/前端中的同源策略与三种跨域资源共享方法.md",
                 "mode": "source",
                 "source": false
               }
@@ -33,7 +33,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "29ee314a0e17a397",
+            "id": "7c656948499aebb2",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -58,7 +58,17 @@
             }
           },
           {
-            "id": "48c7b86416776bad",
+            "id": "e345afbe4a3d8094",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "md/前端中的同源策略与三种跨域资源共享方法.md"
+              }
+            }
+          },
+          {
+            "id": "7ca14c88009dcc21",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -69,7 +79,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 243.5
+    "width": 244.5
   },
   "right": {
     "id": "c998dc817f697143",
@@ -85,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/浏览器同源策略及跨域的解决方法.md",
+                "file": "md/前端中的同源策略与三种跨域资源共享方法.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/浏览器同源策略及跨域的解决方法.md",
+                "file": "md/前端中的同源策略与三种跨域资源共享方法.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,36 +128,34 @@
                 "useHierarchy": true
               }
             }
-          },
-          {
-            "id": "e345afbe4a3d8094",
-            "type": "leaf",
-            "state": {
-              "type": "outline",
-              "state": {
-                "file": "md/浏览器同源策略及跨域的解决方法.md"
-              }
-            }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "daily-notes:打开/创建今天的日记": false,
-      "templates:插入模板": false,
       "command-palette:打开命令面板": false,
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "1c9094602b34e07c",
+  "active": "4df2549f80d65ff9",
   "lastOpenFiles": [
-    "未命名.canvas",
-    "md/浏览器同源策略及跨域的解决方法.md"
+    "readme.md",
+    "achieve/Rem 布局的原理解析.md",
+    "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
+    "md/浏览器同源策略及跨域的解决方法.md",
+    "md/Optimizing_Instrumentation_Next.js.md",
+    "md/前端中的同源策略与三种跨域资源共享方法.md",
+    "2023-06-09.md",
+    "md/test.md",
+    "未命名.canvas"
   ]
 }

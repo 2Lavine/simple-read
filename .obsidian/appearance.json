@@ -1,5 +1,7 @@
 {
   "accentColor": "",
   "theme": "system",
-  "cssTheme": "Atom"
+  "cssTheme": "Atom",
+  "translucency": false,
+  "nativeMenus": false
 }

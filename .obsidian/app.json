@@ -2,5 +2,7 @@
   "showLineNumber": false,
   "readableLineLength": true,
   "showIndentGuide": true,
-  "autoConvertHtml": false
+  "autoConvertHtml": false,
+  "promptDelete": false,
+  "spellcheck": false
 }
