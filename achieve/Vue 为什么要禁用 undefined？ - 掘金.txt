@@ -1,0 +1,25 @@
+Vue 为什么要禁用 undefined？ - 掘金
+https://juejin.cn/post/7240483867123220540
+
+https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/99208165cd324e5aaa9d7e2f80242de1~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?
+
+Vue 等开源项目为什么要禁用/限用 undefined
+
+开源项目对 undefined 的使用有两种保守方案：
+
+禁欲系——能且仅能节制地使用 undefined
+绝育系——禁用 undefined
+黑科技 void 0 重构 undefined
+
+不同于 null 字面量，undefined 并不恒等于 undefined 原始值，比如说祂可以被“作用域链截胡”。
+
+这种灵异现象主要跟变量查找的作用域链机制有关。
+
+当前局部作用域的优先级高于全局作用域，于是乎 JS 会优先使用当前非全局同名变量 undefined
+
+“复合 BUG”指的是，单独的代码可以正常工作，但是多人代码集成就出现问题
+
+“Jenga Code”（积木代码）
+
+积木代码指的是一点点的代码带来了亿点点的 BUG，一行代码搞崩整个项目
+
