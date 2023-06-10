@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/前端中的同源策略与三种跨域资源共享方法.md",
+                "file": "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/前端中的同源策略与三种跨域资源共享方法.md"
+                "file": "achieve/生成器（Generator）——《实战 ES2015》章节试读.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/前端中的同源策略与三种跨域资源共享方法.md",
+                "file": "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/前端中的同源策略与三种跨域资源共享方法.md",
+                "file": "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,21 +139,23 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:打开快速切换": false,
-      "graph:查看关系图谱": false,
-      "daily-notes:打开/创建今天的日记": false,
-      "command-palette:打开命令面板": false,
-      "workspaces:管理工作区布局": false
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "daily-notes:Open today's daily note": false,
+      "command-palette:Open command palette": false,
+      "workspaces:Manage workspace layouts": false
     }
   },
   "active": "4df2549f80d65ff9",
   "lastOpenFiles": [
-    "readme.md",
+    "merge-achieve.js",
+    "merge-achieve",
     "achieve/Rem 布局的原理解析.md",
+    "md/前端中的同源策略与三种跨域资源共享方法.md",
+    "readme.md",
     "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
     "md/浏览器同源策略及跨域的解决方法.md",
     "md/Optimizing_Instrumentation_Next.js.md",
-    "md/前端中的同源策略与三种跨域资源共享方法.md",
     "2023-06-09.md",
     "md/test.md",
     "未命名.canvas"
