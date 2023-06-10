@@ -1,7 +1,18 @@
 const fs = require("fs");
 const path = require("path");
-const directoryPath = "./achieve"; // 替换为目标目录的路径
-const outputFilePath = "./output/merge.html"; // 替换为输出文件的路径
+const directoryPath = "./done"; // 替换为目标目录的路径
+const acheievePath = "./achieve";
+const now = new Date()
+  .toLocaleString("zh-CN", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  })
+  .replace(/[/,:]/g, "-");
+const outputFilePath = "./output/" + now + ".html"; // 替换为输出文件的路径
 const md = require("markdown-it")();
 
 const output = []; // 用于存储所有的 main-content 元素内容
@@ -12,7 +23,6 @@ function readDirectory(directoryPath) {
       console.error(err);
       return;
     }
-
     files.forEach((file) => {
       const filePath = path.join(directoryPath, file);
       if (fs.statSync(filePath).isDirectory()) {
@@ -26,7 +36,9 @@ function readDirectory(directoryPath) {
           path.basename(file, path.extname(file)) +
           "</h1>" +
           md.render(fileContent);
-
+        fs.rename(filePath, path.join(acheievePath, file), (err) => {
+          console.error(err);
+        });
         output.push(content);
       }
     });

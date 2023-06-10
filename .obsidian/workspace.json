@@ -140,6 +140,14 @@
   },
   "active": "f3d90807d104b3be",
   "lastOpenFiles": [
+    "output/2023-6-10 16-11-27.html",
+    "achieve/test.md",
+    "done/test.md",
+    "output/06-10-2023- 04-09-51 PM.html",
+    "md/test.md",
+    "output/Sat Jun 10 2023 16:05:35 GMT+0800 (China Standard Time).html",
+    "done",
+    "achieve/done",
     "output/merge.html",
     "output",
     "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
@@ -147,11 +155,6 @@
     "node_modules/uc.micro/properties/Any/regex.js",
     "node_modules/uc.micro/categories/Z/regex.js",
     "node_modules/uc.micro/categories/P/regex.js",
-    "node_modules/uc.micro/categories/Cf/regex.js",
-    "node_modules/uc.micro/categories/Cc/regex.js",
-    "node_modules/markdown-it/lib/rules_inline/text.js",
-    "node_modules/markdown-it/lib/rules_inline/strikethrough.js",
-    "node_modules/markdown-it/lib/rules_inline/state_inline.js",
     "node_modules/uc.micro/README.md",
     "node_modules/uc.micro/CHANGELOG.md",
     "node_modules/mdurl/README.md",
@@ -167,7 +170,6 @@
     "md/浏览器同源策略及跨域的解决方法.md",
     "md/Optimizing_Instrumentation_Next.js.md",
     "2023-06-09.md",
-    "md/test.md",
     "未命名.canvas"
   ]
 }
