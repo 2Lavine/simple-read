@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "dc453cc5fdff9b50",
+        "id": "41644187ebfc469d",
         "type": "tabs",
         "children": [
           {
-            "id": "4df2549f80d65ff9",
+            "id": "f3d90807d104b3be",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -62,9 +58,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "achieve/生成器（Generator）——《实战 ES2015》章节试读.md"
-              }
+              "state": {}
             }
           },
           {
@@ -95,7 +89,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +105,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,14 +138,32 @@
       "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "4df2549f80d65ff9",
+  "active": "f3d90807d104b3be",
   "lastOpenFiles": [
-    "merge-achieve.js",
-    "merge-achieve",
+    "output/merge.html",
+    "output",
+    "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
+    "package-lock.json",
+    "node_modules/uc.micro/properties/Any/regex.js",
+    "node_modules/uc.micro/categories/Z/regex.js",
+    "node_modules/uc.micro/categories/P/regex.js",
+    "node_modules/uc.micro/categories/Cf/regex.js",
+    "node_modules/uc.micro/categories/Cc/regex.js",
+    "node_modules/markdown-it/lib/rules_inline/text.js",
+    "node_modules/markdown-it/lib/rules_inline/strikethrough.js",
+    "node_modules/markdown-it/lib/rules_inline/state_inline.js",
+    "node_modules/uc.micro/README.md",
+    "node_modules/uc.micro/CHANGELOG.md",
+    "node_modules/mdurl/README.md",
+    "node_modules/mdurl/CHANGELOG.md",
+    "node_modules/markdown-it/README.md",
+    "node_modules/linkify-it/README.md",
+    "node_modules/entities/readme.md",
+    "node_modules/argparse/README.md",
+    "node_modules/argparse/CHANGELOG.md",
     "achieve/Rem 布局的原理解析.md",
     "md/前端中的同源策略与三种跨域资源共享方法.md",
     "readme.md",
-    "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
     "md/浏览器同源策略及跨域的解决方法.md",
     "md/Optimizing_Instrumentation_Next.js.md",
     "2023-06-09.md",
