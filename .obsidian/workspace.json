@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "41644187ebfc469d",
+        "id": "0456acbc77f2e2fb",
         "type": "tabs",
         "children": [
           {
-            "id": "f3d90807d104b3be",
+            "id": "115d4b85845f6388",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -135,11 +135,22 @@
       "graph:Open graph view": false,
       "daily-notes:Open today's daily note": false,
       "command-palette:Open command palette": false,
-      "workspaces:Manage workspace layouts": false
+      "workspaces:Manage workspace layouts": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "f3d90807d104b3be",
+  "active": "115d4b85845f6388",
   "lastOpenFiles": [
+    "md/前端中的同源策略与三种跨域资源共享方法.md",
+    "md/什么时候会发送 options 请求.md",
+    "done/vue 的生命周期.md",
+    "done/vue 单页面 (SPA) 和多页面 (MPA) 的区别(详细答案).md",
+    "done/Optimizing_Instrumentation_Next.js.md",
+    "done/localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结.md",
+    "md/面试官：说说你对 options 请求的理解.md",
+    "md/百万级数据 excel 导出功能如何实现？.md",
+    "md/现代前端框架的渲染模式.md",
+    "md/探索 JavaScript 中三种不同的迭代方式：for...in、for...of 和 for await...of.md",
     "output/2023-6-10 16-11-27.html",
     "achieve/test.md",
     "done/test.md",
@@ -154,7 +165,6 @@
     "package-lock.json",
     "node_modules/uc.micro/properties/Any/regex.js",
     "node_modules/uc.micro/categories/Z/regex.js",
-    "node_modules/uc.micro/categories/P/regex.js",
     "node_modules/uc.micro/README.md",
     "node_modules/uc.micro/CHANGELOG.md",
     "node_modules/mdurl/README.md",
@@ -165,11 +175,8 @@
     "node_modules/argparse/README.md",
     "node_modules/argparse/CHANGELOG.md",
     "achieve/Rem 布局的原理解析.md",
-    "md/前端中的同源策略与三种跨域资源共享方法.md",
     "readme.md",
     "md/浏览器同源策略及跨域的解决方法.md",
-    "md/Optimizing_Instrumentation_Next.js.md",
-    "2023-06-09.md",
     "未命名.canvas"
   ]
 }
