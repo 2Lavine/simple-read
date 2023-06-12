@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844904183905157127)
+、
 
 ### 什么是 options 请求
 
@@ -64,16 +64,3 @@ Access-Control-Request-Headers: X-PINGOTHER, Content-Type
 ### 总结
 
 options 请求就是预检请求，可用于检测服务器允许的 http 方法。当发起跨域请求时，由于安全原因，触发一定条件时浏览器会在正式请求之前自动先发起 OPTIONS 请求，即 CORS 预检请求，服务器若接受该跨域请求，浏览器才继续发起正式请求。
-
-### 参考资料
-
-*   [developer.mozilla.org/zh-CN/docs/…](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FHTTP%2FAccess_control_CORS%23Preflighted_requests "https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS#Preflighted_requests")
-
-*   [zhuanlan.zhihu.com/p/70032617](https://link.juejin.cn?target=https%3A%2F%2Fzhuanlan.zhihu.com%2Fp%2F70032617 "https://zhuanlan.zhihu.com/p/70032617")
-
-### 最后
-
-*   欢迎加我微信 (winty230)，拉你进技术群，长期交流学习...
-*   欢迎关注「前端 Q」, 认真学前端，做个有专业的技术人...
-
-![](https://raw.githubusercontent.com/LuckyWinty/blog/master/images/qrcode/%E4%BA%8C%E7%BB%B4%E7%A0%81%E7%BE%8E%E5%8C%96%202.png)
