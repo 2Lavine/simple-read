@@ -106,7 +106,7 @@ exposeReportClass.scrollReport(()=>{
 
 然后我再测试的时候就发现，上报发的请求居然是通过图片发起的，并不是我们认为的接口上报。
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/68d6cf4c1ab34c4e96b3fce24aa88131~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
+![[../_resources/为什么大厂前端监控都在用 GIF 做埋点？/5c6c76fa3d8911f946f468598ec28075_MD5.webp]]
 
 然后我去查了下资料，发现很多大厂的上报都是这么干的！
 

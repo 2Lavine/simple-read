@@ -152,9 +152,9 @@ pageStart = (pageNo - 1) * pageSize;
 invalid row number (1048576) outside allowable range (0..1048575)
 ```
 
-如果你想导出一百万以上的数据，excel 的一个 sheet 肯定是存放不下的。![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAACbklEQVRoQ+2aMU4dMRCGZw6RC1CSSyQdLZJtKQ2REgoiRIpQkCYClCYpkgIESQFIpIlkW+IIcIC0gUNwiEFGz+hlmbG9b1nesvGW++zxfP7H4/H6IYzkwZFwQAUZmpJVkSeniFJKA8ASIi7MyfkrRPxjrT1JjZ8MLaXUDiJuzwngn2GJaNd7vyP5IoIYY94Q0fEQIKIPRGS8947zSQTRWh8CwLuBgZx479+2BTkHgBdDAgGAC+fcywoyIFWqInWN9BSONbTmFVp/AeA5o+rjKRJ2XwBYRsRXM4ZXgAg2LAPzOCDTJYQx5pSIVlrC3EI45y611osMTHuQUPUiYpiVooerg7TWRwDAlhSM0TuI+BsD0x4kGCuFSRVzSqkfiLiWmY17EALMbCAlMCmI6IwxZo+INgQYEYKBuW5da00PKikjhNNiiPGm01rrbwDwofGehQjjNcv1SZgddALhlJEgwgJFxDNr7acmjFLqCyJuTd6LEGFttpmkYC91Hrk3s1GZFERMmUT01Xv/sQljjPlMRMsxO6WULwnb2D8FEs4j680wScjO5f3vzrlNJszESWq2LYXJgTzjZm56MCHf3zVBxH1r7ftU1splxxKYHEgoUUpTo+grEf303rPH5hxENJqDKQEJtko2q9zGeeycWy3JhpKhWT8+NM/sufIhBwKI+Mta+7pkfxKMtd8Qtdbcx4dUQZcFCQ2I6DcAnLUpf6YMPxhIDDOuxC4C6djoQUE6+tKpewWZ1wlRkq0qUhXptKTlzv93aI3jWmE0Fz2TeujpX73F9TaKy9CeMk8vZusfBnqZ1g5GqyIdJq+XrqNR5AahKr9CCcxGSwAAAABJRU5ErkJggg==)
+如果你想导出一百万以上的数据，excel 的一个 sheet 肯定是存放不下的。![[../_resources/百万级数据 excel 导出功能如何实现？/98008aa3d533cfe14da22f58d7402b75_MD5.png]]
 
-因此我们需要把数据保存到多个 sheet 中。![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAACbklEQVRoQ+2aMU4dMRCGZw6RC1CSSyQdLZJtKQ2REgoiRIpQkCYClCYpkgIESQFIpIlkW+IIcIC0gUNwiEFGz+hlmbG9b1nesvGW++zxfP7H4/H6IYzkwZFwQAUZmpJVkSeniFJKA8ASIi7MyfkrRPxjrT1JjZ8MLaXUDiJuzwngn2GJaNd7vyP5IoIYY94Q0fEQIKIPRGS8947zSQTRWh8CwLuBgZx479+2BTkHgBdDAgGAC+fcywoyIFWqInWN9BSONbTmFVp/AeA5o+rjKRJ2XwBYRsRXM4ZXgAg2LAPzOCDTJYQx5pSIVlrC3EI45y611osMTHuQUPUiYpiVooerg7TWRwDAlhSM0TuI+BsD0x4kGCuFSRVzSqkfiLiWmY17EALMbCAlMCmI6IwxZo+INgQYEYKBuW5da00PKikjhNNiiPGm01rrbwDwofGehQjjNcv1SZgddALhlJEgwgJFxDNr7acmjFLqCyJuTd6LEGFttpmkYC91Hrk3s1GZFERMmUT01Xv/sQljjPlMRMsxO6WULwnb2D8FEs4j680wScjO5f3vzrlNJszESWq2LYXJgTzjZm56MCHf3zVBxH1r7ftU1splxxKYHEgoUUpTo+grEf303rPH5hxENJqDKQEJtko2q9zGeeycWy3JhpKhWT8+NM/sufIhBwKI+Mta+7pkfxKMtd8Qtdbcx4dUQZcFCQ2I6DcAnLUpf6YMPxhIDDOuxC4C6djoQUE6+tKpewWZ1wlRkq0qUhXptKTlzv93aI3jWmE0Fz2TeujpX73F9TaKy9CeMk8vZusfBnqZ1g5GqyIdJq+XrqNR5AahKr9CCcxGSwAAAABJRU5ErkJggg==)
+因此我们需要把数据保存到多个 sheet 中。![[../_resources/百万级数据 excel 导出功能如何实现？/98008aa3d533cfe14da22f58d7402b75_MD5.png]]
 
 5. 计算 limit 的起始位置
 -----------------
@@ -303,9 +303,9 @@ webSocket 给客户端推送一个通知之后，用户的右上角的收件箱�
 
 最后用两张图，总结一下 excel 异步导数据的流程。
 
-如果是使用 mq 导数据：![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e3563c4d4daf4535b281884c358ec11e~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
+如果是使用 mq 导数据：![[../_resources/百万级数据 excel 导出功能如何实现？/356e7284aaa5791b09e2de96f3f1f64b_MD5.webp]]
 
-如果是使用 job 导数据：![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ee18b342b05432e93499687a3e13c4e~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
+如果是使用 job 导数据：![[../_resources/百万级数据 excel 导出功能如何实现？/54f2e74e4cb3cc4b0669eb65b4926e78_MD5.webp]]
 
 这两种方式都可以，可以根据实际情况选择使用。
 

@@ -308,7 +308,7 @@ window.addEventListener('orientationchange' in window ? 'orientationchange' : 'r
 
 页面效果如下
 
-![img](https://yanhaijing.com/blog/520.png)
+![[../_resources/Rem 布局的原理解析/7baf41449a7c94ea4aa748d255f0a5e9_MD5.png]]
 
 ## 总结
 

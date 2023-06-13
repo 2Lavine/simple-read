@@ -9,7 +9,7 @@ generator 来源
 
 举一个简单的例子，斐波那契数列
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2016/11/29/683adad5e78b117fb60afbc0447d1ed0.jpg~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.awebp)
+![[../_resources/生成器（Generator）——《实战 ES2015》章节试读/59f27c43d53a004f24fd21a599b0eb6b_MD5.webp]]
 
 依靠程序我们可以这样实现：
 
@@ -97,7 +97,7 @@ const inputValue = yield outputValue
 
 假设我们需要按照下面这个公式来生成一个数列）
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2016/11/29/e8e47da543aaff47e4a51a58074f1add.jpg~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.awebp)
+![[../_resources/生成器（Generator）——《实战 ES2015》章节试读/22a1d9984565bd7607eb4acd49c90364_MD5.webp]]
 
 为了使得生成器能够不断根据公式输出数列元素使用 `while (true)` 循环以保持程序的不断执行。
 
@@ -177,7 +177,7 @@ for (const a of gen) {
 
 为了能更好地理解生成器内部的运行模式，我们将上面的这个例子以流程图的形式展示出来。
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2016/11/29/3d78d298726ebf980cff50f737f2adf9.jpg~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.awebp)
+![[../_resources/生成器（Generator）——《实战 ES2015》章节试读/e69ccea113575e2caac55f97ba597d4b_MD5.webp]]
 
 生成器是一种可以被暂停的运行时，
 

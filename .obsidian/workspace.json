@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "done/JavaScript 三种迭代方式.md",
+                "file": "md/前端埋点实现方案✔.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "done/JavaScript 三种迭代方式.md"
+                "file": "md/前端埋点实现方案✔.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/JavaScript 三种迭代方式.md",
+                "file": "md/前端埋点实现方案✔.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/JavaScript 三种迭代方式.md",
+                "file": "md/前端埋点实现方案✔.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -128,9 +128,17 @@
                 "useHierarchy": true
               }
             }
+          },
+          {
+            "id": "9820d0c26074997f",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {}
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -139,16 +147,42 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:打开快速切换": false,
-      "graph:查看关系图谱": false,
-      "daily-notes:打开/创建今天的日记": false,
-      "command-palette:打开命令面板": false,
-      "workspaces:管理工作区布局": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "daily-notes:Open today's daily note": false,
+      "command-palette:Open command palette": false,
+      "workspaces:Manage workspace layouts": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "d5077233460c7981",
   "lastOpenFiles": [
+    "md/为什么大厂前端监控都在用 GIF 做埋点？.md",
+    "_resources/Rem 布局的原理解析/7baf41449a7c94ea4aa748d255f0a5e9_MD5.png",
+    "_resources/Rem 布局的原理解析",
+    "_resources/options 流程/2cdb6f2bb6c00703edcddebf31d1b88e_MD5.webp",
+    "_resources/options 流程/db4cabc85086cd46081e1dd569b628c9_MD5.webp",
+    "_resources/options 流程/4a35dc8ce68c4ec4ec36c795d57af2b3_MD5.webp",
+    "_resources/options 流程",
+    "_resources/options 请求/d3d5c4d39393cc7a227a2ac15a192607_MD5.jpg",
+    "_resources/options 请求",
+    "_resources/vue 的生命周期/f2386d8dbc75425de7ad80927523b6ae_MD5.webp",
+    "_resources/vue 的生命周期/b15b54052f6b34b4a7f055e7d530a280_MD5.webp",
+    "_resources/vue 的生命周期/ea410c00f19456bce925bcd15cd87472_MD5.webp",
+    "_resources/vue 的生命周期/111f3e8931daac24cb5e08c83f826adf_MD5.webp",
+    "_resources/vue 的生命周期/a566158942b5d303f0ce5b7da990cc5b_MD5.webp",
+    "_resources/vue 的生命周期",
+    "_resources/现代前端框架的渲染模式",
+    "_resources/生成器（Generator）——《实战 ES2015》章节试读",
+    "_resources/百万级数据 excel 导出功能如何实现？",
+    "_resources/为什么大厂前端监控都在用 GIF 做埋点？",
+    "_resources/前端埋点实现方案✔",
+    "_resources/前端监控和前端埋点方案设计",
+    "achieve/JavaScript 三种迭代方式.md",
+    "achieve/options 请求.md",
+    "achieve/Rem 布局的原理解析.md",
+    "achieve/localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结.md",
     "done/现代前端框架的渲染模式.md",
     "done/vue 的生命周期.md",
     "done/vue 单页面 (SPA) 和多页面 (MPA) 的区别(详细答案).md",
@@ -158,34 +192,18 @@
     "done/localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结.md",
     "done/前端中的同源策略与三种跨域资源共享方法.md",
     "done/浏览器同源策略及跨域的解决方法.md",
-    "_assert/Pasted image 20230612231921.png",
-    "_assert/Pasted image 20230612231655.png",
-    "_assert",
-    "img",
     "readme.md",
     "cur useless/百万级数据 excel 导出功能如何实现？.md",
-    "cur useless",
     "md/现代前端框架的渲染模式.md",
     "done/JavaScript 三种迭代方式.md",
-    "output/2023-6-10 16-11-27.html",
     "achieve/test.md",
     "done/test.md",
-    "output/06-10-2023- 04-09-51 PM.html",
     "md/test.md",
-    "output/Sat Jun 10 2023 16:05:35 GMT+0800 (China Standard Time).html",
-    "done",
-    "achieve/done",
-    "output/merge.html",
-    "output",
     "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
     "node_modules/uc.micro/README.md",
     "node_modules/uc.micro/CHANGELOG.md",
     "node_modules/mdurl/README.md",
     "node_modules/mdurl/CHANGELOG.md",
-    "node_modules/markdown-it/README.md",
-    "node_modules/linkify-it/README.md",
-    "node_modules/entities/readme.md",
-    "node_modules/argparse/README.md",
     "未命名.canvas"
   ]
 }
