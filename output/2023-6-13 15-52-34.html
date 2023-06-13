@@ -1,0 +1,1022 @@
+<h1>JavaScript 三种迭代方式</h1><h2>for...in</h2>
+<p><strong>MDN</strong>：<strong><code>for...in</code></strong> <strong>语句</strong>以任意顺序迭代一个对象的除 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FJavaScript%2FReference%2FGlobal_Objects%2FSymbol" title="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a> 以外的<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FJavaScript%2FEnumerability_and_ownership_of_properties" title="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Enumerability_and_ownership_of_properties">可枚举</a>属性，包括继承的<strong>可枚举属性</strong>。</p>
+<p>那么什么是<strong>可枚举属性</strong>？</p>
+<p>在<code>JavaScript</code>中，<strong>可枚举性</strong>（enumerable）是是<strong>对象属性</strong>的一种特性，用于指示该属性是否可以通过循环访问，常见的可枚举的数据类型有：object、array、string、typedArray</p>
+<p>我们可以通过<code>Object.getOwnPropertyDescriptor</code> 方法获取对象属性的描述对象。该方法接受<strong>两个参数</strong>：要获取的属性所在的对象和属性名。它返回一个对象，该对象包含以下属性：</p>
+<ul>
+<li>value: 属性值</li>
+<li>writable: 布尔类型，表示是否可写</li>
+<li>enumerable: 布尔类型，表示是否可枚举</li>
+<li>configurable: 布尔类型，表示是否可配置</li>
+</ul>
+<pre><code>const obj = {
+  name: &quot;张三&quot;,
+  age: 18,
+};
+
+const desc = Object.getOwnPropertyDescriptor(obj, &quot;name&quot;);
+
+console.log(desc);
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c79fd40f63f546fc9ed1621c68d1b067~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>普通对象的属性默认都是可枚举的，我们一般用于获取<strong>对象的属性名（键）</strong></p>
+<pre><code>const obj = {
+  name: &quot;张三&quot;,
+  age: 10,
+  hello() {
+    console.log(&quot;hello&quot;);
+  },
+};
+for (const key in obj) {
+  console.log(key); // name age hello
+}
+</code></pre>
+<p>但是有两个点我们要注意：</p>
+<ul>
+<li>for...in 用于获取对象的<strong>属性名</strong>，包括<strong>自身属性</strong>和<strong>继承属性</strong></li>
+<li>for...in 遍历对象时，<strong>顺序并不是固定的</strong>，并且可能会出现一些意外情况</li>
+</ul>
+<p>我们以第一个点为例</p>
+<pre><code>// 定义一个父级对象
+const parent = {
+  name: &quot;张三&quot;,
+  say() {
+    console.log(this.name);
+  },
+};
+
+// 以parent为原型,定义一个子级对象
+const son = Object.create(parent);
+son.age = 19;
+
+// 遍历子级对象的属性
+for (const key in son) {
+  console.log(key); // 输出 age name say
+}
+</code></pre>
+<p>那么如何让<code>for...in</code>只遍历自己的属性呢？我们可以用<code>obj.hasOwnProperty()</code>来判断是否是自己的属性</p>
+<p>修改如下：</p>
+<pre><code>for (const key in son) {
+  if (son.hasOwnProperty(key)) {
+    console.log(key); // 输出 age
+  }
+}
+</code></pre>
+<p>再说第二个点，如果键名都是字符串，那么顺序没问题，这也是我们大多数的使用情况</p>
+<pre><code>const obj = {
+  name: &quot;张三&quot;,
+  age: 18,
+  say() {
+    console.log(this.name);
+  },
+};
+
+for (const key in obj) {
+  console.log(key); // name age say
+}
+</code></pre>
+<p>要是出现其他类型的键名，顺序就有问题了</p>
+<pre><code>const obj = {
+  name: &quot;张三&quot;,
+  age: 18,
+  say() {
+    console.log(this.name);
+  },
+  2: &quot;数字2&quot;,
+};
+
+for (const key in obj) {
+  console.log(key); // 2 name age say
+}
+</code></pre>
+<h2>for...of</h2>
+<p>说完<code>for...in</code>，我们再来说说<code>for...of</code>。</p>
+<p><strong>MDN</strong>：<strong><code>for...of</code>语句</strong>在<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FJavaScript%2FReference%2FIteration_protocols" title="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Iteration_protocols">可迭代对象</a>（包括<code>Array</code>, <code>Map</code>, <code>Set</code>, <code>String</code>, <code>TypedArray</code>, <code>arguments</code> 对象等等）上创建一个迭代循环，调用自定义迭代钩子，并为每个不同属性的值执行语句</p>
+<p>那么什么又是<strong>可迭代对象</strong>呢？</p>
+<p>说到可迭代对象，就要讲到<strong>迭代器</strong>了，迭代器是一种对象，它提供统一的接口，为不同的集合（Object、Array、Set、Map）提供了统一的访问机制。总的来说，<strong>可迭代对象就是实现 Symbol.iterator 方法的对象</strong></p>
+<blockquote>
+<p>注意：普通对象不是可迭代对象，所以，for...of 是不能用来遍历普通对象的</p>
+</blockquote>
+<p>还有一个直观感受就是<code>for...in</code>用于获取<strong>键（key）</strong>，<code>for...of</code>用于获取<strong>值（value）</strong></p>
+<pre><code>const arr = [&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;];
+
+for (const key in arr) {
+  console.log(key); // 0 1 2
+}
+
+for (const value of arr) {
+  console.log(value); // &quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;
+}
+</code></pre>
+<p>但我们一般不用于遍历数组，我们用于遍历<code>Map</code>，<code>Set</code>，<code>for...of</code>可以直接遍历<code>Set</code>和<code>Map</code></p>
+<pre><code>const set = new Set([&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;]);
+
+for (const key of set) {
+  console.log(key); // red green blue
+}
+
+const map = new Map([
+  [&quot;name&quot;, &quot;张三&quot;],
+  [&quot;age&quot;, 19],
+]);
+
+for (const [key, value] of map) {
+  console.log(key, value); 
+  // name 张三
+  // age 19
+}
+</code></pre>
+<p>它们的实例身上也都有如下几个方法，用于返回一个迭代器。</p>
+<ul>
+<li>keys()：返回键名的迭代器</li>
+<li>values()：返回键值的迭代器</li>
+<li>entries()：返回键值对的迭代器</li>
+</ul>
+<p>以 Set 为例</p>
+<pre><code>const set = new Set([&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;]);
+
+// 因为set只有值，没有键，结果就是这样了
+for (const key of set.keys()) {
+  console.log(key);
+}
+for (const key of set.values()) {
+  console.log(key);
+}
+for (const [key, value] of set.entries()) {
+  console.log(key, value);
+}
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/712045ce37b34344ac8311e02dd1c268~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>再来看看 Map</p>
+<pre><code>const map = new Map([
+  [&quot;name&quot;, &quot;张三&quot;],
+  [&quot;age&quot;, 19],
+]);
+
+for (const key of map.keys()) {
+  console.log(key);
+}
+for (const key of map.values()) {
+  console.log(key);
+}
+for (const [key, value] of map.entries()) {
+  console.log(key, value);
+}
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f0760bb19fb549558f215d0fc45a606e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>我们也可以使用<code>for...of</code>来遍历普通对象，借助<code>Object.keys()</code>、<code>Object.values()</code>、<code>Object.entries()</code>，它们都可以把一个对象包装成迭代器，使用起来就和<code>Map</code>差不多了。</p>
+<pre><code>const obj = {
+  name: &quot;张三&quot;,
+  age: 19,
+};
+
+for (const key of Object.keys(obj)) {
+  console.log(key);
+}
+for (const key of Object.values(obj)) {
+  console.log(key);
+}
+for (const [key, value] of Object.entries(obj)) {
+  console.log(key, value);
+}
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f15887d86c14b3dad9a28e63f08ea00~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>如何选择<code>for...in</code>和<code>for...of</code>？</p>
+<p>如果你只是想<strong>遍历对象的属性名</strong>，用<code>for...in</code>，其他的像<code>Map</code>、<code>Set</code>用<code>for...of</code>。</p>
+<h2>for await...of</h2>
+<p><code>for await...of</code>是 <strong>ES9</strong> 才有的新东西。</p>
+<p><strong>MDN</strong>：<strong><code>for await...of</code> 语句</strong>创建一个循环，该循环遍历<strong>异步可迭代对象</strong>以及<strong>同步可迭代对象</strong>，包括：内置的<code>String</code>，<code>Array</code>，类似数组对象 (例如<code>arguments</code>或 <code>NodeList</code>)，<code>TypedArray</code>，<code>Map</code>，<code>Set</code> 和用户定义的异步 / 同步迭代器。它使用对象的每个不同属性的值调用要执行的语句来调用自定义迭代钩子。</p>
+<blockquote>
+<p>需要注意的是：我们知道<code>await</code>需要配合<code>async</code>一起使用，所以，使用了<code>for await...of</code>，外层需要<code>async</code>。</p>
+</blockquote>
+<p>注意和<code>for...of</code>的区别，用于遍历<strong>异步可迭代对象</strong>，当然也可以遍历<strong>同步可迭代对象</strong>，但这样就失去了使用意义。</p>
+<p>我们一个例子来讲解：</p>
+<pre><code>function createAsyncIterable(delay) {
+  return new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      resolve(delay);
+    }, delay);
+  });
+}
+
+// 数组就是一个可迭代对象
+const asyncIterable = [createAsyncIterable(2000), createAsyncIterable(1000), createAsyncIterable(3000)];
+
+async function main() {
+  for await (const item of asyncIterable) {
+    console.log(item);
+  }
+}
+
+main();
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/55df4a01b8304ed793c883502b7cf452~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>它其实相当于</p>
+<pre><code>function createAsyncIterable(delay) {
+  return new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      resolve(delay);
+    }, delay);
+  });
+}
+
+// 数组就是一个可迭代对象
+const asyncIterable = [createAsyncIterable(2000), createAsyncIterable(1000), createAsyncIterable(3000)];
+
+async function main() {
+  const p1 = await asyncIterable[0];
+  console.log(p1);
+  const p2 = await asyncIterable[1];
+  console.log(p2);
+  const p3 = await asyncIterable[2];
+  console.log(p3);
+}
+
+main();
+</code></pre>
+
+<h1>Optimizing_Instrumentation_Next.js</h1><blockquote>
+<p>Learn how to use instrumentation to run code at server startup in your Next.js app</p>
+</blockquote>
+<p>If you export a function named <code>register</code> from this file, we will call that function whenever a new Next.js server instance is bootstrapped.</p>
+<p>When your <code>register</code> function is deployed, it will be called on each cold boot (but exactly once in each environment).</p>
+<p>Sometimes, it may be useful to import a file in your code because of the side effects it will cause. For example, you might import a file that defines a set of global variables, but never explicitly use the imported file in your code. You would still have access to the global variables the package has declared!.</p>
+<p>You can import files with side effects in <code>instrumentation.ts</code>, which you might want to use in your <code>register</code> function as demonstrated in the following example:</p>
+<pre><code>import { init } from 'package-init';
+ 
+export function register() {
+  init();
+}
+</code></pre>
+<p>However, we recommend importing files with side effects using <code>import</code> from within your <code>register</code> function instead.</p>
+<pre><code>export async function register() {
+  await import('package-with-side-effect');
+}
+</code></pre>
+<p>We call <code>register</code> in all environments, so it's necessary to conditionally import any code that doesn't support both <code>edge</code> and <code>nodejs</code>. You can use the environment variable <code>NEXT_RUNTIME</code> to get the current environment. Importing an environment-specific code would look like this:</p>
+<pre><code>export async function register() {
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    await import('./instrumentation-node');
+  }
+ 
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    await import('./instrumentation-edge');
+  }
+}
+</code></pre>
+
+<h1>localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903989096497159">juejin.cn</a></p>
+</blockquote>
+<h1>cookie 和 session</h1>
+<p>cookie 和 session 都是普遍用来跟踪浏览用户身份的会话方式。</p>
+<ul>
+<li>cookie 数据存放在客户端，session 数据放在服务器端。</li>
+</ul>
+<ul>
+<li>考虑到安全应当使用 session。 cookie 本身并不安全，</li>
+<li></li>
+</ul>
+<ul>
+<li>
+<p>session 会在一定时间内保存在服务器上。如果访问量比较大，会比较消耗服务器的性能。</p>
+</li>
+<li>
+<p>考虑到减轻服务器性能方面的开销，应当使用 cookie 。</p>
+</li>
+<li>
+<p>单个 cookie 保存的数据不能超过 4K，很多浏览器都限制一个域名最多保存 50 个 cookie。</p>
+</li>
+<li>
+<p>将登陆信息等重要信息存放为 session、其他信息如果需要保留，可以放在 cookie 中。</p>
+</li>
+</ul>
+<h2>cookie 的使用</h2>
+<p>cookie 可通过 <code>document.cookie</code> 获取全部 cookie。
+它是一段字符串，是键值对的形式。</p>
+<pre><code>name=sdsdsdd;name2=sdsdsd;
+</code></pre>
+<h1>localStorage 和 sessionStorage</h1>
+<p>cookie 的使用（4kb）受到种种限制，存储容量太小和数据无法持久化存储。
+storage 均为 5mb</p>
+<p>localStorage理论上永久有效的，除非主动清除。
+sessionStorage仅在当前网页会话下有效，关闭页面或浏览器后会被清除。</p>
+<p>应用场景：</p>
+<ul>
+<li>localStorage 适合持久化缓存数据，比如页面的默认偏好配置等；</li>
+<li>sessionStorage 适合一次性临时数据保存。</li>
+</ul>
+<p>WebStorage(localStorage 和 sessionStorage) 本身就提供了比较好用的方法：</p>
+<pre><code>localStorage.setItem(&quot;name&quot;, &quot;value&quot;);
+localStorage.getItem(&quot;name&quot;); // =&gt; 'value'
+localStorage.removeItem(&quot;name&quot;);
+localStorage.clear(); // 删除所有数据
+
+sessionStorage.setItem(&quot;name&quot;, &quot;value&quot;);
+</code></pre>
+<p>&lt;br&gt;</p>
+<p>注意事项：</p>
+<ul>
+<li>localStorage 写入的时候，如果超出容量会报错，但之前保存的数据不会丢失。</li>
+<li>localStorage 存储容量快要满的时候，getItem 方法性能会急剧下降。</li>
+<li>web storage 在保存复杂数据类型时，较为依赖 <code>JSON.stringify</code>，在移动端性能问题比较明显。</li>
+</ul>
+
+<h1>options 流程</h1><h3>1 偶然的相遇——options 请求</h3>
+<p>最近写的项目，应用里所有的 ajax 请求都发送了 2 遍。由于新项目，基础模块是新搭的，所以出现一些奇葩问题也是意料之中，啊终于第一次在 chrome 的 devTools 遇见了活的 options 请求。</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/15/16a1ef19b66d8e5f~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.webp" alt=""></p>
+<h4>1.1 第 1 次请求</h4>
+<p>这里首先发送了一次额外的 options 请求，在浏览器里看到请求 request header 和 response header 的信息如下：</p>
+<h4>（1）预检请求头 request header 的关键字段：</h4>
+<p>&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Request Header&lt;/th&gt;&lt;th&gt;作用&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Request-Method&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;告诉服务器实际请求所使用的 HTTP 方法&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Request-Headers&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;告诉服务器实际请求所携带的自定义首部字段，本次实际请求首部字段中 content-type 为自定义&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
+<p>服务器基于从预检请求头部获得的信息来判断，是否接受接下来的实际请求。</p>
+<p>![[Pasted image 20230612231655.png]]</p>
+<h4>（2）预检响应头 response header 的关键字段：</h4>
+<p>&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;response header&lt;/th&gt;&lt;th&gt;作用&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Allow-Methods&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;返回了服务端允许的请求，包含 GET/HEAD/PUT/PATCH/POST/DELETE&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Allow-Credentials&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;允许跨域携带 cookie（跨域请求要携带 cookie 必须设置为 true）&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Allow-Origin&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;允许跨域请求的域名，这个可以在服务端配置一些信任的域名白名单&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Request-Headers&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;客户端请求所携带的自定义首部字段 content-type&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
+<p>![[Pasted image 20230612231921.png]]
+此次 OPTIONS 请求返回了响应头的内容，但没有返回响应实体 response body 内容。</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/15/16a1f053cb92db6c~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.webp" alt=""></p>
+<h4>1.2 第 2 次请求</h4>
+<p>这是本来要发送的请求，如图所示是普通的 post 请求。
+其中 <strong>Content-Type</strong> 的 <em>application/json</em> 是此次和后端约定的请求内容格式，</p>
+<ul>
+<li>这个也是后面讲到为什么会发送 options 请求的原因之一。</li>
+</ul>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/15/16a1ef15e805bad2~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.webp" alt=""></p>
+
+<h1>options 请求</h1><h3>什么是 options 请求</h3>
+<blockquote>
+<p>HTTP 的 OPTIONS 方法 用于获取目的资源所支持的通信选项。
+客户端可以对特定的 URL 使用 OPTIONS 方法，也可以对整站（通过将 URL 设置为 &quot;*&quot;）使用该方法。</p>
+</blockquote>
+<p>简单来说，就是可以用 options 请求去嗅探某个请求在对应的服务器中都支持哪种请求方法。</p>
+<p>在前端中我们一般不会主动发起这个请求，但是往往你可以看到浏览器中相同的请求发起了 2 次，如图：</p>
+<p><img src="https://raw.githubusercontent.com/LuckyWinty/blog/master/images/network/1591547440557.jpg" alt=""></p>
+<p>这是因为在跨域的情况下，在浏览器发起 &quot;复杂请求&quot; 时主动发起的。
+跨域共享标准规范要求，对那些可能对服务器数据产生副作用的 HTTP 请求方法（特别是 GET 以外的 HTTP 请求，或者搭配某些 MIME 类型的 POST 请求），</p>
+<p>浏览器必须首先使用 OPTIONS 方法发起一个预检请求（preflight request），从而获知服务端是否允许该跨域请求。服务器确认允许之后，才发起实际的 HTTP 请求。</p>
+<h3>Options 请求优化</h3>
+<p>如果是简单请求，那么我们只会发出一次请求，
+如果是复杂请求则先发出 options 请求，用于确认目标资源是否支持跨域，然后浏览器会根据服务端响应的 header 自动处理剩余的请求，</p>
+<ul>
+<li>如果响应支持跨域，则继续发出正常请求，如果不支持，则在控制台显示错误。</li>
+</ul>
+<p>由此可见，当触发预检时，跨域请求便会发送 2 次请求，既增加了请求数，也延迟了请求真正发起的时间，严重影响性能。</p>
+<p>所以，我们可以优化 Options 请求，主要有 2 种方法。</p>
+<ol>
+<li>转为简单请求，如用 JSONP 做跨域请求</li>
+<li>对 options 请求进行缓存，服务器端设置 <code>Access-Control-Max-Age</code> 字段，具体缓存时间还取决于浏览器的支持的默认最大值，取两者最小值，一般为 10 分钟）。 在缓存有效期内，该资源的请求（URL 和 header 字段都相同的情况下）不会再触发预检。</li>
+</ol>
+<h3>优化 OPTIONS 请求：Access-Control-Max-Age 或者 避免触发</h3>
+<p>可见一旦达到触发条件，跨域请求便会一直发送 2 次请求，这样增加的请求数是否可优化呢？答案是可以，OPTIONS 预检请求的结果可以被缓存。</p>
+<blockquote>
+<p>Access-Control-Max-Age 这个响应首部表示 preflight request （预检请求）的返回结果（即 Access-Control-Allow-Methods 和 Access-Control-Allow-Headers 提供的信息） 可以被缓存的最长时间，单位是秒。(MDN)</p>
+</blockquote>
+<p>如果值为 -1，则表示禁用缓存，每一次请求都需要提供预检请求，即用 OPTIONS 请求进行检测。</p>
+<p>评论区的朋友提醒了，尽量避免不要触发 OPTIONS 请求，上面例子中把 content-type 改掉是可以的。在其他场景，比如跨域并且业务有自定义请求头的话就很难避免了。现在使用的 axios 或者 superagent 等第三方 ajax 插件，如果出现 CORS 预检请求，可以看看默认配置或者二次封装是否规范。</p>
+
+<h1>vue 单页面 (SPA) 和多页面 (MPA) 的区别(详细答案)</h1><h2>SPA 的原理</h2>
+<p>js 会感知到 url 的变化，通过这一点可以用 js 监听 url 中 hash 值的变化, 通过 onhashchange 事件, 由于哈希值的变换并不会引发页面的刷新和跳转, 当监听到 hash 变化, 就可以动态的切换组件, 就可以实现无刷新切换页面技术</p>
+<ul>
+<li>注意. 在 vue-router 中 vue 不支持 onhashchange 事件, 它希望你使用 vue-router 中的钩子函数解决</li>
+</ul>
+<h2>SPA 的优缺点</h2>
+<ul>
+<li>
+<ol>
+<li>页面切换快. 并不需要做<code>html</code>文件的请求，这样就节约了很多<code>http</code>发送时延</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>用户体验好 在网络环境差的时候, 因为组件已经预先加载好了, 并不需要发送网络请求</li>
+</ol>
+</li>
+<li>
+<ol>
+<li>首屏加载速度慢。</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>不易于 SEO</li>
+</ol>
+</li>
+</ul>
+<h1>什么是 MPA</h1>
+<p>与 <code>SPA</code> 对比最大的不同即是页面路由切换由原生浏览器文档跳转（<code>navigating across documents</code>）控制。
+页面跳转，是返回 HTML 的。</p>
+<h2>MPA 的优点</h2>
+<ul>
+<li>
+<ol>
+<li>首屏加载速度快
+当我们访问页面的时候，服务器返回一个<code>html</code>，页面就会展示出来，这个过程只经历了一个<code>HTTP</code>请求，所以页面展示的速度非常快。</li>
+</ol>
+</li>
+<li>
+<p>2.SEO 效果好
+搜索引擎在做网页排名的时候，要根据网页的内容才能给网页权重，来进行网页的排名。搜索引擎是可以识的卡顿，影响用户体验。</p>
+</li>
+</ul>
+
+<h1>vue 的生命周期</h1><h1>vue 2,3生命周期比较</h1>
+<blockquote>
+<p>Vue2 的生命周期主要是：</p>
+<ol>
+<li>beforeCreate</li>
+<li>beforeMount</li>
+<li>beforeUpdate</li>
+<li>beforeDestroy</li>
+</ol>
+</blockquote>
+<p>而 <code>vue3</code> 在 <code>vue2</code> 的基础上进行了一些改变，主要是针对最后两个生命周期：</p>
+<blockquote>
+<p>beforeDestroy -&gt; beforeUnmount
+Destoryed -&gt; Unmounted</p>
+</blockquote>
+<p><code>options API</code> 和 <code>composition API</code> 生命周期不同：</p>
+<blockquote>
+<p><code>composition API</code> 提供了 <code>setup</code> 函数作为入口函数，替换了 <code>beforeCreate</code> 和 <code>created</code> 这两个生命周期钩子。
+所以在实际开发中，我们可以简单的把 <code>setup</code> 理解为 <code>created</code> 进行使用。</p>
+</blockquote>
+<h2>我们最常用的 <code>created</code> 和 <code>mounted</code>。</h2>
+<p>在 <code>created</code> 中，因为组件实例已经处理好了所有与状态相关的操作，所以我们可以在这里 <strong>获取数据、调用方法、<code>watch</code>、<code>computed</code></strong> 都可以。</p>
+<p>而 <code>mounted</code> 主要是在 <code>DOM</code> 挂载之后被调用，所以如果我们想要获取 <code>DOM</code> 的话，那么需要在 <code>mounted</code> 之后进行。</p>
+<h2>beforeUpdate和updated</h2>
+<p>其中 <code>beforeUpdate</code> 表示 <strong>数据变化后，视图改变前</strong>。<code>updated</code> 表示 <strong>数据变化后，视图改变后</strong>。</p>
+<p>那么由这两个生命周期我们可以知道，<code>vue</code> 从数据变化到视图变化，其实是需要经历一定的时间的。
+原因是因为 <code>vue</code> 在内部通过 <code>queue</code> 队列的形式在更新视图（<code>packages/runtime-core/src/scheduler.ts</code>）：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b77da6ac7044c158209e890be358cc1~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p>这个逻辑还被体现在了 <code>nextTick</code> 这个方法上（<code>packages/runtime-core/src/scheduler.ts</code>）：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/40749b7022c849c9a4068cd729dd659e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p>而这种更新本质上是一种异步的更新形式，
+因为这种异步更新形式（微任务）的存在，才导致出现 <strong>数据更新 -&gt; 视图更新</strong> 出现延迟的原因。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/408e6ec674194eb6a3626bdf7f58d540~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p>因为它的异步更新是以微任务的形式呈现的，这也是为什么很多时候我们可以通过 <code>setTimeout</code> 代替 <code>nextTick</code> 的原因。</p>
+<h2>从源码看生命周期</h2>
+<p>从 <code>vue</code> 的源码中来看的话，整个组件的生命周期，其实是被分为两大部分的（<code>packages/runtime-core/src/renderer.ts</code>）：</p>
+<ol>
+<li><code>isMounted</code> 之前</li>
+<li><code>isMounted</code> 之后</li>
+</ol>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3ab606fb457740deaf8c9fec25773e8f~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p><code>isMounted</code> 之前表示：视图被挂载之前。因为组件的渲染本质上是 <code>render</code> 渲染了所有的 <code>subVNode</code>，所以在 <code>isMounted</code> 之前，会得到一个 <code>subTree</code> 来进行渲染。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/594ec527d36444598d66656f9ddd4d06~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p><code>isMounted</code> 之后表示：视图全部被渲染完成了，也就是 <code>mounted</code> 之后。着这个时候其实就是 <code>beforeUpdate</code> 和 <code>updated</code> 的活跃时期了。</p>
+
+<h1>前端中的同源策略与三种跨域资源共享方法</h1><h2>同源策略</h2>
+<h3>什么是同源</h3>
+<p>浏览器限制了从同一个源加载的文档或脚本如何与来自另一个源的资源进行交互。</p>
+<p>满足同源要具备三方面：<strong>协议相同</strong>、<strong>域名相同</strong>、<strong>端口相同</strong>。
+以下是对于<code>http://domain.com/dir/index.html</code>（默认端口 80）来进行同源判断：
+https://www.example.com:8080/path/to
+所以域名是domain.com  dir/index.html 是路径。 端口号直接在域名后面</p>
+<ol>
+<li><code>http://domain.com/dir2/info.html</code>（同源）</li>
+<li><code>https://domain.com/dir/index.html</code>（非同源，协议不相同）</li>
+<li><code>http://www.domain.com/dir/index.html</code>（非同源，域名不同）</li>
+<li><code>http://domain.com:233/dir/index.html</code>（非同源，端口不同）</li>
+</ol>
+<h3>什么地方有要求同源</h3>
+<ol>
+<li>Ajax 通信</li>
+<li>Cookie</li>
+<li>LocalStorage</li>
+<li>IndexDB</li>
+<li>DOM 的操作</li>
+</ol>
+<h2>跨域资源共享</h2>
+<h3>CORS 的简单请求原理</h3>
+<p>实现 CORS 需要浏览器与服务器的同时支持。
+例如发送一个简单的<code>GET</code>或<code>POST</code>请求，浏览器会为其添加一个<code>Origin</code>的头，其包含页面的源信息（协议、域名和端口），如：</p>
+<pre><code>Origin: http://domain.com
+</code></pre>
+<p>若服务器认为该请求可接受，就在<code>Access-Control-Allow-Origin</code>头部中回发相同的源信息（我们有时调用的公共 API，大部分都是将该头部设为<code>*</code>，但是它们都不发送 Cookie）。</p>
+<p>要注意的是请求和响应都不包含 Cookie 信息。
+以上都为简单请求，
+对于非简单请求，CORS 通过一种叫做 Preflighted Requests 的透明服务器验证机制支持开发者使用自定义头部信息或者 GET 和 POST 之外的方法，不过代价是在正式通信前增加一次 HTTP 请求</p>
+<h3>浏览器对 CORS 的实现</h3>
+<p>现代浏览器都会自动帮你添加一些头部信息，但是有以下限制：</p>
+<ol>
+<li>不可使用<code>setRequestHeader()</code>设置自定义头部。</li>
+<li>默认情况下不能请求 Cookie 等凭据，除非服务器在响应头中将<code>Access-Control-Allow-Credentials</code>设为<code>true</code>。</li>
+<li>调用<code>getAllResponseHeaders()</code>会返回空字符串。</li>
+</ol>
+<h3>图像 Ping</h3>
+<p>该跨域技术主要是利用<code>&lt;img&gt;</code>标签设置<code>src</code>属性（请求地址通常都带有查询字符串），
+然后监听该<code>&lt;img&gt;</code>的<code>onload</code>或<code>onerror</code>事件来判断请求是否成功。
+响应的内容通常是一张 1 像素的图片或者<code>204</code>响应。</p>
+<p>图片 Ping 有两个缺点：</p>
+<ol>
+<li>因为是通过<code>&lt;img&gt;</code>标签实现，所以只支持<code>GET</code>请求。</li>
+<li>无法访问服务器响应脚本，只能用于在浏览器与服务器之间进行单向通行。</li>
+</ol>
+<p>由于以上特点，图片 Ping 方法常用于跟踪用户点击页面或动态广告的曝光次数。</p>
+
+<h1>浏览器同源策略及跨域的解决方法</h1><h2>浏览器同源策略</h2>
+<p>同源策略（Same origin policy）的核心在于不信任外部的内容，只信任自己站点的内容，
+这样可以有效地防止跨站点脚本攻击等安全问题。</p>
+<p>同源是指：域名、协议、端口相同。</p>
+<p>同源策略又分为以下两种：</p>
+<ol>
+<li>DOM 同源策略：禁止对不同源页面 DOM 进行操作。
+<ol>
+<li>这里主要场景是 iframe 跨域的情况，不同域名的 iframe 是限制互相访问的。</li>
+</ol>
+</li>
+<li>XMLHttpRequest 同源策略：禁止使用 XHR 对象向不同源的服务器地址发起 HTTP 请求。</li>
+</ol>
+<h2>为什么要有跨域限制</h2>
+<p>如果浏览器没有同源策略，会存在什么样的安全问题呢。</p>
+<p><strong>如果没有 DOM 同源策略，也就是说不同域的 iframe 之间可以相互访问，那么黑客可以这样进行攻击：</strong></p>
+<ol>
+<li>做一个假网站，里面用 iframe 嵌套一个银行网站 <code>http://mybank.com</code>。</li>
+<li>把 iframe 宽高啥的调整到页面全部，这样用户进来除了域名，别的部分和银行的网站没有任何差别。</li>
+<li>这时如果用户输入账号密码，我们的主网站可以跨域访问到 <code>http://mybank.com</code> 的 dom 节点，就可以拿到用户的账户密码了。</li>
+</ol>
+<p><strong>如果没有 XMLHttpRequest 同源策略，那么黑客可以进行 CSRF（跨站请求伪造） 攻击：</strong></p>
+<ol>
+<li>用户登录了自己的银行页面 <code>http://mybank.com</code>，<code>http://mybank.com</code> 向用户的 cookie 中添加用户标识。</li>
+<li>用户浏览了恶意页面 <code>http://evil.com</code>，执行了页面中的恶意 AJAX 请求代码。</li>
+<li><code>http://evil.com</code> 向 <code>http://mybank.com</code> 发起 AJAX HTTP 请求，请求会默认把 <code>http://mybank.com</code> 对应 cookie 也同时发送过去。</li>
+<li>银行页面从发送的 cookie 中提取用户标识，验证用户无误，response 中返回请求数据。此时数据就泄露了。</li>
+<li>而且由于 Ajax 在后台执行，用户无法感知这一过程。</li>
+</ol>
+<h2>跨域的解决方法</h2>
+<h3>CORS（跨域资源共享）</h3>
+<p>CORS（Cross-origin resource sharing，跨域资源共享）
+定义了在必须访问跨域资源时，浏览器与服务器应该如何沟通。
+基本思想是使用自定义的 HTTP 头部让浏览器与服务器进行沟通，从而决定成功失败。</p>
+<ul>
+<li>CORS 需要浏览器和服务器同时支持。
+目前，所有浏览器都支持该功能，IE 浏览器不能低于 IE10。</li>
+</ul>
+<p>整个 CORS 通信过程，都是浏览器自动完成，不需要用户参与。</p>
+<p>对于开发者来说，CORS 通信与同源的 AJAX 通信没有差别，代码完全一样。
+浏览器一旦发现 AJAX 请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。</p>
+<p>因此，实现 CORS 通信的关键是服务器。只要服务器实现了 CORS 接口，就可以跨源通信。</p>
+<p>浏览器将 CORS 请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）。浏览器对这两种请求的处理，是不一样的。</p>
+<p>只要同时满足以下两大条件，就属于<strong>简单请求</strong>。</p>
+<ol>
+<li>请求方法是以下三种方法之一：
+<ul>
+<li>HEAD</li>
+<li>GET</li>
+<li>POST</li>
+</ul>
+</li>
+<li>HTTP 的头信息不超出以下几种字段：
+<ul>
+<li>Accept</li>
+<li>Accept-Language</li>
+<li>Content-Language</li>
+<li>Last-Event-ID</li>
+<li>Content-Type：只限于三个值 application/x-www-form-urlencoded、multipart/form-data、text/plain
+凡是不同时满足上面两个条件，就属于<strong>非简单请求</strong>。</li>
+</ul>
+</li>
+</ol>
+<p>请求中的任意 XMLHttpRequestUpload 对象均没有注册任何事件监听器；
+请求中没有使用 ReadableStream 对象。
+人为设置了规范集合之内的首部字段，如<code>Accept/Accept-Language/Content-Language/Content-Type/DPR/Downlink/Save-Data/Viewport-Width/Width</code></p>
+<h4>简单请求</h4>
+<ol>
+<li>在请求中需要附加一个额外的 Origin 头部，其中包含请求页面的源信息（协议、域名和端口）例如：<code>Origin: http://www.laixiangran.cn</code></li>
+<li>如果服务器认为这个请求可以接受，就在 Access-Control-Allow-Origin 头部中回发相同的源信息（如果是公共资源，可以回发 * ）。例如：<code>Access-Control-Allow-Origin：http://www.laixiangran.cn</code></li>
+<li>没有这个头部或者有这个头部但源信息不匹配，浏览器就会驳回请求。正常情况下，浏览器会处理请求。注意，请求和响应都不包含 cookie 信息。</li>
+<li>如果需要包含 cookie 信息，ajax 请求需要设置 xhr 的属性 withCredentials 为 true，服务器需要设置响应头部 <code>Access-Control-Allow-Credentials: true</code>。</li>
+</ol>
+<h4>非简单请求</h4>
+<p>浏览器在发送真正的请求之前，会先发送一个 Preflight 请求给服务器，</p>
+<p>这种请求使用 OPTIONS 方法，发送下列头部：</p>
+<ul>
+<li>Origin：与简单的请求相同。</li>
+<li>Access-Control-Request-Method: 请求自身使用的方法。</li>
+<li>Access-Control-Request-Headers: （可选）自定义的头部信息，多个头部以逗号分隔。</li>
+</ul>
+<p>例如：</p>
+<pre><code>Origin: http://www.laixiangran.cn
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: NCZ
+</code></pre>
+<p>发送这个请求后，服务器可以决定是否允许这种类型的请求。</p>
+<p>服务器通过在响应中发送如下头部与浏览器进行沟通：</p>
+<ul>
+<li>Access-Control-Allow-Origin：与简单的请求相同。</li>
+<li>Access-Control-Allow-Methods: 允许的方法，多个方法以逗号分隔。</li>
+<li>Access-Control-Allow-Headers: 允许的头部，多个方法以逗号分隔。</li>
+<li>Access-Control-Max-Age: 应该将这个 Preflight 请求缓存多长时间（以秒表示）。</li>
+</ul>
+<pre><code>Access-Control-Allow-Origin: http://www.laixiangran.cn
+Access-Control-Allow-Methods: GET, POST
+Access-Control-Allow-Headers: NCZ
+Access-Control-Max-Age: 1728000
+</code></pre>
+<p>一旦服务器通过 Preflight 请求允许该请求之后，以后每次浏览器正常的 CORS 请求，就都跟简单请求一样了。</p>
+<h4>优点</h4>
+<ul>
+<li>CORS 通信与同源的 AJAX 通信没有差别，代码完全一样，容易维护。</li>
+<li>支持所有类型的 HTTP 请求。</li>
+</ul>
+<h4>缺点</h4>
+<ul>
+<li>存在兼容性问题，特别是 IE10 以下的浏览器。</li>
+<li>第一次发送非简单请求时会多一次请求。</li>
+</ul>
+<h3>JSONP 跨域</h3>
+<p>JSONP 跨域的基本原理。
+<code>script</code> 标签不受浏览器同源策略的影响，允许跨域引用资源。
+通过动态创建 script 标签，然后利用 src 属性进行跨域(script会自动执行对应返回资源的代码)</p>
+<pre><code>// 1. 定义一个 回调函数 handleResponse 用来接收返回的数据
+function handleResponse(data) {
+    console.log(data);
+};
+
+// 2. 动态创建一个 script 标签，并且告诉后端回调函数名叫 handleResponse
+var body = document.getElementsByTagName('body')[0];
+var script = document.gerElement('script');
+script.src = 'http://www.laixiangran.cn/json?callback=handleResponse';
+body.appendChild(script);
+
+// 3. 通过 script.src 请求 `http://www.laixiangran.cn/json?callback=handleResponse`，
+// 4. 后端能够识别这样的 URL 格式并处理该请求，然后返回 handleResponse({&quot;name&quot;: &quot;laixiangran&quot;}) 给浏览器
+// 5. 浏览器在接收到 handleResponse({&quot;name&quot;: &quot;laixiangran&quot;}) 之后立即执行 ，也就是执行 handleResponse 方法，获得后端返回的数据，这样就完成一次跨域请求了。
+</code></pre>
+<h4>JSONP优点</h4>
+<ul>
+<li>使用简便，没有兼容性问题，目前最流行的一种跨域方法。</li>
+</ul>
+<h4>JSONP缺点</h4>
+<ul>
+<li>只支持 GET 请求。</li>
+<li>要确定 JSONP 请求是否失败并不容易。
+<ul>
+<li>虽然 HTML5 给 script 标签新增了一个 onerror 事件处理程序，但是存在兼容性问题。</li>
+</ul>
+</li>
+</ul>
+<h3>图像 Ping 跨域</h3>
+<p>由于 <code>img</code> 标签不受浏览器同源策略的影响，允许跨域引用资源。
+因此可以通过 img 标签的 src 属性进行跨域，这也就是图像 Ping 跨域的基本原理。</p>
+<pre><code>var img = new Image();
+
+// 通过 onload 及 onerror 事件可以知道响应是什么时候接收到的，但是不能获取响应文本
+img.onload = img.onerror = function() {
+    console.log(&quot;Done!&quot;);
+}
+
+// 请求数据通过查询字符串形式发送
+img.src = 'http://www.laixiangran.cn/test?name=laixiangran';
+</code></pre>
+<h4>优点</h4>
+<ul>
+<li>用于实现跟踪用户点击页面或动态广告曝光次数有较大的优势。</li>
+</ul>
+<h4>缺点</h4>
+<ul>
+<li>只支持 GET 请求。</li>
+<li>只能浏览器与服务器的单向通信，因为浏览器不能访问服务器的响应文本。</li>
+</ul>
+<h3>服务器代理</h3>
+<p>浏览器有跨域限制，但是服务器不存在跨域问题，所以可以由服务器请求所有域的资源再返回给客户端。</p>
+<h3>document.domain 跨域</h3>
+<p>对于主域名相同，而子域名不同的情况，可以使用 document.domain 来跨域。</p>
+<ul>
+<li>这种方式非常适用于 iframe 跨域的情况。</li>
+</ul>
+<p>有一个页面地址是 <code>http://www.laixiangran.cn/a.html</code>，
+这个页面里面有一个 iframe，它的 src 是 <code>http://laixiangran.cn/b.html</code>。
+显然，这个页面与它里面的 iframe 框架是不同域的，所以我们是无法通过在页面中书写 js 代码来获取 iframe 中的东西的。</p>
+<p>我们只要把 <code>http://www.laixiangran.cn/a.html</code> 和 <code>http://laixiangran.cn/b.html</code> 这两个页面的 document.domain 都设成相同的域名就可以了。
+但要注意的是，我们只能把 document.domain 设置成自身或更高一级的父域，且主域必须相同。</p>
+<p>例如：<code>a.b.laixiangran.cn</code> 中某个文档的 document.domain 可以设成 <code>a.b.laixiangran.cn</code>、<code>b.laixiangran.cn</code> 、<code>laixiangran.cn</code> 中的任意一个，但是不可以设成 <code>c.a.b.laixiangran.cn</code> ，
+因为这是当前域的子域，也不可以设成 <code>baidu.com</code>，因为主域已经不相同了。</p>
+<p>例如，在页面 <code>http://www.laixiangran.cn/a.html</code> 中设置 document.domain：</p>
+<pre><code>&lt;iframe src=&quot;http://laixiangran.cn/b.html&quot; id=&quot;myIframe&quot; onload=&quot;test()&quot;&gt;
+&lt;script&gt;
+    document.domain = 'laixiangran.cn'; // 设置成主域
+    function test() {
+        console.log(document.getElementById('myIframe').contentWindow);
+    }
+&lt;/script&gt;
+</code></pre>
+<p>在页面 <code>http://laixiangran.cn/b.html</code> 中也设置 document.domain，而且这也是必须的，
+虽然这个文档的 domain 就是 <code>laixiangran.cn</code>，但是还是必须显式地设置 document.domain 的值：</p>
+<pre><code>&lt;script&gt;
+    document.domain = 'laixiangran.cn'; // document.domain 设置成与主页面相同
+&lt;/script&gt;
+</code></pre>
+<h3><a href="https://link.juejin.cn?target=http%3A%2F%2Fwindow.name" title="http://window.name">window.name</a> 跨域</h3>
+<p>window 对象有个 name 属性，该属性有个特征：即在一个窗口（window）的生命周期内，窗口载入的所有的页面（不管是相同域的页面还是不同域的页面）都是共享一个 <code>window.name</code> 的，</p>
+<p>每个页面对 <code>window.name</code> 都有读写的权限，
+<code>window.name</code> 是持久存在一个窗口载入过的所有页面中的，并不会因新页面的载入而进行重置。</p>
+<p>页面 <code>http://www.laixiangran.cn/a.html</code> 的代码：</p>
+<pre><code>&lt;iframe src=&quot;http://laixiangran.cn/b.html&quot; id=&quot;myIframe&quot; onload=&quot;test()&quot; style=&quot;display: none;&quot;&gt;
+&lt;script&gt;
+    // 2. iframe载入 &quot;http://laixiangran.cn/b.html 页面后会执行该函数
+    function test() {
+        var iframe = document.getElementById('myIframe');
+        
+        // 重置 iframe 的 onload 事件程序，
+        // 此时经过后面代码重置 src 之后，
+        // http://www.laixiangran.cn/a.html 页面与该 iframe 在同一个源了，可以相互访问了
+        iframe.onload = function() {
+            var data = iframe.contentWindow.name; // 4. 获取 iframe 里的 window.name
+            console.log(data); // hello world!
+        };
+        
+        // 3. 重置一个与 http://www.laixiangran.cn/a.html 页面同源的页面
+        iframe.src = 'http://www.laixiangran.cn/c.html';
+    }
+&lt;/script&gt;
+</code></pre>
+<p>页面 <code>http://laixiangran.cn/b.html</code> 的代码：</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+    // 1. 给当前的 window.name 设置一个 http://www.laixiangran.cn/a.html 页面想要得到的数据值 
+    window.name = &quot;hello world!&quot;;
+&lt;/script&gt;
+</code></pre>
+<h3>location.hash 跨域</h3>
+<p>location.hash 方式跨域，是子框架修改父框架 src 的 hash 值，通过这个属性进行传递数据，且更改 hash 值，页面不会刷新。但是传递的数据的字节数是有限的。</p>
+<p>页面 <code>http://www.laixiangran.cn/a.html</code> 的代码：</p>
+<pre><code>&lt;iframe src=&quot;http://laixiangran.cn/b.html&quot; id=&quot;myIframe&quot; onload=&quot;test()&quot; style=&quot;display: none;&quot;&gt;
+&lt;script&gt;
+    // 2. iframe载入 &quot;http://laixiangran.cn/b.html 页面后会执行该函数
+    function test() {
+        // 3. 获取通过 http://laixiangran.cn/b.html 页面设置 hash 值
+        var data = window.location.hash;
+        console.log(data);
+    }
+&lt;/script&gt;
+</code></pre>
+<p>页面 <code>http://laixiangran.cn/b.html</code> 的代码：</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+    // 1. 设置父页面的 hash 值
+    parent.location.hash = &quot;world&quot;;
+&lt;/script&gt;
+</code></pre>
+<h3>postMessage 跨域</h3>
+<p>window.postMessage(message，targetOrigin) 方法是 HTML5 新引进的特性，可以使用它来向其它的 window 对象发送消息，无论这个 window 对象是属于同源或不同源。</p>
+<ul>
+<li>这个应该就是以后解决 dom 跨域通用方法了。</li>
+</ul>
+<p>调用 postMessage 方法的 window 对象是指要接收消息的那一个 window 对象，</p>
+<ul>
+<li>方法的第一个参数 message 为要发送的消息，类型只能为字符串；</li>
+<li>第二个参数 targetOrigin 用来限定接收消息的那个 window 对象所在的域，如果不想限定域，可以使用通配符 *。</li>
+</ul>
+<p>需要接收消息的 window 对象，可是通过监听自身的 message 事件来获取传过来的消息，消息内容储存在该事件对象的 data 属性中。</p>
+<p>页面 <code>http://www.laixiangran.cn/a.html</code> 的代码：</p>
+<pre><code>&lt;iframe src=&quot;http://laixiangran.cn/b.html&quot; id=&quot;myIframe&quot; onload=&quot;test()&quot; style=&quot;display: none;&quot;&gt;
+&lt;script&gt;
+    // 1. iframe载入 &quot;http://laixiangran.cn/b.html 页面后会执行该函数
+    function test() {
+        // 2. 获取 http://laixiangran.cn/b.html 页面的 window 对象，
+        // 然后通过 postMessage 向 http://laixiangran.cn/b.html 页面发送消息
+        var iframe = document.getElementById('myIframe');
+        var win = iframe.contentWindow;
+        win.postMessage('我是来自 http://www.laixiangran.cn/a.html 页面的消息', '*');
+    }
+&lt;/script&gt;
+</code></pre>
+<p>页面 <code>http://laixiangran.cn/b.html</code> 的代码：</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+    // 注册 message 事件用来接收消息
+    window.onmessage = function(e) {
+        e = e || event; // 获取事件对象
+        console.log(e.data); // 通过 data 属性得到发送来的消息
+    }
+&lt;/script&gt;
+</code></pre>
+
+<h1>现代前端框架的渲染模式</h1><p>这十年，前端渲染方式一直在演进，我觉得大概可以分为以下三个阶段：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cdf9ad8014fc43c6bc5eeea1abcd07c4~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<ul>
+<li>传统 SSR:</li>
+<li>前后端分离</li>
+<li>同构前端：这几年前端框架的发展进入的深水区，随着云原生、容器技术、Serverless、边缘计算等底层技术设施的普及，也让‘前端’生存范围延展到服务端。前端开始寻求 <code>UX</code> 和 <code>DX</code> 的平衡点</li>
+</ul>
+<h2>CSR - 客户端渲染</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92aca334b5f14afaab69dd56a708fd95~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>前端页面在浏览器中渲染，服务端仅仅是静态资源服务器 (比如 nginx)。
+初始的 HTML 文件只是一个空壳，我们需要等待 JavaScript 包加载和执行完毕，才能进行交互，白屏时间比较长。</p>
+<ul>
+<li>优点
+<ul>
+<li>部署简单</li>
+<li>页面过渡、功能交互友好</li>
+<li>适合复杂交互型应用程序开发</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li><code>SEO</code> 不友好</li>
+<li>白屏时间长</li>
+<li>可能需要复杂的状态管理。</li>
+</ul>
+</li>
+</ul>
+<h2>SSR - 服务端渲染</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d82dd2a96e5e4282950b553ae626f661~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>为了解决 SEO 和白屏问题，各大框架开始支持在服务端渲染 HTML 字符串。</p>
+<p>SSR 把数据拉取放到了服务端，因为离数据源比较近，数据拉取的速度会快一点。
+但因为需要在服务端等待数据就绪, <code>TTFB(Time to First Byte)</code> 相比 CSR 会长一点。</p>
+<p>SSR 只是准备好了初始的数据和 HTML,
+实际上和 CSR 一样，我们还是需要加载完整的<code>客户端程序</code>，然后在浏览器端重新渲染一遍</p>
+<p><code>FCP(First Contentful Paint)</code> 相比 CSR 提前了, 但是 <code>TTI(Time to Interactive)</code> 并没有太多差别。只是用户可以更快地看到内容了。</p>
+<blockquote>
+<p>hydration 的主要目的是挂载事件处理器、触发副作用等等</p>
+</blockquote>
+<p>优点</p>
+<ul>
+<li>SEO 友好</li>
+<li>用户可以更快看到内容了</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>部署环境要求。需要 Nodejs 等 JavaScript 服务端运行环境</li>
+<li>需要包含完整的 JavaScript 客户端渲染程序，<code>TTI</code> 还有改善空间</li>
+</ul>
+<h2>SSG - 静态生成</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/992331ee5a6648e3924fd580fde74a4d~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>对于完全静态的页面，比如博客，公司主页等等，也可以使用 SSG 静态渲染。</p>
+<p>和 SSR 的区别是，SSG 是在<code>构建时</code>渲染的。</p>
+<p>和 CSR 一样，因为是静态的，所以在服务端不需要渲染运行时，部署在静态服务器就行了。</p>
+<p>VuePress、VitePress、Gatsby、Docusaurus 这些框架都属于 SSG 的范畴。</p>
+<p>优点</p>
+<ul>
+<li>相比 SSR, 因为不需要服务端运行时、数据拉取，TTFB/FCP 等都会提前。</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>和 SSR 一样，也有客户端渲染程序、需要进行 Hydrate。 对于<code>内容为中心</code>的站点来说，实际上并不需要太多交互，客户端程序还有较大压缩的空间。</li>
+<li>在构建时渲染，如果内容变更，需要重新构建，比较麻烦</li>
+</ul>
+<h2>ISG - 增量静态生成</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ef5e9b4f6d843c7a0ff82fd0d4cb5a9~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>ISG 是 SSG 的升级版。解决 SSG 内容变更繁琐问题。</p>
+<p>ISG 依旧会在构建时预渲染页面，但是这里多出了一个<code>服务端运行时</code>，这个运行时会按照一定的过期 / 刷新策略 (通常会使用 <strong><a href="https://link.juejin.cn?target=https%3A%2F%2Fweb.dev%2Fstale-while-revalidate%2F" title="https://web.dev/stale-while-revalidate/">stale-while-revalidate</a></strong> ) 来重新生成页面。</p>
+<h2>Progressive Hydration - 渐进水合</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4aee8e45ee54d77aa15f4affb490497~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>上文提到，常规的 SSR 通常需要完整加载客户端程序 (上图的 bundle.js)，水合之后才能得到可交互页面，这就导致 <code>TTI</code> 会偏晚。</p>
+<p>最直接的解决办法就是压缩客户端程序的体积。那么自然会想到使用<code>代码分割</code>(code splitting) 技术。 <code>渐进式水合 （Progressive Hydration ）</code></p>
+<p>如上图，我们使用<code>代码分割</code>的方式，将 Foo、Bar 抽取为<code>异步组件</code>，抽取后<code>主包</code>的体积下降了，<code>TTI</code> 就可以提前了。</p>
+<p>而 Foo、Bar 可以按照一定的策略来按需加载和水合，比如在视口可见时、浏览器空闲时，或者交给 <code>React Concurrent Mode</code> 根据交互的优先级来加载。</p>
+<p>React 18 官方支持了渐进式水合（官方叫 <code>Selective Hydration</code>）。</p>
+<h2>SSR with streaming - 流式 SSR</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3435b6d2c1f742478677df24be8600de~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<ul>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Freact.dev%2Freference%2Freact-dom%2Fserver%2FrenderToString" title="https://react.dev/reference/react-dom/server/renderToString">renderToString</a> → 普通响应。即 SSR 会等待完整的 HTML 渲染完毕后，才给客户端发送第一个字节。</li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Freact.dev%2Freference%2Freact-dom%2Fserver%2FrenderToNodeStream" title="https://react.dev/reference/react-dom/server/renderToNodeStream">renderToNodeStream</a> → 流式响应。渲染多少，就发送多少。就像 ChatGPT 聊天消息一样，一个字一个字的蹦，</li>
+</ul>
+<p>浏览器能够很好地处理 HTML 流，快速地将内容呈现给用户，而不是白屏干等。</p>
+<p>下面这张图可以更直观感受两者区别：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2126f6c7de834904aea4ad2fa5df9b40~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>来源：<a href="https://link.juejin.cn?target=https%3A%2F%2Fmxstbr.com%2Fthoughts%2Fstreaming-ssr%2F" title="https://mxstbr.com/thoughts/streaming-ssr/">mxstbr.com/thoughts/st…</a></p>
+<p>对于常规的流式 SSR，优化效果可能没有我们想象的那么明显。<strong>因为框架还是得等数据拉取完成之后才能开始渲染</strong>。因此，除非是比较复杂、长序列的 HTML 树，至上而下需要较长时间的渲染，否则效果并不明显。</p>
+<p>优点</p>
+<ul>
+<li>相比普通响应，流式响应可以提前 TTFB 和 FCP, 浏览器不用空转等待，可以连续绘制。</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li><strong>数据拉取是 TTFB/FCP 的主要阻塞原因。为了解决这个问题，下文的 <code>Selective Hydration</code> 如何巧妙地解决这个问题。</strong></li>
+</ul>
+<h2>Selective Hydration - 选择性水合</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/06e10af9061d48c5b13e70e947c88da0~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><code>选择性水合（Progressive Hydration）</code> 是 <code>渐进式水合(Progressive Hydration)</code> 和 <code>流式SSR(SSR with Streaming)</code> 的升级版。
+<strong>主要通过选择性地跳过‘<code>慢组件</code>’，避免阻塞，来实现更快的 HTML 输出， 从而让流式响应发挥应有的作用。</strong></p>
+<blockquote>
+<p><code>慢组件</code>通常指的是：需要异步获取数据、体积较大、或者是计算量比较复杂的组件。</p>
+</blockquote>
+<p>比较典型的<code>慢组件</code>是异步数据获取的组件, 如下图，未开启 Selective Hydration 的情况，会等待所有异步任务完成后才开始输出，而 Selective Hydration 可以跳过这些组件，等待它们就绪后，继续输出。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51ff85fa84d745899ef294186aceb389~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>我们可以在最新的 Next.js(当前是 13.4) 演示一下。</p>
+<p>没有开启 Selective Hydration 的 Demo:</p>
+<pre><code>function delay(time: number) {
+  return new Promise((resolve) =&gt; setTimeout(resolve, time))
+}
+
+/**
+ * 获取关键数据
+ */
+function getCrucialData() {
+  return delay(1000).then(() =&gt; {
+    return {
+      data: Math.random(),
+    }
+  })
+}
+
+function getData(time: number) {
+  return delay(time).then(() =&gt; {
+    return {
+      data: Math.random(),
+    }
+  })
+}
+
+const Foo = async () =&gt; {
+  const data = await getData(1000)
+
+  return &lt;div&gt;foo: {data.data}&lt;/div&gt;
+}
+
+const Bar = async () =&gt; {
+  const data = await getData(2000)
+
+  return &lt;div&gt;bar: {data.data}&lt;/div&gt;
+}
+
+/**
+ * 页面 🔴
+ *
+ */
+export default async function WithoutSelective() {
+  // 获取关键数据
+  const crucialData = await getCrucialData()
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Without Selective&lt;/h1&gt;
+      &lt;p&gt;This page is rendered without Selective Hydration.&lt;/p&gt;
+      &lt;p&gt;crucial data: {crucialData.data}&lt;/p&gt;
+      &lt;Foo&gt;&lt;/Foo&gt;
+      &lt;Bar&gt;&lt;/Bar&gt;
+    &lt;/div&gt;
+  )
+}
+</code></pre>
+<p>运行结果：浏览器等待响应的时间为 3s <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4bcdecb0edd74bafb0cbe985feba8ccf~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""> 即所有<code>服务端组件（Server Component）</code> 就绪后才会有实际的内容输出。</p>
+<p>开启 Selective Hydration 很简单，我们只需要用 Suspend 包裹起来，提示 React 这可能是一个‘慢组件’，可以跳过他：</p>
+<pre><code>export default async function WithoutSelective() {
+  // 获取关键数据
+  const crucialData = await getCrucialData()
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Without Selective&lt;/h1&gt;
+      &lt;p&gt;This page is rendered without Selective Hydration.&lt;/p&gt;
+      &lt;p&gt;crucial data: {crucialData.data}&lt;/p&gt;
+      &lt;Suspense fallback=&quot;foo loading&quot;&gt;
+        &lt;Foo&gt;&lt;/Foo&gt;
+      &lt;/Suspense&gt;
+      &lt;Suspense fallback=&quot;bar loading&quot;&gt;
+        &lt;Bar&gt;&lt;/Bar&gt;
+      &lt;/Suspense&gt;
+    &lt;/div&gt;
+  )
+}
+</code></pre>
+<p>现在来看运行结果：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e30a867ae0b943f483871253653f2102~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>明显 TTFB 提前了！但是完整的请求时间没变。</p>
+<p>当 Foo 和 Bar 就绪后，Next.js 会将渲染结果写入流中。怎么做到的？</p>
+<p>看一眼 HTML 就知道了：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/acc75151731041748f36b432992a5a4b~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>对于<code>慢组件</code>，React 会先渲染 Suspend 的 fallback 内容，并留一个插槽。</p>
+<p>继续往下看，可以看到 Foo、Bar 的渲染结果：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b29d2b9cdea41b580d73b03c1bb531c~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>接着将渲染结果替换掉插槽。用于后续的水合。</p>
+<p>在服务端，Selective Hydration 在 SSR With Streaming 的基础上，通过选择性地跳过一些低优先级的慢组件来优化了 TTFB(主要的，相对于 FCP 等指标也优化了)，更快地向用户呈现页面。</p>
+<h2>在客户端 Selective Hydration 的运行过程同 Progressive Hydration 。
+Islands Architecture - 岛屿架构</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f9dfa5b6d3d4806824c7ec460f86950~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>近两年，<strong>去 JavaScript 成为一波小趋势</strong>，这其中的典型代表是 <code>Islands Architecture</code> (岛屿架构) 和 <code>React Server Component</code>(RSC, React 服务端组件)。</p>
+<p>它们主张是：<strong>在服务端渲染，然后去掉不必要 JavaScript</strong></p>
+<p>岛屿架构的主要代表是 <code>Astro</code>。
+Astro 在服务端渲染后，**
+默认情况下，在客户端侧没有客户端程序和水合的过程。
+而对于需要 JavaScript 增强，实现动态交互的组件，需要显式标记为岛屿。**</p>
+<p>这有点类似 Progressive Hydration 的意思。但是还是有很大的差别：</p>
+<ul>
+<li>岛屿是在<code>去 JavaScript</code> 这个背景下的交互增强手段。按 Astro 解释是： 你可以将‘岛屿’想象成在一片由_静态（不可交互）的 HTML_ 页面中的_动态岛屿_</li>
+<li>每个岛屿都是独立加载、局部水合。而 Progressive Hydration 是整棵树水合的分支，只不过延后了。</li>
+<li>岛屿可以框架无关。</li>
+</ul>
+<p>去 JavaScript 后，可以缓解典型的 SSR <code>TTI</code> 问题。<strong>但是岛屿架构并不能通吃所有的场景，最擅长的是” 内容为中心 “的站点，即当静态的页面比重远高于动态比重时，去 JavaScript 的收益才是显著的。</strong></p>
+<h2>React Server Component - React 服务端组件</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07cd64c0f98c4ebca5ed67a93d164dda~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>在笔者看来，<code>React Server Component(RSC)</code> 本质上和岛屿架构的目的是一样的，都是去 JavaScript。只是实现的手段不同。</p>
+<p>这是 Next.js 官方文档的示例图：
+和岛屿架构类似，
+对于静态的内容推荐使用 <code>Server Component (SC),</code>
+而需要交互增强的，可以使用 <code>Client Component (CC)</code>。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/23d0716c544a42b4ba5892fbe6643c98~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p>顾名思义，RSC <strong>就是只能在服务端运行的组件</strong>。下面简单对比一下两者的区别：</p>
+<p>&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;Server Component&lt;/th&gt;&lt;th&gt;Client Component&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;运行环境&lt;/td&gt;&lt;td&gt;服务端&lt;/td&gt;&lt;td&gt;服务端 + 客户端 或者 仅客户端&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;JavaScript&lt;/td&gt;&lt;td&gt;服务端组件依赖的相关程序对客户端不可见。 在这里实现了 ‘去 JavaScript’&lt;/td&gt;&lt;td&gt;需要打包分发给客户端&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;水合&lt;/td&gt;&lt;td&gt;不需要水合&lt;/td&gt;&lt;td&gt;需要水合&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;支持 async&lt;/td&gt;&lt;td&gt;Y&lt;/td&gt;&lt;td&gt;N&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;支持状态 (state, context)&lt;/td&gt;&lt;td&gt;N&lt;/td&gt;&lt;td&gt;Y&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;支持事件、副作用&lt;/td&gt;&lt;td&gt;N&lt;/td&gt;&lt;td&gt;Y&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
+<blockquote>
+<p>RSC 优点类似 React Hooks 出来之前的<a href="https://link.juejin.cn?target=https%3A%2F%2Fweb.archive.org%2Fweb%2F20170621181013%2Fhttps%3A%2F%2Ffacebook.github.io%2Freact%2Fdocs%2Fcomponents-and-props.html" title="https://web.archive.org/web/20170621181013/https://facebook.github.io/react/docs/components-and-props.html">函数组件</a>: 就是一个普通的函数，不能使用 hooks，没有状态，只会被调用一次。</p>
+</blockquote>
+<p><strong>那么相比岛屿架构呢？</strong></p>
+<p>优点</p>
+<ul>
+<li>Server Component 和 Client Component 都是 React 框架的组件，尽管有些区别，但是心智模型是统一的。</li>
+<li>React Server Component 是 React 框架下一体化的原生解决方案，支持和 Selective Hydration 配合使用。岛屿架构只是一个架构模式。</li>
+<li>可以进行更细粒度和更灵活的组合。</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>Server Component 和 Client Component 还是有较大差别，在组合、通信上也有较多限制，需要开发者规划好服务端和客户端的边界。初期有一定上手门槛。 当然，Islands 可能也有类似的问题。</li>
+</ul>
