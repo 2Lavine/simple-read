@@ -17,7 +17,7 @@ const options = {
   baseURL: "../",
 };
 const obsidianImages = require("markdown-it-obsidian-images")(options);
-const md = require("markdown-it")().use(obsidianImages);
+const md = require("markdown-it")({ html: true }).use(obsidianImages);
 const output = []; // 用于存储所有的 main-content 元素内容
 
 function readDirectory(directoryPath) {
