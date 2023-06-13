@@ -18,7 +18,7 @@ const desc = Object.getOwnPropertyDescriptor(obj, &quot;name&quot;);
 
 console.log(desc);
 </code></pre>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c79fd40f63f546fc9ed1621c68d1b067~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c79fd40f63f546fc9ed1621c68d1b067~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>普通对象的属性默认都是可枚举的，我们一般用于获取<strong>对象的属性名（键）</strong></p>
 <pre><code>const obj = {
   name: &quot;张三&quot;,
@@ -146,7 +146,7 @@ for (const [key, value] of set.entries()) {
   console.log(key, value);
 }
 </code></pre>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/712045ce37b34344ac8311e02dd1c268~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/712045ce37b34344ac8311e02dd1c268~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>再来看看 Map</p>
 <pre><code>const map = new Map([
   [&quot;name&quot;, &quot;张三&quot;],
@@ -163,7 +163,7 @@ for (const [key, value] of map.entries()) {
   console.log(key, value);
 }
 </code></pre>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f0760bb19fb549558f215d0fc45a606e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f0760bb19fb549558f215d0fc45a606e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>我们也可以使用<code>for...of</code>来遍历普通对象，借助<code>Object.keys()</code>、<code>Object.values()</code>、<code>Object.entries()</code>，它们都可以把一个对象包装成迭代器，使用起来就和<code>Map</code>差不多了。</p>
 <pre><code>const obj = {
   name: &quot;张三&quot;,
@@ -180,7 +180,7 @@ for (const [key, value] of Object.entries(obj)) {
   console.log(key, value);
 }
 </code></pre>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f15887d86c14b3dad9a28e63f08ea00~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9f15887d86c14b3dad9a28e63f08ea00~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>如何选择<code>for...in</code>和<code>for...of</code>？</p>
 <p>如果你只是想<strong>遍历对象的属性名</strong>，用<code>for...in</code>，其他的像<code>Map</code>、<code>Set</code>用<code>for...of</code>。</p>
 <h2>for await...of</h2>
@@ -210,7 +210,7 @@ async function main() {
 
 main();
 </code></pre>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/55df4a01b8304ed793c883502b7cf452~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/55df4a01b8304ed793c883502b7cf452~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>它其实相当于</p>
 <pre><code>function createAsyncIterable(delay) {
   return new Promise((resolve, reject) =&gt; {
@@ -324,7 +324,7 @@ sessionStorage.setItem(&quot;name&quot;, &quot;value&quot;);
 
 <h1>options 流程</h1><h3>1 偶然的相遇——options 请求</h3>
 <p>最近写的项目，应用里所有的 ajax 请求都发送了 2 遍。由于新项目，基础模块是新搭的，所以出现一些奇葩问题也是意料之中，啊终于第一次在 chrome 的 devTools 遇见了活的 options 请求。</p>
-<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/15/16a1ef19b66d8e5f~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.webp" alt=""></p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/15/16a1ef19b66d8e5f~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
 <h4>1.1 第 1 次请求</h4>
 <p>这里首先发送了一次额外的 options 请求，在浏览器里看到请求 request header 和 response header 的信息如下：</p>
 <h4>（1）预检请求头 request header 的关键字段：</h4>
@@ -335,14 +335,14 @@ sessionStorage.setItem(&quot;name&quot;, &quot;value&quot;);
 <p>&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;response header&lt;/th&gt;&lt;th&gt;作用&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Allow-Methods&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;返回了服务端允许的请求，包含 GET/HEAD/PUT/PATCH/POST/DELETE&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Allow-Credentials&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;允许跨域携带 cookie（跨域请求要携带 cookie 必须设置为 true）&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Allow-Origin&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;允许跨域请求的域名，这个可以在服务端配置一些信任的域名白名单&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Access-Control-Request-Headers&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;客户端请求所携带的自定义首部字段 content-type&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
 <p>![[Pasted image 20230612231921.png]]
 此次 OPTIONS 请求返回了响应头的内容，但没有返回响应实体 response body 内容。</p>
-<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/15/16a1f053cb92db6c~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.webp" alt=""></p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/15/16a1f053cb92db6c~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
 <h4>1.2 第 2 次请求</h4>
 <p>这是本来要发送的请求，如图所示是普通的 post 请求。
 其中 <strong>Content-Type</strong> 的 <em>application/json</em> 是此次和后端约定的请求内容格式，</p>
 <ul>
 <li>这个也是后面讲到为什么会发送 options 请求的原因之一。</li>
 </ul>
-<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/15/16a1ef15e805bad2~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.webp" alt=""></p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/15/16a1ef15e805bad2~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
 
 <h1>options 请求</h1><h3>什么是 options 请求</h3>
 <blockquote>
@@ -447,12 +447,12 @@ Destoryed -&gt; Unmounted</p>
 <p>其中 <code>beforeUpdate</code> 表示 <strong>数据变化后，视图改变前</strong>。<code>updated</code> 表示 <strong>数据变化后，视图改变后</strong>。</p>
 <p>那么由这两个生命周期我们可以知道，<code>vue</code> 从数据变化到视图变化，其实是需要经历一定的时间的。
 原因是因为 <code>vue</code> 在内部通过 <code>queue</code> 队列的形式在更新视图（<code>packages/runtime-core/src/scheduler.ts</code>）：</p>
-<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b77da6ac7044c158209e890be358cc1~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b77da6ac7044c158209e890be358cc1~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?" alt=""></p>
 <p>这个逻辑还被体现在了 <code>nextTick</code> 这个方法上（<code>packages/runtime-core/src/scheduler.ts</code>）：</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/40749b7022c849c9a4068cd729dd659e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/40749b7022c849c9a4068cd729dd659e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?" alt=""></p>
 <p>而这种更新本质上是一种异步的更新形式，
 因为这种异步更新形式（微任务）的存在，才导致出现 <strong>数据更新 -&gt; 视图更新</strong> 出现延迟的原因。</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/408e6ec674194eb6a3626bdf7f58d540~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/408e6ec674194eb6a3626bdf7f58d540~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?" alt=""></p>
 <p>因为它的异步更新是以微任务的形式呈现的，这也是为什么很多时候我们可以通过 <code>setTimeout</code> 代替 <code>nextTick</code> 的原因。</p>
 <h2>从源码看生命周期</h2>
 <p>从 <code>vue</code> 的源码中来看的话，整个组件的生命周期，其实是被分为两大部分的（<code>packages/runtime-core/src/renderer.ts</code>）：</p>
@@ -460,9 +460,9 @@ Destoryed -&gt; Unmounted</p>
 <li><code>isMounted</code> 之前</li>
 <li><code>isMounted</code> 之后</li>
 </ol>
-<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3ab606fb457740deaf8c9fec25773e8f~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3ab606fb457740deaf8c9fec25773e8f~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?" alt=""></p>
 <p><code>isMounted</code> 之前表示：视图被挂载之前。因为组件的渲染本质上是 <code>render</code> 渲染了所有的 <code>subVNode</code>，所以在 <code>isMounted</code> 之前，会得到一个 <code>subTree</code> 来进行渲染。</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/594ec527d36444598d66656f9ddd4d06~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp?" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/594ec527d36444598d66656f9ddd4d06~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?" alt=""></p>
 <p><code>isMounted</code> 之后表示：视图全部被渲染完成了，也就是 <code>mounted</code> 之后。着这个时候其实就是 <code>beforeUpdate</code> 和 <code>updated</code> 的活跃时期了。</p>
 
 <h1>前端中的同源策略与三种跨域资源共享方法</h1><h2>同源策略</h2>
@@ -791,14 +791,14 @@ img.src = 'http://www.laixiangran.cn/test?name=laixiangran';
 </code></pre>
 
 <h1>现代前端框架的渲染模式</h1><p>这十年，前端渲染方式一直在演进，我觉得大概可以分为以下三个阶段：</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cdf9ad8014fc43c6bc5eeea1abcd07c4~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cdf9ad8014fc43c6bc5eeea1abcd07c4~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <ul>
 <li>传统 SSR:</li>
 <li>前后端分离</li>
 <li>同构前端：这几年前端框架的发展进入的深水区，随着云原生、容器技术、Serverless、边缘计算等底层技术设施的普及，也让‘前端’生存范围延展到服务端。前端开始寻求 <code>UX</code> 和 <code>DX</code> 的平衡点</li>
 </ul>
 <h2>CSR - 客户端渲染</h2>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92aca334b5f14afaab69dd56a708fd95~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/92aca334b5f14afaab69dd56a708fd95~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>前端页面在浏览器中渲染，服务端仅仅是静态资源服务器 (比如 nginx)。
 初始的 HTML 文件只是一个空壳，我们需要等待 JavaScript 包加载和执行完毕，才能进行交互，白屏时间比较长。</p>
 <ul>
@@ -818,7 +818,7 @@ img.src = 'http://www.laixiangran.cn/test?name=laixiangran';
 </li>
 </ul>
 <h2>SSR - 服务端渲染</h2>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d82dd2a96e5e4282950b553ae626f661~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d82dd2a96e5e4282950b553ae626f661~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>为了解决 SEO 和白屏问题，各大框架开始支持在服务端渲染 HTML 字符串。</p>
 <p>SSR 把数据拉取放到了服务端，因为离数据源比较近，数据拉取的速度会快一点。
 但因为需要在服务端等待数据就绪, <code>TTFB(Time to First Byte)</code> 相比 CSR 会长一点。</p>
@@ -839,7 +839,7 @@ img.src = 'http://www.laixiangran.cn/test?name=laixiangran';
 <li>需要包含完整的 JavaScript 客户端渲染程序，<code>TTI</code> 还有改善空间</li>
 </ul>
 <h2>SSG - 静态生成</h2>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/992331ee5a6648e3924fd580fde74a4d~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/992331ee5a6648e3924fd580fde74a4d~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>对于完全静态的页面，比如博客，公司主页等等，也可以使用 SSG 静态渲染。</p>
 <p>和 SSR 的区别是，SSG 是在<code>构建时</code>渲染的。</p>
 <p>和 CSR 一样，因为是静态的，所以在服务端不需要渲染运行时，部署在静态服务器就行了。</p>
@@ -854,25 +854,25 @@ img.src = 'http://www.laixiangran.cn/test?name=laixiangran';
 <li>在构建时渲染，如果内容变更，需要重新构建，比较麻烦</li>
 </ul>
 <h2>ISG - 增量静态生成</h2>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ef5e9b4f6d843c7a0ff82fd0d4cb5a9~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ef5e9b4f6d843c7a0ff82fd0d4cb5a9~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>ISG 是 SSG 的升级版。解决 SSG 内容变更繁琐问题。</p>
 <p>ISG 依旧会在构建时预渲染页面，但是这里多出了一个<code>服务端运行时</code>，这个运行时会按照一定的过期 / 刷新策略 (通常会使用 <strong><a href="https://link.juejin.cn?target=https%3A%2F%2Fweb.dev%2Fstale-while-revalidate%2F" title="https://web.dev/stale-while-revalidate/">stale-while-revalidate</a></strong> ) 来重新生成页面。</p>
 <h2>Progressive Hydration - 渐进水合</h2>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4aee8e45ee54d77aa15f4affb490497~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4aee8e45ee54d77aa15f4affb490497~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>上文提到，常规的 SSR 通常需要完整加载客户端程序 (上图的 bundle.js)，水合之后才能得到可交互页面，这就导致 <code>TTI</code> 会偏晚。</p>
 <p>最直接的解决办法就是压缩客户端程序的体积。那么自然会想到使用<code>代码分割</code>(code splitting) 技术。 <code>渐进式水合 （Progressive Hydration ）</code></p>
 <p>如上图，我们使用<code>代码分割</code>的方式，将 Foo、Bar 抽取为<code>异步组件</code>，抽取后<code>主包</code>的体积下降了，<code>TTI</code> 就可以提前了。</p>
 <p>而 Foo、Bar 可以按照一定的策略来按需加载和水合，比如在视口可见时、浏览器空闲时，或者交给 <code>React Concurrent Mode</code> 根据交互的优先级来加载。</p>
 <p>React 18 官方支持了渐进式水合（官方叫 <code>Selective Hydration</code>）。</p>
 <h2>SSR with streaming - 流式 SSR</h2>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3435b6d2c1f742478677df24be8600de~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3435b6d2c1f742478677df24be8600de~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <ul>
 <li><a href="https://link.juejin.cn?target=https%3A%2F%2Freact.dev%2Freference%2Freact-dom%2Fserver%2FrenderToString" title="https://react.dev/reference/react-dom/server/renderToString">renderToString</a> → 普通响应。即 SSR 会等待完整的 HTML 渲染完毕后，才给客户端发送第一个字节。</li>
 <li><a href="https://link.juejin.cn?target=https%3A%2F%2Freact.dev%2Freference%2Freact-dom%2Fserver%2FrenderToNodeStream" title="https://react.dev/reference/react-dom/server/renderToNodeStream">renderToNodeStream</a> → 流式响应。渲染多少，就发送多少。就像 ChatGPT 聊天消息一样，一个字一个字的蹦，</li>
 </ul>
 <p>浏览器能够很好地处理 HTML 流，快速地将内容呈现给用户，而不是白屏干等。</p>
 <p>下面这张图可以更直观感受两者区别：</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2126f6c7de834904aea4ad2fa5df9b40~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2126f6c7de834904aea4ad2fa5df9b40~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>来源：<a href="https://link.juejin.cn?target=https%3A%2F%2Fmxstbr.com%2Fthoughts%2Fstreaming-ssr%2F" title="https://mxstbr.com/thoughts/streaming-ssr/">mxstbr.com/thoughts/st…</a></p>
 <p>对于常规的流式 SSR，优化效果可能没有我们想象的那么明显。<strong>因为框架还是得等数据拉取完成之后才能开始渲染</strong>。因此，除非是比较复杂、长序列的 HTML 树，至上而下需要较长时间的渲染，否则效果并不明显。</p>
 <p>优点</p>
@@ -884,14 +884,14 @@ img.src = 'http://www.laixiangran.cn/test?name=laixiangran';
 <li><strong>数据拉取是 TTFB/FCP 的主要阻塞原因。为了解决这个问题，下文的 <code>Selective Hydration</code> 如何巧妙地解决这个问题。</strong></li>
 </ul>
 <h2>Selective Hydration - 选择性水合</h2>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/06e10af9061d48c5b13e70e947c88da0~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/06e10af9061d48c5b13e70e947c88da0~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p><code>选择性水合（Progressive Hydration）</code> 是 <code>渐进式水合(Progressive Hydration)</code> 和 <code>流式SSR(SSR with Streaming)</code> 的升级版。
 <strong>主要通过选择性地跳过‘<code>慢组件</code>’，避免阻塞，来实现更快的 HTML 输出， 从而让流式响应发挥应有的作用。</strong></p>
 <blockquote>
 <p><code>慢组件</code>通常指的是：需要异步获取数据、体积较大、或者是计算量比较复杂的组件。</p>
 </blockquote>
 <p>比较典型的<code>慢组件</code>是异步数据获取的组件, 如下图，未开启 Selective Hydration 的情况，会等待所有异步任务完成后才开始输出，而 Selective Hydration 可以跳过这些组件，等待它们就绪后，继续输出。</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51ff85fa84d745899ef294186aceb389~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51ff85fa84d745899ef294186aceb389~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>我们可以在最新的 Next.js(当前是 13.4) 演示一下。</p>
 <p>没有开启 Selective Hydration 的 Demo:</p>
 <pre><code>function delay(time: number) {
@@ -948,7 +948,7 @@ export default async function WithoutSelective() {
   )
 }
 </code></pre>
-<p>运行结果：浏览器等待响应的时间为 3s <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4bcdecb0edd74bafb0cbe985feba8ccf~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""> 即所有<code>服务端组件（Server Component）</code> 就绪后才会有实际的内容输出。</p>
+<p>运行结果：浏览器等待响应的时间为 3s <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4bcdecb0edd74bafb0cbe985feba8ccf~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""> 即所有<code>服务端组件（Server Component）</code> 就绪后才会有实际的内容输出。</p>
 <p>开启 Selective Hydration 很简单，我们只需要用 Suspend 包裹起来，提示 React 这可能是一个‘慢组件’，可以跳过他：</p>
 <pre><code>export default async function WithoutSelective() {
   // 获取关键数据
@@ -970,19 +970,19 @@ export default async function WithoutSelective() {
 }
 </code></pre>
 <p>现在来看运行结果：</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e30a867ae0b943f483871253653f2102~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e30a867ae0b943f483871253653f2102~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>明显 TTFB 提前了！但是完整的请求时间没变。</p>
 <p>当 Foo 和 Bar 就绪后，Next.js 会将渲染结果写入流中。怎么做到的？</p>
 <p>看一眼 HTML 就知道了：</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/acc75151731041748f36b432992a5a4b~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/acc75151731041748f36b432992a5a4b~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>对于<code>慢组件</code>，React 会先渲染 Suspend 的 fallback 内容，并留一个插槽。</p>
 <p>继续往下看，可以看到 Foo、Bar 的渲染结果：</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b29d2b9cdea41b580d73b03c1bb531c~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b29d2b9cdea41b580d73b03c1bb531c~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>接着将渲染结果替换掉插槽。用于后续的水合。</p>
 <p>在服务端，Selective Hydration 在 SSR With Streaming 的基础上，通过选择性地跳过一些低优先级的慢组件来优化了 TTFB(主要的，相对于 FCP 等指标也优化了)，更快地向用户呈现页面。</p>
 <h2>在客户端 Selective Hydration 的运行过程同 Progressive Hydration 。
 Islands Architecture - 岛屿架构</h2>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f9dfa5b6d3d4806824c7ec460f86950~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2f9dfa5b6d3d4806824c7ec460f86950~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>近两年，<strong>去 JavaScript 成为一波小趋势</strong>，这其中的典型代表是 <code>Islands Architecture</code> (岛屿架构) 和 <code>React Server Component</code>(RSC, React 服务端组件)。</p>
 <p>它们主张是：<strong>在服务端渲染，然后去掉不必要 JavaScript</strong></p>
 <p>岛屿架构的主要代表是 <code>Astro</code>。
@@ -997,13 +997,13 @@ Astro 在服务端渲染后，**
 </ul>
 <p>去 JavaScript 后，可以缓解典型的 SSR <code>TTI</code> 问题。<strong>但是岛屿架构并不能通吃所有的场景，最擅长的是” 内容为中心 “的站点，即当静态的页面比重远高于动态比重时，去 JavaScript 的收益才是显著的。</strong></p>
 <h2>React Server Component - React 服务端组件</h2>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07cd64c0f98c4ebca5ed67a93d164dda~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07cd64c0f98c4ebca5ed67a93d164dda~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>在笔者看来，<code>React Server Component(RSC)</code> 本质上和岛屿架构的目的是一样的，都是去 JavaScript。只是实现的手段不同。</p>
 <p>这是 Next.js 官方文档的示例图：
 和岛屿架构类似，
 对于静态的内容推荐使用 <code>Server Component (SC),</code>
 而需要交互增强的，可以使用 <code>Client Component (CC)</code>。</p>
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/23d0716c544a42b4ba5892fbe6643c98~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.webp" alt=""></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/23d0716c544a42b4ba5892fbe6643c98~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
 <p>顾名思义，RSC <strong>就是只能在服务端运行的组件</strong>。下面简单对比一下两者的区别：</p>
 <p>&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;Server Component&lt;/th&gt;&lt;th&gt;Client Component&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;运行环境&lt;/td&gt;&lt;td&gt;服务端&lt;/td&gt;&lt;td&gt;服务端 + 客户端 或者 仅客户端&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;JavaScript&lt;/td&gt;&lt;td&gt;服务端组件依赖的相关程序对客户端不可见。 在这里实现了 ‘去 JavaScript’&lt;/td&gt;&lt;td&gt;需要打包分发给客户端&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;水合&lt;/td&gt;&lt;td&gt;不需要水合&lt;/td&gt;&lt;td&gt;需要水合&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;支持 async&lt;/td&gt;&lt;td&gt;Y&lt;/td&gt;&lt;td&gt;N&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;支持状态 (state, context)&lt;/td&gt;&lt;td&gt;N&lt;/td&gt;&lt;td&gt;Y&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;支持事件、副作用&lt;/td&gt;&lt;td&gt;N&lt;/td&gt;&lt;td&gt;Y&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
 <blockquote>

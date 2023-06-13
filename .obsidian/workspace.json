@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/前端埋点实现方案✔.md",
+                "file": "md/前端监控和前端埋点方案设计.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/前端埋点实现方案✔.md"
+                "file": "md/前端监控和前端埋点方案设计.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/前端埋点实现方案✔.md",
+                "file": "md/前端监控和前端埋点方案设计.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/前端埋点实现方案✔.md",
+                "file": "md/前端监控和前端埋点方案设计.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -158,6 +158,35 @@
   },
   "active": "d5077233460c7981",
   "lastOpenFiles": [
+    "md/前端埋点实现方案✔.md",
+    "output/2023-6-13 16-17-00.html",
+    "achieve/现代前端框架的渲染模式.md",
+    "achieve/浏览器同源策略及跨域的解决方法.md",
+    "achieve/前端中的同源策略与三种跨域资源共享方法.md",
+    "achieve/vue 的生命周期.md",
+    "achieve/vue 单页面 (SPA) 和多页面 (MPA) 的区别(详细答案).md",
+    "achieve/options 请求.md",
+    "achieve/options 流程.md",
+    "achieve/localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结.md",
+    "achieve/Optimizing_Instrumentation_Next.js.md",
+    "achieve/JavaScript 三种迭代方式.md",
+    "achieve/Rem 布局的原理解析.md",
+    "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
+    "achieve/Vue 为什么要禁用 undefined？ - 掘金.txt",
+    "done/生成器（Generator）——《实战 ES2015》章节试读.md",
+    "done/现代前端框架的渲染模式.md",
+    "done/浏览器同源策略及跨域的解决方法.md",
+    "done/前端中的同源策略与三种跨域资源共享方法.md",
+    "done/vue 的生命周期.md",
+    "done/vue 单页面 (SPA) 和多页面 (MPA) 的区别(详细答案).md",
+    "done/Vue 为什么要禁用 undefined？ - 掘金.txt",
+    "done/Rem 布局的原理解析.md",
+    "done/options 请求.md",
+    "done/options 流程.md",
+    "done/Optimizing_Instrumentation_Next.js.md",
+    "done/localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结.md",
+    "done/JavaScript 三种迭代方式.md",
+    "output/2023-6-13 16-15-51.html",
     "md/为什么大厂前端监控都在用 GIF 做埋点？.md",
     "_resources/Rem 布局的原理解析/7baf41449a7c94ea4aa748d255f0a5e9_MD5.png",
     "_resources/Rem 布局的原理解析",
@@ -175,35 +204,6 @@
     "_resources/vue 的生命周期",
     "_resources/现代前端框架的渲染模式",
     "_resources/生成器（Generator）——《实战 ES2015》章节试读",
-    "_resources/百万级数据 excel 导出功能如何实现？",
-    "_resources/为什么大厂前端监控都在用 GIF 做埋点？",
-    "_resources/前端埋点实现方案✔",
-    "_resources/前端监控和前端埋点方案设计",
-    "achieve/JavaScript 三种迭代方式.md",
-    "achieve/options 请求.md",
-    "achieve/Rem 布局的原理解析.md",
-    "achieve/localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结.md",
-    "done/现代前端框架的渲染模式.md",
-    "done/vue 的生命周期.md",
-    "done/vue 单页面 (SPA) 和多页面 (MPA) 的区别(详细答案).md",
-    "done/options 请求.md",
-    "done/options 流程.md",
-    "done/Optimizing_Instrumentation_Next.js.md",
-    "done/localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结.md",
-    "done/前端中的同源策略与三种跨域资源共享方法.md",
-    "done/浏览器同源策略及跨域的解决方法.md",
-    "readme.md",
-    "cur useless/百万级数据 excel 导出功能如何实现？.md",
-    "md/现代前端框架的渲染模式.md",
-    "done/JavaScript 三种迭代方式.md",
-    "achieve/test.md",
-    "done/test.md",
-    "md/test.md",
-    "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
-    "node_modules/uc.micro/README.md",
-    "node_modules/uc.micro/CHANGELOG.md",
-    "node_modules/mdurl/README.md",
-    "node_modules/mdurl/CHANGELOG.md",
     "未命名.canvas"
   ]
 }
