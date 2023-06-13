@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const directoryPath = "./done"; // 替换为目标目录的路径
+const directoryPath = "./test"; // 替换为目标目录的路径
 const acheievePath = "./achieve";
 const now = new Date()
   .toLocaleString("zh-CN", {
@@ -13,8 +13,11 @@ const now = new Date()
   })
   .replace(/[/,:]/g, "-");
 const outputFilePath = "./output/" + now + ".html"; // 替换为输出文件的路径
-const md = require("markdown-it")();
-
+const options = {
+  baseURL: "../",
+};
+const obsidianImages = require("markdown-it-obsidian-images")(options);
+const md = require("markdown-it")().use(obsidianImages);
 const output = []; // 用于存储所有的 main-content 元素内容
 
 function readDirectory(directoryPath) {
