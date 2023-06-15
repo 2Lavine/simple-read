@@ -1,89 +1,7 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7043758954496655397)
 
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8044f3bf42844e7592943041dde57b7f~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
 
 前言
 ==
-
-**如果你问我有什么方法可以让自己 JS 的技术活生生地提升一个等级？** 🙀
-
-**`那就是手写Promise了！！！`** 😺
-
-手写 Promise 有一个难点就在于有很多地方需要和原生一样严谨，也就是说原生的 Promise 会考虑很多特殊情况~🧐
-
-我们在实际运用时可能暂时不会碰到这些情况，可是当我们遇到的时候 **却不知底层的原理，无法精准定位和解决问题，`这就是为什么我们要知道如何手写Promise`**
-
-如果你问我为什么看了这么多教程还是不懂如何手写 Promise，那就是因为这里头有很多细节难点，很少人有人愿意把这些都讲出来，不过我今天就要把这里头的细节一个个给抠出来，_所以请大家务必先收藏再观看 ~_ 奥力给😸😸😸
-
-手写 Promise 包含以下知识点 👇：
-
-*   Promise
-*   Class 类
-*   改变 this 指向 (call、apply 和 bind)
-*   事件循环 Event Loop
-*   等
-
-不必担心因为上面的知识点不熟练而无法进行 "手写 Promise" 的学习，因为本文附带 `包会套餐` 👇：
-
-*   🔍 如果你不太熟悉 Promise 的话，建议先看我之前发的那篇 Promise 文章：[通俗易懂的 Promise 知识点总结，检验一下你是否真的完全掌握了 promise？](https://juejin.cn/post/7020335414980378655 "https://juejin.cn/post/7020335414980378655")
-    
-*   🔍 如果不知道 `类 class` 是如何使用的，建议参考我发的这篇文章：[ES6 新特性 Class 类的全方面理解](https://juejin.cn/post/7021069095336411166 "https://juejin.cn/post/7021069095336411166")
-    
-*   🔍 其他知识点讲解文章，会在文中列出，不用担心，你只需要跟着这篇文中走就完了~
-    
-
-手写之前先简要的复习一下 Promise，现在我们就来一边回忆一边实现 Promise 吧 🪐~
-
-> _如果很熟悉 Promsie 可以跳过下面这一节`(不建议)`_
-
-**◾ promise 核心要点**
-
-> 本章节内容其实并不多，而且通俗易懂，建议不太熟悉 Promise 的同学还是循序渐进的看完本章再逐步学习 Promise 核心手写~
-
-`Promise`对象代表一个异步操作，有三种状态：`pending`（进行中）、`fulfilled`（已成功）和`rejected`（已失败）
-
-一个 `Promise` 必然处于以下几种状态之一 👇：
-
-*   待定 `(pending)`: 初始状态，既没有被兑现，也没有被拒绝。
-*   已成功 `(fulfilled)`: 意味着操作成功完成。
-*   已拒绝 `(rejected)`: 意味着操作失败。
-
-当 promise 被调用后，它会以**处理中状态** `(pending)` 开始。 这意味着调用的函数会继续执行，而 promise 仍处于处理中直到解决为止，从而为调用的函数提供所请求的任何数据。
-
-被创建的 promise 最终会以**被解决状态** `(fulfilled)` 或 **被拒绝状态** `(rejected)` 结束，并在完成时调用相应的回调函数（传给 **then** 和 **catch**）。
-
-◾ 为了让读者尽快对 promise 有一个整体的理解，我们先来看一段 promise 的例子 🌰：
-
-```
-let p1 = new Promise((resolve, reject) => {
-    resolve('成功')
-    reject('失败')
-})
-console.log('p1', p1)
-
-let p2 = new Promise((resolve, reject) => {
-    reject('失败')
-    resolve('成功')
-})
-console.log('p2', p2)
-
-let p3 = new Promise((resolve, reject) => {
-    throw('报错')
-})
-console.log('p3', p3)
-复制代码
-```
-
-输出结果为：
-
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/850f66b296cb4c9582a8711c4955db67~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
-
-**这里包含了四个知识点 👇：**
-
-*   1、执行了`resolve()`，Promise 状态会变成`fulfilled`，即 **已完成状态**
-*   2、执行了`reject()`，Promise 状态会变成`rejected`，即 **被拒绝状态**
-*   3、Promise 只以`第一次为准`，第一次成功就`永久`为`fulfilled`，第一次失败就永远状态为`rejected`
-*   4、Promise 中有`throw`的话，就相当于执行了`reject()`
 
 ◾ 接下来看下面一段代码，学习新的知识点：
 
@@ -104,7 +22,7 @@ console.log('myPromise2 :>> ', myPromise2)
 myPromise2.then(() => {
     console.log("myPromise2执行了then");
 })
-复制代码
+
 ```
 
 输出结果为：
@@ -122,59 +40,14 @@ myPromise2.then(() => {
 ```
 let myPromise0 = new Promise();
 console.log('myPromise0 :>> ', myPromise0);
-复制代码
+
 ```
 
 输出结果：
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b95ce2e9ddc74e4eae9eb80d8dd54ba8~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
 
-这个里包含了一个知识点：
-
 *   规定必须给`Promise`对象传入一个执行函数，否则将会报错。
-
-一、定义初始结构
-========
-
-原生的 promise 我们一般都会用 new 来创建实例 👇 ：
-
-```
-let promise = new Promise()
-复制代码
-```
-
-所以我们手写的时候可以用构造函数或者 class 来创建，为了方便代码的整体观看就用 class。
-
-🔍 如果不知道 `类 class` 是如何使用的，建议参考我写的这篇文章：[ES6 新特性 Class 类的全方面理解](https://juejin.cn/post/7021069095336411166 "https://juejin.cn/post/7021069095336411166")
-
-把我们手写的 Promise 命名为 myPromise，_具体名字可以按自己想法，都可以_
-
-首先创建一个`myPromise`类
-
-```
-class myPromise {}
-复制代码
-```
-
-在 new 一个 promise 实例的时候肯定是需要传入参数的
-
-```
-let promise = new Promise(() => {})
-复制代码
-```
-
-不然这个实例用处不大；而这个参数我们知道是一个函数，并且当我们传入这个函数参数的时候，这个函数参数会自动执行。
-
-因此，我们需要在类的`构造函数constructor`里面添加一个参数，这里就用 func 来做形参，并且执行一下这个参数
-
-```
-class myPromise {
-+    constructor(func) {
-+       func();
-+   }
-}
-复制代码
-```
 
 二、实现 resolve 和 reject
 =====================
@@ -185,44 +58,10 @@ class myPromise {
 
 ```
 let promise = new Promise((resolve, reject) => {})
-复制代码
+
 ```
 
 那么我们也得允许手写这边可以传入这两个参数：
-
-```
-class myPromise {
-    constructor(func) {
-+       func(resolve, reject);
-    }
-}
-复制代码
-```
-
-这里这样写明显有一个问题 🤨，那就是手写这边不知道哪里调用`resolve()`和`reject()`这两个参数，毕竟`resolve()`和`reject()`还没有定义
-
-因此就需要创造出这两个对象 😀
-
-有一点我们需要知道的是`resolve()`和`reject()`也是以函数的形式来执行的，我们在原生`promise`里也是在`resolve`和`reject`后面加括号`()`来执行的，因此我们可以用类方法的形式来创建这两个函数：
-
-```
-class myPromise {
-    constructor(func) {
-        func(resolve, reject);
-    }
-+   resolve() {}
-+   reject() {}
-}
-复制代码
-```
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3f6b473ae29e4418a9998a3b3dedcd04~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-创建这两个方法以后我们发现`func`里面的两个参数颜色还是原来的颜色，编辑器就是在告诉我们：这两个参数还没有创建噢~😲
-
-等下，刚刚不是已经创建了吗？🦁
-
-是的，但是我们需要用`this`来调用自身`class`的方法，因此我们需要在构造函数里把两个参数前加上`this`：
 
 ```
 class myPromise {
@@ -232,58 +71,25 @@ class myPromise {
     resolve() {}
     reject() {}
 }
-复制代码
+
 ```
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87e4027549bd40e5b9a647493e0b44dd~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
 
-那么这里的`resolve()`和`reject()`方法应该如何执行呢？里面应该写什么内容呢？😯
-
-这就需要用到状态了 😛
-
-1. 管理状态和结果
+1.管理状态和结果
 ----------
-
-promise 有三种状态：分别是`pending`，`fulfilled`和`rejected`
-
-*   初始的时候是`pending`
-*   `pending`可以转为`fulfilled`状态，但是不能逆转
-*   `pending`也可以转为`rejected`状态，但是也不能逆转
-*   这里`fulfilled`和`rejected`也不能互转
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bcaccbc6d596491cbcd2c5715e8a14d6~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
 因此我们需要提前先把这些状态定义好，可以用`const`来创建外部的固定变量，但是这里为了统一就用`static`来创建`静态属性`：
 
 ```
-class myPromise {
 +   static PENDING = 'pending';
 +   static FULFILLED = 'fulfilled';
 +   static REJECTED = 'rejected';
-    constructor(func) {
-        func(this.resolve, this.reject);
-    }
-    resolve() {}
-    reject() {}
-}
-复制代码
-```
-
-创建了状态属性以后，还需要为每一个实例添加一个`状态属性`，在前面讲到得 `“Promise 核心要点”` 章节，我们已经知道原生 Promise 用`PromiseState`这个字段来保存实例的状态属性，这里就也用 `this.PromiseState` 来保存实例的状态属性，这个状态属性默认就是 `待定pending` 状态，**这样在每一个实例被创建以后就会有自身的状态属性可以进行判断和变动了**
 
 ```
-class myPromise {
-    static PENDING = 'pending';
-    static FULFILLED = 'fulfilled';
-    static REJECTED = 'rejected';
-    constructor(func) {
+
+原生 Promise 用`PromiseState`这个字段来保存实例的状态属性，这里就也用 `this.PromiseState` 来保存实例的状态属性，
+
+```
 +       this.PromiseState = myPromise.PENDING;
-        func(this.resolve, this.reject);
-    }
-    resolve() {}
-    reject() {}
-}
-复制代码
 ```
 
 那么在执行`resolve()`的时候就需要判断状态是否为 `待定 pending`，如果是 `待定 pending`的话就把状态改为 `成功 fulfilled`:
@@ -304,7 +110,7 @@ class myPromise {
     }
     reject() {}
 }
-复制代码
+
 ```
 
 同样，为给`reject`添加参数，并且把参数赋值给实例的`PromiseResult`属性:
@@ -329,108 +135,11 @@ class myPromise {
 +       }
     }
 }
-复制代码
-```
-
-**◾ 执行 `resolve()` 和 `reject()` 可以传参**
-
-现在我们再回忆一下原生`Promise` 🙂，在执行`resolve()`或者`reject()`的时候都是可以传入一个参数，这样我们后面就可以使用这个参数了
 
 ```
-let promise = new Promise((resolve, reject) => {
-    resolve('这次一定')
-})
-复制代码
-```
 
-我们可以把这个结果参数命名为`PromiseResult` _(和原生 Promise 保持一致)_，不管是成功还是拒绝的结果，两者选其一，我们让每个实例都有`PromiseResult`属性，并且给他们都赋值`null`，这里给空值`null`是因为执行`resolve()`或者`reject()`的时候会给结果赋值：
-
-```
-class myPromise {
-    static PENDING = 'pending';
-    static FULFILLED = 'fulfilled';
-    static REJECTED = 'rejected';
-    constructor(func) {
-        this.PromiseState = myPromise.PENDING;
-+       this.PromiseResult = null;
-        func(this.resolve, this.reject);
-    }
-    resolve() {
-        if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.FULFILLED;
-        }
-    }
-    reject() {
-        if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.REJECT;
-        }
-    }
-}
-复制代码
-```
-
-接着我们就可以给`resolve()`添加参数，并且把参数赋值给实例的`PromiseResult`属性:
-
-```
-class myPromise {
-    static PENDING = 'pending';
-    static FULFILLED = 'fulfilled';
-    static REJECTED = 'rejected';
-    constructor(func) {
-        this.PromiseState = myPromise.PENDING;
-        this.PromiseResult = null;
-        func(this.resolve, this.reject);
-    }
-+   resolve(result) {
-        if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.FULFILLED;
-+           this.PromiseResult = result;
-        }
-    }
-    reject() {
-        if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.REJECT;
-        }
-    }
-}
-复制代码
-```
-
-同样，为给`reject()`添加参数，并且把参数赋值给实例的`PromiseResult`属性:
-
-```
-class myPromise {
-    static PENDING = 'pending';
-    static FULFILLED = 'fulfilled';
-    static REJECTED = 'rejected';
-    constructor(func) {
-        this.PromiseState = myPromise.PENDING;
-        this.PromiseResult = null;
-        func(this.resolve, this.reject);
-    }
-    resolve(result) {
-        if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.FULFILLED;
-            this.PromiseResult = result;
-        }
-    }
-+   reject(reason) {
-        if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.REJECT;
-+           this.PromiseResult = reason;
-        }
-    }
-}
-复制代码
-```
-
-2. this 指向问题
+2.this 指向问题
 ------------
-
-现在的代码看起来风平浪静的，但很多人会在这里犯错~😥
-
-大家觉得这里有什么错误？🧐
-
 我们来`new`一个实例 🌰 执行一下代码就知道有没有问题了
 
 ```
@@ -442,16 +151,15 @@ class myPromise {
 +  let promise1 = new myPromise((resolve, reject) => {
 +      resolve('这次一定');
 +  })
-复制代码
+
 ```
 
 运行上面代码，报错 🦁：
 
 `Uncaught TypeError: Cannot read property 'PromiseState ' of undefined`
 
-可从报错的信息里面我们貌似发现不了有什么错误🤨，因为`PromiseState` 属性我们已经创建了，不应该是`undefined`~
 
-🔍 但我们仔细看看`resolve()`和`reject()`方法里调用`PromiseState` ，前面是有`this`关键字的😲
+`resolve()`和`reject()`方法里调用`PromiseState` ，前面是有`this`关键字的
 
 ```
 resolve(result) {
@@ -466,52 +174,20 @@ resolve(result) {
             this.PromiseResult = reason;
         }
     }
-复制代码
-```
-
-那么只有一种可能🧐，调用`this.PromiseState` 的时候并没有调用`constructor`里的`this.PromiseState` ，也就是这里的`this`已经跟丢了~
-
-我们在`new`一个新实例的时候执行的是`constructor`里的内容，也就是`constructor`里的`this`确实是新实例的，但现在我们是在新实例被创建后再在外部环境下执行`resolve()`方法的，这里的`resolve()`看着像是和实例一起执行的，其实不然，也就**相当于不在`class`内部使用这个`this`**，而**我们没有在外部定义任何`PromiseState` 变量，因此这里会报错**
-
-解决`class`的`this`指向问题一般会用箭头函数，`bind`或者`proxy`，在这里我们就可以使用`bind`来绑定`this`，只需要在构造函数`constructor`中的`this.resolve`和`this.reject`后加上，`.bind（this）`就可以了 😺:
 
 ```
-class myPromise {
-    static PENDING = 'pending';
-    static FULFILLED = 'fulfilled';
-    static REJECTED = 'rejected';
+
+我们在`new`一个新实例的时候执行的是`constructor`里的内容，也就是`constructor`里的`this`确实是新实例的，
+但现在我们是在新实例被创建后再在外部环境下执行`resolve()`方法的，这里的`resolve()`看着像是和实例一起执行的，其实不然，也就**相当于不在`class`内部使用这个`this`**，而**我们没有在外部定义任何`PromiseState` 变量，因此这里会报错**
+
+在这里我们就可以使用`bind`来绑定`this`就可以了 😺:
+
+```
     constructor(func) {
         this.PromiseState = myPromise.PENDING;
         this.PromiseResult = null;
 +       func(this.resolve.bind(this), this.reject.bind(this));
-    }
-    resolve(result) {
-        if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.FULFILLED;
-            this.PromiseResult  = result;
-        }
-    }
-    reject(reason) {
-        if (this.PromiseState === myPromise.PENDING) {
-            this.PromiseState = myPromise.REJECT;
-            this.PromiseResult = reason;
-        }
-    }
-}
-
-// 测试代码
-let promise1 = new myPromise((resolve, reject) => {
-    resolve('这次一定');
-})
-复制代码
 ```
-
-🔍 如果这里有点蒙圈，不太懂为什么这样写，可以参考我之前写的关于`this`指向的文章：
-
-*   [JavaScript 基础系列之 call、apply 和 bind 方法的用法、区别和使用场景](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fyuanyuanbyte%2FBlog%2Fissues%2F115 "https://github.com/yuanyuanbyte/Blog/issues/115")
-*   [JavaScript 深入系列之 call、apply 和 bind 方法的模拟实现](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fyuanyuanbyte%2FBlog%2Fissues%2F109 "https://github.com/yuanyuanbyte/Blog/issues/109")
-
-我们接着往下写~
 
 对于`resolve`来说，这里就是给实例的`resolve()`方法绑定这个`this`为当前的实例对象，并且执行`this.resolve()`方法： ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0c4f15ab1711462892c301caee12191b~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp) 对于`reject`来说，这里就是给实例的`reject`方法绑定这个`this`为当前的实例对象，并且执行`this.reject`方法： ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/753b61f4ae814801a5ebaafc5c8a3a94~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp) 咱们来测试一下代码吧：
 
@@ -551,7 +227,7 @@ let promise2 = new myPromise((resolve, reject) => {
 })
 console.log(promise2); 
 // myPromise {PromiseState: 'rejected', PromiseResult: '下次一定'}
-复制代码
+
 ```
 
 上面是我们手写的 `myPromise`的执行情况，看看原生 Promise 的执行情况：
@@ -582,7 +258,7 @@ let promise = new Promise((resolve, reject) => {
 +          console.log(reason.message);
 +      }
 +  )
-复制代码
+
 ```
 
 `then`方法可以传入两个参数，这两个参数都是函数，一个是当状态为`fulfilled 成功` 时执行的代码，另一个是当状态为 `rejected 拒绝` 时执行的代码。
@@ -618,7 +294,7 @@ class myPromise {
     }
 +   then(onFulfilled, onRejected) {}
 }
-复制代码
+
 ```
 
 1. 状态不可变
@@ -640,7 +316,7 @@ promise.then(
         console.log('rejected', reason.message);
     }
 )
-复制代码
+
 ```
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/89a7957b5ca14038bcff46ff8601aaf8~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
@@ -681,7 +357,7 @@ class myPromise {
 +       }
     }
 }
-复制代码
+
 ```
 
 ◾ 如果当前实例的 `PromiseState` 状态属性为 `rejected 拒绝` 的话，我们就执行传进来的 `onRejected` 函数，并且为`onRejected`函数传入前面保留的`PromiseResult`属性值：
@@ -717,7 +393,7 @@ class myPromise {
 +       }
     }
 }
-复制代码
+
 ```
 
 定义好了判断条件以后，我们就来测试一下代码，也是一样，在实例 🌰 上使用`then`方法：
@@ -741,7 +417,7 @@ let promise1 = new myPromise((resolve, reject) => {
 +           console.log(reason.message)
 +       }
 +   )
-复制代码
+
 ```
 
 执行上面的测试代码，查看控制台：
@@ -788,7 +464,7 @@ p.then(
 // 等同于
 p.then((val) => console.log('fulfilled:', val))
   .then(null, (err) => console.log("rejected:", err));
-复制代码
+
 ```
 
 ◾ 注意看下面的例子 🌰：
@@ -801,7 +477,7 @@ promise.catch(function(error) {
   console.log(error);
 });
 // Error: test
-复制代码
+
 ```
 
 上面代码中，promise 抛出一个错误，就被`catch()`方法指定的回调函数捕获。注意，上面的写法与下面两种写法是等价的。
@@ -825,7 +501,7 @@ const promise = new Promise(function(resolve, reject) {
 promise.catch(function(error) {
   console.log(error);
 });
-复制代码
+
 ```
 
 比较上面两种写法，可以发现`reject()`方法的作用，等同于抛出错误。这一点很重要，因为我们手写 Promise 就是用`try/catch`来处理异常，用的就是上面的思想。
@@ -849,7 +525,7 @@ promise
   .catch(function(err) {
     // error
   });
-复制代码
+
 ```
 
 上面代码中，第二种写法要好于第一种写法，理由是第二种写法可以捕获前面`then`方法执行中的错误，也更接近同步的写法（`try/catch`）。因此，建议总是使用`catch()`方法，而不使用`then()`方法的第二个参数。
@@ -871,7 +547,7 @@ promise.then(
         console.log('rejected:', reason)
     }
 )
-复制代码
+
 ```
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4afbee05224a4eb99674007130dabf24~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
@@ -896,7 +572,7 @@ promise1.then(
 +       console.log('rejected:', reason)
 +   }
 )
-复制代码
+
 ```
 
 我们看看控制台
@@ -936,7 +612,7 @@ class myPromise {
         ...
     }
 }
-复制代码
+
 ```
 
 ◾ **注意这里不需要给`reject()`方法进行`this`的绑定了，因为这里是直接执行，而不是创建实例后再执行。**
@@ -975,7 +651,7 @@ promise.then(
         console.log('rejected:', reason)
     }
 )
-复制代码
+
 ```
 
 运行以后我们发现在这里执行是没有问题的：
@@ -999,7 +675,7 @@ promise1.then(
         console.log('rejected:', reason)
     }
 )
-复制代码
+
 ```
 
 大家想想会不会有什么问题？来看看结果会怎样？🧐
@@ -1019,7 +695,7 @@ then(onFulfilled, onRejected) {
         onRejected(this.PromiseResult);
     }
 }
-复制代码
+
 ```
 
 我们会在里面分别执行成功和拒绝两个参数，可是我们不想修改这里的代码，那么就只能把不是函数的参数改为函数
@@ -1043,7 +719,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 ▪ 如果`onRejected`参数是一个函数，就把原来的`onRejected`内容重新赋值给它，如果`onRejected`参数不是一个函数，就`throw`一个`Error`
@@ -1064,7 +740,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 现在我们再来测试一下代码：
@@ -1083,7 +759,7 @@ promise1.then(
         console.log('rejected:', reason)
     }
 )
-复制代码
+
 ```
 
 查看控制台，发现没有报错了👏👏👏：
@@ -1131,7 +807,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 四、实现异步
@@ -1164,7 +840,7 @@ promise.then(
 )
 
 console.log(3);
-复制代码
+
 ```
 
 我们配合这段原生 Promise 代码，结合控制台一起看看
@@ -1175,7 +851,7 @@ console.log(3);
 
 ```
 fulfilled: 这次一定
-复制代码
+
 ```
 
 *   首先执行`console.log(1)`，输出`1`
@@ -1206,14 +882,14 @@ promise1.then(
     }
 )
 console.log(3);
-复制代码
+
 ```
 
 这次我们发现有些不同了😯，输出顺序为：
 
 ```
 fulfilled: 这次一定
-复制代码
+
 ```
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/da97821d707844529e81ee0882071271~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
@@ -1244,7 +920,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 我们使用前面的用例重新测试一下代码：
@@ -1269,14 +945,14 @@ promise1.then(
     }
 )
 console.log(3);
-复制代码
+
 ```
 
 输出顺序为:
 
 ```
 fulfilled: 这次一定
-复制代码
+
 ```
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/937722da9c724fbea2a732000aeb8911~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
@@ -1330,14 +1006,14 @@ promise.then(
     }
 )
 console.log(3);
-复制代码
+
 ```
 
 输出顺序为：
 
 ```
 fulfilled: 这次一定
-复制代码
+
 ```
 
 特别要注意的是当遇到`setTimeout`的时候被异步执行了，而`resolve('这次一定')`没有被马上执行，而是先执行`console.log(4)`，等到`then`的时候再执行`resolve`里保存的值。
@@ -1382,13 +1058,13 @@ promise1.then(
     }
 )
 console.log(3);
-复制代码
+
 ```
 
 控制台输出：
 
 ```
-复制代码
+
 ```
 
 可以发现 `fulfilled: 这次一定` 并没有输出
@@ -1415,7 +1091,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 也就是说很可能没有符合的条件，再换句话说可能没有符合的状态
@@ -1448,7 +1124,7 @@ promise1.then(
     }
 )
 console.log(3);
-复制代码
+
 ```
 
 输出结果为：
@@ -1456,7 +1132,7 @@ console.log(3);
 ```
 A pending
 B fulfilled
-复制代码
+
 ```
 
 发现只有两组状态被输出，这两组都在`console.log(4)`前被输出，证明`setTimeout`里面的状态都被输出了，只有`then`里面的状态没有被输出
@@ -1486,7 +1162,7 @@ setTimeout(() => {
      console.log('B',promise1.PromiseState);
      console.log(4);
  });
-复制代码
+
 ```
 
 ▪ **第八步**，执行 `console.log('A',promise1.PromiseState)`，此时 promise 状态还没发生变化，还是`pending`，所以输出 `A pending`
@@ -1526,7 +1202,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 ◾ 但是问题来了，当`then`里面判断到 `pending` 待定状态时我们要干什么？
@@ -1559,7 +1235,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 ◾ 接着就完善`then`里面的代码，也就是当判断到状态为 `pending` 待定时，暂时保存两个回调，也就是说暂且把`then`里的两个函数参数分别放在两个数组里面：
@@ -1599,7 +1275,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 ◾ 数组里面放完函数以后，就可以完善`resolve`和`reject`的代码了
@@ -1661,7 +1337,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 完善好代码后，让我们再来测试以下刚才的实例：
@@ -1693,7 +1369,7 @@ promise1.then(
     }
 )
 console.log(3);
-复制代码
+
 ```
 
 输出结果：
@@ -1703,7 +1379,7 @@ A pending
 C fulfilled
 fulfilled: 这次一定
 B fulfilled
-复制代码
+
 ```
 
 **从上面的结果我们可以看到 `fulfilled: 这次一定` 打印出来啦，`promise1.then()`方法也正常执行，打印出了当前的状态：`B fulfilled`**
@@ -1746,7 +1422,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 细节补充好了，**当前实现的完整代码：**
@@ -1814,7 +1490,7 @@ class myPromise {
         }
     }
 }
-复制代码
+
 ```
 
 检验一下这次是否能行：
@@ -1845,7 +1521,7 @@ promise1.then(
     }
 )
 console.log(3);
-复制代码
+
 ```
 
 输出顺序：
@@ -1855,7 +1531,7 @@ A pending
 B pending
 C fulfilled
 fulfilled: 这次一定
-复制代码
+
 ```
 
 **可以看到最后输出 `fulfilled: 这次一定` ，和原生 Promise 顺序一致！**
@@ -1893,7 +1569,7 @@ promise.then(value => {
     console.log(3)
     console.log('resolve', value)
 })
-复制代码
+
 ```
 
 运行上面 🌰，输出结果👇
@@ -1902,7 +1578,7 @@ promise.then(value => {
 resolve success
 resolve success
 resolve success
-复制代码
+
 ```
 
 所有 `then` 中的回调函数都已经执行 😎
@@ -1928,7 +1604,7 @@ p1.then(res => {
 }).then(res => {
     console.log('fulfilled', res)
 })
-复制代码
+
 ```
 
 输出👇：
@@ -1936,7 +1612,7 @@ p1.then(res => {
 ```
 fulfilled 100
 fulfilled 200
-复制代码
+
 ```
 
 再举一个例子 🌰 ：
@@ -1952,7 +1628,7 @@ p2.then(res => {
 }).then(res => {
     console.log('fulfilled', res)
 })
-复制代码
+
 ```
 
 输出👇：
@@ -1960,7 +1636,7 @@ p2.then(res => {
 ```
 fulfilled 100
 fulfilled 300
-复制代码
+
 ```
 
 我们先试一下当前的`myPromise`是否可以实现链式调用：
@@ -1980,7 +1656,7 @@ p1.then(res => {
 }).then(res => {
     console.log('fulfilled', res)
 }) 
-复制代码
+
 ```
 
 毫无疑问在控制台里面是会报错的，提示 `then` 方法没有定义：
@@ -2002,7 +1678,7 @@ p1.then(res => {
 
 ```
 promise2 = promise1.then(onFulfilled, onRejected);
-复制代码
+
 ```
 
 *   **2.2.7.1** 如果 `onFulfilled` 或者 `onRejected` 返回一个值 `x` ，则运行下面的 **Promise 解决过程：`[[Resolve]](promise2, x)`**
@@ -2084,7 +1760,7 @@ promise2 = promise1.then(onFulfilled, onRejected);
 
 ```
 function resolvePromise(promise2, x, resolve, reject) {}
-复制代码
+
 ```
 
 `resolvePromise()`各参数的意义：
@@ -2098,7 +1774,7 @@ function resolvePromise(promise2, x, resolve, reject) {}
  * @param  {[type]} reject    promise2的reject方法
  */
 function resolvePromise(promise2, x, resolve, reject) {}
-复制代码
+
 ```
 
 其实，这个`resolvePromise(promise2, x, resolve, reject)` 即 `Promise 解决过程：[[Resolve]](promise2, x)` 就是对`resolve()、reject()` 进行**改造增强**， 针对`resolve()`和`reject()`中不同值情况 进行处理。
@@ -2153,7 +1829,7 @@ class myPromise {
 +       return promise2
     }
 }
-复制代码
+
 ```
 
 **◾ 2.2.7.1 规范** 如果 `onFulfilled` 或者 `onRejected` 返回一个值 `x` ，则运行下面的 **Promise 解决过程：`[[Resolve]](promise2, x)`**
@@ -2204,7 +1880,7 @@ class myPromise {
 + * @param  {[type]} reject    promise2的reject方法
 + */
 + function resolvePromise(promise2, x, resolve, reject) {}
-复制代码
+
 ```
 
 我们在 `myPromise` 类外面声明了一个 **Promise 解决过程**：
@@ -2213,7 +1889,7 @@ class myPromise {
 function resolvePromise(promise2, x, resolve, reject) {
 
 }
-复制代码
+
 ```
 
 **`resolvePromise()` 具体方法我们后面会补充~**
@@ -2274,7 +1950,7 @@ class myPromise {
  * @param  {[type]} reject    promise2的reject方法
  */
 function resolvePromise(promise2, x, resolve, reject) {}
-复制代码
+
 ```
 
 **◾ `fulfilled` 和 `rejected` 状态处理完，不要忘了 `pending` 状态的情况**
@@ -2349,7 +2025,7 @@ class myPromise {
  * @param  {[type]} reject    promise2的reject方法
  */
 function resolvePromise(promise2, x, resolve, reject) {}
-复制代码
+
 ```
 
 **◾ 2.2.7.3 如果 `onFulfilled` 不是函数且 `promise1` 成功执行， `promise2` 必须成功执行并返回相同的值**
@@ -2426,7 +2102,7 @@ class myPromise {
  * @param  {[type]} reject    promise2的reject方法
  */
 function resolvePromise(promise2, x, resolve, reject) {}
-复制代码
+
 ```
 
 **◾ 2.2.7.4 如果 `onRejected` 不是函数且 `promise1` 拒绝执行， `promise2` 必须拒绝执行并返回相同的据因**
@@ -2511,7 +2187,7 @@ class myPromise {
  * @param  {[type]} reject    promise2的reject方法
  */
 function resolvePromise(promise2, x, resolve, reject) {}
-复制代码
+
 ```
 
 规范 **2.2.7.3** 和 **2.2.7.4** 对 `onFulfilled` 和 `onRejected` 不是函数的情况做了更详细的描述，根据描述我们对 `onFulfilled` 和 `onRejected` 引入了新的参数校验，所以之前的参数校验就可以退役了：
@@ -2537,7 +2213,7 @@ class myPromise {
  * @param  {[type]} reject    promise2的reject方法
  */
 function resolvePromise(promise2, x, resolve, reject) {}
-复制代码
+
 ```
 
 搞定 `then` 方法 😎
@@ -2628,7 +2304,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 +       throw new TypeError('Chaining cycle detected for promise');
 +   }
 }
-复制代码
+
 ```
 
 在这里我们只需要抛出一个 `TypeError` 的异常即可，因为调用 `resolvePromise` 方法外层的 `try...catch` 会抓住这个异常，然后 **以 TypeError 为据因拒绝执行 promise。**
@@ -2645,7 +2321,7 @@ const p1 = promise.then(value => {
   console.log(value)
   return p1
 })
-复制代码
+
 ```
 
 使用原生 Promise 执行这个代码，会报类型错误：
@@ -2681,7 +2357,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 +       }, reject);
 +   }
 }
-复制代码
+
 ```
 
 马上就要成功啦😸，还有最后一条😎
@@ -2696,7 +2372,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 
 ```
 if (x != null && ((typeof x === 'object' || (typeof x === 'function'))))
-复制代码
+
 ```
 
 **◾ 2.3.3 和 2.3.4 规范实现如下：**
@@ -2783,7 +2459,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 +       return resolve(x);
 +   }
 }
-复制代码
+
 ```
 
 **打完收工**✨✨✨✨
@@ -2870,7 +2546,7 @@ function resolvePromise(promise2, x, resolve, reject) {
         return resolve(x);
     }
 }
-复制代码
+
 ```
 
 七、完整的 Promises/A+ 实现
@@ -3039,7 +2715,7 @@ function resolvePromise(promise2, x, resolve, reject) {
         return resolve(x);
     }
 }
-复制代码
+
 ```
 
 2. 按步分析 注释加持版
@@ -3261,7 +2937,7 @@ function resolvePromise(promise2, x, resolve, reject) {
         return resolve(x);
     }
 }
-复制代码
+
 ```
 
 八、Promise A+ 测试
@@ -3280,7 +2956,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 
 ```
 npm install promises-aplus-tests -D
-复制代码
+
 ```
 
 **安装完测试工具后的项目目录：**
@@ -3300,7 +2976,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 }
 
 + module.exports = myPromise;
-复制代码
+
 ```
 
 3. 实现静态方法 deferred
@@ -3339,7 +3015,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 +  }
 
 module.exports = myPromise;
-复制代码
+
 ```
 
 4. 配置 package.json
@@ -3359,7 +3035,7 @@ module.exports = myPromise;
     "test": "promises-aplus-tests myPromise"
   }
 }
-复制代码
+
 ```
 
 **项目目录：**
@@ -3377,7 +3053,7 @@ module.exports = myPromise;
 
 ```
 npm run test
-复制代码
+
 ```
 
 肯定都等不及了吧~😜 快来看看我们的测试结果吧，走起 🚀

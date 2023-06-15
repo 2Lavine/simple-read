@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/前端监控和前端埋点方案设计.md",
+                "file": "md/A+ 手写Promise.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "await",
+                "query": "复制代码",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/前端监控和前端埋点方案设计.md"
+                "file": "md/A+ 手写Promise.md"
               }
             }
           },
@@ -75,7 +75,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
@@ -95,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/前端监控和前端埋点方案设计.md",
+                "file": "md/A+ 手写Promise.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/前端监控和前端埋点方案设计.md",
+                "file": "md/A+ 手写Promise.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -152,58 +153,56 @@
       "daily-notes:Open today's daily note": false,
       "command-palette:Open command palette": false,
       "workspaces:Manage workspace layouts": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
+      "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "d5077233460c7981",
+  "active": "e345afbe4a3d8094",
   "lastOpenFiles": [
+    "md/前端监控和前端埋点方案设计.md",
+    "done/手写 Promise 原理.md",
+    "done/为什么用 GIF 做埋点？.md",
+    "done",
+    "md/BAT 前端经典面试问题：史上最最最详细的手写 Promise 教程.md",
+    "md/A+ 手写Promise.md",
+    "md/手把手一行一行代码教你 “手写 Promise“，完美通过 Promises",
+    "output/2023-6-13 16-40-22.html",
+    "achieve/看了就会，手写 Promise 原理，最通俗易懂的版本！！！.md",
+    "test/看了就会，手写 Promise 原理，最通俗易懂的版本！！！.md",
+    "output/2023-6-13 16-40-02.html",
+    "output/2023-6-13 16-38-40.html",
+    "output/2023-6-13 16-37-37.html",
+    "test",
+    "node_modules/markdown-it-regexp/index.js",
+    "node_modules/markdown-it-regexp/LICENSE",
+    "node_modules/markdown-it-regexp/README.md",
+    "node_modules/markdown-it-regexp/lib/utils.js",
+    "node_modules/markdown-it-obsidian-images/README.md",
+    "node_modules/utf8-byte-length/README.md",
+    "node_modules/truncate-utf8-bytes/README.md",
+    "node_modules/sanitize-filename/README.md",
+    "node_modules/sanitize-filename/LICENSE.md",
+    "node_modules/sanitize-filename/Changelog.md",
+    "node_modules/extend/README.md",
+    "node_modules/extend/CHANGELOG.md",
+    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8074c71fa8ae2e699cb73bf4f1a710aa_MD5.webp",
+    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/eca6befa5d5237f99cf43e97ab0ccb3c_MD5.webp",
+    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/699f80edea9916bd27066c2d0be514ff_MD5.webp",
+    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8384ea4c8037ea8e30f600fccb7f46dc_MD5.webp",
+    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/3d11232072b778d66c0307c90dc2e5c0_MD5.webp",
+    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/5ce24faea89d0c4b646ab52d28a55a7a_MD5.webp",
+    "md/手写 Promise 教程.md",
+    "_resources/手写 Promise 教程/e78bf7663c5eae57f812102dc0583f46_MD5.webp",
+    "md/手写 promise.md",
+    "_resources/前端监控和前端埋点方案设计/198e424559d99162965d913cd76e56ab_MD5.png",
+    "_resources/前端埋点实现方案✔/f57c8d76fa7177c87fc1ac4bbf347f26_MD5.webp",
+    "_resources/前端埋点实现方案✔/e4aeb4f0af8b15bc994371039161dc4d_MD5.webp",
     "md/前端埋点实现方案✔.md",
-    "output/2023-6-13 16-17-00.html",
     "achieve/现代前端框架的渲染模式.md",
     "achieve/浏览器同源策略及跨域的解决方法.md",
     "achieve/前端中的同源策略与三种跨域资源共享方法.md",
     "achieve/vue 的生命周期.md",
     "achieve/vue 单页面 (SPA) 和多页面 (MPA) 的区别(详细答案).md",
     "achieve/options 请求.md",
-    "achieve/options 流程.md",
-    "achieve/localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结.md",
-    "achieve/Optimizing_Instrumentation_Next.js.md",
-    "achieve/JavaScript 三种迭代方式.md",
-    "achieve/Rem 布局的原理解析.md",
-    "achieve/生成器（Generator）——《实战 ES2015》章节试读.md",
-    "achieve/Vue 为什么要禁用 undefined？ - 掘金.txt",
-    "done/生成器（Generator）——《实战 ES2015》章节试读.md",
-    "done/现代前端框架的渲染模式.md",
-    "done/浏览器同源策略及跨域的解决方法.md",
-    "done/前端中的同源策略与三种跨域资源共享方法.md",
-    "done/vue 的生命周期.md",
-    "done/vue 单页面 (SPA) 和多页面 (MPA) 的区别(详细答案).md",
-    "done/Vue 为什么要禁用 undefined？ - 掘金.txt",
-    "done/Rem 布局的原理解析.md",
-    "done/options 请求.md",
-    "done/options 流程.md",
-    "done/Optimizing_Instrumentation_Next.js.md",
-    "done/localStorage、sessionStorage、cookie、session 几种 web 数据存储方式对比总结.md",
-    "done/JavaScript 三种迭代方式.md",
-    "output/2023-6-13 16-15-51.html",
-    "md/为什么大厂前端监控都在用 GIF 做埋点？.md",
-    "_resources/Rem 布局的原理解析/7baf41449a7c94ea4aa748d255f0a5e9_MD5.png",
-    "_resources/Rem 布局的原理解析",
-    "_resources/options 流程/2cdb6f2bb6c00703edcddebf31d1b88e_MD5.webp",
-    "_resources/options 流程/db4cabc85086cd46081e1dd569b628c9_MD5.webp",
-    "_resources/options 流程/4a35dc8ce68c4ec4ec36c795d57af2b3_MD5.webp",
-    "_resources/options 流程",
-    "_resources/options 请求/d3d5c4d39393cc7a227a2ac15a192607_MD5.jpg",
-    "_resources/options 请求",
-    "_resources/vue 的生命周期/f2386d8dbc75425de7ad80927523b6ae_MD5.webp",
-    "_resources/vue 的生命周期/b15b54052f6b34b4a7f055e7d530a280_MD5.webp",
-    "_resources/vue 的生命周期/ea410c00f19456bce925bcd15cd87472_MD5.webp",
-    "_resources/vue 的生命周期/111f3e8931daac24cb5e08c83f826adf_MD5.webp",
-    "_resources/vue 的生命周期/a566158942b5d303f0ce5b7da990cc5b_MD5.webp",
-    "_resources/vue 的生命周期",
-    "_resources/现代前端框架的渲染模式",
-    "_resources/生成器（Generator）——《实战 ES2015》章节试读",
     "未命名.canvas"
   ]
 }
