@@ -1,100 +1,5 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7020335414980378655#heading-10)
 
-前言
-==
-
-Promise 想必大家都十分熟悉，想想就那么几个 api，可是你真的了解 Promise 吗？
-
-本文就带大家彻底盘点 promise~
-
-Promise 简介
-==========
-
-Promise 是一种处理异步代码（而不会陷入回调地狱）的方式。
-
-多年来，promise 已成为语言的一部分（在 ES2015 中进行了标准化和引入），并且最近变得更加集成，在 ES2017 中具有了 async 和 await。
-
-**异步函数** 在底层使用了 promise，因此了解 promise 的工作方式是了解 **async** 和 **await** 的基础。
-
-`Promise`对象代表一个异步操作，有三种状态：`pending`（进行中）、`fulfilled`（已成功）和`rejected`（已失败）
-
-一个 `Promise` 必然处于以下几种状态之一：
-
-*   待定 `(pending)`: 初始状态，既没有被兑现，也没有被拒绝。
-*   已成功 `(fulfilled)`: 意味着操作成功完成。
-*   已拒绝 `(rejected)`: 意味着操作失败。
-
-Promise 如何运作
-============
-
-当 promise 被调用后，它会以**处理中状态** `(pending)` 开始。 这意味着调用的函数会继续执行，而 promise 仍处于处理中直到解决为止，从而为调用的函数提供所请求的任何数据。
-
-被创建的 promise 最终会以**被解决状态** `(fulfilled)` 或 **被拒绝状态** `(rejected)` 结束，并在完成时调用相应的回调函数（传给 **then** 和 **catch**）。
-
-◾ 为了让读者尽快对 promise 有一个整体的理解，我们先来看一段 promise 的代码：
-
-```
-let p1 = new Promise((resolve, reject) => {
-    resolve('成功')
-    reject('失败')
-})
-console.log('p1', p1)
-
-let p2 = new Promise((resolve, reject) => {
-    reject('失败')
-    resolve('成功')
-})
-console.log('p2', p2)
-
-let p3 = new Promise((resolve, reject) => {
-    throw('报错')
-})
-console.log('p3', p3)
-```
-
-输出结果为：
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d6f97b54d4474b339c6b863c287160f6~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-**这里包含了四个知识点：**
-
-*   1、执行了`resolve`，Promise 状态会变成`fulfilled`，即 **已完成状态**
-*   2、执行了`reject`，Promise 状态会变成`rejected`，即 **被拒绝状态**
-*   3、Promise 只以`第一次为准`，第一次成功就`永久`为`fulfilled`，第一次失败就永远状态为`rejected`
-*   4、Promise 中有`throw`的话，就相当于执行了`reject`
-
-◾ 接下来看下面一段代码，学习新的知识点：
-
-```
-let myPromise1 = new Promise(() => {});
-
-console.log('myPromise1 :>> ', myPromise1);
-
-let myPromise2 = new Promise((resolve, reject) => {
-    let a = 1;
-    for (let index = 0; index < 5; index++) {
-        a++;
-    }
-})
-
-console.log('myPromise2 :>> ', myPromise2)
-
-myPromise2.then(() => {
-    console.log("myPromise2执行了then");
-})
-```
-
-输出结果为：
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7803e9ea2864446be57893614cdb0d7~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-**这里包含了三个知识点：**
-
-*   1、Promise 的初始状态是`pending`
-*   2、Promise 里没有执行`resolve`、`reject`以及`throw`的话，这个 **promise 的状态也是`pending`**
-*   3、基于上一条，`pending`状态下的 promise 不会执行回调函数`then()`
-
-**◾ 最后一点：**
+# Promise 如何运作
 
 ```
 let myPromise0 = new Promise();
@@ -136,36 +41,9 @@ const isItDoneYet = new Promise((resolve, reject) => {
 })
 ```
 
-如你所见，promise 检查了 done 全局常量，如果为真，则 promise 进入**被解决**状态（因为调用了 `resolve` 回调）；否则，则执行 `reject` 回调（将 promise 置于**被拒绝**状态）。 **如果在执行路径中从未调用过这些函数之一，则 promise 会保持处理中状态。**
-
-使用 `resolve` 和 `reject`，可以向调用者传达最终的 promise 状态以及该如何处理。 在上述示例中，只返回了一个字符串，但是它可以是一个对象，也可以为 `null`。 由于已经在上述的代码片段中创建了 promise，因此它已经开始执行。
-
-一个更常见的示例是一种被称为 Promisifying 的技术。 这项技术能够使用经典的 JavaScript 函数来接受回调并使其返回 promise：
-
-```
-const fs = require('fs')
-
-const getFile = (fileName) => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(fileName, (err, data) => {
-      if (err) {
-        reject(err)  // 调用 `reject` 会导致 promise 失败，无论是否传入错误作为参数，
-        return        // 且不再进行下去。
-      }
-      resolve(data)
-    })
-  })
-}
-
-getFile('/etc/passwd')
-.then(data => console.log(data))
-.catch(err => console.error(err))
-```
 
 使用 promise
 ==========
-
-在上一个章节中，介绍了如何创建 promise。
 
 现在，看看如何使用 promise。
 
@@ -225,7 +103,7 @@ Promise.resolve()
 
 有时需要将现有对象转为 Promise 对象，`Promise.resolve()`方法就起到这个作用。
 
-> 注意 ❗ ❗ ❗ 这里的`Promise.resolve()`是直接使用的，不是在 promise 对象里的`resolve()`方法，是`Promise.resolve()` ，开头大写，不是`promise`
+> 注意 ❗ 这里的`Promise.resolve()`是直接使用的，不是在 promise 对象里的`resolve()`方法，是`Promise.resolve()` ，开头大写，不是`promise`
 
 ```
 const jsPromise = Promise.resolve($.ajax('/whatever.json'));
@@ -403,7 +281,10 @@ getJSON("/post/1.json").then(
 
 前面介绍了 `then` 方法的参数和链式调用，下面详细介绍一下 `then` 方法的返回值，也就是 `then` 方法中的 `return`。
 
-当一个 `Promise` 完成（fulfilled）或者失败（rejected）时，返回函数将被异步调用（由当前的线程循环来调度完成）。具体的返回值 `return` 依据以下规则返回。如果 `then` 中的回调函数：
+当一个 `Promise` 完成（fulfilled）或者失败（rejected）时，返回函数将被异步调用（由当前的线程循环来调度完成）。
+
+具体的返回值 `return` 依据以下规则返回。
+如果 `then` 中的回调函数：
 
 *   返回 `(return)` 了一个值，那么 `then` 返回的 Promise 将会成为接受状态，并且将返回的值作为接受状态的回调函数的参数值。
 *   没有返回 `(return)` 任何值，那么 `then` 返回的 Promise 将会成为接受状态，并且该接受状态的回调函数的参数值为 `undefined`。
@@ -881,12 +762,3 @@ try {
 **◾ `UnhandledPromiseRejectionWarning`**
 
 这意味着调用的 promise 被拒绝，但是没有用于处理错误的 catch。 在 then 之后添加 catch 则可以正确地处理。
-
-参考
-==
-
-*   [Promise - JavaScript | MDN (mozilla.org)](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FJavaScript%2FReference%2FGlobal_Objects%2FPromise "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise")
-*   [JavaScript Promise (nodejs.cn)](https://link.juejin.cn?target=http%3A%2F%2Fnodejs.cn%2Flearn%2Funderstanding-javascript-promises "http://nodejs.cn/learn/understanding-javascript-promises")
-*   [阮一峰 ECMAScript 6 (ES6) 标准入门教程 第三版](https://link.juejin.cn?target=https%3A%2F%2Fwww.bookstack.cn%2Fread%2Fes6-3rd%2Fdocs-promise.md "https://www.bookstack.cn/read/es6-3rd/docs-promise.md")
-*   [看了就会，手写 Promise 原理，最通俗易懂的版本！！！](https://juejin.cn/post/6994594642280857630 "https://juejin.cn/post/6994594642280857630")
-*   [Promise.all 和 Promise.race 的使用场景](https://link.juejin.cn?target=https%3A%2F%2Fblog.csdn.net%2Flgdaren%2Farticle%2Fdetails%2F105095611 "https://blog.csdn.net/lgdaren/article/details/105095611")
