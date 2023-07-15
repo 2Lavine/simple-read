@@ -1,0 +1,3283 @@
+<h1>A+ 手写Promise</h1><p>三个知识点** 👇：</p>
+<ul>
+<li>1、Promise 的初始状态是<code>pending</code></li>
+<li>2、Promise 里没有执行<code>resolve()</code>、<code>reject()</code>以及<code>throw</code>的话，这个 <strong>promise 的状态也是<code>pending</code></strong></li>
+<li>3、基于上一条，<code>pending</code>状态下的 promise 不会执行回调函数<code>then()</code></li>
+</ul>
+<p><strong>◾ 最后一点：</strong></p>
+<pre><code>let myPromise0 = new Promise();
+console.log('myPromise0 :&gt;&gt; ', myPromise0);
+
+</code></pre>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b95ce2e9ddc74e4eae9eb80d8dd54ba8~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<ul>
+<li>规定必须给<code>Promise</code>对象传入一个执行函数，否则将会报错。</li>
+</ul>
+<h1>二、实现 resolve 和 reject</h1>
+<p>大家都知道需要为这个函数参数传入它自己的函数，也就是<code>resolve()</code>和<code>reject()</code></p>
+<p>原生的 promise 里面可以传入<code>resolve</code>和<code>reject</code>两个参数</p>
+<pre><code>let promise = new Promise((resolve, reject) =&gt; {})
+
+</code></pre>
+<p>那么我们也得允许手写这边可以传入这两个参数：</p>
+<pre><code>class myPromise {
+    constructor(func) {
++       func(this.resolve, this.reject);
+    }
+    resolve() {}
+    reject() {}
+}
+
+</code></pre>
+<h2>1.管理状态和结果</h2>
+<p>用<code>static</code>来创建<code>静态属性</code>：</p>
+<pre><code>+   static PENDING = 'pending';
++   static FULFILLED = 'fulfilled';
++   static REJECTED = 'rejected';
+</code></pre>
+<p>用 <code>this.PromiseState</code> 来保存实例的状态属性，</p>
+<pre><code>+       this.PromiseState = myPromise.PENDING;
+</code></pre>
+<p>那么在执行<code>resolve()</code>的时候就需要判断状态是否为 <code>待定 pending</code>，如果是 <code>待定 pending</code>的话就把状态改为 <code>成功 fulfilled</code>:</p>
+<pre><code>class myPromise {
+    resolve() {
++       if (this.PromiseState === myPromise.PENDING) {
++           this.PromiseState = myPromise.FULFILLED;
++       }
+    }
+}
+
+</code></pre>
+<h2>2.this 指向问题</h2>
+<p>我们来<code>new</code>一个实例 🌰 执行一下代码就知道有没有问题了</p>
+<pre><code>// 测试代码
++  let promise1 = new myPromise((resolve, reject) =&gt; {
++      resolve('这次一定');
++  })
+
+</code></pre>
+<p>运行上面代码，报错 🦁：
+<code>Uncaught TypeError: Cannot read property 'PromiseState ' of undefined</code>
+<code>resolve()</code>和<code>reject()</code>方法里调用<code>PromiseState</code> ，前面是有<code>this</code>关键字的</p>
+<pre><code>	resolve(result) {
+➡      if (this.PromiseState === myPromise.PENDING) {
+➡          this.PromiseState = myPromise.FULFILLED;
+            this.PromiseResult = result;
+        }
+    }
+    reject(reason) {
+➡      if (this.PromiseState === myPromise.PENDING) {
+➡          this.PromiseState = myPromise.REJECT;
+            this.PromiseResult = reason;
+        }
+    }
+
+</code></pre>
+<p>因为现在我们是在新实例被创建后再在外部环境下执行<code>resolve()</code>方法的，这里的<code>resolve()</code>看着像是和实例一起执行的，其实不然，也就<strong>相当于不在<code>class</code>内部使用这个<code>this</code></strong>，而<strong>我们没有在外部定义任何<code>PromiseState</code> 变量，因此这里会报错</strong></p>
+<p>在这里我们就可以使用<code>bind</code>来绑定<code>this</code>就可以了 😺:</p>
+<pre><code>    constructor(func) {
+        this.PromiseState = myPromise.PENDING;
+        this.PromiseResult = null;
++       func(this.resolve.bind(this), this.reject.bind(this));
+</code></pre>
+<p>对于<code>resolve</code>来说，这里就是给实例的<code>resolve()</code>方法绑定这个<code>this</code>为当前的实例对象，并且执行<code>this.resolve()</code>方法： <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0c4f15ab1711462892c301caee12191b~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<h1>三、实现 then 方法</h1>
+<p><strong>因为<code>then</code>是在创建实例后再进行调用的，因此我们再创建一个 类方法，可千万不要创建在 <code>constructor</code> 里面了~</strong>
+我想应该有些同学突然失忆😶，不记得<code>then</code>怎么用了，我们就来稍微写一下原生的<code>then</code>方法：</p>
+<pre><code>let promise = new Promise((resolve, reject) =&gt; {
+    resolve('这次一定')
+})
+
++  promise.then(
++      result =&gt; {
++          console.log(result);
++      },
++      reason =&gt; {
++          console.log(reason.message);
++      }
++  )
+
+</code></pre>
+<p><code>then</code>方法可以传入两个参数，这两个参数都是函数，
+一个是当状态为<code>fulfilled 成功</code> 时执行的代码，
+另一个是当状态为 <code>rejected 拒绝</code> 时执行的代码。</p>
+<p>因此我们就可以先给手写的<code>then</code>里面添加 <strong>两个参数</strong>：</p>
+<ul>
+<li>一个是 <code>onFulfilled</code> 表示 <code>“当状态为成功时”</code></li>
+<li>另一个是 <code>onRejected</code> 表示 <code>“当状态为拒绝时”</code></li>
+</ul>
+<pre><code>class myPromise {
++   then(onFulfilled, onRejected) {}
+}
+
+</code></pre>
+<ol>
+<li>状态不可变</li>
+</ol>
+<hr>
+<p><code>Promise</code> 只以 <code>第一次为准</code>，第一次成功就<code>永久</code>为<code>fulfilled</code>，第一次失败就<code>永远</code>状态为<code>rejected</code></p>
+<p>因此我们在手写的时候就必须进行判断 🤖：</p>
+<p>◾ 如果当前实例的 <code>PromiseState</code> 状态属性为 <code>fulfilled 成功</code> 的话，我们就执行传进来的 <code>onFulfilled</code> 函数，并且为<code>onFulfilled</code>函数传入前面保留的<code>PromiseResult</code>属性值：</p>
+<pre><code>class myPromise {
+    then(onFulfilled, onRejected) {
++       if (this.PromiseState === myProise.FULFILLED) {
++           onFulfilled(this.PromiseResult);
++       }
+    }
+}
+
+</code></pre>
+<ol start="2">
+<li>执行异常 throw</li>
+</ol>
+<hr>
+<p>在<code>new Promise</code>的时候，执行函数里面如果抛出错误，是会触发<code>then</code>方法的第二个参数，即即<code>rejected</code>状态的回调函数可以把错误的信息作为内容输出出来</p>
+<p>到这里，有的同学可能会说，执行异常抛错，不是用<code>catch()</code>方法去接吗？为什么这里又说 <code>是会触发then方法的第二个参数，即rejected状态的回调函数</code>？😵
+事实上, calling <code>obj.catch(onRejected)</code> 内部 calls <code>obj.then(undefined, onRejected)</code>。(这句话的意思是，我们显式使用<code>obj.catch(onRejected)</code>，内部实际调用的是<code>obj.then(undefined, onRejected)</code>)</p>
+<p>◾ 注意看下面的例子 🌰：</p>
+<pre><code>const promise = new Promise(function(resolve, reject) {
+  throw new Error('test');
+});
+promise.catch(function(error) {
+  console.log(error);
+});
+// Error: test
+</code></pre>
+<p>上面代码中，promise 抛出一个错误，就被<code>catch()</code>方法指定的回调函数捕获。注意，上面的写法与下面两种写法是等价的。</p>
+<pre><code>// 写法一
+const promise = new Promise(function(resolve, reject) {
+  try {
+    throw new Error('test');
+  } catch(e) {
+    reject(e);
+  }
+});
+promise.catch(function(error) {
+  console.log(error);
+});
+// 写法二
+const promise = new Promise(function(resolve, reject) {
+  reject(new Error('test'));
+});
+promise.catch(function(error) {
+  console.log(error);
+});
+
+</code></pre>
+<p>比较上面两种写法，可以发现<code>reject()</code>方法的作用，等同于抛出错误。
+这一点很重要，因为我们手写 Promise 就是用<code>try/catch</code>来处理异常，用的就是上面的思想。</p>
+<p>◾ <strong>一般来说，不要在<code>then()</code>方法里面定义 Reject 状态的回调函数（即<code>then</code>的第二个参数），总是使用<code>catch</code>方法。</strong></p>
+<pre><code>// bad
+promise
+  .then(function(data) {
+    // success
+  }, function(err) {
+    // error
+  });
+  
+// good
+promise
+  .then(function(data) { //cb
+    // success
+  })
+  .catch(function(err) {
+    // error
+  });
+
+</code></pre>
+<p>上面代码中，第二种写法要好于第一种写法，
+理由是第二种写法可以捕获前面<code>then</code>方法执行中的错误，也更接近同步的写法（<code>try/catch</code>）。
+因此，建议总是使用<code>catch()</code>方法，而不使用<code>then()</code>方法的第二个参数。</p>
+<p><strong>回到正题</strong></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/315d46ffbd8b4a9cb4959ad4437e43b3~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<blockquote>
+<p><code>Uncaught</code> 未捕获</p>
+</blockquote>
+<p>可以发现报错了😰，没有捕获到错误，没有把内容输出出来</p>
+<p>◾ 我们可以在执行<code>resolve()</code>和<code>reject()</code>之前用<code>try/catch</code>进行判断，在<code>构造函数 constructor</code>里面完善代码，判断生成实例的时候是否有报错 🔍：</p>
+<ul>
+<li>如果没有报错的话，就按照正常执行<code>resolve()</code>和<code>reject()</code>方法</li>
+<li>如果报错的话，就把错误信息传入给<code>reject()</code>方法，并且直接执行<code>reject()</code>方法</li>
+</ul>
+<pre><code>class myPromise {
+    static PENDING = 'pending';
+    static FULFILLED = 'fulfilled';
+    static REJECTED = 'rejected';
+    constructor(func) {
+        this.PromiseState = myPromise.PENDING;
+        this.PromiseResult = null;
++       try {
+            func(this.resolve.bind(this), this.reject.bind(this));
++       } catch (error) {
++           this.reject(error)
++       }
+    }
+}
+
+</code></pre>
+<p>◾ <strong>注意这里不需要给<code>reject()</code>方法进行<code>this</code>的绑定了，因为这里是直接执行，而不是创建实例后再执行。</strong></p>
+<p>▪ <code>func(this.resolve.bind(this), this.reject.bind(this));</code> 这里的<code>this.reject</code>意思是：把类方法<code>reject()</code>作为参数 传到构造函数<code>constructor</code> 里要执行的<code>func()</code>方法里，只是一个参数，并不执行，只有创建实例后调用<code>reject()</code>方法的时候才执行，此时<code>this</code>的指向已经变了，所以想要正确调用<code>myPromise</code>的<code>reject()</code>方法就要通过<code>.bind(this))</code>改变<code>this</code>指向。
+▪ <code>this.reject(error)</code>，这里的<code>this.reject()</code>，是直接在构造函数里执行类方法，<code>this</code>指向不变，<code>this.reject()</code>就是直接调用类方法<code>reject()</code>，所以不用再进行<code>this</code>绑定。</p>
+<ol start="3">
+<li>参数校验</li>
+</ol>
+<hr>
+<p>原生 Promise 里<strong>规定<code>then</code>方法里面的两个参数如果不是函数的话就要被忽略</strong>，我们就故意在原生代码这里不传入函数作为参数：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/840804fc6bab4c71b95f75d9c99f1de3~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>结果就是 <code>Uncaught TypeError: onFulfilled is not a function</code>。浏览器帮你报错了，这不是我们想要的~😥 我们只想要自己来抛出错误，再来看看刚刚的手写<code>then</code>部分：</p>
+<pre><code>then(onFulfilled, onRejected) {
+    if (this.PromiseState === myPromise.FULFILLED) {
+        onFulfilled(this.PromiseResult);
+    }
+    if (this.PromiseState === myPromise.REJECTED) {
+        onRejected(this.PromiseResult);
+    }
+}
+
+</code></pre>
+<p>我们会在里面分别执行成功和拒绝两个参数，可是我们不想修改这里的代码，那么就只能把不是函数的参数改为函数</p>
+<p><strong><code>Promise</code> 规范如果 <code>onFulfilled</code> 和 <code>onRejected</code> 不是函数，就忽略他们</strong>。
+所谓 “忽略” 并不是什么都不干，</p>
+<ul>
+<li>对于<code>onFulfilled</code>来说 “忽略” 就是将<code>value</code>原封不动的返回，</li>
+<li>对于<code>onRejected</code>来说就是返回<code>reason</code>，<code>onRejected</code>因为是错误分支，我们返回<code>reason</code>应该<code>throw</code>一个<code>Error</code>:</li>
+</ul>
+<p>这里我们就可以用 <code>条件运算符</code>，我们在进行<code>if</code>判断之前进行预先判断：</p>
+<p>▪ 如果<code>onFulfilled</code>参数是一个函数，就把原来的<code>onFulfilled</code>内容重新赋值给它，如果<code>onFulfilled</code>参数不是一个函数，就将<code>value</code>原封不动的返回</p>
+<pre><code>class myPromise {
+	...
+    then(onFulfilled, onRejected) {
++       onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value =&gt; value;
+    }
+}
+
+</code></pre>
+<p>▪ 如果<code>onRejected</code>参数是一个函数，就把原来的<code>onRejected</code>内容重新赋值给它，如果<code>onRejected</code>参数不是一个函数，就<code>throw</code>一个<code>Error</code></p>
+<pre><code>class myPromise {
+	...
+    then(onFulfilled, onRejected) {
++       onRejected = typeof onRejected === 'function' ? onRejected : reason =&gt; {
+            throw reason;
+        };
+    }
+}
+
+</code></pre>
+<p>现在我们再来测试一下代码：</p>
+<pre><code>class myPromise {
+	...
+}
+
+let promise1 = new myPromise((resolve, reject) =&gt; {
+    resolve('这次一定');
+})
+promise1.then(
+    undefined,
+    reason =&gt; {
+        console.log('rejected:', reason)
+    }
+)
+
+</code></pre>
+<h1>四、实现异步</h1>
+<ol>
+<li>添加定时器</li>
+</ol>
+<hr>
+<p>可以说我们在手写的代码里面依旧没有植入异步功能，毕竟最基本的<code>setTimeout</code>我们都没有使用，</p>
+<p>先了解一下原生 Promise 的一些<code>运行顺序规则</code>。
+在这里我为原生代码添加上步骤信息：</p>
+<pre><code>console.log(1);
+
+let promise = new Promise((resolve, reject) =&gt; {
+    console.log(2);
+    resolve('这次一定');
+})
+
+promise.then(
+    result =&gt; {
+        console.log('fulfilled:', result);
+    },
+    reason =&gt; {
+        console.log('rejected:', reason)
+    }
+)
+
+console.log(3);
+
+</code></pre>
+<ul>
+<li>首先执行<code>console.log(1)</code>，输出<code>1</code></li>
+<li>接着创建<code>promise实例</code>，输出<code>2</code>，因为这里依旧是同步</li>
+<li>然后碰到<code>resolve</code>的时候，修改结果值</li>
+<li>到了<code>promise.then</code>会进行异步操作，也就是我们 <strong>需要先把执行栈的内容清空</strong>，于是就执行<code>console.log(3)</code>，输出<code>3</code></li>
+<li>接着才会执行<code>promise.then</code>里面的内容，也就是最后输出<code>“fulfilled: 这次一定”</code></li>
+</ul>
+<p>▪ 我们用同样的测试代码应用在 <strong>手写代码</strong> 上面：
+这次我们发现有些不同了😯，输出顺序为：
+<code>1</code> 和 <code>2</code> 都没有问题，问题就是<code>“fulfilled: 这次一定”</code>和<code>3</code>这里的顺序不对
+◾ 其实问题很简单，就是我们刚刚说的 <strong>没有设置异步执行</strong> 😶</p>
+<p>我们二话不说直接给<code>then</code>方法里面添加<code>setTimeout</code>就可以了😎，
+<strong>需要在进行<code>if</code>判断以后再添加<code>setTimeout</code>，要不然状态不符合添加异步也是没有意义的</strong>，然后在<code>setTimeout</code>里执行传入的函数参数：</p>
+<pre><code>class myPromise {
+	...
+    then(onFulfilled, onRejected) {
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value =&gt; value;
+        onRejected = typeof onRejected === 'function' ? onRejected : reason =&gt; {
+            throw reason;
+        };
+        if (this.PromiseState === myPromise.FULFILLED) {
++           setTimeout(() =&gt; {
+                onFulfilled(this.PromiseResult);
++           });
+        }
+        if (this.PromiseState === myPromise.REJECTED) {
++           setTimeout(() =&gt; {
+                onRejected(this.PromiseResult);
++           });
+        }
+    }
+}
+
+</code></pre>
+<p><strong>在这里我们解决异步的方法是给<code>onFulfilled</code>和<code>onRejected</code>添加<code>setTimeout</code>，但是为什么要这么做呢？</strong></p>
+<p>◾ 这就要讲到 <a href="https://link.juejin.cn?target=https%3A%2F%2Fpromisesaplus.com%2F%23notes" title="https://promisesaplus.com/#notes"><strong><code>Promises/A+</code> 规范</strong></a> 了</p>
+<p>规范 <code>2.2.4</code> ：</p>
+<blockquote>
+<p><code>onFulfilled</code> or <code>onRejected</code> must not be called until the <code>execution context</code> stack contains only platform code. [3.1].</p>
+</blockquote>
+<p>译文：</p>
+<p>2.2.4 <code>onFulfilled</code> 和 <code>onRejected</code> 只有在<code>执行环境</code>堆栈仅包含平台代码时才可被调用 <code>注1</code></p>
+<p>规范对 2.2.4 做了注释：</p>
+<blockquote>
+<p>3.1 Here “platform code” means engine, environment, and promise implementation code. In practice, this requirement ensures that <code>onFulfilled</code> and <code>onRejected</code> execute asynchronously, after the event loop turn in which <code>then</code> is called, and with a fresh stack. This can be implemented with either a “macro-task” mechanism such as setTimeout or <code>setImmediate</code>, or with a “micro-task” mechanism such as MutationObserver or process.nextTick. Since the promise implementation is considered platform code, it may itself contain a task-scheduling queue or “trampoline” in which the handlers are called.</p>
+</blockquote>
+<p>译文：</p>
+<p><strong>3.1 这里的平台代码指的是引擎、环境以及 promise 的实施代码。实践中要确保 <code>onFulfilled</code> 和 <code>onRejected</code> 方法异步执行，且应该在 <code>then</code> 方法被调用的那一轮事件循环之后的新执行栈中执行。这个事件队列可以采用 “宏任务（macro-task）” 机制，比如<code>setTimeout</code> 或者 <code>setImmediate</code>； 也可以采用 “微任务（micro-task）” 机制来实现， 比如 <code>MutationObserver</code> 或者<code>process.nextTick</code>。</strong> 由于 promise 的实施代码本身就是平台代码（译者注： 即都是 JavaScript），故代码自身在处理在处理程序时可能已经包含一个任务调度队列或『跳板』)。</p>
+<p><strong>这里我们用的就是规范里讲到的 “宏任务” <code>setTimeout</code></strong>。</p>
+<ol start="2">
+<li>回调保存</li>
+</ol>
+<hr>
+<p>异步的问题真的解决了吗？现在又要进入 Promise 另一个难点了，大家务必竖起耳朵啦😛</p>
+<p>我们来给原生的 Promise 里添加<code>setTimeout</code>，使得<code>resolve</code>也异步执行，那么就会出现一个问题了，<code>resolve</code>是异步的，<code>then</code>也是异步的，究竟谁会先被调用呢？</p>
+<pre><code>console.log(1);
+let promise = new Promise((resolve, reject) =&gt; {
+    console.log(2);
++   setTimeout(() =&gt; {
+        resolve('这次一定');
++       console.log(4);
++   });
+})
+promise.then(
+    result =&gt; {
+        console.log('fulfilled:', result);
+    },
+    reason =&gt; {
+        console.log('rejected:', reason)
+    }
+)
+console.log(3);
+
+</code></pre>
+<p>特别要注意的是当遇到<code>setTimeout</code>的时候被异步执行了，而<code>resolve('这次一定')</code>没有被马上执行，而是先执行<code>console.log(4)</code>，等到<code>then</code>的时候再执行<code>resolve</code>里保存的值。</p>
+<p>这里涉及到了浏览器的事件循环，<code>promise.then()</code> 和 <code>setTimeout()</code> 都是异步任务，但实际上异步任务之间并不相同，因此他们的执行优先级也有区别。
+不同的异步任务被分为两类：<code>微任务 (micro task)</code> 和 <code>宏任务 (macro task</code>)。</p>
+<ul>
+<li><code>setTimeout()</code>属于宏任务</li>
+<li><code>promise.then()</code>属于微任务</li>
+</ul>
+<p>在一个事件循环中，异步事件返回结果后会被放到一个任务队列中。
+然而，根据这个异步事件的类型，这个事件实际上会被对应的宏任务队列或者微任务队列中去。并且在当前执行栈为空的时候，主线程会 查看微任务队列是否有事件存在。
+如果不存在，那么再去宏任务队列中取出一个事件并把对应的回到加入当前执行栈；
+如果存在，则会依次执行队列中事件对应的回调，直到微任务队列为空，然后去宏任务队列中取出最前面的一个事件，把对应的回调加入当前执行栈… 如此反复，进入循环。</p>
+<p>我们只需记住 <strong>当 当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</strong></p>
+<p><strong>回到正文</strong></p>
+<p>我们用同样的代码应用到手写的部分：</p>
+<pre><code>// 测试代码
+console.log(1);
+let promise1 = new myPromise((resolve, reject) =&gt; {
+    console.log(2);
+    setTimeout(() =&gt; {
+        resolve('这次一定');
+        console.log(4);
+    });
+})
+promise1.then(
+    result =&gt; {
+        console.log('fulfilled:', result);
+    },
+    reason =&gt; {
+        console.log('rejected:', reason)
+    }
+)
+console.log(3);
+
+</code></pre>
+<p>可以发现 <code>fulfilled: 这次一定</code> 并没有输出</p>
+<p>我们可以先猜测一下，没有输出的原因很可能是因为<code>then</code>方法没有被执行，看看<code>then</code>方法里面是根据条件判断来执行代码的：也就是说很可能没有符合的条件，再换句话说可能没有符合的状态</p>
+<p>那么我们就在三个位置分别输出当前的状态，这样分别来判断哪个位置出了问题:</p>
+<pre><code>class myPromise {
+	...
+}
+
+// 测试代码
+console.log(1);
+let promise1 = new myPromise((resolve, reject) =&gt; {
+    console.log(2);
+    setTimeout(() =&gt; {
++       console.log('A',promise1.PromiseState);
+        resolve('这次一定');
++       console.log('B',promise1.PromiseState);
+        console.log(4);
+    });
+})
+promise1.then(
+    result =&gt; {
++       console.log('C',promise1.PromiseState);
+        console.log('fulfilled:', result);
+    },
+    reason =&gt; {
+        console.log('rejected:', reason)
+    }
+)
+console.log(3);
+
+</code></pre>
+<p>这里涉及到事件循环，我们详细解读一下：</p>
+<p>▪ <strong>首先</strong>，执行<code>console.log(1)</code>，输出<code>1</code></p>
+<p>▪ <strong>第二步</strong>，创建 promise，执行函数体里的<code>console.log(2)</code>，输出<code>2</code></p>
+<p>▪ <strong>第三步</strong>，遇到<code>setTimeout</code>，<code>setTimeout</code>是宏任务，将<code>setTimeout</code>加入宏任务队列，等待执行</p>
+<p>▪ <strong>第四步</strong>，遇到<code>promise.then()</code>，<code>promise.then()</code>是微任务，将<code>promise.then()</code>加入微任务队列，等待执行</p>
+<p>▪ <strong>第五步</strong>，执行<code>console.log(3)</code>，输出<code>3</code>，此时当前执行栈已经清空</p>
+<p>▪ <strong>第六步</strong>，当前执行栈已经清空，先执行微任务队列的任务 <code>promise.then()</code>，发现 promise 的状态并没有改变，还是<code>pending</code>，所以没有输出。状态并没有改变的原因是：<code>resolve('这次一定')</code>是在<code>setTimeout</code>里的，但此时还没开始执行<code>setTimeout</code>，因为<code>setTimeout</code>是宏任务，宏任务在微任务后面执行</p>
+<p>▪ <strong>第七步</strong>，微任务队列已经清空，开始执行宏任务 <code>setTimeout</code>：</p>
+<pre><code>setTimeout(() =&gt; {
+     console.log('A',promise1.PromiseState);
+     resolve('这次一定');
+     console.log('B',promise1.PromiseState);
+     console.log(4);
+ });
+
+</code></pre>
+<p>▪ <strong>第八步</strong>，执行 <code>console.log('A',promise1.PromiseState)</code>，此时 promise 状态还没发生变化，还是<code>pending</code>，所以输出 <code>A pending</code></p>
+<p>▪ <strong>第九步</strong>，执行 <code>resolve('这次一定');</code>，改变 promise 的状态为<code>fulfilled</code></p>
+<p>▪ <strong>第十步</strong>，执行 <code>console.log('B',promise1.PromiseState)</code>，输出 <code>B fulfilled</code></p>
+<p>▪ <strong>第十一步</strong>，执行 <code>console.log(4)</code>，输出<code>4</code></p>
+<blockquote>
+<p>这里暂且认为我们写的 promise.then() 和原生一样，方便理解</p>
+</blockquote>
+<p>◾ 分析完上面的代码，我们知道了，因为先执行了<code>then</code>方法，但发现这个时候状态依旧是 <code>pending</code>，而我们手写部分没有定义<code>pending</code>待定状态的时候应该做什么，因此就少了<code>fulfilled: 这次一定</code> 这句话的输出</p>
+<p>所以我们就 <strong>直接给<code>then</code>方法里面添加待定状态的情况就可以了</strong>，也就是用<code>if</code>进行判断:</p>
+<pre><code>class myPromise {
+	...
+    then(onFulfilled, onRejected) {
++       if (this.PromiseState === myPromise.PENDING) {
++ 		
++ 		}
+    }
+}
+
+</code></pre>
+<p>◾ 但是问题来了，当<code>then</code>里面判断到 <code>pending</code> 待定状态时我们要干什么？</p>
+<p>因为这个时候<code>resolve</code>或者<code>reject</code>还没获取到任何值，因此我们必须让<code>then</code>里的函数稍后再执行，等<code>resolve</code>执行了以后，再执行<code>then</code></p>
+<p>为了保留<code>then</code>里的函数，我们可以创建 <code>数组</code> 来 <strong>保存函数</strong>。</p>
+<p><strong>为什么用 <code>数组</code> 来保存这些回调呢？因为一个 promise 实例可能会多次 <code>then</code>，也就是经典的 <code>链式调用</code></strong>，而且数组是先入先出的顺序</p>
+<p>在实例化对象的时候就让每个实例都有这两个数组：</p>
+<ul>
+<li><code>onFulfilledCallbacks</code> ：用来 <strong>保存成功回调</strong></li>
+<li><code>onRejectedCallbacks</code> ：用来 <strong>保存失败回调</strong></li>
+</ul>
+<pre><code>class myPromise {
+    constructor(func) {
+        this.PromiseState = myPromise.PENDING;
+        this.PromiseResult = null;
++       this.onFulfilledCallbacks = []; // 保存成功回调
++       this.onRejectedCallbacks = []; // 保存失败回调
+    }
+}
+
+</code></pre>
+<p>◾ 接着就完善<code>then</code>里面的代码，也就是当判断到状态为 <code>pending</code> 待定时，暂时保存两个回调，也就是说暂且把<code>then</code>里的两个函数参数分别放在两个数组里面：</p>
+<pre><code>class myPromise {
+    then(onFulfilled, onRejected) {
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : () =&gt; {};
+        onRejected = typeof onRejected === 'function' ? onRejected : () =&gt; {};
+        if (this.PromiseState === myPromise.PENDING) {
++           this.onFulfilledCallbacks.push(onFulfilled);
++           this.onRejectedCallbacks.push(onRejected);
+        }
+    }
+}
+
+</code></pre>
+<p>◾ 数组里面放完函数以后，就可以完善<code>resolve</code>和<code>reject</code>的代码了</p>
+<p><strong>在执行<code>resolve</code>或者<code>reject</code>的时候，遍历自身的<code>callbacks</code>数组</strong>，看看数组里面有没有<code>then</code>那边 <strong>保留</strong> 过来的 <strong>待执行函数</strong>，<strong>然后逐个执行数组里面的函数</strong>，执行的时候会传入相应的参数：</p>
+<pre><code>class myPromise {
+    resolve(result) {
+        if (this.PromiseState === myPromise.PENDING) {
+            this.PromiseState = myPromise.FULFILLED;
+            this.PromiseResult = result;
++           this.onFulfilledCallbacks.forEach(callback =&gt; {
++               callback(result)
++           })
+        }
+    }
+}
+
+</code></pre>
+<p><strong>但是</strong>细心的同学可能已经发现了，代码输出顺序还是不太对，原生 Promise 中，<code>fulfilled: 这次一定</code> 是最后输出的</p>
+<p>◾ 这里有一个很多人忽略的小细节，<strong>要确保 onFulfilled 和 onRejected 方法异步执行，且应该在 then 方法被调用的那一轮事件循环之后的新执行栈中执行</strong>。因此，<strong>在保存成功和失败回调时也要添加 <code>setTimeout</code></strong></p>
+<pre><code>class myPromise {
+    ...
+    then(onFulfilled, onRejected) {
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value =&gt; value;
+        onRejected = typeof onRejected === 'function' ? onRejected : reason =&gt; {
+            throw reason;
+        };
+        if (this.PromiseState === myPromise.PENDING) {
++           this.onFulfilledCallbacks.push(() =&gt; {
++               setTimeout(() =&gt; {
++                   onFulfilled(this.PromiseResult);
++               });
++           });
++           this.onRejectedCallbacks.push(() =&gt; {
++               setTimeout(() =&gt; {
++                   onRejected(this.PromiseResult);
++               });
++           });
+        }
+        if (this.PromiseState === myPromise.FULFILLED) {
+            setTimeout(() =&gt; {
+                onFulfilled(this.PromiseResult);
+            });
+        }
+        if (this.PromiseState === myPromise.REJECTED) {
+            setTimeout(() =&gt; {
+                onRejected(this.PromiseResult);
+            });
+        }
+    }
+}
+
+</code></pre>
+<h1>五、实现 then 方法的链式调用</h1>
+<p><strong>我们常常用到 <code>new Promise().then().then()</code>，这就是链式调用，用来解决回调地狱</strong></p>
+<p>我们先试一下当前的<code>myPromise</code>是否可以实现链式调用：</p>
+<pre><code>class myPromise {
+    ...
+}
+
+// 测试代码
+let p1 = new myPromise((resolve, reject) =&gt; {
+    resolve(10)
+})
+p1.then(res =&gt; {
+    console.log('fulfilled', res);
+    return 2 * res
+}).then(res =&gt; {
+    console.log('fulfilled', res)
+}) 
+
+</code></pre>
+<p>毫无疑问在控制台里面是会报错的，提示 <code>then</code> 方法没有定义：
+<code>Uncaught TypeError: Cannot read property 'then' of undefined</code></p>
+<p><strong><code>Promise.prototype.then()</code> 方法返回一个新的 Promise 实例（注意，不是原来那个<code>Promise</code>实例）。因此可以采用链式写法，即 then 方法后面再调用另一个 then 方法。</strong></p>
+<ol>
+<li>Promises/A+ 规范的理解</li>
+</ol>
+<hr>
+<p><strong>规范在<code>2.2.7</code>中这样描述 👇：</strong></p>
+<p>◾ <strong>2.2.7 then 方法必须返回一个 promise 对象</strong></p>
+<pre><code>promise2 = promise1.then(onFulfilled, onRejected);
+</code></pre>
+<ul>
+<li><strong>2.2.7.1</strong> 如果 <code>onFulfilled</code> 或者 <code>onRejected</code> 返回一个值 <code>x</code> ，则运行下面的 <strong>Promise 解决过程：<code>[[Resolve]](promise2, x)</code></strong></li>
+<li><strong>2.2.7.2</strong> 如果 <code>onFulfilled</code> 或者 <code>onRejected</code> 抛出一个异常 <code>e</code> ，则 <code>promise2</code> 必须拒绝执行，并返回拒因 <code>e</code></li>
+<li><strong>2.2.7.3</strong> 如果 <code>onFulfilled</code> 不是函数且 <code>promise1</code> 成功执行， <code>promise2</code> 必须成功执行并返回相同的值</li>
+<li><strong>2.2.7.4</strong> 如果 <code>onRejected</code> 不是函数且 <code>promise1</code> 拒绝执行， <code>promise2</code> 必须拒绝执行并返回相同的据因</li>
+</ul>
+<p>理解上面的<code>“返回”</code>部分非常重要，即：<strong>不论 promise1 被 reject 还是被 resolve 时 promise2 都会执行 Promise 解决过程：<code>[[Resolve]](promise2, x)</code>，只有出现异常时才会被 rejected。</strong></p>
+<p>注意 <strong>2.2.7.1</strong> ：</p>
+<blockquote>
+<p>If either onFulfilled or onRejected returns a value x, <strong><code>run the Promise Resolution Procedure [[Resolve]](promise2, x).</code></strong></p>
+</blockquote>
+<p>即：如果 <code>onFulfilled</code> 或者 <code>onRejected</code> 返回一个值 <code>x</code> ，则运行下面的 <strong>Promise 解决过程：<code>[[Resolve]](promise2, x)</code></strong></p>
+<p>规范在 <strong>2.3</strong> 中详细描述 <strong>Promise 解决过程</strong> <code>The Promise Resolution Procedure</code> 👇
+◾ <strong>2.3 Promise 解决过程</strong></p>
+<p><strong>Promise 解决过程</strong> 是一个抽象的操作，其需输入一个 <code>promise</code> 和一个值，我们表示为 <code>[[Resolve]](promise, x)</code>，如果 <code>x</code> 有 <code>then</code> 方法且看上去像一个 <code>Promise</code> ，解决程序即尝试使 <code>promise</code> 接受 <code>x</code> 的状态；否则其用 <code>x</code> 的值来执行 <code>promise</code> 。</p>
+<p>这种 <code>thenable</code> 的特性使得 <code>Promise</code> 的实现更具有通用性：<strong>只要其暴露出一个遵循 <code>Promises/A+</code> 协议的 <code>then</code> 方法即可；这同时也使遵循 <code>Promises/A+</code> 规范的实现可以与那些不太规范但可用的实现能良好共存。</strong></p>
+<p><strong>运行 <code>[[Resolve]](promise, x)</code> 需遵循以下步骤：</strong></p>
+<p>▪ <strong>2.3.1 <code>x</code> 与 promise 相等</strong></p>
+<p>如果 <code>promise</code> 和 <code>x</code> 指向同一对象，以 <code>TypeError</code> 为据因拒绝执行 <code>promise</code></p>
+<p>▪ <strong>2.3.2 <code>x</code> 为 Promise</strong></p>
+<p>如果 <code>x</code> 为 Promise ，则使 <code>promise</code> 接受 <code>x</code> 的状态</p>
+<ul>
+<li>2.3.2.1 如果 <code>x</code> 处于等待态， <code>promise</code> 需保持为等待态直至 <code>x</code> 被执行或拒绝</li>
+<li>2.3.2.2 如果 <code>x</code> 处于执行态，用相同的值执行 <code>promise</code></li>
+<li>2.3.2.3 如果 <code>x</code> 处于拒绝态，用相同的据因拒绝 <code>promise</code></li>
+</ul>
+<p>▪ <strong>2.3.3 <code>x</code> 为对象或函数</strong></p>
+<p>如果 x 为对象或者函数：</p>
+<ul>
+<li>
+<p>2.3.3.1 把 <code>x.then</code> 赋值给 <code>then</code></p>
+</li>
+<li>
+<p>2.3.3.2 如果取 <code>x.then</code> 的值时抛出错误 <code>e</code> ，则以 <code>e</code> 为据因拒绝 <code>promise</code></p>
+</li>
+<li>
+<p>2.3.3.3 如果 <code>then</code> 是函数，将 <code>x</code> 作为函数的作用域 <code>this</code> 调用之。传递两个回调函数作为参数，第一个参数叫做 <code>resolvePromise</code> ，第二个参数叫做 <code>rejectPromise</code>:</p>
+<ul>
+<li>
+<p>2.3.3.3.1 如果 <code>resolvePromise</code> 以值 <code>y</code> 为参数被调用，则运行 <code>[[Resolve]](promise, y)</code></p>
+</li>
+<li>
+<p>2.3.3.3.2 如果 <code>rejectPromise</code> 以据因 <code>r</code> 为参数被调用，则以据因 <code>r</code> 拒绝 <code>promise</code></p>
+</li>
+<li>
+<p>2.3.3.3.3 如果 <code>resolvePromise</code> 和 <code>rejectPromise</code> 均被调用，或者被同一参数调用了多次，则优先采用首次调用并忽略剩下的调用</p>
+</li>
+<li>
+<p>2.3.3.3.4 如果调用 <code>then</code> 方法抛出了异常 <code>e</code>：</p>
+<ul>
+<li>2.3.3.3.4.1 如果 <code>resolvePromise</code> 或 <code>rejectPromise</code> 已经被调用，则忽略之</li>
+<li>2.3.3.3.4.2 否则以 <code>e</code> 为据因拒绝 <code>promise</code></li>
+</ul>
+</li>
+<li>
+<p>2.3.3.4 如果 <code>then</code> 不是函数，以 <code>x</code> 为参数执行 <code>promise</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>▪ 2.3.4 如果 <code>x</code> 不为对象或者函数，以 <code>x</code> 为参数执行 <code>promise</code></strong></p>
+<p>如果一个 <code>promise</code> 被一个循环的 <code>thenable</code> 链中的对象解决，而 <code>[[Resolve]](promise, thenable)</code> 的递归性质又使得其被再次调用，根据上述的算法将会陷入无限递归之中。算法虽不强制要求，但也鼓励施者检测这样的递归是否存在，若检测到存在则以一个可识别的 <code>TypeError</code> 为据因来拒绝 <code>promise</code>。</p>
+<ol start="2">
+<li>Promises/A+ 规范的总结</li>
+</ol>
+<hr>
+<p>基于规范的描述，我们得到以下几点：</p>
+<p><strong>◾ 1.</strong> <code>then</code>方法本身会返回一个新的<code>Promise</code>对象，返回一个新的 Promise 以后它就有自己的<code>then</code>方法，这样就能实现无限的链式</p>
+<p><strong>◾ 2.</strong> 不论 <code>promise1</code> 被 <code>resolve()</code> 还是被 <code>reject()</code> 时 <code>promise2</code> 都会执行 <strong><code>Promise 解决过程：[[Resolve]](promise2, x)</code></strong></p>
+<p>在手写这里我们把这个 <strong><code>Promise 解决过程：[[Resolve]](promise2, x)</code></strong> 命名为 <code>resolvePromise()</code> 方法，参数为 <code>(promise2, x, resolve, reject)</code> 即：</p>
+<pre><code>function resolvePromise(promise2, x, resolve, reject) {}
+</code></pre>
+<p><code>resolvePromise()</code>各参数的意义：</p>
+<pre><code>/**
+ * 对resolve()、reject() 进行改造增强 针对resolve()和reject()中不同值情况 进行处理
+ * @param  {promise} promise2 promise1.then方法返回的新的promise对象
+ * @param  {[type]} x         promise1中onFulfilled或onRejected的返回值
+ * @param  {[type]} resolve   promise2的resolve方法
+ * @param  {[type]} reject    promise2的reject方法
+ */
+function resolvePromise(promise2, x, resolve, reject) {}
+
+</code></pre>
+<p>其实，这个<code>resolvePromise(promise2, x, resolve, reject)</code> 即 <code>Promise 解决过程：[[Resolve]](promise2, x)</code> 就是对<code>resolve()、reject()</code> 进行<strong>改造增强</strong>， 针对<code>resolve()</code>和<code>reject()</code>中不同值情况 进行处理。</p>
+<p><code>resolve()</code>和<code>reject()</code> 返回的 <code>x</code> 值的几种情况：</p>
+<ol>
+<li>
+<p>普通值</p>
+</li>
+<li>
+<p>Promise 对象</p>
+</li>
+<li>
+<p>thenable 对象 / 函数</p>
+</li>
+<li>
+<p>then 方法返回一个新的 Promise</p>
+</li>
+</ol>
+<hr>
+<p>◾ <strong>2.2.7 规范 then 方法必须返回一个 promise 对象</strong></p>
+<p>我们在<code>then</code>方法里面返回一个 <strong><code>新的手写Promise实例</code></strong>，再把原来的代码复制上去：</p>
+<pre><code>class myPromise {
+	...
+    then(onFulfilled, onRejected) {
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value =&gt; value;
+        onRejected = typeof onRejected === 'function' ? onRejected : reason =&gt; {
+            throw reason;
+        };
+        
++       const promise2 = new myPromise((resolve, reject) =&gt; {
+            if (this.PromiseState === myPromise.FULFILLED) {
+                setTimeout(() =&gt; {
+                    onFulfilled(this.PromiseResult);
+                });
+            } else if (this.PromiseState === myPromise.REJECTED) {
+                setTimeout(() =&gt; {
+                    onRejected(this.PromiseResult);
+                });
+            } else if (this.PromiseState === myPromise.PENDING) {
+                this.onFulfilledCallbacks.push(() =&gt; {
+                    setTimeout(() =&gt; {
+                        onFulfilled(this.PromiseResult);
+                    });
+                });
+                this.onRejectedCallbacks.push(() =&gt; {
+                    setTimeout(() =&gt; {
+                        onRejected(this.PromiseResult);
+                    });
+                });
+            }
++       })
+        
++       return promise2
+    }
+}
+
+</code></pre>
+<p><strong>◾ 2.2.7.1 规范</strong> 如果 <code>onFulfilled</code> 或者 <code>onRejected</code> 返回一个值 <code>x</code> ，则运行下面的 <strong>Promise 解决过程：<code>[[Resolve]](promise2, x)</code></strong></p>
+<pre><code>class myPromise {
+	...
+    then(onFulfilled, onRejected) {
+        const promise2 = new myPromise((resolve, reject) =&gt; {
+            if (this.PromiseState === myPromise.FULFILLED) {
+                setTimeout(() =&gt; {
++                   let x = onFulfilled(this.PromiseResult);
++                   resolvePromise(promise2, x, resolve, reject);
+                });
+            } else if (this.PromiseState === myPromise.REJECTED) {
+                setTimeout(() =&gt; {
++                   let x = onRejected(this.PromiseResult);
++                   resolvePromise(promise2, x, resolve, reject);
+                });
+            } 
+        })
+
+        return promise2
+    }
+}
+
++/**
++ * 对resolve()、reject() 进行改造增强 针对resolve()和reject()中不同值情况 进行处理
++ * @param  {promise} promise2 promise1.then方法返回的新的promise对象
++ * @param  {[type]} x         promise1中onFulfilled或onRejected的返回值
++ * @param  {[type]} resolve   promise2的resolve方法
++ * @param  {[type]} reject    promise2的reject方法
++ */
++ function resolvePromise(promise2, x, resolve, reject) {}
+
+</code></pre>
+<p>我们在 <code>myPromise</code> 类外面声明了一个 <strong>Promise 解决过程</strong>：</p>
+<p><strong>◾ 2.2.7.2 如果 <code>onFulfilled</code> 或者 <code>onRejected</code> 抛出一个异常 <code>e</code> ，则 <code>promise2</code> 必须拒绝执行，并返回拒因 <code>e</code></strong></p>
+<pre><code>class myPromise {
+	...
+    then(onFulfilled, onRejected) {
+
+        const promise2 = new myPromise((resolve, reject) =&gt; {
+            if (this.PromiseState === myPromise.FULFILLED) {
+                setTimeout(() =&gt; {
++                   try {
+                        let x = onFulfilled(this.PromiseResult);
+                        resolvePromise(promise2, x, resolve, reject);
++                   } catch (e) {
++                       reject(e); // 捕获前面onFulfilled中抛出的异常
++                   }
+                });
+            } else if (this.PromiseState === myPromise.REJECTED) {
+                setTimeout(() =&gt; {
++                   try {
+                        let x = onRejected(this.PromiseResult);
+                        resolvePromise(promise2, x, resolve, reject);
++                   } catch (e) {
++                       reject(e)
++                   }
+                });
+            } else if (this.PromiseState === myPromise.PENDING) {
+                this.onFulfilledCallbacks.push(() =&gt; {
+                    setTimeout(() =&gt; {
+                        onFulfilled(this.PromiseResult);
+                    });
+                });
+                this.onRejectedCallbacks.push(() =&gt; {
+                    setTimeout(() =&gt; {
+                        onRejected(this.PromiseResult);
+                    });
+                });
+            }
+        })
+
+        return promise2
+    }
+}
+
+</code></pre>
+<p><strong>◾ <code>fulfilled</code> 和 <code>rejected</code> 状态处理完，不要忘了 <code>pending</code> 状态的情况</strong></p>
+<p>我们在 <code>pending</code> 状态保存的 <code>resolve()</code> 和 <code>reject()</code> 回调也要符合 <code>2.2.7.1 和 2.2.7.2 规范</code>：</p>
+<blockquote>
+<p>如果 <code>onFulfilled</code> 或者 <code>onRejected</code> 返回一个值 <code>x</code> ，则运行 Promise 解决过程：<code>[[Resolve]](promise2, x)</code>
+如果 <code>onFulfilled</code> 或者 <code>onRejected</code> 抛出一个异常 <code>e</code> ，则 <code>promise2</code> 必须拒绝执行，并返回拒因 <code>e</code></p>
+</blockquote>
+<pre><code>class myPromise {
+	...
+    then(onFulfilled, onRejected) {
+        const promise2 = new myPromise((resolve, reject) =&gt; {
+            } else if (this.PromiseState === myPromise.PENDING) {
+                this.onFulfilledCallbacks.push(() =&gt; {
+                    setTimeout(() =&gt; {
++                       try {
++                           let x = onFulfilled(this.PromiseResult);
++                           resolvePromise(promise2, x, resolve, reject)
++                       } catch (e) {
++                           reject(e);
++                       }
+                    });
+                });
+                this.onRejectedCallbacks.push(() =&gt; {
+                    setTimeout(() =&gt; {
++                       try {
++                           let x = onRejected(this.PromiseResult);
++                           resolvePromise(promise2, x, resolve, reject);
++                       } catch (e) {
++                           reject(e);
++                       }
+                    });
+                });
+            }
+        })
+
+        return promise2
+    }
+}
+
+</code></pre>
+<p><strong>◾ 2.2.7.3 如果 <code>onFulfilled</code> 不是函数且 <code>promise1</code> 成功执行， <code>promise2</code> 必须成功执行并返回相同的值</strong></p>
+<pre><code>class myPromise {
+    ...
+    then(onFulfilled, onRejected) {
+        const promise2 = new myPromise((resolve, reject) =&gt; {
+            if (this.PromiseState === myPromise.FULFILLED) {
+                setTimeout(() =&gt; {
+                    try {
++                       if (typeof onFulfilled !== 'function') {
++                           resolve(this.PromiseResult);
++                       } else {
+                            let x = onFulfilled(this.PromiseResult);
+                            resolvePromise(promise2, x, resolve, reject);
++                       }
+                    } catch (e) {
+                        reject(e);
+                    }
+                });
+        })
+
+        return promise2
+    }
+}
+</code></pre>
+<p><strong>◾ 2.2.7.4 如果 <code>onRejected</code> 不是函数且 <code>promise1</code> 拒绝执行， <code>promise2</code> 必须拒绝执行并返回相同的据因</strong></p>
+<pre><code>class myPromise {
+    ...
+    then(onFulfilled, onRejected) {
+        const promise2 = new myPromise((resolve, reject) =&gt; {
+	        else if (this.PromiseState === myPromise.REJECTED) {
+                setTimeout(() =&gt; {
+                    try {
++                       if (typeof onRejected !== 'function') {
++                           reject(this.PromiseResult);
++                       } else {
+                            let x = onRejected(this.PromiseResult);
+                            resolvePromise(promise2, x, resolve, reject);
++                       }
+                    } catch (e) {
+                        reject(e)
+                    }
+                });
+            } 
+        })
+
+        return promise2
+    }
+}
+</code></pre>
+<p>规范 <strong>2.2.7.3</strong> 和 <strong>2.2.7.4</strong> 对 <code>onFulfilled</code> 和 <code>onRejected</code> 不是函数的情况做了更详细的描述，根据描述我们对 <code>onFulfilled</code> 和 <code>onRejected</code> 引入了新的参数校验，所以之前的参数校验就可以退役了：</p>
+<pre><code>class myPromise {
+    ...
+    then(onFulfilled, onRejected) {
+-       onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value =&gt; value;
+-       onRejected = typeof onRejected === 'function' ? onRejected : reason =&gt; {
+-           throw reason;
+-       };
+    
+    ...
+    }
+}
+
+
+</code></pre>
+<p>`**</p>
+<h1>六、实现 resolvePromise 方法</h1>
+<p><strong>◾ 2.3.1 如果 <code>promise</code> 和 <code>x</code> 指向同一对象，以 <code>TypeError</code> 为据因拒绝执行 <code>promise</code></strong></p>
+<p>如果从 <code>onFulfilled</code> 或 <code>onRejected</code> 中返回的 x 就是 promise2，会导致 <strong>循环引用报错</strong>，这部分的处理就是要解决这个问题。</p>
+<pre><code>function resolvePromise(promise2, x, resolve, reject) {
++   if (x === promise2) {
++       throw new TypeError('Chaining cycle detected for promise');
++   }
+}
+
+</code></pre>
+<p>在这里我们只需要抛出一个 <code>TypeError</code> 的异常即可，因为调用 <code>resolvePromise</code> 方法外层的 <code>try...catch</code> 会抓住这个异常，然后 <strong>以 TypeError 为据因拒绝执行 promise。</strong></p>
+<p>举一个 <strong>循环引用</strong> 的例子🌰：</p>
+<pre><code>const promise = new Promise((resolve, reject) =&gt; {
+  resolve(100)
+})
+const p1 = promise.then(value =&gt; {
+  console.log(value)
+  return p1
+})
+
+</code></pre>
+<p>使用原生 Promise 执行这个代码，会报类型错误：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4ce362aa04d1474899056757d69c2a80~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p><strong>◾ 2.3.2 如果 <code>x</code> 为 Promise ，则使 <code>promise</code> 接受 <code>x</code> 的状态</strong></p>
+<pre><code>function resolvePromise(promise2, x, resolve, reject) {
+    if (x === promise2) {
+        throw new TypeError('Chaining cycle detected for promise');
+    }
+
++   if (x instanceof myPromise) {
++       /**
++        * 2.3.2 如果 x 为 Promise ，则使 promise2 接受 x 的状态
++        *       也就是继续执行x，如果执行的时候拿到一个y，还要继续解析y
++        */
++       x.then(y =&gt; {
++           resolvePromise(promise2, y, resolve, reject)
++       }, reject);
++   }
+}
+
+</code></pre>
+<p><strong>◾ 2.3.3 如果 <code>x</code> 为对象或者函数</strong> <strong>◾ 2.3.4 如果 <code>x</code> 不为对象或者函数，以 <code>x</code> 为参数执行 <code>promise</code></strong></p>
+<p>在判断<code>x</code>是对象或函数时，<code>x</code> 不能是 <code>null</code>，因为 <code>typeof null</code>的值也为 <code>object</code></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1976a2fb1142468185be97771c418c3c~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>我们应该显式的声明 <code>x != null</code>，这样 当 <code>x</code> 为 <code>null</code> 时，直接执行<code>resolve(x)</code>，否则，如果不这样不声明，<code>x</code> 为 <code>null</code> 时就会走到<code>catch</code>然后<code>reject</code>，这不是我们要的，所以需要检测下<code>null</code>：</p>
+<pre><code>if (x != null &amp;&amp; ((typeof x === 'object' || (typeof x === 'function'))))
+</code></pre>
+<p><strong>◾ 2.3.3 和 2.3.4 规范实现如下：</strong></p>
+<pre><code>function resolvePromise(promise2, x, resolve, reject) {
+    if (x === promise2) {
+        throw new TypeError('Chaining cycle detected for promise');
+    }
+
+    if (x instanceof myPromise) {
+        x.then(y =&gt; {
+            resolvePromise(promise2, y, resolve, reject)
+        }, reject);
++   } else if (x !== null &amp;&amp; ((typeof x === 'object' || (typeof x === 'function')))) {
++       // 2.3.3 如果 x 为对象或函数
++       try {
++           // 2.3.3.1 把 x.then 赋值给 then
++           var then = x.then;
++       } catch (e) {
++           // 2.3.3.2 如果取 x.then 的值时抛出错误 e ，则以 e 为据因拒绝 promise
++           return reject(e);
++       }
++
++       /**
++        * 2.3.3.3 
++        * 如果 then 是函数，将 x 作为函数的作用域 this 调用之。
++        * 传递两个回调函数作为参数，
++        * 第一个参数叫做 `resolvePromise` ，第二个参数叫做 `rejectPromise`
++        */
++       if (typeof then === 'function') {
++           // 2.3.3.3.3 如果 resolvePromise 和 rejectPromise 均被调用，或者被同一参数调用了多次，则优先采用首次调用并忽略剩下的调用
++           let called = false; // 避免多次调用
++           try {
++               then.call(
++                   x,
++                   // 2.3.3.3.1 如果 resolvePromise 以值 y 为参数被调用，则运行 [[Resolve]](promise, y)
++                   y =&gt; {
++                       if (called) return;
++                       called = true;
++                       resolvePromise(promise2, y, resolve, reject);
++                   },
++                   // 2.3.3.3.2 如果 rejectPromise 以据因 r 为参数被调用，则以据因 r 拒绝 promise
++                   r =&gt; {
++                       if (called) return;
++                       called = true;
++                       reject(r);
++                   }
++               )
++           } catch (e) {
++               /**
++                * 2.3.3.3.4 如果调用 then 方法抛出了异常 e
++                * 2.3.3.3.4.1 如果 resolvePromise 或 rejectPromise 已经被调用，则忽略之
++                */
++               if (called) return;
++               called = true;
++
++               /**
++                * 2.3.3.3.4.2 否则以 e 为据因拒绝 promise
++                */
++               reject(e);
++           }
++       } else {
++           // 2.3.3.4 如果 then 不是函数，以 x 为参数执行 promise
++           resolve(x);
++       }
++   } else {
++       // 2.3.4 如果 x 不为对象或者函数，以 x 为参数执行 promise
++       return resolve(x);
++   }
+}
+</code></pre>
+<hr>
+<h1>ES6 新特性 Class 类的全方面理解</h1><h1>类的由来</h1>
+<p>生成实例对象的传统方法是通过构造函数。下面是一个例子。</p>
+<pre><code>function Point(x, y) {
+  this.x = x;
+  this.y = y;
+}
+
+Point.prototype.toString = function () {
+  return '(' + this.x + ', ' + this.y + ')';
+};
+
+var p = new Point(1, 2);
+</code></pre>
+<p>ES6 提供了更接近传统语言的写法，引入了 Class（类）这个概念，作为对象的模板。
+基本上，ES6 的<code>class</code>可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做到
+用 ES6 的<code>class</code>改写，就是下面这样。</p>
+<pre><code>class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  toString() {
+    return '(' + this.x + ', ' + this.y + ')';
+  }
+}
+</code></pre>
+<p>上面代码定义了一个 “类”，可以看到里面有一个<code>constructor()</code>方法，这就是构造方法，而<code>this</code>关键字则代表实例对象。</p>
+<p>◾ <code>Point</code>类除了构造方法，还定义了一个<code>toString()</code>方法。
+<strong>注意，定义<code>toString()</code>方法的时候，前面不需要加上<code>function</code>这个关键字，直接把函数定义放进去了就可以了。
+另外，方法与方法之间不需要逗号分隔，加了会报错。</strong></p>
+<h2>ES6 的类，完全可以看作构造函数的另一种写法。</h2>
+<pre><code>class Point {
+  // ...
+}
+typeof Point // &quot;function&quot;
+Point === Point.prototype.constructor // true
+</code></pre>
+<p>上面代码表明，类的数据类型就是函数，类本身就指向构造函数。
+使用的时候，也是直接对类使用<code>new</code>命令，跟构造函数的用法完全一致。</p>
+<pre><code>class Bar {
+  doStuff() {
+    console.log('stuff');
+  }
+}
+
+const b = new Bar();
+b.doStuff() // &quot;stuff&quot;
+</code></pre>
+<p>构造函数的<code>prototype</code>属性，在 ES6 的 “类” 上面继续存在。事实上，类的所有方法都定义在类的<code>prototype</code>属性上面。</p>
+<pre><code>class Point {
+  constructor() {
+    // ...
+  }
+
+  toString() {
+    // ...
+  }
+
+  toValue() {
+    // ...
+  }
+}
+
+// 等同于
+
+Point.prototype = {
+  constructor() {},
+  toString() {},
+  toValue() {},
+};
+</code></pre>
+<p>上面代码中，<code>constructor()</code>、<code>toString()</code>、<code>toValue()</code>这三个方法，其实都是定义在<code>Point.prototype</code>上面。
+因此，在类的实例上面调用方法，其实就是调用原型上的方法。</p>
+<pre><code>class B {}
+const b = new B();
+
+b.constructor === B.prototype.constructor // true
+</code></pre>
+<p>上面代码中，<code>b</code>是<code>B</code>类的实例，它的<code>constructor()</code>方法就是<code>B</code>类原型的<code>constructor()</code>方法。
+由于类的方法都定义在<code>prototype</code>对象上面，所以类的新方法可以添加在<code>prototype</code>对象上面。<code>Object.assign()</code>方法可以很方便地一次向类添加多个方法。</p>
+<pre><code>class Point {
+  constructor(){
+    // ...
+  }
+}
+
+Object.assign(Point.prototype, {
+  toString(){},
+  toValue(){}
+});
+</code></pre>
+<p><code>prototype</code>对象的<code>constructor()</code>属性，直接指向 “类” 的本身，这与 ES5 的行为是一致的。</p>
+<pre><code>Point.prototype.constructor === Point // true
+</code></pre>
+<h2>类的内部所有定义的方法，都是不可枚举的（non-enumerable）。</h2>
+<pre><code>class Point {
+  constructor(x, y) {
+    // ...
+  }
+
+  toString() {
+    // ...
+  }
+}
+
+Object.keys(Point.prototype)
+// []
+Object.getOwnPropertyNames(Point.prototype)
+// [&quot;constructor&quot;,&quot;toString&quot;]
+</code></pre>
+<p>上面代码中，<code>toString()</code>方法是<code>Point</code>类内部定义的方法，它是不可枚举的。这一点与 ES5 的行为不一致。</p>
+<pre><code>var Point = function (x, y) {
+  // ...
+};
+
+Point.prototype.toString = function () {
+  // ...
+};
+
+Object.keys(Point.prototype)
+// [&quot;toString&quot;]
+Object.getOwnPropertyNames(Point.prototype)
+// [&quot;constructor&quot;,&quot;toString&quot;]
+</code></pre>
+<p>上面代码采用 ES5 的写法，<code>toString()</code>方法就是可枚举的。</p>
+<p><em>注：在 JavaScript 中，对象的属性分为可枚举和不可枚举之分。可枚举性决定了这个属性能否被 for…in 查找遍历到。</em></p>
+<blockquote>
+<p>可枚举属性是指那些内部 “可枚举” 标志设置为 <code>true</code> 的属性，对于通过直接的赋值和属性初始化的属性，该标识值默认为即为 <code>true</code>，对于通过 <code>Object.defineProperty</code> 等定义的属性，该标识值默认为 <code>false</code>。可枚举的属性可以通过 <code>for...in</code> 循环进行遍历（除非该属性名是一个 Symbol）。</p>
+</blockquote>
+<p>属性的枚举性会影响以下三个函数的结果：</p>
+<ul>
+<li>
+<p>for…in</p>
+</li>
+<li>
+<p>Object.keys()</p>
+</li>
+<li>
+<p>JSON.stringify</p>
+</li>
+</ul>
+<h1>构造函数 constructor</h1>
+<p><strong><code>constructor</code></strong> 是一种用于创建和初始化<code>class</code>创建的对象的特殊方法。</p>
+<pre><code>class Polygon {
+  constructor() {
+    this.name = 'Polygon';
+  }
+}
+
+const poly1 = new Polygon();
+
+console.log(poly1.name);
+// expected output: &quot;Polygon&quot;
+</code></pre>
+<p><code>constructor()</code>方法是类的默认方法，<strong>通过<code>new</code>命令生成对象实例时，自动调用该方法</strong>。一个类必须有<code>constructor()</code>方法，如果没有显式定义，一个空的<code>constructor()</code>方法会被默认添加。</p>
+<pre><code>class Point {
+}
+
+// 等同于
+class Point {
+  constructor() {}
+}
+</code></pre>
+<p>上面代码中，定义了一个空的类<code>Point</code>，JavaScript 引擎会自动为它添加一个空的<code>constructor()</code>方法。</p>
+<p><code>constructor()</code>方法默认返回实例对象（即<code>this</code>），完全可以指定返回另外一个对象。</p>
+<pre><code>class Foo {
+  constructor() {
+    return Object.create(null);
+  }
+}
+
+new Foo() instanceof Foo
+// false
+</code></pre>
+<p>上面代码中，<code>constructor()</code>函数返回一个全新的对象，结果导致实例对象不是<code>Foo</code>类的实例。</p>
+<p>类必须使用<code>new</code>调用，否则会报错。这是它跟普通构造函数的一个主要区别，后者不用<code>new</code>也可以执行。</p>
+<pre><code>class Foo {
+  constructor() {
+    return Object.create(null);
+  }
+}
+
+Foo()
+// TypeError: Class constructor Foo cannot be invoked without 'new'
+</code></pre>
+<p>在一个类中只能有一个名为 “constructor” 的特殊方法。 一个类中出现多次构造函数 (<code>constructor)</code>方法将会抛出一个 <code>SyntaxError</code>错误。</p>
+<p>在一个构造方法中可以使用<code>super</code>关键字来调用一个父类的构造方法。</p>
+<p>如果没有显式指定构造方法，则会添加默认的 constructor 方法。</p>
+<p>如果不指定一个构造函数 (constructor) 方法, 则使用一个默认的构造函数(constructor)。</p>
+<p><strong>◾ 使用 constructor 方法</strong></p>
+<pre><code>class Square extends Polygon {
+    constructor(length) {
+        // 在这里, 它调用了父类的构造函数, 并将 lengths 提供给 Polygon 的&quot;width&quot;和&quot;height&quot;
+        super(length, length);
+        // 注意: 在派生类中, 必须先调用 super() 才能使用 &quot;this&quot;。
+        // 忽略这个，将会导致一个引用错误。
+        this.name = 'Square';
+    }
+    get area() {
+        return this.height * this.width;
+    }
+    set area(value) {
+        // 注意：不可使用 this.area = value
+        // 否则会导致循环call setter方法导致爆栈
+        this._area = value;
+    }
+}
+</code></pre>
+<p>这里包含两个重要知识点：</p>
+<ul>
+<li>注意: 在派生类中, 必须先调用 super() 才能使用 &quot;this&quot;。忽略这个，将会导致一个引用错误。</li>
+<li>注意：在 <code>set area(value)</code>中 不可使用 <code>this.area = value</code>，否则会导致循环 call setter 方法导致爆栈</li>
+</ul>
+<p><strong>◾ 默认构造方法</strong></p>
+<p>如前所述，如果不指定构造方法，则使用默认构造函数。对于基类，默认构造函数是：</p>
+<pre><code>constructor() {}
+</code></pre>
+<p>Copy to Clipboard</p>
+<p>对于派生类，默认构造函数是：</p>
+<pre><code>constructor(...args) {
+  super(...args);
+}
+</code></pre>
+<h1>类的实例化</h1>
+<p>class 的实例化必须通过 new 关键字。</p>
+<pre><code>class Example {} 
+let exam1 = Example(); 
+// Class constructor Example cannot be invoked without 'new'
+</code></pre>
+<p><strong>◾ 实例化对象</strong></p>
+<p>类的所有实例共享一个原型对象。</p>
+<pre><code>class Example {
+    constructor(a, b) {
+        this.a = a;
+        this.b = b;
+        console.log('Example');
+    }
+    sum() {
+        return this.a + this.b;
+    }
+}
+let exam1 = new Example(2, 1);
+let exam2 = new Example(3, 1);
+console.log(exam1._proto_ == exam2._proto_); // true 
+
+exam1._proto_.sub = function () {
+    return this.a - this.b;
+}
+console.log(exam1.sub()); // 1 
+console.log(exam2.sub()); // 2
+</code></pre>
+<p>上面代码中，<code>exam1</code>和<code>exam2</code>都是<code>Example</code>的实例，它们的原型都是<code>Example.prototype</code>，所以<code>__proto__</code>属性是相等的。</p>
+<p>这也意味着，可以通过实例的<code>__proto__</code>属性为 “类” 添加方法。</p>
+<blockquote>
+<p><code>__proto__</code> 并不是语言本身的特性，这是各大厂商具体实现时添加的私有属性，虽然目前很多现代浏览器的 JS 引擎中都提供了这个私有属性，但依旧不建议在生产中使用该属性，避免对环境产生依赖。生产环境中，我们可以使用 <code>Object.getPrototypeOf</code> 方法来获取实例对象的原型，然后再来为原型添加方法 / 属性。</p>
+</blockquote>
+<p>使用实例的<code>__proto__</code>属性改写原型，必须相当谨慎，不推荐使用，因为这会改变 “类” 的原始定义，影响到所有实例。</p>
+<h1>取值函数 (getter) 和存值函数 (setter)</h1>
+<p>在 “类” 的内部可以使用<code>get</code>和<code>set</code>关键字，对某个属性设置存值函数和取值函数，拦截该属性的存取行为。</p>
+<pre><code>class MyClass {
+  constructor() {
+    // ...
+  }
+  get prop() {
+    return 'getter';
+  }
+  set prop(value) {
+    console.log('setter: '+value);
+  }
+}
+
+let inst = new MyClass();
+
+inst.prop = 123;
+// setter: 123
+
+inst.prop
+// 'getter'
+</code></pre>
+<p>上面代码中，<code>prop</code>属性有对应的存值函数和取值函数，因此赋值和读取行为都被自定义了。</p>
+<p>存值函数和取值函数是设置在属性的 Descriptor 对象上的。</p>
+<pre><code>class CustomHTMLElement {
+  constructor(element) {
+    this.element = element;
+  }
+
+  get html() {
+    return this.element.innerHTML;
+  }
+
+  set html(value) {
+    this.element.innerHTML = value;
+  }
+}
+
+var descriptor = Object.getOwnPropertyDescriptor(
+  CustomHTMLElement.prototype, &quot;html&quot;
+);
+
+&quot;get&quot; in descriptor  // true
+&quot;set&quot; in descriptor  // true
+</code></pre>
+<p>上面代码中，存值函数和取值函数是定义在<code>html</code>属性的描述对象上面，这与 ES5 完全一致。</p>
+<pre><code>class Example {
+    constructor(a, b) {
+        this.a = a; // 实例化时调用 set 方法
+        this.b = b;
+    }
+    get a() {
+        console.log('getter');
+        return this.a;
+    }
+    set a(a) {
+        console.log('setter');
+        this.a = a; // 自身递归调用
+    }
+}
+let exam = new Example(1, 2); // 不断输出 setter ，最终导致 RangeError
+class Example1 {
+    constructor(a, b) {
+        this.a = a;
+        this.b = b;
+    }
+    get a() {
+        console.log('getter');
+        return this._a;
+    }
+    set a(a) {
+        console.log('setter');
+        this._a = a;
+    }
+}
+let exam1 = new Example1(1, 2); // 只输出 setter , 不会调用 getter 方法
+console.log(exam1._a); // 1, 可以直接访问
+</code></pre>
+<p><strong>◾ getter 不可单独出现</strong></p>
+<pre><code>class Example {
+    constructor(a) {
+        this.a = a;
+    }
+    get a() {
+        return this.a;
+    }
+}
+let exam = new Example(1); 
+// Uncaught TypeError: Cannot set property a of #&lt;Example&gt; which has only a getter
+</code></pre>
+<p><strong>◾ getter 与 setter 必须同级出现</strong></p>
+<pre><code>class Father {
+    constructor() {}
+    get a() {
+        return this._a;
+    }
+}
+class Child extends Father {
+    constructor() {
+        super();
+    }
+    set a(a) {
+        this._a = a;
+    }
+}
+let test = new Child();
+test.a = 2;
+console.log(test.a); // undefined
+</code></pre>
+<p><strong>正确写法：创建类的时候同时声明<code>get</code> 和<code>set</code>，或者把 <code>get</code> 和<code>set</code>都放在子类中</strong></p>
+<pre><code>class Father1 {
+    constructor() {}
+    // 或者都放在子类中
+    get a() {
+        return this._a;
+    }
+    set a(a) {
+        this._a = a;
+    }
+}
+class Child1 extends Father1 {
+    constructor() {
+        super();
+    }
+}
+let test1 = new Child1();
+test1.a = 2;
+console.log(test1.a); // 2
+</code></pre>
+<h1>静态方法 static</h1>
+<p>类（class）通过 <strong>static</strong> 关键字定义静态方法。不能在类的实例上调用静态方法，而应该通过类本身调用。这
+些通常是实用程序方法，例如创建或克隆对象的功能。</p>
+<p>类相当于实例的原型，所有在类中定义的方法，都会被实例继承。如果在一个方法前，加上<code>static</code>关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为 “静态方法”。</p>
+<pre><code>class Foo {
+  static classMethod() {
+    return 'hello';
+  }
+}
+
+Foo.classMethod() // 'hello'
+
+var foo = new Foo();
+foo.classMethod()
+// TypeError: foo.classMethod is not a function
+</code></pre>
+<p>上面代码中，<code>Foo</code>类的<code>classMethod</code>方法前有<code>static</code>关键字，表明该方法是一个静态方法，可以直接在<code>Foo</code>类上调用（<code>Foo.classMethod()</code>），而不是在<code>Foo</code>类的实例上调用。如果在实例上调用静态方法，会抛出一个错误，表示不存在该方法。</p>
+<p>◾ 注意，如果静态方法包含<code>this</code>关键字，这个<code>this</code>指的是类，而不是实例。</p>
+<pre><code>class Foo {
+  static bar() {
+    this.baz();
+  }
+  static baz() {
+    console.log('hello');
+  }
+  baz() {
+    console.log('world');
+  }
+}
+
+Foo.bar() // hello
+</code></pre>
+<p>上面代码中，静态方法<code>bar</code>调用了<code>this.baz</code>，这里的<code>this</code>指的是<code>Foo</code>类，而不是<code>Foo</code>的实例，等同于调用<code>Foo.baz</code>。另外，从这个例子还可以看出，静态方法可以与非静态方法重名。</p>
+<p>◾ 父类的静态方法，可以被子类继承。</p>
+<pre><code>class Foo {
+  static classMethod() {
+    return 'hello';
+  }
+}
+
+class Bar extends Foo {
+}
+
+Bar.classMethod() // 'hello'
+</code></pre>
+<p>上面代码中，父类<code>Foo</code>有一个静态方法，子类<code>Bar</code>可以调用这个方法。</p>
+<p>◾ 静态方法也是可以从<code>super</code>对象上调用的。</p>
+<pre><code>class Foo {
+  static classMethod() {
+    return 'hello';
+  }
+}
+
+class Bar extends Foo {
+  static classMethod() {
+    return super.classMethod() + ', too';
+  }
+}
+
+Bar.classMethod() // &quot;hello, too&quot;
+</code></pre>
+<h1>关键字 super</h1>
+<p><strong>super</strong> 关键字用于访问和调用一个对象的父对象上的函数。</p>
+<p><strong>在构造函数中使用时，<code>super</code>关键字将单独出现</strong>，并且<strong>必须在使用<code>this</code>关键字之前使用。<code>super</code>关键字也可以用来调用父对象上的函数</strong>。</p>
+<p><strong>◾ 调用父类的构造函数</strong></p>
+<pre><code>class Polygon {
+  constructor(height, width) {
+    this.name = 'Rectangle';
+    this.height = height;
+    this.width = width;
+  }
+  sayName() {
+    console.log('Hi, I am a ', this.name + '.');
+  }
+  get area() {
+    return this.height * this.width;
+  }
+  set area(value) {
+    this._area = value;
+  }
+}
+
+class Square extends Polygon {
+  constructor(length) {
+    this.height; // 这样直接 this.heigh t会报错：ReferenceError，因为 super 需要先被调用！
+
+    // 这里，它调用父类的构造函数的,
+    // 作为Polygon 的 height, width
+    super(length, length);
+
+    // 注意: 在派生的类中, 在你可以使用'this'之前, 必须先调用super()。
+    // 忽略这, 这将导致引用错误。
+    this.name = 'Square';
+  }
+}
+</code></pre>
+<p><strong>◾ 调用父类上的静态方法</strong></p>
+<pre><code>class Rectangle {
+  constructor() {}
+  static logNbSides() {
+    return 'I have 4 sides';
+  }
+}
+
+class Square extends Rectangle {
+  constructor() {}
+  static logDescription() {
+    return super.logNbSides() + ' which are all equal';
+  }
+}
+Square.logDescription(); // 'I have 4 sides which are all equal'
+</code></pre>
+<p><strong>◾ 子类 constructor 方法中必须有 super ，且必须出现在 this 之前。</strong></p>
+<p>下面是两个错误写法：</p>
+<pre><code>class Father {
+    constructor() {}
+}
+class Child extends Father {
+    constructor() {}
+}
+let test = new Child();
+// Uncaught ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+</code></pre>
+<pre><code>class Father {
+    constructor() {}
+}
+class Child extends Father {
+    or
+    constructor(a) {
+        this.a = a;
+        super();
+    }
+}
+let test = new Child();
+// Uncaught ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+</code></pre>
+<p><strong>◾ 调用父类构造函数, 只能出现在子类的构造函数。</strong></p>
+<pre><code>class Father {
+    test() {
+        return 0;
+    }
+    static test1() {
+        return 1;
+    }
+}
+class Child extends Father {
+    constructor() {
+        super();
+    }
+}
+class Child1 extends Father {
+    test2() {
+        super(); // Uncaught SyntaxError: 'super' keyword unexpected     
+        // here
+    }
+}
+</code></pre>
+<p><strong>◾ 调用父类方法, super 作为对象，在普通方法中，指向父类的原型对象，在静态方法中，指向父类。</strong></p>
+<pre><code>class Child2 extends Father {
+    constructor(){
+        super();
+        // 调用父类普通方法
+        console.log(super.test()); // 0
+    }
+    static test3(){
+        // 调用父类静态方法
+        return super.test1+2;
+    }
+}
+Child2.test3(); // 3
+</code></pre>
+<h1>继承 extends</h1>
+<p>Class 可以通过<code>extends</code>关键字实现继承，这比 ES5 的通过修改原型链实现继承，要清晰和方便很多。</p>
+<pre><code>class Point {
+}
+
+class ColorPoint extends Point {
+}
+</code></pre>
+<p>上面代码定义了一个<code>ColorPoint</code>类，该类通过<code>extends</code>关键字，继承了<code>Point</code>类的所有属性和方法。但是由于没有部署任何代码，所以这两个类完全一样，等于复制了一个<code>Point</code>类。下面，我们在<code>ColorPoint</code>内部加上代码。</p>
+<pre><code>class ColorPoint extends Point {
+  constructor(x, y, color) {
+    super(x, y); // 调用父类的constructor(x, y)
+    this.color = color;
+  }
+
+  toString() {
+    return this.color + ' ' + super.toString(); // 调用父类的toString()
+  }
+}
+</code></pre>
+<p>上面代码中，<code>constructor</code>方法和<code>toString</code>方法之中，都出现了<code>super</code>关键字，它在这里表示父类的构造函数，用来新建父类的<code>this</code>对象。</p>
+<p>◾ 子类必须在<code>constructor</code>方法中调用<code>super</code>方法，否则新建实例时会报错。这是因为子类自己的<code>this</code>对象，必须先通过父类的构造函数完成塑造，得到与父类同样的实例属性和方法，然后再对其进行加工，加上子类自己的实例属性和方法。如果不调用<code>super</code>方法，子类就得不到<code>this</code>对象。</p>
+<pre><code>class Point { /* ... */ }
+
+class ColorPoint extends Point {
+  constructor() {
+  }
+}
+
+let cp = new ColorPoint(); // ReferenceError
+</code></pre>
+<p>上面代码中，<code>ColorPoint</code>继承了父类<code>Point</code>，但是它的构造函数没有调用<code>super</code>方法，导致新建实例时报错。</p>
+<p>ES5 的继承，实质是先创造子类的实例对象<code>this</code>，然后再将父类的方法添加到<code>this</code>上面（<code>Parent.apply(this)</code>）。ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到<code>this</code>上面（所以必须先调用<code>super</code>方法），然后再用子类的构造函数修改<code>this</code>。</p>
+<p>如果子类没有定义<code>constructor</code>方法，这个方法会被默认添加，代码如下。也就是说，不管有没有显式定义，任何一个子类都有<code>constructor</code>方法。</p>
+<pre><code>class ColorPoint extends Point {
+}
+
+// 等同于
+class ColorPoint extends Point {
+  constructor(...args) {
+    super(...args);
+  }
+}
+</code></pre>
+<p>另一个需要注意的地方是，在子类的构造函数中，只有调用<code>super</code>之后，才可以使用<code>this</code>关键字，否则会报错。这是因为子类实例的构建，基于父类实例，只有<code>super</code>方法才能调用父类实例。</p>
+<pre><code>class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+class ColorPoint extends Point {
+  constructor(x, y, color) {
+    this.color = color; // ReferenceError
+    super(x, y);
+    this.color = color; // 正确
+  }
+}
+</code></pre>
+<p>上面代码中，子类的<code>constructor</code>方法没有调用<code>super</code>之前，就使用<code>this</code>关键字，结果报错，而放在<code>super</code>方法之后就是正确的。</p>
+<p>下面是生成子类实例的代码。</p>
+<pre><code>let cp = new ColorPoint(25, 8, 'green');
+
+cp instanceof ColorPoint // true
+cp instanceof Point // true
+</code></pre>
+<p>上面代码中，实例对象<code>cp</code>同时是<code>ColorPoint</code>和<code>Point</code>两个类的实例，这与 ES5 的行为完全一致。</p>
+<p>最后，父类的静态方法，也会被子类继承。</p>
+<pre><code>class A {
+  static hello() {
+    console.log('hello world');
+  }
+}
+
+class B extends A {
+}
+
+B.hello()  // hello world
+</code></pre>
+<p>上面代码中，<code>hello()</code>是<code>A</code>类的静态方法，<code>B</code>继承<code>A</code>，也继承了<code>A</code>的静态方法。</p>
+<h1>不存在变量提升</h1>
+<p>类不存在变量提升（hoist），这一点与 ES5 完全不同。</p>
+<pre><code>new Foo(); // ReferenceError
+class Foo {}
+</code></pre>
+<p>上面代码中，<code>Foo</code>类使用在前，定义在后，这样会报错，因为 ES6 不会把类的声明提升到代码头部。这种规定的原因与下文要提到的继承有关，必须保证子类在父类之后定义。</p>
+<pre><code>{
+  let Foo = class {};
+  class Bar extends Foo {
+  }
+}
+</code></pre>
+<p>上面的代码不会报错，因为<code>Bar</code>继承<code>Foo</code>的时候，<code>Foo</code>已经有定义了。但是，如果存在<code>class</code>的提升，上面代码就会报错，因为<code>class</code>会被提升到代码头部，而<code>let</code>命令是不提升的，所以导致<code>Bar</code>继承<code>Foo</code>的时候，<code>Foo</code>还没有定义。</p>
+<hr>
+<h1>JS 中的 this 到底指向啥？</h1><h2><strong>this 到底是啥</strong></h2>
+<p>其实 this 就是一个指针，它指示的就是当前的一个执行环境，可以用来对当前执行环境进行一些操作。
+因为它指示的是执行环境，所以在定义这个变量时，其实是不知道它真正的值的，只有运行时才能确定他的值。</p>
+<p>这个方法很简单，只是给 this 添加了一个 name 属性，我们把这个方法复制到 Chrome 调试工具看下结果：</p>
+<p><img src="https://dl-harmonyos.51cto.com/images/202101/b3ee817353af7143689614be5f879048a42df6.png" alt="">上图中我们直接调用了 func()，发现 this 指向的是 window，name 属性添加到了 window 上。</p>
+<p>下面我们换一种调用方式，我们换成 new func() 来调用：</p>
+<p><img src="https://dl-harmonyos.51cto.com/images/202101/b1d7c6308dadd68d9529020c1fb620f78617f0.png" alt="">我们看到输出了两个 func {name: &quot;小小飞&quot;}，一个是我们 new 返回的对象，另一个是方法里面的 console。这两个值是一样的，说明这时候方法里面 this 就指向了 new 返回的对象，而不是前面例子的 window 了。
+这是因为当你使用 new 去调用一个方法时，这个方法其实就作为构造函数使用了，这时候的 this 指向的是 new 出来的对象。</p>
+<h2>分别讲解下几种情况</h2>
+<h3><strong>使用 new 调用时，this 指向 new 出来的对象</strong></h3>
+<p>当你用 new 来执行一个函数时，这个函数就变成了一个类，new 关键字会返回一个类的实例给你，这个函数会充当构造函数的角色。作为面向对象的构造函数，必须要有能够给实例初始化属性的能力，所以构造函数里面必须要有某种机制来操作生成的实例，这种机制就是 this。让 this 指向生成的实例就可以通过 this 来操作实例了。</p>
+<p>this 的这种特性还有一些妙用。</p>
+<p>一个函数可以直接调用，也可以用 new 调用，那假如我只想使用者通过 new 调用有没有办法呢？下图截取自 Vue 源码：</p>
+<p><img src="https://dl-harmonyos.51cto.com/images/202101/b7c881854b442e3736d479885887141be4533b.png" alt="">Vue 巧妙利用了 this 的特性，通过检查 this 是不是 Vue 的一个实例来检测使用者是通过 new 调用的还是直接调用的。</p>
+<h3><strong>没有明确调用者时，this 指向 window</strong></h3>
+<p>这个其实在最开始的例子就讲过了，那里没有明确调用者，this 指向的是 window。
+我们这里讲另外一个例子，函数里面的函数，this 指向谁？我们执行一下看看：</p>
+<p><img src="https://dl-harmonyos.51cto.com/images/202101/787cd4c711315c740ff279c067f9a41ab4e344.png" alt="">使用 new 执行：</p>
+<p><img src="https://dl-harmonyos.51cto.com/images/202101/226a98518ebe5af82809364610bc69e6037898.png" alt="">我们发现无论是直接执行，还是使用 new 执行，this 的值都指向的 window。直接执行时很好理解，因为没有明确调用者，那 this 自然就是 window。
+需要注意的是使用 new 时，只有被 new 的 func 才是构造函数，他的 this 指向 new 出来的对象，他里面的函数的 this 还是指向 window。</p>
+<h3><strong>有明确调用者时，this 指向调用者</strong></h3>
+<p>上述例子很好理解，因为调用者是 obj，所以 func 里面的 this 就指向 obj，this.myName 就是 obj.myName。其实这一条和上一条可以合在一起，没有明确调用者时其实隐含的调用者就是 window，所以经常有人说 this 总是指向调用者。</p>
+<h3><strong>箭头函数并不会绑定 this</strong></h3>
+<p>箭头函数在申明时 this 确定为当前作用域的 this，在这里就是 func 的作用域，跟 func 的 this 一样指向 new 出来的实例。如果不用 new，而是直接调用，这里的 this 就指向 window。</p>
+<h3><strong>DOM 事件回调里面，this 指向绑定事件的对象</strong></h3>
+<p>currentTarget 指的是绑定事件的 DOM 对象，target 指的是触发事件的对象。
+DOM 事件回调里面 this 总是指向 currentTarget，如果触发事件的对象刚好是绑定事件的对象，即 target === currentTarget，this 也会顺便指向 target。
+如果回调是箭头函数，this 是箭头函数申明时作用域的 this。</p>
+<h3><strong>严格模式下 this 是 undefined</strong></h3>
+<p>注意这里说的严格模式下 this 是 undefined 是指在函数体内部，如果本身就在全局作用域，this 还是指向 window。</p>
+<hr>
+<h1>JavaScript 判断是否为数字的几种方式</h1><h2>1. typeof、instanceof、Number.isInteger</h2>
+<p>=====================================</p>
+<p><code>typeof</code>判断值是不是基本类型<code>number</code>，比如：</p>
+<pre><code>let num = 1;
+typeof num === 'number'; // true
+
+</code></pre>
+<p><code>instanceof</code>判断值是不是<a href="https://so.csdn.net/so/search?q=%E5%8C%85%E8%A3%85%E7%B1%BB&amp;spm=1001.2101.3001.7020">包装类</a><code>Number</code>，比如：</p>
+<pre><code>let num = new Number(1);
+num instanceof Number; // true
+
+</code></pre>
+<p><code>Number.isInteger</code>判断值是否是整数：</p>
+<pre><code>Number.isInteger(1);   // true
+Number.isInteger('1'); // false
+Number.isInteger(1.1); // false
+
+</code></pre>
+<p>这几种方式的缺点，都是只能基于类型判断，无法判断字符串是否是数值。</p>
+<h2>. parseInt、<a href="https://so.csdn.net/so/search?q=parseFloat&amp;spm=1001.2101.3001.7020">parseFloat</a></h2>
+<p>这个方法的特点，一句话，返回字符串开头最长的有效数字。
+我们可以用<code>!isNaN(parseFloat(value))</code>来判断字符串是否是数值。</p>
+<pre><code>let str1 = '123';
+let str2 = 'abc';
+!isNaN(parseFloat(str1)); // true，是数字
+!isNaN(parseFloat(str2)); // false，不是数字
+
+</code></pre>
+<p><code>parseInt</code>和<code>parseFloat</code>解析的时候遇到非法字符结束，返回解析到的数值。也就是说只要字符串头部是合法数值，那么就能解析出数值，哪怕整体不是数值。比如<code>123abc</code>，会被解析程<code>123</code>。</p>
+<p>因此，上面的判断方式还不够严谨，下面的终极方案是比较严谨的方式。</p>
+<h2>. <a href="https://so.csdn.net/so/search?q=isNaN&amp;spm=1001.2101.3001.7020">isNaN</a>、isFinite</h2>
+<p>在介绍这两个方法之前，先讲下<code>NaN</code>，它表示<code>Not-a-Number</code>。两个<code>NaN</code>无法直接比较相等，因为我们只知道它不是数值，是啥不确定，也就无法比较相等。</p>
+<pre><code>NaN === NaN;         // false
+NaN == NaN;          // false
+Object.is(NaN, NaN); // false
+
+</code></pre>
+<ul>
+<li><code>isNaN(value)</code>，如果<code>ToNumber(value)</code>的结果为<code>NaN</code>返回<code>true</code>，否则返回<code>false</code>。</li>
+<li><code>isFinite(value)</code>，如果<code>ToNumber(value)</code>的结果为数值，且不等于<code>Infinity</code>或<code>-Infinity</code>返回<code>true</code>，否则返回<code>false</code>。</li>
+</ul>
+<p><code>isNaN</code>和<code>isFinite</code>都会先将传入的值转成数值，再进行判断。<code>ToNumber</code>的规则跟直接使用<code>Number</code>函数一样。一些非数值在类型转换的时候都能转成数值，比如：</p>
+<pre><code>Number(true);         // 1
+Number(false);        // 0
+Number(null);         // 0
+Number('');           // 0
+
+</code></pre>
+<p>对<code>null</code>、<code>true</code>、<code>false</code>、<code>''</code>使用<code>isNaN</code>结果都是<code>false</code>，但是它们本身不是数值，因此不能单独使用<code>isNaN</code>。</p>
+<h2>Number.isNaN、Number.isFinite</h2>
+<p>===============================</p>
+<p>这两个方法跟对应的全局方法是不一样的。</p>
+<ul>
+<li><code>Number.isNaN(value)</code>，如果<code>value</code>为<code>NaN</code>返回<code>true</code>，否则返回<code>false</code>。</li>
+<li><code>Number.isFinite(value)</code>，如果<code>value</code>为数值，且不等于<code>Infinity</code>或<code>-Infinity</code>返回<code>true</code>，否则返回<code>false</code>。</li>
+</ul>
+<p>区别是全局方法会有强制类型转换，而这两个方法没有强制类型转换：</p>
+<pre><code>Number.isNaN(null);      // true
+Number.isNaN(true);      // true
+Number.isNaN(false);     // true
+Number.isNaN('');        // true
+
+</code></pre>
+<p>可以看，由于没有类型转换，所以<code>Number.isNaN</code>判断<code>null</code>、<code>true</code>、<code>false</code>、<code>''</code>的结果都是<code>true</code>。</p>
+<p>但是 “副作用” 是数字字符串也会得到<code>true</code>：</p>
+<pre><code>Number.isNaN('123');    // true
+
+</code></pre>
+<p><code>Number.isNaN</code>等价与：</p>
+<pre><code>Number.isNaN = Number.isNaN || function(value) {
+    return typeof value === &quot;number&quot; &amp;&amp; isNaN(value);
+}
+
+</code></pre>
+<p>而<code>Number.isFinite</code>等价于：</p>
+<pre><code>if (Number.isFinite === undefined) Number.isFinite = function(value) {
+    return typeof value === 'number' &amp;&amp; isFinite(value);
+}
+
+</code></pre>
+<p>因此，这两个方法本质上也是基于类型的，没法判断一个字符串是否为数值。</p>
+<h2>正则表达式</h2>
+<p>========</p>
+<pre><code>let exp = /^[+-]?\d*(\.\d*)?(e[+-]?\d+)?$/;
+exp.test('+1.9');   // true
+exp.test('-.1e11'); // true
+
+</code></pre>
+<p>这个正则可以判断整数、浮点数、正负数和科学计数法。</p>
+<p>不过我觉得判断是否是数值用正则，有点小题大做了。</p>
+<h2>. 终极方案（推荐）</h2>
+<p>===========</p>
+<p>我们先看方案：</p>
+<pre><code>!isNaN(parseFloat(value)) &amp;&amp; isFinite(value);
+
+</code></pre>
+<p>这其实是 jquery 中<code>$.isNumeric</code>的源码，多么简洁且优雅。</p>
+<p>接下来我们看看它的原理，我们以字符串<code>123abc</code>为例，我们应该得到<code>false</code>。</p>
+<ol>
+<li><code>parseFloat('123abc')</code>得到<code>123</code>；</li>
+<li><code>!isNaN(123)</code>得到<code>true</code>；</li>
+<li><code>isFinite('123abc')</code>得到<code>false</code>；</li>
+<li>最终结果为<code>false</code>。</li>
+</ol>
+<p>单独使用<code>!isNaN(parseFloat(value))</code>会将<code>123abc</code>当成数值，所以用<code>isFinite</code>额外判断一次，<code>isFinite</code>的另一个作用是排除无穷数。</p>
+<pre><code>!isNaN(parseFloat(Infinity));  // true
+!isNaN(parseFloat(Infinity)) &amp;&amp; isFinite(Infinity); // false
+
+</code></pre>
+<p>而且，因为<code>parseFloat</code>的解析是纯字符串解析，没有类型转换，所以不会将<code>null</code>、<code>true</code>、<code>false</code>、<code>''</code>当成数值。</p>
+<pre><code>!isNaN(parseFloat(null)) &amp;&amp; isFinite(null);   // false
+!isNaN(parseFloat(true)) &amp;&amp; isFinite(true);   // false
+!isNaN(parseFloat(false)) &amp;&amp; isFinite(false); // false
+!isNaN(parseFloat('')) &amp;&amp; isFinite('');       // false
+
+</code></pre>
+<hr>
+<h1>为什么用 GIF 做埋点？</h1><blockquote>
+<p>什么是前端监控？</p>
+<p>它指的是通过一定的手段来获取用户行为以及跟踪产品在用户端的使用情况，并以监控数据为基础，为产品优化指明方向，为用户提供更加精确、完善的服务。</p>
+</blockquote>
+<p><strong>所以前端监控一般也分为三大类：</strong></p>
+<h3>数据监控（监控用户行为）</h3>
+<ul>
+<li>PV(page view)：即页面浏览量或点击量；</li>
+<li>UV：指访问某个站点或点击某条新闻的不同 IP 地址的人数</li>
+<li>用户在每一个页面的停留时间</li>
+<li>用户通过什么入口来访问该网页</li>
+<li>用户在相应的页面中触发的行为，等...</li>
+</ul>
+<h3>性能监控（监控页面性能）</h3>
+<ul>
+<li>不同用户，不同机型和不同系统下的首屏加载时间</li>
+<li>白屏时间</li>
+<li>http 等请求的响应时间</li>
+<li>静态资源整体下载时间</li>
+<li>页面渲染时间</li>
+<li>页面交互动画完成时间，等...</li>
+</ul>
+<h3>异常监控（监控产品、系统异常）</h3>
+<p>及时的上报异常情况，可以避免线上故障的发上。
+虽然大部分异常可以通过 <code>try catch</code> 的方式捕获，但是比如内存泄漏以及其他偶现的异常难以捕获。常见的需要监控的异常包括：</p>
+<ul>
+<li>Javascript 的异常监控</li>
+<li>样式丢失的异常监控</li>
+</ul>
+<h2>埋点上报</h2>
+<p>实现前端监控，</p>
+<ul>
+<li>第将要监控的事项（数据）给收集起来，</li>
+<li>提交给后台进行入库，</li>
+<li>数据分析，</li>
+<li>同步给运营或者是产品。</li>
+</ul>
+<p>现在常见的埋点上报方法有三种：手动埋点、可视化埋点、无埋点</p>
+<h3>手动埋点</h3>
+<p>手动埋点，也叫代码埋点，即纯手动写代码，调用埋点 SDK 的函数，在需要埋点的业务逻辑功能位置调用接口，上报埋点数据，
+像 <strong>[友盟]</strong>、<strong>[百度统计]</strong> 等第三方数据统计服务商大都采用这种方案。</p>
+<p>手动埋点让使用者可以方便地设置自定义属性、自定义事件；
+所以当你需要深入下钻，并精细化自定义分析时，比较适合使用手动埋点。</p>
+<p>手动埋点的缺陷就是，项目工程量大，需要埋点的位置太多，</p>
+<h3>可视化埋点</h3>
+<p>通过可视化交互的手段，代替上述的代码埋点。</p>
+<p>将业务代码和埋点代码分离，提供一个可视化交互的页面，输入为业务代码，通过这个可视化系统，
+可以在业务代码中自定义的增加埋点事件等等，
+最后输出的代码耦合了业务代码和埋点代码。</p>
+<p>可视化埋点的缺陷就是可以埋点的控件有限，不能手动定制。</p>
+<h3>无埋点</h3>
+<p>无埋点则是前端自动采集全部事件，上报埋点数据，由后端来过滤和计算出有用的数据。
+优点是前端只要一次加载埋点脚本，缺点是流量和采集的数据过于庞大，服务器性能压力山大。</p>
+<h2>为什么用 GIF 来做埋点？</h2>
+<p>向服务器端上报数据，可以通过请求接口，请求普通文件，或者请求图片资源的方式进行。
+只要能上报数据，无论是请求 GIF 文件还是请求 js 文件或者是调用页面接口，服务器端其实并不关心具体的上报方式。
+那为什么所有系统都统一使用了请求 GIF 图片的方式上报数据呢？</p>
+<ul>
+<li>防止跨域</li>
+</ul>
+<p>一般而言，打点域名都不是当前域名，所以所有的接口请求都会构成跨域。而跨域请求很容易出现由于配置不当被浏览器拦截并报错，这是不能接受的。但图片的 src 属性并不会跨域，并且同样可以发起请求。（排除接口上报）</p>
+<ul>
+<li>防止阻塞页面加载，影响用户体验</li>
+</ul>
+<p>通常，创建资源节点后只有将对象注入到浏览器 DOM 树后，浏览器才会实际发送资源请求。
+反复操作 DOM 不仅会引发性能问题，而且载入 js/css 资源还会阻塞页面渲染，影响用户体验。</p>
+<p>但是图片请求例外。
+构造图片打点不仅不用插入 DOM，只要在 js 中 new 出 Image 对象就能发起请求，而且还没有阻塞问题，在没有 js 的浏览器环境中也能通过 img 标签正常打点，
+这是其他类型的资源请求所做不到的。（排除文件方式）</p>
+<ul>
+<li>相比 PNG/JPG，GIF 的体积最小</li>
+</ul>
+<p>最小的 BMP 文件需要 74 个字节，PNG 需要 67 个字节，而合法的 GIF，只需要 43 个字节。
+同样的响应，GIF 可以比 BMP 节约 41% 的流量，比 PNG 节约 35% 的流量。</p>
+<p><strong>并且大多采用的是 1*1 像素的透明 GIF 来上报</strong>
+1x1 像素是最小的合法图片。
+而且，因为是通过图片打点，所以图片最好是透明的，这样一来不会影响页面本身展示效果，二者不用存储色彩空间数据，可以节约体积。</p>
+<hr>
+<h1>前端埋点实现方案✔</h1><h2>前端埋点名称解释</h2>
+<p>UV（Unique visitor）</p>
+<p>是指通过互联网访问、浏览这个网页的自然人。访问您网站的一台电脑客户端为一个访客。一天内同个访客多次访问仅计算一个<code>UV</code>。</p>
+<p>IP（Internet Protocol）</p>
+<p>独立<code>IP</code>是指访问过某站点的<code>IP</code>总数，以用户的 IP 地址作为统计依据。<code>00:00-24:00</code>内相同<code>IP</code>地址之被计算一次。</p>
+<p>UV 与 IP 区别</p>
+<blockquote>
+<p>如：你和你的家人用各自的账号在同一台电脑上登录新浪微博，则<code>IP</code>数 + 1，<code>UV</code>数 + 2。由于使用的是同一台电脑，所以<code>IP</code>不变，但使用的不同账号，所以<code>UV</code>+2</p>
+</blockquote>
+<p>PV（Page View）</p>
+<p>即页面浏览量或点击量，用户每 1 次对网站中的每个网页访问均被记录 1 个<code>PV</code>。用户对同一页面的多次访问，访问量累计，用以衡量网站用户访问的网页数量。</p>
+<p>VV（Visit View）</p>
+<p>用以统计所有访客 1 天内访问网站的次数。当访客完成所有浏览并最终关掉该网站的所有页面时便完成了一次访问，同一访客 1 天内可能有多次访问行为，访问次数累计。</p>
+<p>PV 与 VV 区别</p>
+<blockquote>
+<p>如：你今天 10 点钟打开了百度，访问了它的三个页面；11 点钟又打开了百度，访问了它的两个页面，则 PV 数 + 5，VV 数 + 2.PV 是指页面的浏览次数，VV 是指你访问网站的次数。</p>
+</blockquote>
+<h2>埋点分类</h2>
+<h3>代码埋点</h3>
+<ul>
+<li>优点：</li>
+</ul>
+<blockquote>
+<ul>
+<li>控制精准，可以非常精确地选择什么时候发送数据。</li>
+<li>传递多样化自定义属性、自定义事件，传递比较丰富的数据到服务端。</li>
+</ul>
+</blockquote>
+<ul>
+<li>缺点：</li>
+</ul>
+<blockquote>
+<ul>
+<li>埋点代价比较大，每一个控件的埋点都需要添加相应的代码，不仅工作量大，必须是技术人员才能完成。</li>
+<li>更新的代价比较大，每一次更新埋点方案，都必须改代码。</li>
+</ul>
+</blockquote>
+<h3>可视化埋点</h3>
+<p>个人理解的可视化埋点应该是肯定需要第三方的服务商支持🍜，不会有做专门业务的公司去做可视化埋点的解决方案。可视化埋点开发人员除集成采集可视化<code>SDK</code> 外👜，不需要额外去写埋点代码🍠，而是由业务人员或运营人员通过访问分析平台的圈选功能🤔，来 “圈” 出需要对用户行为进行捕捉的控件🎪，并给出事件命名🚘。圈选完毕后，这些配置会同步到各个用户的终端上😮，由采集<code>SDK</code>按照圈选的配置自动进行用户行为数据的采集和发送🚇。</p>
+<p>优点：</p>
+<blockquote>
+<ul>
+<li>埋点代价小，更新代价小</li>
+<li>埋点只需业务同学接入，开发只需对接可视化<code>SDK</code></li>
+</ul>
+</blockquote>
+<p>缺点：</p>
+<blockquote>
+<ul>
+<li>无法做到自定义获取数据</li>
+<li>可视化埋点覆盖的功能有限</li>
+<li>仅支持客户端行为</li>
+</ul>
+</blockquote>
+<h3>无痕埋点</h3>
+<p>无痕埋点又叫全埋点🥪，网上又很多文章写的都是无痕埋点是将所有事件的操作全部上报😀，但是我们在实现的过程中肯定是不会监听那么多的事件吧😋，但是好像也有第三方服务商 sdk 集成了所有事件😏。</p>
+<blockquote>
+<p><strong>我的个人理解</strong>无痕埋点是针对某一个单一事件，在全局实现监听达到上报，而不是全部事件上报才叫无痕埋点🥙。只要有某个事件在全局实现监听，针对这个事件的埋点方式就称为无痕埋点🌯</p>
+</blockquote>
+<p>优点：</p>
+<blockquote>
+<ul>
+<li>由于采集的是全量数据，所以产品迭代过程中是不需要关注埋点逻辑的，也不会出现漏埋、误埋等现象。</li>
+<li>无埋点方式因为收集的是全量数据，可以大大减少运营和产品的试错成本</li>
+<li>如果集成 sdk 之后无需埋点，方便快捷</li>
+</ul>
+</blockquote>
+<p>缺点：</p>
+<blockquote>
+<ul>
+<li>缺点与可视化埋点相同，未解决个性化自定义获取数据的问题，缺乏数据获取的灵活性；</li>
+<li>数据量过大，如果不使用第三方服务商，针对自身的服务器是个考验</li>
+</ul>
+</blockquote>
+<h2>实现方案步骤（uni-app，其他项目逻辑相同）</h2>
+<h4>两方面上报: 1. 事件上报 (目前只有点击事件埋点)，2. 停留时间上报</h4>
+<ul>
+<li><strong>事件上报</strong>：通过给元素绑定自定义指令的方式实现 (减少对原有代码的侵入)🍜，将信息存储在缓存池中定时上报，上报之后清空之前的上报信息🥠。</li>
+<li><strong>停留时间上报</strong>：需要重新封装路由，创建路由拦截在跳转之前记录来源, 以及上一个页面的停留时间，当拦截器捕获成功之后🌯，如果发现停留时间大于 xx 秒进行上报🥙。</li>
+</ul>
+<p><em>优点</em>：清晰合理，比较适合新项目。</p>
+<p><em>缺点</em>：针对老项目需要与产品和运营对接埋点方案绑定自定义事件🤪，如果是老项目需要对<code>uni.navigateTo</code>,<code>uni.redirectTo</code>,<code>uni.reLaunch</code>,<code>uni.switchTab</code> 进行二次封装。</p>
+<blockquote>
+<p>问：为什么何将信息存储，而不是实时上报？<br>
+答：考虑到服务器的压力，采用了定时上报的方式。<br>
+问：为什么监听停留时长大于 XX 秒才进行上报？<br>
+答：1. 服务器的压力问题。2 考虑到用户可能做一些没意义的操作，所以停留时长大于 XX 秒才属于有效页面。</p>
+</blockquote>
+<hr>
+<h1>前端监控和前端埋点方案设计</h1><h3>一、为什么需要前端监控</h3>
+<p>前端监控的目的是：</p>
+<p><em><strong>获取用户行为以及跟踪产品在用户端的使用情况，并以监控数据为基础，指明产品优化的方向</strong></em>。</p>
+<p>前端监控可以分为三类：数据监控、性能监控和异常监控。下面我们来一一的了解。</p>
+<h3>三、前端埋点方案选型和前端上报方案设计</h3>
+<h4>(1) 监控数据</h4>
+<p>首先我们需要明确一个产品或者网页，普遍需要监控和上报的数据。监控的分为三个阶段：用户进入网页首页、用户在网页内部交互和交互中报错。每一个阶段需要监控和上报的数据如下图所示：</p>
+<p><img src="../_resources/前端监控和前端埋点方案设计/198e424559d99162965d913cd76e56ab_MD5.png" /></p>
+<h4>(2) 埋点方案</h4>
+<p>在实际项目中考虑到上报数据的灵活定制，以及减少数据传输和服务器的压力，在所需埋点处不多的情况下，常用的方式是代码埋点。</p>
+<p>以用户进入首页为例，我们在首页渲染完成后会发送事件类型和类型相关的数据给 server 端，告知首页的监控信息。</p>
+<p><img src="../_resources/前端监控和前端埋点方案设计/fdbd6819642571008f55abedc645da62_MD5.png" /></p>
+<h4>(3) 上报周期和上报数据类型</h4>
+<p>如果埋点的事件不是很多，上报可以时时进行，比如监控用户的交互事件，可以在用户触发事件后，立刻上报用户所触发的事件类型。如果埋点的事件较多，或者说网页内部交互频繁，可以通过本地存储的方式先缓存上报信息，然后定期上报。</p>
+<p>接着来确定需要埋点上报的数据，上报的信息包括用户个人信息以及用户行为，主要数据可以分为：</p>
+<ul>
+<li>
+<p>who: appid(系统或者应用的 id),userAgent(用户的系统、网络等信息)</p>
+</li>
+<li>
+<p>when: timestamp(上报的时间戳)</p>
+</li>
+<li>
+<p>from where: currentUrl(用户当前 url)，fromUrl(从哪一个页面跳转到当前页面)，type(上报的事件类型),element(触发上报事件的元素）</p>
+</li>
+<li>
+<p>what: 上报的自定义扩展数据 data:{}, 扩展数据中可以按需求定制，比如包含 uid 等信息</p>
+</li>
+</ul>
+<p>上报数据的对象为：</p>
+<pre><code>{   
+    ----------------上报接口本身提供--------------------
+    currentUrl,  
+    fromUrl,
+    timestamp,
+    userAgent:{
+       os,
+       netWord,
+    }
+    ----------------业务代码配置和自定义上报数据------------
+    type,
+    appid,
+    element,
+    data:{
+        uid,
+        uname
+    }
+}
+
+
+</code></pre>
+<h4>(4) 埋点和上报举例</h4>
+<p>我们以上报首屏加载事件为例，DOM 提供了 document 的 DOMContentLoaded 事件来监听 dom 挂载，提供了 window 的 load 事件来监听页面所有资源加载渲染完毕。</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+  var start=Date.now();
+  document.addEventListener('DOMContentLoaded', function() {
+     fetch('some api',{
+         type:'dom complete',
+         data:{
+           domCompletedTime:Date.now()-start
+         }
+     })
+  });
+  window.addEventListener('load', function() {
+     fetch('some api',{
+         type:'load complete',
+         data:{
+           LoadCompletedTime:Date.now()-start
+         }
+     })
+  });
+&lt;/script&gt;
+
+
+</code></pre>
+<h4>(5) 前端埋点系统的前后端通信加密</h4>
+<p>在上报数据的前后端通信中，需要和 server 端协商加密机制，利用 OpenSSL 库来实现的加密，OpenSSL 已经是一个广泛被采用的加密算法。前端可以采用 node 的 crypto 模块。</p>
+<p>首先来看 hash 算法，crypto.createHash() 来创建一个 Hash 实例，可利用的 hash 算法如下：</p>
+<ul>
+<li>
+<p>md5</p>
+</li>
+<li>
+<p>sha1</p>
+</li>
+<li>
+<p>sha256</p>
+</li>
+<li>
+<p>sha512</p>
+</li>
+<li>
+<p>ripemd160</p>
+</li>
+</ul>
+<p>以 sha256 算法加密为例：</p>
+<pre><code>const str=&quot;123445&quot;;//需要加密的字段
+const hash=crypto.createHash('sha256');//指定加密算法
+hash.update(str); //通过算法加密相应的字段
+const result=hash.digest('hex');//转化成十六进制
+
+
+</code></pre>
+<h3>四、前端监控结果可视化展示系统的设计</h3>
+<p>当后端得到前端上报的信息之后，经过数据分析和处理，需要前端可视化的展示数据分析后的结果。</p>
+<p>可以在开源中后台系统 ant-design-pro 的基础上进行二次开发，首先要明确展示信息。展示的信息包括单个用户和整体应用。</p>
+<p>对于单个用户来说需要展示的监控信息为：</p>
+<ul>
+<li>单个用户，在交互过程中触发各个埋点事件的次数</li>
+<li>单个用户，在某个时间周期内，访问本网页的入口来源</li>
+<li>单个用户，在每一个子页面的停留时间</li>
+</ul>
+<p>对于全体用户需要展示的信息为：</p>
+<ul>
+<li>某一个时间段内网页的 PV 和 UV</li>
+<li>全体用户访问网页的设备和操作系统分析</li>
+<li>某一个时间段内访问本网页的入口来源分析</li>
+<li>全体用户在访问本网页时，在交互过程中触发各个埋点事件的总次数</li>
+<li>全体用户在访问本网页时，网页上报异常的集合</li>
+</ul>
+<p>删选功能集合：</p>
+<ul>
+<li>时间筛选：提供今日（00 点到当前时间）、本周、本月和全年</li>
+<li>用户删选：提供根据用户 id 删选出用户行为的统计信息</li>
+<li>设备删选：删选不同系统的整体展示信息</li>
+</ul>
+<hr>
+<h1>手写 Promise 原理</h1><h2>resolve 和 reject</h2>
+<p>四个知识点：</p>
+<ul>
+<li>1、执行了<code>resolve</code>，Promise 状态会变成<code>fulfilled</code></li>
+<li>2、执行了<code>reject</code>，Promise 状态会变成<code>rejected</code></li>
+<li>3、Promise 只以<code>第一次为准</code>，第一次成功就<code>永久</code>为<code>fulfilled</code>，第一次失败就永远状态为<code>rejected</code></li>
+<li>4、Promise 中有<code>throw</code>的话，就相当于执行了<code>reject</code></li>
+</ul>
+<h3>1、实现 resolve 与 reject</h3>
+<p>大家要注意：Promise 的初始状态是<code>pending</code></p>
+<p>重要的一步是<code>resolve和reject的绑定this</code></p>
+<p>为什么要绑定<code>this</code>呢？这是为了 resolve 和 reject 的<code>this指向</code>永远指向当前的<code>MyPromise实例</code>，防止随着函数执行环境的改变而改变</p>
+<pre><code>class MyPromise {
+    // 构造方法
+    constructor(executor) {
+
+        // 初始化值
+        this.initValue()
+        // 初始化this指向
+        this.initBind()
+        // 执行传进来的函数
+        executor(this.resolve, this.reject)
+    }
+
+    initBind() {
+        // 初始化this
+        this.resolve = this.resolve.bind(this)
+        this.reject = this.reject.bind(this)
+    }
+
+    initValue() {
+        // 初始化值
+        this.PromiseResult = null // 终值
+        this.PromiseState = 'pending' // 状态
+    }
+
+    resolve(value) {
+        // 如果执行resolve，状态变为fulfilled
+        this.PromiseState = 'fulfilled'
+        // 终值为传进来的值
+        this.PromiseResult = value
+    }
+
+    reject(reason) {
+        // 如果执行reject，状态变为rejected
+        this.PromiseState = 'rejected'
+        // 终值为传进来的reason
+        this.PromiseResult = reason
+    }
+}
+
+</code></pre>
+<p>咱们来测试一下代码吧：</p>
+<pre><code>const test1 = new MyPromise((resolve, reject) =&gt; {
+    resolve('成功')
+})
+console.log(test1) // MyPromise { PromiseState: 'fulfilled', PromiseResult: '成功' }
+
+const test2 = new MyPromise((resolve, reject) =&gt; {
+    reject('失败')
+})
+console.log(test2) // MyPromise { PromiseState: 'rejected', PromiseResult: '失败' }
+
+</code></pre>
+<h3>2. 状态不可变</h3>
+<p>其实上面的代码是有问题的，什么问题呢？看看：</p>
+<pre><code>const test1 = new MyPromise((resolve, reject) =&gt; {
+    resolve('成功')
+    reject('失败')
+})
+console.log(test1) // MyPromise { PromiseState: 'rejected', PromiseResult: '失败' }
+
+</code></pre>
+<p>正确的应该是状态为<code>fulfilled</code>，结果是<code>成功</code>，这里明显没有<code>以第一次为准</code></p>
+<p>之前说了，Promise 只以<code>第一次为准</code>，第一次成功就<code>永久</code>为<code>fulfilled</code>，第一次失败就永远状态为<code>rejected</code></p>
+<p>一旦状态从<code>pending</code>变为<code>fulfilled或者rejected</code>，那么此 Promise 实例的状态就定死了。 ![]</p>
+<p>其实实现起来也很容易，加个判断条件就行：</p>
+<pre><code>resolve(value) {
+        // state是不可变的
++        if (this.PromiseState !== 'pending') return
+        // 如果执行resolve，状态变为fulfilled
+        this.PromiseState = 'fulfilled'
+        // 终值为传进来的值
+        this.PromiseResult = value
+    }
+
+    reject(reason) {
+        // state是不可变的
++        if (this.PromiseState !== 'pending') return
+        // 如果执行reject，状态变为rejected
+        this.PromiseState = 'rejected'
+        // 终值为传进来的reason
+        this.PromiseResult = reason
+    }
+
+</code></pre>
+<h3>3. throw</h3>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fa2e17b24a124dadba540e86350f1302~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>Promise 中有<code>throw</code>的话，就相当于执行了<code>reject</code>。这就要使用<code>try catch</code>了</p>
+<pre><code>+        try {
+            // 执行传进来的函数
+            executor(this.resolve, this.reject)
++        } catch (e) {
+            // 捕捉到错误直接执行reject
++            this.reject(e)
++        }
+
+</code></pre>
+<h2>then</h2>
+<p>then 方法使用的：</p>
+<pre><code>// 马上输出 ”成功“
+const p1 = new Promise((resolve, reject) =&gt; {
+    resolve('成功')
+}).then(res =&gt; console.log(res), err =&gt; console.log(err))
+
+// 1秒后输出 ”失败“
+const p2 = new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+        reject('失败')
+    }, 1000)
+}).then(res =&gt; console.log(res), err =&gt; console.log(err))
+
+// 链式调用 输出 200
+const p3 = new Promise((resolve, reject) =&gt; {
+    resolve(100)
+}).then(res =&gt; 2 * res, err =&gt; console.log(err))
+  .then(res =&gt; console.log(res), err =&gt; console.log(err))
+
+</code></pre>
+<p>可以总结出这几点：</p>
+<ul>
+<li>then 接收两个回调，一个是<code>成功回调</code>，一个是<code>失败回调</code></li>
+<li>当 Promise 状态为<code>fulfilled</code>执行<code>成功回调</code>，为<code>rejected</code>执行<code>失败回调</code></li>
+<li>如 resolve 或 reject 在定时器里，<code>则定时器结束后再执行then</code></li>
+<li>then 支持<code>链式调用</code>，下一次 then 执行<code>受上一次then返回值的影响</code></li>
+</ul>
+<p>下面咱们就一步一步地去实现他吧</p>
+<h3>1. 实现 then</h3>
+<pre><code>then(onFulfilled, onRejected) {
+        // 接收两个回调 onFulfilled, onRejected
+        
+        // 参数校验，确保一定是函数
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : val =&gt; val
+        onRejected = typeof onRejected === 'function' ? onRejected : reason =&gt; { throw reason }
+
+        if (this.PromiseState === 'fulfilled') {
+            // 如果当前为成功状态，执行第一个回调
+            onFulfilled(this.PromiseResult)
+        } else if (this.PromiseState === 'rejected') {
+            // 如果当前为失败状态，执行第二哥回调
+            onRejected(this.PromiseResult)
+        }
+
+    }
+
+</code></pre>
+<h3>2. 异步情况</h3>
+<p>那如果是异步情况呢？
+怎么才能保证，1 秒后才执行 then 里的失败回调呢？</p>
+<pre><code>// 1秒后输出 ”成功“
+const p2 = new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+        reject('失败')
+    }, 1000)
+}).then(res =&gt; console.log(res), err =&gt; console.log(err))
+
+</code></pre>
+<p>我们不能确保 1 秒后才执行 then 函数，但是我们可以保证 1 秒后再执行 then 里的回调，</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ba5a2544b1144548cdc63362fa27d23~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>在这 1 秒时间内，我们可以先把 then 里的两个回调保存起来，
+等到 1 秒过后，执行了 resolve 或者 reject，咱们再去判断状态，并且判断要去执行刚刚保存的两个回调中的哪一个回调。</p>
+<p>那么问题来了，我们怎么知道当前 1 秒还没走完甚至还没开始走呢？</p>
+<p>其实很好判断，只要状态是<code>pending</code>，那就证明定时器还没跑完，
+因为如果定时器跑完的话，那状态肯定就不是<code>pending</code>，而是<code>fulfilled或者rejected</code></p>
+<p>那是用什么来保存这些回调呢？
+建议使用<code>数组</code>，因为一个 promise 实例可能会<code>多次then</code>，用数组就一个一个保存了</p>
+<pre><code>initValue() {
+        // 初始化值
+        this.PromiseResult = null // 终值
+        this.PromiseState = 'pending' // 状态
++        this.onFulfilledCallbacks = [] // 保存成功回调
++        this.onRejectedCallbacks = [] // 保存失败回调
+    }
+
+    resolve(value) {
+        // state是不可变的
+        if (this.PromiseState !== 'pending') return
+        // 如果执行resolve，状态变为fulfilled
+        this.PromiseState = 'fulfilled'
+        // 终值为传进来的值
+        this.PromiseResult = value
+        // 执行保存的成功回调
++        while (this.onFulfilledCallbacks.length) {
++            this.onFulfilledCallbacks.shift()(this.PromiseResult)
++        }
+    }
+
+    reject(reason) {
+        // state是不可变的
+        if (this.PromiseState !== 'pending') return
+        // 如果执行reject，状态变为rejected
+        this.PromiseState = 'rejected'
+        // 终值为传进来的reason
+        this.PromiseResult = reason
+        // 执行保存的失败回调
++       while (this.onRejectedCallbacks.length) {
++            this.onRejectedCallbacks.shift()(this.PromiseResult)
++        }
+    }
+    
+    then(onFulfilled, onRejected) {
+        // 接收两个回调 onFulfilled, onRejected
+
+        // 参数校验，确保一定是函数
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : val =&gt; val
+        onRejected = typeof onRejected === 'function' ? onRejected : reason =&gt; { throw reason }
+
+        if (this.PromiseState === 'fulfilled') {
+            // 如果当前为成功状态，执行第一个回调
+            onFulfilled(this.PromiseResult)
+        } else if (this.PromiseState === 'rejected') {
+            // 如果当前为失败状态，执行第二哥回调
+            onRejected(this.PromiseResult)
++        } else if (this.PromiseState === 'pending') {
++            // 如果状态为待定状态，暂时保存两个回调
++            this.onFulfilledCallbacks.push(onFulfilled.bind(this))
++            this.onRejectedCallbacks.push(onRejected.bind(this))
++        }
+
+    }
+
+
+</code></pre>
+<p>加完上面的代码，咱们来看看定时器的效果吧：</p>
+<pre><code>const test2 = new MyPromise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+        resolve('成功') // 1秒后输出 成功
+        // resolve('成功') // 1秒后输出 失败
+    }, 1000)
+}).then(res =&gt; console.log(res), err =&gt; console.log(err))
+
+</code></pre>
+<h3>3. 链式调用</h3>
+<p>then 支持<code>链式调用</code>，下一次 then 执行<code>受上一次then返回值的影响</code>，给大家举个例子：</p>
+<ul>
+<li>1、then 方法本身会返回一个新的 Promise 对象</li>
+<li>2、如果返回值是 promise 对象，返回值为成功，新 promise 就是成功</li>
+<li>3、如果返回值是 promise 对象，返回值为失败，新 promise 就是失败</li>
+<li>4、如果返回值非 promise 对象，新 promise 对象就是成功，值为此返回值</li>
+</ul>
+<p>咱们知道 then 是 Promise 上的方法，那如何实现 then 完还能再 then 呢？很简单，then 执行后返回一个<code>Promise对象</code>就行了，就能保证 then 完还能继续执行 then：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/62a3c3afcf0a4262a1a7e52231c34dbc~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>代码实现：</p>
+<pre><code>then(onFulfilled, onRejected) {
+        // 接收两个回调 onFulfilled, onRejected
+
+        // 参数校验，确保一定是函数
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : val =&gt; val
+        onRejected = typeof onRejected === 'function' ? onRejected : reason =&gt; { throw reason }
+
+
+        var thenPromise = new MyPromise((resolve, reject) =&gt; {
+
+            const resolvePromise = cb =&gt; {
+                try {
+                    const x = cb(this.PromiseResult)
+                    if (x === thenPromise) {
+                        // 不能返回自身哦
+                        throw new Error('不能返回自身。。。')
+                    }
+                    if (x instanceof MyPromise) {
+                        // 如果返回值是Promise
+                        // 如果返回值是promise对象，返回值为成功，新promise就是成功
+                        // 如果返回值是promise对象，返回值为失败，新promise就是失败
+                        // 谁知道返回的promise是失败成功？只有then知道
+                        x.then(resolve, reject)
+                    } else {
+                        // 非Promise就直接成功
+                        resolve(x)
+                    }
+                } catch (err) {
+                    // 处理报错
+                    reject(err)
+                    throw new Error(err)
+                }
+            }
+
+            if (this.PromiseState === 'fulfilled') {
+                // 如果当前为成功状态，执行第一个回调
+                resolvePromise(onFulfilled)
+            } else if (this.PromiseState === 'rejected') {
+                // 如果当前为失败状态，执行第二个回调
+                resolvePromise(onRejected)
+            } else if (this.PromiseState === 'pending') {
+                // 如果状态为待定状态，暂时保存两个回调
+                // 如果状态为待定状态，暂时保存两个回调
+                this.onFulfilledCallbacks.push(resolvePromise.bind(this, onFulfilled))
+                this.onRejectedCallbacks.push(resolvePromise.bind(this, onRejected))
+            }
+        })
+
+        // 返回这个包装的Promise
+        return thenPromise
+
+    }
+
+</code></pre>
+<p>现在大家可以试试效果怎么样了，大家要<strong>边敲边试</strong>哦：</p>
+<pre><code>const test3 = new Promise((resolve, reject) =&gt; {
+  resolve(100) // 输出 状态：成功 值： 200
+  // reject(100) // 输出 状态：成功 值：300
+}).then(res =&gt; 2 * res, err =&gt; 3 * err)
+  .then(res =&gt; console.log('成功', res), err =&gt; console.log('失败', err))
+
+
+  const test4 = new Promise((resolve, reject) =&gt; {
+    resolve(100) // 输出 状态：失败 值：200
+    // reject(100) // 输出 状态：成功 值：300
+    // 这里可没搞反哦。真的搞懂了，就知道了为啥这里是反的
+  }).then(
+		  res =&gt; new Promise((resolve, reject) =&gt; reject(2 * res)), 
+		  err =&gt; new Promise((resolve, reject) =&gt; resolve(3 * err))
+		  )
+    .then(res =&gt; console.log('成功', res), err =&gt; console.log('失败', err))
+
+</code></pre>
+<h3>4. 微任务</h3>
+<p>then 方法是<code>微任务</code>，啥叫微任务呢？其实不知道也不要紧，我通过下面例子让你知道：</p>
+<pre><code>const p = new Promise((resolve, reject) =&gt; {
+    resolve(1)
+}).then(res =&gt; console.log(res), err =&gt; console.log(err))
+
+console.log(2)
+
+输出顺序是 2 1
+
+</code></pre>
+<p>为啥不是 1 2 呢？因为 then 是个微任务啊
+同样，我们也要给我们的 MyPromise 加上这个特性 (我这里使用定时器，大家别介意哈)
+只需要让<code>resolvePromise函数</code>异步执行就可以了</p>
+<pre><code>const resolvePromise = cb =&gt; {
+    setTimeout(() =&gt; {
+        try {
+            const x = cb(this.PromiseResult)
+            if (x === thenPromise) {
+                // 不能返回自身哦
+                throw new Error('不能返回自身。。。')
+            }
+            if (x instanceof MyPromise) {
+                // 如果返回值是Promise
+                // 如果返回值是promise对象，返回值为成功，新promise就是成功
+                // 如果返回值是promise对象，返回值为失败，新promise就是失败
+                // 谁知道返回的promise是失败成功？只有then知道
+                x.then(resolve, reject)
+            } else {
+                // 非Promise就直接成功
+                resolve(x)
+            }
+        } catch (err) {
+            // 处理报错
+            reject(err)
+            throw new Error(err)
+        }
+    })
+}
+
+</code></pre>
+<h3>all</h3>
+<ul>
+<li>接收一个 Promise 数组，数组中如有非 Promise 项，则此项当做成功</li>
+<li>如果所有 Promise 都成功，则返回成功结果数组</li>
+<li>如果有一个 Promise 失败，则返回这个失败结果</li>
+</ul>
+<pre><code>static all(promises) {
+        const result = []
+        let count = 0
+        return new MyPromise((resolve, reject) =&gt; {
+            const addData = (index, value) =&gt; {
+                result[index] = value
+                count++
+                if (count === promises.length) resolve(result)
+            }
+            promises.forEach((promise, index) =&gt; {
+                if (promise instanceof MyPromise) {
+                    promise.then(res =&gt; {
+                        addData(index, res)
+                    }, err =&gt; reject(err))
+                } else {
+                    addData(index, promise)
+                }
+            })
+        })
+    }
+
+</code></pre>
+<h3>race</h3>
+<ul>
+<li>接收一个 Promise 数组，数组中如有非 Promise 项，则此项当做成功</li>
+<li>哪个 Promise 最快得到结果，就返回那个结果，无论成功失败</li>
+</ul>
+<pre><code>static race(promises) {
+        return new MyPromise((resolve, reject) =&gt; {
+            promises.forEach(promise =&gt; {
+                if (promise instanceof MyPromise) {
+                    promise.then(res =&gt; {
+                        resolve(res)
+                    }, err =&gt; {
+                        reject(err)
+                    })
+                } else {
+                    resolve(promise)
+                }
+            })
+        })
+    }
+
+</code></pre>
+<h3>allSettled</h3>
+<ul>
+<li>接收一个 Promise 数组，数组中如有非 Promise 项，则此项当做成功</li>
+<li>把每一个 Promise 的结果，集合成数组，返回</li>
+</ul>
+<pre><code>static allSettled(promises) {
+        return new Promise((resolve, reject) =&gt; {
+            const res = []
+            let count = 0
+            const addData = (status, value, i) =&gt; {
+                res[i] = {
+                    status,
+                    value
+                }
+                count++
+                if (count === promises.length) {
+                    resolve(res)
+                }
+            }
+            promises.forEach((promise, i) =&gt; {
+                if (promise instanceof MyPromise) {
+                    promise.then(res =&gt; {
+                        addData('fulfilled', res, i)
+                    }, err =&gt; {
+                        addData('rejected', err, i)
+                    })
+                } else {
+                    addData('fulfilled', promise, i)
+                }
+            })
+        })
+    }
+
+</code></pre>
+<h3>any</h3>
+<p>any 与 all 相反</p>
+<ul>
+<li>接收一个 Promise 数组，数组中如有非 Promise 项，则此项当做成功</li>
+<li>如果有一个 Promise 成功，则返回这个成功结果</li>
+<li>如果所有 Promise 都失败，则报错</li>
+</ul>
+<pre><code>static any(promises) {
+        return new Promise((resolve, reject) =&gt; {
+            let count = 0
+            promises.forEach((promise) =&gt; {
+                promise.then(val =&gt; {
+                    resolve(val)
+                }, err =&gt; {
+                    count++
+                    if (count === promises.length) {
+                        reject(new AggregateError('All promises were rejected'))
+                    }
+                })
+            })
+        })
+    }
+}
+
+</code></pre>
+<hr>
+<h1>模拟题 - 抓住三个核心：“时间”、“事件”、“状态” 进行模拟 - 过桥的时间 - 力扣（LeetCode）</h1><h3>如何解模拟题</h3>
+<p>这个题目属于一类典型的模拟题：让你去 <strong>模拟一个过程</strong>，而这个过程一般是按照 <strong>时间顺序</strong> 去执行。<br>
+对于此类问题，我们需要抓住其关键点：</p>
+<ol>
+<li>当前我们正在关注的 <strong>时间</strong>；</li>
+<li>在这个时间点，将会发生什么 <strong>事件</strong>；</li>
+<li>在这个时间点，题目所描述的环境的 <strong>状态</strong>。</li>
+</ol>
+<p>我在当前 「时间」，处理完这个时间点及其之前所发生的 「事件」，事件会导致 「状态」 的更新）
+然后基于当前的 「状态」，去按照规则做相应的 「决策」。
+决策完成后，我们需要查看临近的下一个时间。</p>
+<h3>本题解法</h3>
+<p>对于本题，其各个要素具体表现如下：</p>
+<ol>
+<li>时间 - 这个无需进一步说明；</li>
+<li>事件 - 分析题目，可以发现有 4 种可能的事件：
+<ul>
+<li>有工人到达右岸，开始拿旧仓库的箱子；</li>
+<li>有工人拿完了旧仓库的箱子，等待回左岸；</li>
+<li>有工人到达了左岸，开始放新仓库的箱子；</li>
+<li>有工人把箱子放到了新仓库，完成搬运，返回河左岸等待下一个任务。</li>
+</ul>
+</li>
+<li>状态 - 分析题目，我们需要保存 5 个状态：
+<ul>
+<li>位于河左岸、等待过河到右岸的工人列表；</li>
+<li>位于河右岸、等待过河到左岸的工人列表；</li>
+<li>当前桥上是否有人正在过河；</li>
+<li>当前尚需搬运的箱子数目；</li>
+<li>当前已经回到左岸的箱子数目。</li>
+</ul>
+</li>
+<li>决策 - 在每个时间点，我们需要根据 状态 和题目要求进行决策：
+<ul>
+<li>如果当前桥上有人，我们不能安排人过河；</li>
+<li>如果当前桥上没人，但是有右岸的工人需要过河，那么从右岸的工人中选择效率最低的工人（用优先队列选择），令其回到左岸；</li>
+<li>如果当前桥上没人，且没有右岸工人需要过河，但是有左岸工人可以过河，且有剩余尚需搬运的箱子，那么从左岸工人中选择效率最低的工人（用优先队列选择），令其到右岸搬箱子。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h1>读《经济学原理 - 微观经济学分册》</h1><h4>经济学十大原理</h4>
+<p><strong>原理一： 社会面临的一种权衡取舍是效率和平等之间的选择
+原理二： 某种东西的成本是为了得到它所放弃的东西</strong> 一种东西的机会成本是为了得到这种东西所必须放弃的东西。
+<strong>原理三： 理性人考虑边际量</strong> 边际成本（Marginal Cost）
+<strong>原理四： 人们会对激励做出反应</strong> 在分析任何一种政策时，应该考虑它通过激励产生的不太明显的间接影响。
+<strong>原理五: 贸易可以使每个人的状况都变得更好</strong>
+<strong>原理六： 市场通常是组织经济活动的一种好方法</strong>
+<strong>原理七： 政府有时可以改善市场结果</strong>
+<strong>原理八： 一国的生活水平取决于它生产物品与服务的能力</strong>
+<strong>原理九： 当政府发行了过多的货币时， 物价上升</strong> 在大多数严重或持续的通货膨胀情况下， 罪魁祸首是货币量的增长。 (感想： 货币超发引起的通货膨胀其实是一种全面征税行为)
+<strong>原理十： 社会面临通货膨胀与失业之间的短期权衡取舍</strong></p>
+<h4>像经济学家一样思考</h4>
+<p>所有政策决策都不是轻而易举或利弊分明的</p>
+<ul>
+<li>一项能够提高效率的政策可能会以损害平等为代价。</li>
+<li>一项有利于子孙后代的政策可能会损害当前一代人的利益。</li>
+</ul>
+<p>经济学家意见分歧的原因主要有两个：</p>
+<ul>
+<li>不同的理论</li>
+<li>不同的价值观，</li>
+</ul>
+<h4>相互依存性与贸易的好处</h4>
+<p>一个人有可能在两种物品的生产上都具有绝对优势， 但不可能在两种物品的生产上都有比较优势。
+一种物品的机会成本是另一种物品机会成本的倒数，
+如果一个人生产一种物品的机会成本较高， 那么他生产另一种物品的机会成本必然较低。 比较优势反应了相对的机会成本。</p>
+<p>专业化和贸易的好处不是基于绝对优势， 而是基于比较优势。
+当每个人都专门生产自己有比较优势的物品时， 经济的总量就增加了， 经济蛋糕的变大可用于改善每个人的状况。</p>
+<p>贸易的双方因为专业性的原因， 都可以在自己专业的机会成本上进行议价出售， 只要进行贸易的价格低于<strong>自己生产</strong>某种物品的机会成本， 贸易双方都可以获益。</p>
+<p>如果购买一件东西所付出的代价比在家里生产所付出的代价小， 就永远不要在家里生产， 这是每一个精明的家长都知道的准则。</p>
+<p>为了使你家庭的效率实现‘最优’， 你应该使每个人<strong>最后</strong>所做的一项工作的效率相等。 你的配偶洗碗、 剪草坪、 列出购物清单， 你做饭、 洗衣、 购物、 亲扫、 支付账单。 这可能看起来不平衡， 但想一想， 当你看到你的配偶在列购物清单时就已经衣衫不整地坐在那里开始打盹了， 你就应该知道他能把你们需要多少牛奶算出来就已经很不错了。</p>
+<h4>市场如何运行</h4>
+<p>当收入减少时， 如果一种物品的需求量增加， 这种物品就被称为低档物品。 低档物品的一个例子就是公共汽车。
+当一种物品价格下降引起另外一种物品的需求减少时， 这两种物品被称为替代品。
+当一种物品的价格下降引起另外一种物品的需求量增加时， 这两种物品被称为互补品。</p>
+<h4>弹性及其应用</h4>
+<p>一种物品时必需品还是奢侈品并不取决于物品本身固有的性质， 而取决于购买者的偏好。
+对于一个热衷于航海而不太关注自身健康的水手来说， 游艇可能是需求缺乏弹性的必需品， 而看病则是需求富有弹性的奢侈品。</p>
+<h4>供给、 需求与政府政策</h4>
+<p>当政府对竞争市场实行限制性价格上限时， 市场就产生了物品的短缺， 而且卖者必须在大量潜在的买者中配给稀缺物品。 这种在价格上限制政策下产生的配给机制很少是合意的。 排长队是无效率的， 因为这样做浪费了买者的时间。</p>
+<p>税收的负担更多地落到缺乏弹性的市场一方身上。 劳动的供给远比劳动的需求缺乏弹性。 这就意味着， 是工人而不是企业承担了大部分工薪税的负担。 换句话说， 其税收负担的分配与立法者所期望的一半对一半相差甚远。</p>
+<p>举个例子， 1990 年， 国会通过了一项针对游艇、 私人飞机、 皮衣、 珠宝和豪华轿车这类物品的新的奢侈品税。 该税的目的是增加那些能轻而易举地承担税收负担的人的税收。 但事与愿违， 游艇的需求是极其富有弹性的。 一个百万富翁很容易不买游艇， 他可以用钱去买更大的房子， 去欧洲度假等等。 因此税收负担将主要落在供给者身上。 这就是说， 对游艇的征税的负担主要落在建造游艇的企业和工人身上， 因为最后是他们的产品价格大幅度下降了。 但是， 工人并不是富人。 因此， 这一奢侈税的税收负担更多的落在了中产阶级身上， 而不是富人身上。</p>
+<h4>税收的代价</h4>
+<p>税收在买者支付的价格和卖者得到的价格之间打入了一个楔子。
+由于这种税收楔子， 销售量低于没有税收时应该达到的水平。 换句话说， 对一种物品征税使这种物品的市场规模缩小</p>
+<h4>国际贸易</h4>
+<p>各国之间贸易最终要建立在比较优势的基础之上。 这就是说， 贸易之所以是互惠的， 是因为它使各国可以专门从事自己最擅长的互动。</p>
+<p>无论是关税还是进口配额， 它们都减少了进口品的数量， 提高了该物品的国内价格， 减少了国内消费者的福利， 增加了国内生产者的福利， 并引起无畏损失。 这两种贸易限制之间的唯一区别是： 关税增加了政府的收入， 而进口配额为那些得到进口许可证的人创造了剩余。</p>
+<p>经济学家承认， 出于对国家安全的合理考虑， 保护关键行业可能是合理的。 但他们担心， 这种观点很快会被那些渴望以损害消费者利益为代价而牟利的生产者所利用。 当国家安全论的观点是由行业代表而不是国防机构提出时， 就应该谨慎看待。</p>
+<h5>幼稚产业论</h5>
+<p>新兴产业有时认为， 应实行暂时性贸易限制， 以有助于该产业的成长。 这种观点认为， 在经过一段时间的保护期以后， 这些产业成熟了， 也就能与外国企业竞争了。 同样， 老产业有时也认为， 它们需要暂时性保护， 以有助于它们对新情况做出调整。</p>
+<p>许多经济学家从理论上怀疑幼稚产业论。 例如， 假设一个产业是新兴的， 不能在与外国竞争对手的竞争中获利， 但由理由相信该产业在长期中是有利可图的， 那么在这种情况下， 这些企业的所有者应该愿意为实现最终的利润而承受暂时的亏损。 保护并不是一个幼稚产业成长所必需的。 历史表明， 即使没有避免竞争的保护， 初创企业虽然往往会经历暂时的亏损， 但在长期中会取得成功。</p>
+<h4>公共部门经济学</h4>
+<p>为了制定出良好的规则， 政府管制者都需要了解有关某些特定行业以及这些行业可以采用的各种技术的详细信息， 但政府管制者要得到这些信息往往是困难的。</p>
+<p>人们面临权衡取舍， 清新的空气和清洁的水肯定是有价值的。
+但是必须把它们的价值与其机会成本进行权衡取舍， 也就是说， 与为了得到它们而必须放弃的东西相比较。
+消除所有污染是不可能的。 如果想要消除所有污染， 就不得不把许多使我们享有高生活水平的技术进步倒退回去</p>
+<p>富国比穷国更有能力维持更清洁的环境， 因此通常也有更严格的环境保护。环境保护的价格越低， 公众就越想要保护环境。</p>
+<h4>公共物品和公共资源</h4>
+<p>古希腊哲学家亚里士多德就指出了公共资源的问题： 大家公有的东西总是被关心得最少， 因为所有人对自己东西的关心都大于对与其他人共同拥有的东西的关心。</p>
+<p>几十年来， 经济学家和其他交通学者一直建议根据道路的拥堵情况进行不同程度的收费。 简而言之， 就是交通越拥堵， 收费就越高， 直至拥堵消失。</p>
+<p>当你为某种物品 - 在本案例里是道路行驶空间 - 出价时， 如果你的出价低于物品的真实价值， 就会出现短缺。 这时一个基本的经济学理论。</p>
+<p>换一种方式来思考， 延误是司机给他的同行们带来的一种外部性。 由于开车进入繁忙的道路而引起拥堵， 司机使其他人放慢了速度， 但他们不用为此付费， 至少没有直接付费。 当然结果是每个人都付了费， 因为在我们给其他人带来拥堵时， 其他人也给我们带来了拥堵。 这就陷入了一场没有赢家的博弈。</p>
+<p>大多数人对时间的评价在不同情况下差别很大， 这取决于他们那天要干什么事。  收费赋予了你按照自己的时间表制定出行成本的权利， 从而给你的生活带来更高的灵活性和自由度。</p>
+<h4>生产成本</h4>
+<p>如果一个企业想使自己工人的生产率尽可能地高， 那么一般最好是让他们每个人都从事自己所精通的有限工作。 但只有在一个企业雇佣了大量工人并生产大量产品时， 这种工作的组织方式才是可能的。</p>
+<h4>竞争市场上的企业</h4>
+<p>边际成本曲线（Marginal Cost Curve）是一种图形表示， 用于描述在生产过程中， 随着产量增加， 边际成本的变化情况。
+它是一条在二维平面上的曲线， 横坐标表示产量（Quantity）， 纵坐标表示边际成本（Marginal Cost）。 边际成本曲线通常用于微观经济学和企业决策中， 帮助分析生产过程中成本的变化特征和最优产量水平。</p>
+<p>边际成本曲线的形状可能因产业、 生产技术、 成本结构等因素而有所不同。 然而， 通常情况下， 边际成本曲线呈现以下特点：</p>
+<ol>
+<li>边际成本曲线初始阶段， 随着产量的增加， 边际成本先下降， 这是由于规模经济、 分工和专业化带来的成本节约效应。</li>
+<li>边际成本曲线某一点后开始上升， 随着产量的增加， 边际成本上升， 这是由于生产过程中的递减报酬、 资源约束和效率降低等因素导致的。</li>
+</ol>
+<p>边际成本曲线通常呈现出先下降后上升的形状， 形象地反映了生产过程中边际成本的变化规律。</p>
+<p>本质上， 由于企业的边际成本曲线决定了企业在任何一种价格时愿意供给的物品数量， 因此边际成本曲线也是竞争企业的供给曲线。</p>
+<h4>垄断竞争</h4>
+<p>企业出售的是相同的产品还是有差异性的产品？ 如果这些企业出售相同的产品， 那么该市场就是完全竞争的； 如果这些企业出售有差异的产品， 那么该市场就是垄断竞争的。</p>
+<p>广告的内容是无关紧要的。 凯洛格通过它为广告付费的意愿传递了其产品质量的信号。 广告本身说了什么并不如消费者知道广告很昂贵这一事实重要。 企业之所以会付给著名演员大笔的钱来做广告， 而从表面上看， 这些广告似乎又根本没有提供什么信息。 信息并不在于广告的内容， 而仅仅在于做广告本身及其昂贵的价格。</p>
+<h4>寡头</h4>
+<p>由于寡头市场上只有少数几家企业， 因此每一家都必须有策略地行事。
+每一家企业都知道， 它的利润不仅取决于它生产多少， 而且还取决于其他企业生产多少。</p>
+<h4>收入与歧视</h4>
+<p>竞争市场包含了一种自发矫正雇主歧视的方法。
+只关心利润的企业进入市场倾向于消除歧视性工资差别。
+只有顾客愿意为歧视性做法进行支付或政府强制歧视时， 竞争市场上的这种工资差别才能持续下去。</p>
+<h4>收入不平等与贫困</h4>
+<p>自由至上主义者的结论是， 机会平等比收入平等更重要。 他们认为， 政府应该落实个人的权利， 以确保每个人都有同样的发挥自己才能并获得成功的机会。</p>
+<p>决策者面临平等和效率之间的权衡取舍。
+几乎每一个人都同意的有关收入分配的一个结论： 越平等地分割蛋糕， 蛋糕就会变得越小。</p>
+<h4>微观经济学前沿</h4>
+<p>政治家也是有目标的。</p>
+<p>最好的政治领导人总是追求整个社会的福利， 即他们的目标是效率与平等的最优结合。
+利己是政治活动者的强大动机，
+一些政治家的动机是想再次当选， 因此他们可能愿意牺牲国家利益。
+另一些政治家的动机只是贪婪。</p>
+<p>对人类决策过程的研究， 力图查明人犯下的系统性错误， 主要有几个方面：
+人们过分自信、 人们过分重视从现实生活中观察的细枝末节、 人们不愿意改变自己的观念。</p>
+<hr>
+<h1>通俗易懂的 Promise 知识点总结，检验一下你是否真的完全掌握了 Promise？</h1><h1>Promise 如何运作</h1>
+<pre><code>let myPromise0 = new Promise();
+console.log('myPromise0 :&gt;&gt; ', myPromise0);
+</code></pre>
+<p>输出结果：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69545d9620e24d0aa5e0595b92007fcf~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>这个里包含了一个知识点：</p>
+<ul>
+<li>规定必须给<code>Promise</code>对象传入一个执行函数，否则将会报错。</li>
+</ul>
+<p>不同于 “老式” 的传入回调，在使用 Promise 时，会有以下约定：</p>
+<ul>
+<li>在本轮 <strong>事件循环</strong> 运行完成之前，回调函数是不会被调用的。</li>
+<li>即使异步操作已经完成（成功或失败），在这之后通过 then() 添加的回调函数也会被调用。</li>
+<li>通过多次调用 then() 可以添加多个回调函数，它们会按照插入顺序进行执行。</li>
+</ul>
+<p>Promise 很棒的一点就是<strong>链式调用</strong>。</p>
+<h1>创建 promise</h1>
+<p>Promise API 公开了一个 Promise 构造函数，可以使用 <code>new Promise()</code> 对其进行初始化：</p>
+<pre><code>let done = true
+
+const isItDoneYet = new Promise((resolve, reject) =&gt; {
+  if (done) {
+    const workDone = '这是创建的东西'
+    resolve(workDone)
+  } else {
+    const why = '仍然在处理其他事情'
+    reject(why)
+  }
+})
+</code></pre>
+<h1>使用 promise</h1>
+<p>现在，看看如何使用 promise。</p>
+<pre><code>const isItDoneYet = new Promise(/* ... 如上所述 ... */)
+//...
+
+const checkIfItsDone = () =&gt; {
+  isItDoneYet
+    .then(ok =&gt; {
+      console.log(ok)
+    })
+    .catch(err =&gt; {
+      console.error(err)
+    })
+</code></pre>
+<p>运行 <code>checkIfItsDone()</code> 会指定当 <code>isItDoneYet</code> promise 被解决（在 <strong>then</strong> 调用中）或被拒绝（在 <strong>catch</strong> 调用中）时执行的函数。</p>
+<h1>实例 promise 封装 AJAX</h1>
+<pre><code>// Promise封装Ajax请求
+function ajax(method, url, data) {
+    var xhr = new XMLHttpRequest();
+    return new Promise(function (resolve, reject) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) return;
+            if (xhr.status === 200) {
+                resolve(xhr.responseText);
+            } else {
+                reject(xhr.statusText);
+            }
+
+        };
+        xhr.open(method, url);
+        xhr.send(data);
+    });
+}
+</code></pre>
+<p>使用上面封装好的 ajax 发起一个请求：</p>
+<pre><code>ajax('GET', '/api/categories').then(function (data) {
+    // AJAX成功，拿到响应数据
+    console.log(data);
+}).catch(function (status) {
+    // AJAX失败，根据响应码判断失败原因
+    new Error(status)
+});
+</code></pre>
+<h1>Promise.resolve()</h1>
+<p>有时需要将现有对象转为 Promise 对象，<code>Promise.resolve()</code>方法就起到这个作用。</p>
+<blockquote>
+<p>注意 ❗ 这里的<code>Promise.resolve()</code>是直接使用的，不是在 promise 对象里的<code>resolve()</code>方法，是<code>Promise.resolve()</code> ，开头大写，不是<code>promise</code></p>
+</blockquote>
+<pre><code>const jsPromise = Promise.resolve($.ajax('/whatever.json'));
+</code></pre>
+<p>上面代码将 jQuery 生成的对象，转为一个新的 Promise 对象。</p>
+<p><code>Promise.resolve()</code>等价于下面的写法。</p>
+<pre><code>Promise.resolve('foo')
+// 等价于
+new Promise(resolve =&gt; resolve('foo'))
+</code></pre>
+<p><code>Promise.resolve</code>方法的参数分成四种情况。</p>
+<p>◾ <strong>（1）参数是一个 Promise 实例</strong></p>
+<p>如果参数是 Promise 实例，那么 Promise.resolve 将不做任何修改、原封不动地返回这个实例。</p>
+<p>◾ <strong>（2）参数是一个 thenable 对象</strong></p>
+<p><code>thenable</code>对象指的是具有<code>then</code>方法的对象，比如下面这个对象。</p>
+<pre><code>let thenable = {
+  then: function(resolve, reject) {
+    resolve(42);
+  }
+};
+</code></pre>
+<p><code>Promise.resolve</code>方法会将这个对象转为 Promise 对象，然后就立即执行<code>thenable</code>对象的<code>then</code>方法。</p>
+<pre><code>let thenable = {
+  then: function(resolve, reject) {
+    resolve(42);
+  }
+};
+let p1 = Promise.resolve(thenable);
+p1.then(function(value) {
+  console.log(value);  // 42
+});
+</code></pre>
+<p>上面代码中，<code>thenable</code>对象的<code>then</code>方法执行后，对象<code>p1</code>的状态就变为<code>resolved</code>，从而立即执行最后那个<code>then</code>方法指定的回调函数，输出 42。</p>
+<p>◾ <strong>（3）参数不是具有 then 方法的对象，或根本就不是对象</strong></p>
+<p>如果参数是一个原始值，或者是一个不具有<code>then</code>方法的对象，则<code>Promise.resolve</code>方法返回一个新的 <code>Promise</code> 对象，状态为<code>resolved</code>。</p>
+<pre><code>const p = Promise.resolve('Hello');
+p.then(function (s){
+  console.log(s)
+});
+// Hello
+</code></pre>
+<p>上面代码生成一个新的 <code>Promise</code> 对象的实例<code>p</code>。由于字符串<code>Hello</code>不属于异步操作（判断方法是字符串对象不具有 <code>then</code> 方法），返回 <code>Promise</code> 实例的状态从一生成就是<code>resolved</code>，所以回调函数会立即执行。<code>Promise.resolve</code>方法的参数，会同时传给回调函数。</p>
+<p>◾ <strong>（4）不带有任何参数</strong></p>
+<p><code>Promise.resolve()</code>方法允许调用时不带参数，直接返回一个<code>resolved</code>状态的 Promise 对象。</p>
+<p>所以，如果希望得到一个 Promise 对象，比较方便的方法就是直接调用<code>Promise.resolve()</code>方法。</p>
+<pre><code>const p = Promise.resolve();
+p.then(function () {
+  // ...
+});
+</code></pre>
+<p>上面代码的变量 p 就是一个 Promise 对象。</p>
+<p>需要注意的是，立即<code>resolve()</code>的 Promise 对象，是在本轮 “事件循环”（event loop）的结束时执行，而不是在下一轮“事件循环” 的开始时。</p>
+<pre><code>setTimeout(function () {
+  console.log('three');
+}, 0);
+Promise.resolve().then(function () {
+  console.log('two');
+});
+console.log('one');
+// one
+// two
+// three
+</code></pre>
+<p>上面代码中，<code>setTimeout(fn, 0)</code>在下一轮 “事件循环” 开始时执行，<code>Promise.resolve()</code>在本轮 “事件循环” 结束时执行，<code>console.log('one')</code>则是立即执行，因此最先输出。</p>
+<h1>Promise.reject()</h1>
+<p><code>Promise.reject(reason)</code>方法也会返回一个新的 Promise 实例，该实例的状态为<code>rejected</code>。</p>
+<pre><code>const p = Promise.reject('出错了');
+// 等同于
+const p = new Promise((resolve, reject) =&gt; reject('出错了'))
+p.then(null, function (s) {
+  console.log(s)
+});
+// 出错了
+</code></pre>
+<p>上面代码生成一个 Promise 对象的实例<code>p</code>，状态为<code>rejected</code>，回调函数会立即执行。</p>
+<p>注意，<code>Promise.reject()</code>方法的参数，会原封不动地作为<code>reject</code>的理由，变成后续方法的参数。这一点与<code>Promise.resolve</code>方法不一致。</p>
+<pre><code>const thenable = {
+  then(resolve, reject) {
+    reject('出错了');
+  }
+};
+Promise.reject(thenable)
+.catch(e =&gt; {
+  console.log(e === thenable)
+})
+// true
+</code></pre>
+<p>上面代码中，<code>Promise.reject</code>方法的参数是一个<code>thenable</code>对象，执行以后，后面<code>catch</code>方法的参数不是<code>reject</code>抛出的 “出错了” 这个字符串，而是<code>thenable</code>对象。</p>
+<h1>Promise.prototype.then()</h1>
+<p>Promise 实例具有<code>then</code>方法，也就是说，<code>then</code>方法是定义在原型对象<code>Promise.prototype</code>上的。它的作用是为 Promise 实例添加状态改变时的回调函数。</p>
+<p><code>then</code>方法的第一个参数是<code>resolved</code>状态的回调函数。如果该参数不是函数，则会在内部被替换为 <code>(x) =&gt; x</code>，即原样返回 promise 最终结果的函数；</p>
+<p>第二个参数（可选）是<code>rejected</code>状态的回调函数。如果该参数不是函数，则会在内部被替换为一个 &quot;Thrower&quot; 函数 (it throws an error it received as argument)。</p>
+<p><code>then</code>方法返回的是一个新的<code>Promise</code>实例（注意，不是原来那个<code>Promise</code>实例）。因此可以采用链式写法，即<code>then</code>方法后面再调用另一个<code>then</code>方法。</p>
+<pre><code>getJSON(&quot;/posts.json&quot;).then(function(json) {
+  return json.post;
+}).then(function(post) {
+  // ...
+});
+</code></pre>
+<p>上面的代码使用<code>then</code>方法，依次指定了两个回调函数。第一个回调函数完成以后，会将返回结果作为参数，传入第二个回调函数。</p>
+<p>采用链式的<code>then</code>，可以指定一组按照次序调用的回调函数。这时，前一个回调函数，有可能返回的还是一个<code>Promise</code>对象（即有异步操作），这时后一个回调函数，就会等待该<code>Promise</code>对象的状态发生变化，才会被调用。</p>
+<pre><code>getJSON(&quot;/post/1.json&quot;).then(function(post) {
+  return getJSON(post.commentURL);
+}).then(function (comments) {
+  console.log(&quot;resolved: &quot;, comments);
+}, function (err){
+  console.log(&quot;rejected: &quot;, err);
+});
+</code></pre>
+<p>上面代码中，第一个<code>then</code>方法指定的回调函数，返回的是另一个<code>Promise</code>对象。这时，第二个<code>then</code>方法指定的回调函数，就会等待这个新的<code>Promise</code>对象状态发生变化。如果变为<code>resolved</code>，就调用第一个回调函数，如果状态变为<code>rejected</code>，就调用第二个回调函数。</p>
+<p>如果采用箭头函数，上面的代码可以写得更简洁。</p>
+<pre><code>getJSON(&quot;/post/1.json&quot;).then(
+  post =&gt; getJSON(post.commentURL)
+).then(
+  comments =&gt; console.log(&quot;resolved: &quot;, comments),
+  err =&gt; console.log(&quot;rejected: &quot;, err)
+);
+</code></pre>
+<p>前面介绍了 <code>then</code> 方法的参数和链式调用，下面详细介绍一下 <code>then</code> 方法的返回值，也就是 <code>then</code> 方法中的 <code>return</code>。</p>
+<p>当一个 <code>Promise</code> 完成（fulfilled）或者失败（rejected）时，返回函数将被异步调用（由当前的线程循环来调度完成）。</p>
+<p>具体的返回值 <code>return</code> 依据以下规则返回。
+如果 <code>then</code> 中的回调函数：</p>
+<ul>
+<li>返回 <code>(return)</code> 了一个值，那么 <code>then</code> 返回的 Promise 将会成为接受状态，并且将返回的值作为接受状态的回调函数的参数值。</li>
+<li>没有返回 <code>(return)</code> 任何值，那么 <code>then</code> 返回的 Promise 将会成为接受状态，并且该接受状态的回调函数的参数值为 <code>undefined</code>。</li>
+<li>抛出一个错误，那么 <code>then</code> 返回的 Promise 将会成为拒绝状态，并且将抛出的错误作为拒绝状态的回调函数的参数值。</li>
+<li>返回 <code>(return)</code> 一个已经是接受状态的 Promise，那么 <code>then</code> 返回的 Promise 也会成为接受状态，并且将那个 Promise 的接受状态的回调函数的参数值作为该被返回的 Promise 的接受状态回调函数的参数值。</li>
+<li>返回 <code>(return)</code> 一个已经是拒绝状态的 Promise，那么 <code>then</code> 返回的 Promise 也会成为拒绝状态，并且将那个 Promise 的拒绝状态的回调函数的参数值作为该被返回的 Promise 的拒绝状态回调函数的参数值。</li>
+<li>返回 <code>(return)</code> 一个未定状态（<code>pending</code>）的 Promise，那么 <code>then</code> 返回 Promise 的状态也是未定的，并且它的终态与那个 Promise 的终态相同；同时，它变为终态时调用的回调函数参数与那个 Promise 变为终态时的回调函数的参数是相同的。</li>
+</ul>
+<h1>链式调用 promise.then()</h1>
+<p><strong><code>then</code> 方法返回一个 Promise 对象，其允许方法链，从而创建一个 promise 链。</strong></p>
+<p>链式 promise 的一个很好的示例是 Fetch API，可以用于获取资源，且当资源被获取时将 promise 链式排队进行执行。</p>
+<p>Fetch API 是基于 promise 的机制，调用 <code>fetch()</code> 相当于使用 new Promise() 来定义 promsie。</p>
+<pre><code>const status = response =&gt; {
+  if (response.status &gt;= 200 &amp;&amp; response.status &lt; 300) {
+    return Promise.resolve(response)
+  }
+  return Promise.reject(new Error(response.statusText))
+}
+
+const json = response =&gt; response.json()
+
+fetch('/todos.json')
+  .then(status)    // 注意，`status` 函数实际上在这里被调用，并且同样返回 promise，
+  .then(json)      // 这里唯一的区别是的 `json` 函数会返回解决时传入 `data` 的 promise，
+  .then(data =&gt; {  // 这是 `data` 会在此处作为匿名函数的第一个参数的原因。
+    console.log('请求成功获得 JSON 响应', data)
+  })
+  .catch(error =&gt; {
+    console.log('请求失败', error)
+  })
+</code></pre>
+<p>在此示例中，调用 <code>fetch()</code> 从域根目录中的 <code>todos.json</code> 文件中获取 TODO 项目的列表，并创建一个 promise 链。</p>
+<p>运行 <code>fetch()</code> 会返回一个响应 <code>response</code>，该响应具有许多属性，在属性中引用了：</p>
+<ul>
+<li><code>status</code>，表示 HTTP 状态码的数值。</li>
+<li><code>statusText</code>，状态消息，如果请求成功，则为 OK。</li>
+</ul>
+<p><code>response</code> 还有一个 <code>json()</code> 方法，该方法会返回一个 promise，该 promise 解决时会传入已处理并转换为 JSON 的响应体的内容。</p>
+<p>因此，考虑到这些前提，发生的过程是：链中的第一个 promise 是我们定义的函数，即 <code>status()</code>，它会检查响应的状态，如果不是成功响应（介于 200 和 299 之间），则它会拒绝 promise。</p>
+<p>此操作会导致 promise 链跳过列出的所有被链的 promise，且会直接跳到底部的 <code>catch()</code> 语句（记录<code>请求失败</code>的文本和错误消息）。</p>
+<p>如果成功，则会调用定义的 <code>json()</code> 函数。 由于上一个 promise 成功后返回了 response 对象，因此将其作为第二个 promise 的输入。</p>
+<p>在此示例中，返回处理后的 JSON 数据，因此第三个 promise 直接接收 JSON：</p>
+<pre><code>.then((data) =&gt; {
+  console.log('请求成功获得 JSON 响应', data)
+})
+</code></pre>
+<h1>Promise.prototype.catch()</h1>
+<p><code>catch()</code> 方法返回一个<code>Promise</code>，并且处理拒绝的情况。它的行为与调用<code>Promise.prototype.then(undefined, onRejected)</code> 相同。</p>
+<p>事实上, calling <code>obj.catch(onRejected)</code> 内部 calls <code>obj.then(undefined, onRejected)</code>。(这句话的意思是，我们显式使用<code>obj.catch(onRejected)</code>，内部实际调用的是<code>obj.then(undefined, onRejected)</code>)</p>
+<p><code>Promise.prototype.catch()</code>方法是<code>.then(null, rejection)</code>或<code>.then(undefined, rejection)</code>的别名，用于指定发生错误时的回调函数。</p>
+<pre><code>getJSON('/posts.json').then(function(posts) {
+  // ...
+}).catch(function(error) {
+  // 处理 getJSON 和 前一个回调函数运行时发生的错误
+  console.log('发生错误！', error);
+});
+</code></pre>
+<p>上面代码中，<code>getJSON()</code>方法返回一个 Promise 对象，如果该对象状态变为<code>resolved</code>，则会调用<code>then()</code>方法指定的回调函数；如果异步操作抛出错误，状态就会变为<code>rejected</code>，就会调用<code>catch()</code>方法指定的回调函数，处理这个错误。另外，<code>then()</code>方法指定的回调函数，如果运行中抛出错误，也会被<code>catch()</code>方法捕获。</p>
+<pre><code>p.then((val) =&gt; console.log('fulfilled:', val))
+  .catch((err) =&gt; console.log('rejected', err));
+  
+// 等同于
+p.then((val) =&gt; console.log('fulfilled:', val))
+  .then(null, (err) =&gt; console.log(&quot;rejected:&quot;, err));
+</code></pre>
+<p>◾ 下面是一个例子。</p>
+<pre><code>const promise = new Promise(function(resolve, reject) {
+  throw new Error('test');
+});
+promise.catch(function(error) {
+  console.log(error);
+});
+// Error: test
+</code></pre>
+<p>上面代码中，promise 抛出一个错误，就被<code>catch()</code>方法指定的回调函数捕获。注意，上面的写法与下面两种写法是等价的。</p>
+<pre><code>// 写法一
+const promise = new Promise(function(resolve, reject) {
+  try {
+    throw new Error('test');
+  } catch(e) {
+    reject(e);
+  }
+});
+promise.catch(function(error) {
+  console.log(error);
+});
+// 写法二
+const promise = new Promise(function(resolve, reject) {
+  reject(new Error('test'));
+});
+promise.catch(function(error) {
+  console.log(error);
+});
+</code></pre>
+<p>比较上面两种写法，可以发现 reject() 方法的作用，等同于抛出错误。</p>
+<p>◾ 如果 Promise 状态已经变成 resolved，再抛出错误是无效的。</p>
+<pre><code>const promise = new Promise(function(resolve, reject) {
+  resolve('ok');
+  throw new Error('test');
+});
+promise
+  .then(function(value) { console.log(value) })
+  .catch(function(error) { console.log(error) });
+// ok
+</code></pre>
+<p>上面代码中，Promise 在 resolve 语句后面，再抛出错误，不会被捕获，等于没有抛出。因为 Promise 的状态一旦改变，就永久保持该状态，不会再变了。</p>
+<p>◾ Promise 对象的错误具有 “冒泡” 性质，会一直向后传递，直到被捕获为止。也就是说，错误总是会被下一个 catch 语句捕获。</p>
+<pre><code>getJSON('/post/1.json').then(function(post) {
+  return getJSON(post.commentURL);
+}).then(function(comments) {
+  // some code
+}).catch(function(error) {
+  // 处理前面三个Promise产生的错误
+});
+</code></pre>
+<p>上面代码中，一共有三个 Promise 对象：一个由<code>getJSON()</code>产生，两个由<code>then()</code>产生。它们之中任何一个抛出的错误，都会被最后一个<code>catch()</code>捕获。</p>
+<p>◾ 一般来说，不要在<code>then()</code>方法里面定义 Reject 状态的回调函数（即<code>then</code>的第二个参数），总是使用<code>catch</code>方法。</p>
+<pre><code>// bad
+promise
+  .then(function(data) {
+    // success
+  }, function(err) {
+    // error
+  });
+  
+// good
+promise
+  .then(function(data) { //cb
+    // success
+  })
+  .catch(function(err) {
+    // error
+  });
+</code></pre>
+<p>上面代码中，第二种写法要好于第一种写法，理由是第二种写法可以捕获前面<code>then</code>方法执行中的错误，也更接近同步的写法（<code>try/catch</code>）。因此，建议总是使用<code>catch()</code>方法，而不使用<code>then()</code>方法的第二个参数。</p>
+<p>◾ 跟传统的<code>try/catch</code>代码块不同的是，如果没有使用<code>catch()</code>方法指定错误处理的回调函数，Promise 对象抛出的错误不会传递到外层代码，即不会有任何反应。</p>
+<pre><code>const someAsyncThing = function() {
+  return new Promise(function(resolve, reject) {
+    // 下面一行会报错，因为x没有声明
+    resolve(x + 2);
+  });
+};
+someAsyncThing().then(function() {
+  console.log('everything is great');
+});
+setTimeout(() =&gt; { console.log(123) }, 2000);
+// Uncaught (in promise) ReferenceError: x is not defined
+// 123
+</code></pre>
+<p>在浏览器中运行上面这段代码，等待两秒后，你会看到控制台正常打印 &quot;123&quot;，并没有因为<code>someAsyncThing()</code>方法里的错误阻塞代码运行。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/819b3df49f7b472d8f1f0ad850632955~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>上面代码中，<code>someAsyncThing()</code>函数产生的 Promise 对象，内部有语法错误。浏览器运行到这一行，会打印出错误提示<code>ReferenceError: x is not defined</code>，但是不会退出进程、终止脚本执行，2 秒之后还是会输出 123。这就是说，Promise 内部的错误不会影响到 Promise 外部的代码，通俗的说法就是 “Promise 会吃掉错误”。</p>
+<h1>处理错误</h1>
+<p>在上一章节的示例中，有个 <code>catch</code> 被附加到了 promise 链上。</p>
+<p>当 promise 链中的任何内容失败并引发错误或拒绝 promise 时，则控制权会转到链中最近的 <code>catch()</code> 语句。</p>
+<pre><code>new Promise((resolve, reject) =&gt; {
+  throw new Error('错误')
+}).catch(err =&gt; {
+  console.error(err)
+})
+
+// 或
+
+new Promise((resolve, reject) =&gt; {
+  reject('错误')
+}).catch(err =&gt; {
+  console.error(err)
+})
+</code></pre>
+<h1>级联错误</h1>
+<p>如果在 <code>catch()</code> 内部引发错误，则可以附加第二个 <code>catch()</code>来处理，依此类推。</p>
+<pre><code>new Promise((resolve, reject) =&gt; {
+  throw new Error('错误')
+})
+  .catch(err =&gt; {
+    throw new Error('错误')
+  })
+  .catch(err =&gt; {
+    console.error(err)
+  })
+</code></pre>
+<h1>Promise.prototype.finally()</h1>
+<p><code>finally()</code>方法用于指定不管 Promise 对象最后状态如何，都会执行的操作。该方法是 ES2018 引入标准的。</p>
+<p><code>finally()</code> 方法返回一个 Promise。在 promise 结束时，无论结果是<code>fulfilled</code>或者是<code>rejected</code>，都会执行指定的回调函数。这为在<code>Promise</code>是否成功完成后都需要执行的代码提供了一种方式。</p>
+<p>这避免了同样的语句需要在<code>then()</code>和<code>catch()</code>中各写一次的情况。</p>
+<pre><code>promise
+.then(result =&gt; {···})
+.catch(error =&gt; {···})
+.finally(() =&gt; {···});
+</code></pre>
+<p>上面代码中，不管<code>promise</code>最后的状态，在执行完<code>then</code>或<code>catch</code>指定的回调函数以后，都会执行<code>finally</code>方法指定的回调函数。</p>
+<p>如果你想在 <code>promise</code> 执行完毕后无论其结果怎样都做一些处理或清理时，<code>finally()</code> 方法可能是有用的。</p>
+<p>◾ 由于无法知道<code>promise</code>的最终状态，所以<code>finally</code>的回调函数中不接收任何参数，它仅用于无论最终结果如何都要执行的情况。</p>
+<p>◾ 与<code>Promise.resolve(2).then(() =&gt; {}, () =&gt; {})</code> （resolved 的结果为<code>undefined</code>）不同，<code>Promise.resolve(2).finally(() =&gt; {})</code> resolved 的结果为 <code>2</code>。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a4c3b75fb94146ae8a35a3f424bc28ed~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>◾ 同样，<code>Promise.reject(3).then(() =&gt; {}, () =&gt; {})</code> (fulfilled 的结果为<code>undefined</code>), <code>Promise.reject(3).finally(() =&gt; {})</code> rejected 的结果为 <code>3</code>。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6733f2cd59ac47e5bc43cbe8a3aeaee5~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<h1>并发 promise.all()</h1>
+<p>可以使用<code>Promise.all()</code>，<strong>发起多个并发请求</strong>，然后在所有 promise 都被解决后执行一些操作。</p>
+<pre><code>function getUserAccount() {
+  return axios.get('/user/12345');
+}
+
+function getUserPermissions() {
+  return axios.get('/user/12345/permissions');
+}
+
+Promise.all([getUserAccount(), getUserPermissions()])
+  .then(function (results) {
+    const acct = results[0];
+    const perm = results[1];
+  });
+</code></pre>
+<p>ES2015 解构赋值语法也可以执行：</p>
+<pre><code>Promise.all([getUserAccount, getUserPermissions]).then(([res1, res2]) =&gt; {
+  console.log('结果', res1, res2)
+})
+</code></pre>
+<p>当然，不限于使用 <code>axios</code>，任何 promise 都可以以这种方式使用，比如：</p>
+<pre><code>const promise1 = Promise.resolve(3);
+const promise2 = 42;
+const promise3 = new Promise((resolve, reject) =&gt; {
+  setTimeout(resolve, 100, 'foo');
+});
+
+Promise.all([promise1, promise2, promise3]).then((values) =&gt; {
+  console.log(values);
+});
+// expected output: Array [3, 42, &quot;foo&quot;]
+</code></pre>
+<h1>竞速 promise.race()</h1>
+<p>race 的用法是：<strong>传入多个 promise 实例，谁跑的快，就以谁的结果执行回调</strong></p>
+<p><code>Promise.race赛跑机制，只认第一名</code></p>
+<p>传给 <code>race()</code> 的 <code>promise列表</code>，<strong>只要有一个 promise 被解决，则 <code>Promise.race()</code> 开始运行，并且只运行一次附加的回调（传入第一个被解决的 <code>promise</code> 的结果）</strong>。</p>
+<p>示例：</p>
+<pre><code>const first = new Promise((resolve, reject) =&gt; {
+  setTimeout(resolve, 500, '第一个')
+})
+const second = new Promise((resolve, reject) =&gt; {
+  setTimeout(resolve, 100, '第二个')
+})
+
+Promise.race([first, second]).then(result =&gt; {
+  console.log(result) // 第二个
+})
+</code></pre>
+<p><strong>◾ 使用场景</strong></p>
+<ul>
+<li>1、把异步操作和定时器放到一起，如果定时器先触发，认为超时，告知用户；</li>
+<li>2、如果图片等资源有多个存放路径，但是不确定哪个路径的资源更快，可以用该方法同时请求多个路径，哪个路径的资源最先拿到，使用哪个资源</li>
+<li>3、如果指定时间内没有获得结果，就将 Promise 的状态变为<code>reject</code>，否则变为<code>resolve</code></li>
+</ul>
+<p>实例：</p>
+<p>◾ 把异步操作和定时器放到一起，如果定时器先触发，认为超时，告知用户:</p>
+<pre><code>function timeOut(time) {
+    let result = new Promise((resolve,reject) =&gt; {
+        setTimeout(() =&gt; {
+            resolve(&quot;请求超时&quot;)
+        }, time) // 为了验证方法，可以把时间设小点
+    });
+    return result;
+}
+
+Promise.race([timeOut(200), fetch('https://api.github.com/users/ruanyf')]).then(res =&gt; {
+    console.log(res);
+})
+</code></pre>
+<p>现代浏览器原生支持 fetch，所以我们可以直接在浏览器上运行上面的代码：</p>
+<p>为了演示效果，这里<code>setTimeout</code>时间设小一点，可以看到定时器先完成，然后 <code>race()</code> 方法以定时器的结果执行了回调</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e388a53e1874d5792ad3fca3792766f~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>把<code>setTimeout</code>设大一点，这次接口先请求完成，所以 <code>race()</code> 以接口的结果执行了回调</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c8e7f92b3a644fd8308e31d9fa3b773~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>◾ 下面是一个例子，如果指定时间内没有获得结果，就将 Promise 的状态变为<code>reject</code>，否则变为<code>resolve</code>。</p>
+<pre><code>const p = Promise.race([
+  fetch('/resource-that-may-take-a-while'),
+  new Promise(function (resolve, reject) {
+    setTimeout(() =&gt; reject(new Error('request timeout')), 5000)
+  })
+]);
+
+p
+.then(console.log)
+.catch(console.error);
+</code></pre>
+<p>上面代码中，如果 5 秒之内<code>fetch</code>方法无法返回结果，变量<code>p</code>的状态就会变为<code>rejected</code>，从而触发<code>catch</code>方法指定的回调函数。</p>
+<h1>Promise.allSettled()</h1>
+<p>该<code>Promise.allSettled()</code>方法返回一个在所有给定的 promise 都已经<code>fulfilled</code>或<code>rejected</code>后的 promise，并带有一个对象数组，每个对象表示对应的 promise 结果。</p>
+<p>当您有多个彼此不依赖的异步任务成功完成时，或者您总是想知道每个 promise 的结果时，通常使用它。</p>
+<p>相比之下，<code>Promise.all()</code> 更适合彼此相互依赖或者在其中任何一个<code>reject</code>时立即结束。</p>
+<p><code>Promise.allSettled()</code>方法接受一组 Promise 实例作为参数，包装成一个新的 Promise 实例。只有等到所有这些参数实例都返回结果，不管是<code>fulfilled</code>还是<code>rejected</code>，包装实例才会结束。该方法由 ES2020 引入。</p>
+<pre><code>const promises = [
+  fetch('/api-1'),
+  fetch('/api-2'),
+  fetch('/api-3'),
+];
+await Promise.allSettled(promises);
+removeLoadingIndicator();// 移除加载的滚动图标
+</code></pre>
+<p>上面代码对服务器发出三个请求，等到三个请求都结束，不管请求成功还是失败，加载的滚动图标就会消失。</p>
+<p>该方法返回的新的 Promise 实例，一旦结束，状态总是<code>fulfilled</code>，不会变成<code>rejected</code>。状态变成<code>fulfilled</code>后，Promise 的监听函数接收到的参数是一个数组，每个成员对应一个传入<code>Promise.allSettled()</code>的 Promise 实例。</p>
+<pre><code>const resolved = Promise.resolve(42);
+const rejected = Promise.reject(-1);
+
+const allSettledPromise = Promise.allSettled([resolved, rejected]);
+
+allSettledPromise.then(function (results) {
+  console.log(results);
+});
+// [
+//    { status: 'fulfilled', value: 42 },
+//    { status: 'rejected', reason: -1 }
+// ]
+</code></pre>
+<p>上面代码中，<code>Promise.allSettled()</code>的返回值<code>allSettledPromise</code>，状态只可能变成<code>fulfilled</code>。它的监听函数接收到的参数是数组<code>results</code>。该数组的每个成员都是一个对象，对应传入<code>Promise.allSettled()</code>的两个 Promise 实例。每个对象都有<code>status</code>属性，该属性的值只可能是字符串<code>fulfilled</code>或字符串<code>rejected</code>。<code>fulfilled</code>时，对象有<code>value</code>属性，<code>rejected</code>时有<code>reason</code>属性，对应两种状态的返回值。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a22e24ecb384387ab4b3d2426e1b15a~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>◾ 下面是返回值用法的例子。</p>
+<pre><code>const promises = [ fetch('index.html'), fetch('https://does-not-exist/') ];
+const results = await Promise.allSettled(promises);
+
+// 过滤出成功的请求
+const successfulPromises = results.filter(p =&gt; p.status === 'fulfilled');
+
+// 过滤出失败的请求，并输出原因
+const errors = results
+  .filter(p =&gt; p.status === 'rejected')
+  .map(p =&gt; p.reason);
+</code></pre>
+<p>有时候，我们不关心异步操作的结果，只关心这些操作有没有结束。这时，<code>Promise.allSettled()</code>方法就很有用。如果没有这个方法，想要确保所有操作都结束，就很麻烦。<code>Promise.all()</code>方法无法做到这一点。</p>
+<pre><code>const urls = [ /* ... */ ];
+const requests = urls.map(x =&gt; fetch(x));
+
+try {
+  await Promise.all(requests);
+  console.log('所有请求都成功。');
+} catch {
+  console.log('至少一个请求失败，其他请求可能还没结束。');
+}
+</code></pre>
+<p>上面代码中，<code>Promise.all()</code>无法确定所有请求都结束。想要达到这个目的，写起来很麻烦，有了<code>Promise.allSettled()</code>，这就很容易了。</p>
+<h1>常见的错误</h1>
+<p><strong>◾ <code>Uncaught TypeError: undefined is not a promise</code></strong></p>
+<p>如果在控制台中收到 <code>Uncaught TypeError: undefined is not a promise</code> 错误，则请确保使用 <code>new Promise()</code> 而不是 <code>Promise()</code>。</p>
+<p><strong>◾ <code>UnhandledPromiseRejectionWarning</code></strong></p>
+<p>这意味着调用的 promise 被拒绝，但是没有用于处理错误的 catch。 在 then 之后添加 catch 则可以正确地处理。</p>
+<hr>

@@ -11,12 +11,8 @@
             "id": "d5077233460c7981",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "done/通俗易懂的 Promise 知识点总结，检验一下你是否真的完全掌握了 Promise？.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -62,9 +58,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "done/通俗易懂的 Promise 知识点总结，检验一下你是否真的完全掌握了 Promise？.md"
-              }
+              "state": {}
             }
           },
           {
@@ -95,7 +89,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/通俗易懂的 Promise 知识点总结，检验一下你是否真的完全掌握了 Promise？.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +105,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/通俗易懂的 Promise 知识点总结，检验一下你是否真的完全掌握了 Promise？.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -155,10 +147,22 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "d5077233460c7981",
   "lastOpenFiles": [
-    "done/模拟题 - 抓住三个核心：“时间”、“事件”、“状态” 进行模拟 - 过桥的时间 - 力扣（LeetCode）.md",
     "done/通俗易懂的 Promise 知识点总结，检验一下你是否真的完全掌握了 Promise？.md",
+    "output/2023-7-15 16-57-26.html",
+    "achieve/通俗易懂的 Promise 知识点总结，检验一下你是否真的完全掌握了 Promise？.md",
+    "achieve/读《经济学原理 - 微观经济学分册》.md",
+    "achieve/模拟题 - 抓住三个核心：“时间”、“事件”、“状态” 进行模拟 - 过桥的时间 - 力扣（LeetCode）.md",
+    "achieve/手写 Promise 原理.md",
+    "achieve/前端监控和前端埋点方案设计.md",
+    "achieve/前端埋点实现方案✔.md",
+    "achieve/为什么用 GIF 做埋点？.md",
+    "achieve/JavaScript 判断是否为数字的几种方式.md",
+    "achieve/JS 中的 this 到底指向啥？.md",
+    "achieve/ES6 新特性 Class 类的全方面理解.md",
+    "achieve/A+ 手写Promise.md",
+    "done/模拟题 - 抓住三个核心：“时间”、“事件”、“状态” 进行模拟 - 过桥的时间 - 力扣（LeetCode）.md",
     "done/前端监控和前端埋点方案设计.md",
     "done/前端埋点实现方案✔.md",
     "done/JS 中的 this 到底指向啥？.md",
@@ -174,31 +178,18 @@
     "done",
     "md/手把手一行一行代码教你 “手写 Promise“，完美通过 Promises",
     "output/2023-6-13 16-40-22.html",
-    "achieve/看了就会，手写 Promise 原理，最通俗易懂的版本！！！.md",
-    "test/看了就会，手写 Promise 原理，最通俗易懂的版本！！！.md",
     "output/2023-6-13 16-40-02.html",
     "output/2023-6-13 16-38-40.html",
     "output/2023-6-13 16-37-37.html",
     "test",
     "node_modules/markdown-it-regexp/index.js",
     "node_modules/markdown-it-regexp/LICENSE",
-    "node_modules/markdown-it-regexp/README.md",
-    "node_modules/markdown-it-regexp/lib/utils.js",
-    "node_modules/markdown-it-obsidian-images/README.md",
-    "node_modules/utf8-byte-length/README.md",
-    "node_modules/truncate-utf8-bytes/README.md",
-    "node_modules/sanitize-filename/README.md",
-    "node_modules/sanitize-filename/LICENSE.md",
-    "node_modules/sanitize-filename/Changelog.md",
-    "node_modules/extend/README.md",
-    "node_modules/extend/CHANGELOG.md",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8074c71fa8ae2e699cb73bf4f1a710aa_MD5.webp",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/eca6befa5d5237f99cf43e97ab0ccb3c_MD5.webp",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/699f80edea9916bd27066c2d0be514ff_MD5.webp",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8384ea4c8037ea8e30f600fccb7f46dc_MD5.webp",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/3d11232072b778d66c0307c90dc2e5c0_MD5.webp",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/5ce24faea89d0c4b646ab52d28a55a7a_MD5.webp",
-    "md/手写 Promise 教程.md",
     "_resources/手写 Promise 教程/e78bf7663c5eae57f812102dc0583f46_MD5.webp",
     "_resources/前端监控和前端埋点方案设计/198e424559d99162965d913cd76e56ab_MD5.png",
     "_resources/前端埋点实现方案✔/f57c8d76fa7177c87fc1ac4bbf347f26_MD5.webp",

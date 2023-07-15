@@ -39,7 +39,7 @@ function readDirectory(readPath) {
           path.basename(file, path.extname(file)) +
           "</h1>" +
           md.render(fileContent) +
-          "<hr>";
+          "<h1> </h1>";
         fs.rename(filePath, path.join(acheievePath, file), (err) => {
           console.error(err);
         });
