@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/A+ 手写Promise.md",
+                "file": "done/读《经济学原理 - 微观经济学分册》.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/A+ 手写Promise.md"
+                "file": "done/读《经济学原理 - 微观经济学分册》.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/A+ 手写Promise.md",
+                "file": "done/读《经济学原理 - 微观经济学分册》.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/A+ 手写Promise.md",
+                "file": "done/读《经济学原理 - 微观经济学分册》.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -155,11 +155,11 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "d5077233460c7981",
+  "active": "7c656948499aebb2",
   "lastOpenFiles": [
+    "done/A+ 手写Promise.md",
     "md/BAT 前端经典面试问题：史上最最最详细的手写 Promise 教程.md",
-    "md/A+ 手写Promise.md",
-    "md/读《经济学原理 - 微观经济学分册》.md",
+    "done/读《经济学原理 - 微观经济学分册》.md",
     "readme.md",
     "md/前端监控和前端埋点方案设计.md",
     "done/手写 Promise 原理.md",
