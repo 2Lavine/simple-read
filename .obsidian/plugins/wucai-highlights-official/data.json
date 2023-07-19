@@ -8,7 +8,7 @@
   "refreshNotes": false,
   "notesToRefresh": [],
   "reimportShowConfirmation": true,
-  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6ODk5NjA2LCJja1BLSUQiOjAsImNrTklEIjowLCJja1hOSUQiOjAsImNrVCI6MTY4OTc3MzQ4NH0=",
+  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6ODk5NzQyLCJja1BLSUQiOjAsImNrTklEIjowLCJja1hOSUQiOjAsImNrVCI6MTY4OTc3NDU5MX0=",
   "dataVersion": 0,
   "notePaths": {
     "H8A6H72": "WuCai/LearnVim_zh_cnch01_starting_vim.md at master · wsdjegLearnVim_zh_cn · GitHub-H8A6H72.md",
@@ -30,7 +30,8 @@
     "H8AMKM2": "WuCai/node webp转换器  Google Search-H8AMKM2.md",
     "H8AMKD6": "WuCai/07-15-1. HelloWeb3 三行代码  WTF Academy-H8AMKD6.md",
     "H8AHEFH": "WuCai/07-19-learnhack01.md at master · xditelearnhack-H8AHEFH.md",
-    "H8AHEF7": "WuCai/07-19-learnhack02.md at master · xditelearnhack-H8AHEF7.md"
+    "H8AHEF7": "WuCai/07-19-learnhack02.md at master · xditelearnhack-H8AHEF7.md",
+    "H8AHE9F": "WuCai/07-19-learnhack03.md at master · xditelearnhack · GitHub-H8AHE9F.md"
   },
   "exportConfig": {
     "titleFormat": 5,

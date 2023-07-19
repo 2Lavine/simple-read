@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "WuCai/07-19-learnhack02.md at master · xditelearnhack-H8AHEF7.md",
+                "file": "WuCai/07-19-learnhack01.md at master · xditelearnhack-H8AHEFH.md",
                 "mode": "source",
                 "source": false
               }
@@ -75,7 +75,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "WuCai/07-19-learnhack02.md at master · xditelearnhack-H8AHEF7.md"
+                "file": "WuCai/07-19-learnhack01.md at master · xditelearnhack-H8AHEFH.md"
               }
             }
           },
@@ -107,7 +107,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "WuCai/07-19-learnhack02.md at master · xditelearnhack-H8AHEF7.md",
+                "file": "WuCai/07-19-learnhack01.md at master · xditelearnhack-H8AHEFH.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -124,7 +124,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "WuCai/07-19-learnhack02.md at master · xditelearnhack-H8AHEF7.md",
+                "file": "WuCai/07-19-learnhack01.md at master · xditelearnhack-H8AHEFH.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -169,9 +169,10 @@
   },
   "active": "d5077233460c7981",
   "lastOpenFiles": [
-    "WuCai/07-19-append-逆向法.md",
+    "WuCai/07-19-learnhack03.md at master · xditelearnhack · GitHub-H8AHE9F.md",
     "WuCai/07-19-learnhack02.md at master · xditelearnhack-H8AHEF7.md",
     "WuCai/07-19-learnhack01.md at master · xditelearnhack-H8AHEFH.md",
+    "WuCai/07-19-append-逆向法.md",
     "WuCai/07-15-1. HelloWeb3 三行代码  WTF Academy-H8AMKD6.md",
     "WuCai/[长文] 史上最快破亿用户的应用Threads 是何方神圣-H8A7D89.md",
     "WuCai/6月展望-H83AFH5.md",
@@ -195,7 +196,6 @@
     "WuCai/wucai-Building Your Application Routing  Next.js-H83BB9K.md",
     "WuCai/wucai-Configuring TypeScript  Next.js-H83BK89.md",
     "WuCai/wucai-Documentation  OpenTelemetry-H83BB9F.md",
-    "WuCai/wucai-LearnVim_zh_cnch01_starting_vim.md at master · wsdjegLearnVim_zh_cn · GitHub-H8A6H72.md",
     "output/2023-7-15 16-57-26.html",
     "done",
     "md/手把手一行一行代码教你 “手写 Promise“，完美通过 Promises",
