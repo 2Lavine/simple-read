@@ -8,7 +8,7 @@
   "refreshNotes": false,
   "notesToRefresh": [],
   "reimportShowConfirmation": true,
-  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6ODc2MDIwLCJja1BLSUQiOjAsImNrTklEIjowLCJja1hOSUQiOjAsImNrVCI6MTY4OTQyNjk4N30=",
+  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6ODk5NjA2LCJja1BLSUQiOjAsImNrTklEIjowLCJja1hOSUQiOjAsImNrVCI6MTY4OTc3MzQ4NH0=",
   "dataVersion": 0,
   "notePaths": {
     "H8A6H72": "WuCai/LearnVim_zh_cnch01_starting_vim.md at master · wsdjegLearnVim_zh_cn · GitHub-H8A6H72.md",
@@ -28,12 +28,14 @@
     "H8A6H7K": "WuCai/LearnVim_zh_cnch02_buffers_windows_tabs.md at master · wsdjegLearnVim_zh_cn · GitHub-H8A6H7K.md",
     "H8A7D89": "WuCai/[长文] 史上最快破亿用户的应用Threads 是何方神圣-H8A7D89.md",
     "H8AMKM2": "WuCai/node webp转换器  Google Search-H8AMKM2.md",
-    "H8AMKD6": "WuCai/07-15-1. HelloWeb3 三行代码  WTF Academy-H8AMKD6.md"
+    "H8AMKD6": "WuCai/07-15-1. HelloWeb3 三行代码  WTF Academy-H8AMKD6.md",
+    "H8AHEFH": "WuCai/07-19-learnhack01.md at master · xditelearnhack-H8AHEFH.md",
+    "H8AHEF7": "WuCai/07-19-learnhack02.md at master · xditelearnhack-H8AHEF7.md"
   },
   "exportConfig": {
     "titleFormat": 5,
     "titleTemplate": "{{createat_ts | date(\"MM-DD\") }}-{{title}}",
-    "writeStyle": 1,
+    "writeStyle": 2,
     "titleStyle": 2,
     "highlightStyle": 1,
     "annotationStyle": 1,

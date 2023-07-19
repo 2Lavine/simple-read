@@ -4,5 +4,6 @@
   "showIndentGuide": true,
   "autoConvertHtml": false,
   "promptDelete": false,
-  "spellcheck": false
+  "spellcheck": false,
+  "alwaysUpdateLinks": true
 }
