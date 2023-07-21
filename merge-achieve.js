@@ -19,7 +19,7 @@ const now = new Date()
   .replace(/[/,:]/g, "-");
 const outputFilePath = "./output/" + now + ".html"; // 替换为输出文件的路径
 const output = []; // 用于存储所有的 main-content 元素内容
-
+const nameArray = [];
 function readDirectory(readPath) {
   fs.readdir(readPath, (err, files) => {
     if (err) {
@@ -43,13 +43,15 @@ function readDirectory(readPath) {
         fs.rename(filePath, path.join(acheievePath, file), (err) => {
           console.error(err);
         });
-        output.push(content);
+        output.push({ content, filePath });
       }
     });
 
     if (readPath === directoryPath) {
       // 如果是最外层的目录，则将所有 main-content 元素内容写入输出文件中
-      fs.writeFileSync(outputFilePath, output.join("\n"));
+      output.sort((a, b) => (a.filePath < b.filePath ? -1 : 1));
+      const result = output.map((item) => item.content);
+      fs.writeFileSync(outputFilePath, result.join("\n"));
     }
   });
 }
