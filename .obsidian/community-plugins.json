@@ -3,5 +3,8 @@
   "dataview",
   "copy-as-html",
   "table-editor-obsidian",
-  "wucai-highlights-official"
+  "wucai-highlights-official",
+  "code-block-from-selection",
+  "customizable-menu",
+  "cm-editor-syntax-highlight-obsidian"
 ]

@@ -79,8 +79,8 @@ BGCONSTS.APPID = '20';
 BGCONSTS.SERVICE_ID = 7;
 BGCONSTS.MARKET_INFO = 'obsidian-plugin';
 BGCONSTS.ENDPOINT = 'obsidianwucai';
-BGCONSTS.VERSION = '23.7.11';
-BGCONSTS.VERSION_NUM = 230711;
+BGCONSTS.VERSION = '23.7.21';
+BGCONSTS.VERSION_NUM = 230721;
 BGCONSTS.IS_DEBUG = false;
 BGCONSTS.TEST_TOKEN = '';
 BGCONSTS.BASE_URL = 'https://marker.dotalk.cn';
@@ -14006,9 +14006,13 @@ class WuCaiPlugin extends obsidian.Plugin {
             yield this.saveData(this.settings);
         });
     }
+    resetObsidianClientID() {
+        window.localStorage.setItem('wc-ObsidianClientId', '');
+        return this.getObsidianClientID();
+    }
     getObsidianClientID() {
-        let tmpId = window.localStorage.getItem('wc-ObsidianClientId');
-        if (tmpId) {
+        let tmpId = window.localStorage.getItem('wc-ObsidianClientId') || '';
+        if (tmpId && tmpId.length > 0) {
             return tmpId;
         }
         tmpId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -14060,12 +14064,13 @@ class WuCaiSettingTab extends obsidian.PluginSettingTab {
         this.plugin = plugin;
     }
     display() {
+        let clientId = this.plugin.getObsidianClientID() || '';
         let { containerEl } = this;
         containerEl.empty();
         containerEl.createEl('h1', { text: 'WuCai Highlights Official' });
         containerEl
             .createEl('p', { text: 'Created by ' })
-            .createEl('a', { text: '希果壳五彩插件', href: 'https://www.dotalk.cn/product/wucai' });
+            .createEl('a', { text: '希果壳五彩', href: 'https://www.dotalk.cn/product/wucai' });
         containerEl.getElementsByTagName('p')[0].appendText(` Version ${BGCONSTS.VERSION}`);
         containerEl.createEl('h2', { text: 'Settings' });
         let token = this.plugin.settings.token;
@@ -14158,7 +14163,7 @@ class WuCaiSettingTab extends obsidian.PluginSettingTab {
             }
         }
         else {
-            // 没有配置 token 的情况
+            clientId = this.plugin.resetObsidianClientID();
             new obsidian.Setting(containerEl)
                 .setName('Connect Obsidian to WuCai')
                 .setClass('wc-setting-connect')
@@ -14178,7 +14183,10 @@ class WuCaiSettingTab extends obsidian.PluginSettingTab {
             containerEl.find('.wc-setting-connect > .setting-item-control ').prepend(el);
         }
         const help = containerEl.createEl('p');
-        help.innerHTML = "Question? Please see our <a href='https://www.dotalk.cn/s/M7'>feedback</a> 🙂";
+        help.innerHTML =
+            "Question? Please see our <a href='https://www.dotalk.cn/s/M7'>feedback</a><br/> Client id is: <b>" +
+                clientId +
+                '</b>';
     }
 }
 
