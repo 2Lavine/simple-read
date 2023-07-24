@@ -11,12 +11,8 @@
             "id": "f64359fa4e67063b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "done/浅谈常见的七种加密算法及实现.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -62,9 +58,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "done/浅谈常见的七种加密算法及实现.md"
-              }
+              "state": {}
             }
           },
           {
@@ -95,7 +89,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/浅谈常见的七种加密算法及实现.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +105,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/浅谈常见的七种加密算法及实现.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -157,6 +149,25 @@
   },
   "active": "f64359fa4e67063b",
   "lastOpenFiles": [
+    "done/浅谈常见的七种加密算法及实现.md",
+    "output/2023-7-24 22-07-49.html",
+    "achieve/手把手教你使用 Vuex，猴子都能看懂的教程.md",
+    "achieve/浅谈常见的七种加密算法及实现.md",
+    "achieve/前端面试查漏补缺 --(十五) Event Loop.md",
+    "achieve/23-07-22-15. 异常  WTF Academy-H8A25HM.md",
+    "achieve/23-07-22-14. 抽象合约和接口  WTF Academy-H8A2C9F.md",
+    "achieve/23-07-22-13. 继承  WTF Academy-H8A2C99.md",
+    "achieve/23-07-22-12. 事件  WTF Academy-H8A2C95.md",
+    "achieve/23-07-22-11. 构造函数和修饰器  WTF Academy-H8A2C9K.md",
+    "achieve/23-07-22-10. 控制流  WTF Academy-H8A2C9M.md",
+    "achieve/23-07-22-09. 常数  WTF Academy-H8A2CFF.md",
+    "achieve/23-07-22-08. 变量初始值  WTF Academy-H8A2CF9.md",
+    "achieve/23-07-22-07. 映射类型  WTF Academy-H8A2CF3.md",
+    "achieve/23-07-22-06. 引用类型  WTF Academy-H8A2CFH.md",
+    "achieve/23-07-22-05. 变量数据存储和作用域  WTF Academy-H8A2C7E.md",
+    "achieve/23-07-22-04. 函数输出  WTF Academy-H8A2C7B.md",
+    "achieve/23-07-22-03. 函数类型  WTF Academy-H8A2CDD.md",
+    "achieve/23-07-22-02. 数值类型  WTF Academy-H8A2CDF.md",
     "done/23-07-22-05. 变量数据存储和作用域  WTF Academy-H8A2C7E.md",
     "done/23-07-22-08. 变量初始值  WTF Academy-H8A2CF9.md",
     "done/23-07-22-10. 控制流  WTF Academy-H8A2C9M.md",
@@ -165,25 +176,7 @@
     "done/23-07-22-14. 抽象合约和接口  WTF Academy-H8A2C9F.md",
     "done/23-07-22-15. 异常  WTF Academy-H8A25HM.md",
     "done/23-07-22-13. 继承  WTF Academy-H8A2C99.md",
-    "done/23-07-22-12. 事件  WTF Academy-H8A2C95.md",
-    "done/23-07-22-09. 常数  WTF Academy-H8A2CFF.md",
-    "done/23-07-22-07. 映射类型  WTF Academy-H8A2CF3.md",
-    "done/23-07-22-02. 数值类型  WTF Academy-H8A2CDF.md",
-    "done/23-07-22-06. 引用类型  WTF Academy-H8A2CFH.md",
-    "done/23-07-22-04. 函数输出  WTF Academy-H8A2C7B.md",
-    "done/23-07-22-03. 函数类型  WTF Academy-H8A2CDD.md",
-    "done/浅谈常见的七种加密算法及实现.md",
-    "done/手把手教你使用 Vuex，猴子都能看懂的教程.md",
-    "done/前端面试查漏补缺 --(十五) Event Loop.md",
     "done",
-    "cur useless/向量数据库.md",
-    "WuCai/23-07-24-30. Try Catch  WTF Academy-H8AK223.md",
-    "WuCai/23-07-24-29. 选择器  WTF Academy-H8AK2H7.md",
-    "WuCai/23-07-24-28. Hash  WTF Academy-H8AK2H2.md",
-    "WuCai/23-07-24-27. ABI编码解码  WTF Academy-H8AKH9H.md",
-    "WuCai/23-07-24-26. 删除合约  WTF Academy-H8AKHFF.md",
-    "WuCai/23-07-24-25. Create2  WTF Academy-H8AKHFM.md",
-    "WuCai/23-07-24-24. 在合约中创建新合约  WTF Academy-H8AKH76.md",
     "output/2023-7-24 21-43-22.html",
     "output/2023-7-21 21-52-00.html",
     "output/2023-7-21 21-50-52.html",
@@ -192,7 +185,6 @@
     "output/2023-7-15 16-57-26.html",
     "md/手把手一行一行代码教你 “手写 Promise“，完美通过 Promises",
     "output/2023-6-13 16-40-22.html",
-    "output/2023-6-13 16-40-02.html",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8074c71fa8ae2e699cb73bf4f1a710aa_MD5.webp",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/eca6befa5d5237f99cf43e97ab0ccb3c_MD5.webp",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/699f80edea9916bd27066c2d0be514ff_MD5.webp",

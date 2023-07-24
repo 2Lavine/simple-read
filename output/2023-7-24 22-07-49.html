@@ -1,0 +1,1544 @@
+<h1>23-07-22-02. 数值类型  WTF Academy-H8A2CDF</h1><p>%%begin highlights%%</p>
+<h1>数值类型​</h1>
+<h2>整型</h2>
+<p>整型是solidity中的整数，最常用的包括
+int public _int = -1; // 整数，包括负数
+uint public _uint = 1; // 正整数
+uint256 public _number = 20220330; // 256位正整数</p>
+<h2>地址类型</h2>
+<p>地址类型(address)存储一个 20 字节的值（以太坊地址的大小）</p>
+<p>地址类型也有成员变量，并作为所有合约的基础。有普通的地址和可以转账ETH的地址（payable）。payable的地址拥有balance和transfer()两个成员，方便查询ETH余额以及转账</p>
+<h2>定长字节数组</h2>
+<p>字节数组bytes分两种，一种定长（byte, bytes8, bytes32），另一种不定长。定长的属于数值类型，不定长的是引用类型（之后讲）。 定长bytes可以存一些数据，消耗gas比较少。</p>
+<p>bytes32 public _byte32 = &quot;MiniSolidity&quot;;
+bytes1 public _byte = _byte32[0];</p>
+<p>MiniSolidity变量以字节的方式存储进变量_byte32，转换成16进制为：0x4d696e69536f6c69646974790000000000000000000000000000000000000000
+_byte变量存储_byte32的第一个字节，为0x4d。</p>
+<h2>枚举 enum</h2>
+<p>它主要用于为uint分配名称，使程序易于阅读和维护</p>
+<p>// 用enum将uint 0， 1， 2表示为Buy, Hold, Sell
+enum ActionSet { Buy, Hold, Sell }
+// 创建enum变量 action
+ActionSet action = ActionSet.Buy;</p>
+<p>它可以显式的和uint相互转换，并会检查转换的正整数是否在枚举的长度内，不然会报错：</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/ValueTypes/">原文</a>
+更新时间: 2023-07-22 19:41</p>
+<h1> </h1>
+<h1>23-07-22-03. 函数类型  WTF Academy-H8A2CDD</h1><p>%%begin highlights%%
+Solidity中的函数​
+方括号中的是可写可不写的关键字
+<code>function &lt;function name&gt; (&lt;parameter types&gt;) {internal|external|public|private} [pure|view|payable] [returns (&lt;return types&gt;)]</code></p>
+<p>从前往后一个一个看：</p>
+<ul>
+<li>function：声明函数时的固定用法，想写函数，就要以function关键字开头。</li>
+<li>function name：函数名。</li>
+<li>(parameter types)：圆括号里写函数的参数，也就是要输入到函数的变量类型和名字。</li>
+<li>{internal|external|public|private}：函数可见性说明符，一共4种。
+<ul>
+<li>没标明函数类型的，默认internal。</li>
+<li>public: 内部外部均可见。(也可用于修饰状态变量，public变量会自动生成 getter函数，用于查询数值).</li>
+<li>private: 只能从本合约内部访问，继承的合约也不能用（也可用于修饰状态变量）。</li>
+<li>external: 只能从合约外部访问（但是可以用this.f()来调用，f是函数名）</li>
+<li>internal: 只能从合约内部访问，继承的合约可以用（也可用于修饰状态变量）。</li>
+</ul>
+</li>
+<li>[pure|view|payable]：决定函数权限/功能的关键字。
+<ul>
+<li>payable（可支付的）很好理解，带着它的函数，运行的时候可以给合约转入ETH。pure和view的介绍见下一节。</li>
+</ul>
+</li>
+<li>[returns ()]：函数返回的变量类型和名称。</li>
+</ul>
+<h2>什么是Pure和View</h2>
+<p>solidity加入这两个关键字，我认为是因为gas fee
+包含pure跟view关键字的函数是不改写链上状态的，因此用户直接调用他们是不需要付gas的
+在以太坊中，以下语句被视为修改链上状态：</p>
+<ul>
+<li>写入状态变量。</li>
+<li>释放事件。</li>
+<li>创建其他合约。</li>
+<li>使用selfdestruct.</li>
+<li>通过调用发送以太币。</li>
+<li>调用任何未标记view或pure的函数。</li>
+<li>使用低级调用（low-level calls）。</li>
+<li>使用包含某些操作码的内联汇编。</li>
+</ul>
+<p>包含pure关键字的函数，不能读取也不能写入存储在链上的状态变量。就像小怪一样，看不到也摸不到碧池公主。
+view，“看”，在solidity里理解为“看客”。包含view关键字的函数，能读取但也不能写入状态变量。类似马里奥，能看到碧池，但终究是看客，不能入洞房。
+不写pure也不写view，函数既可以读取也可以写入状态变量。类似马里奥里的boss，可以对碧池公主为所欲为🐶。</p>
+<h2>pure v.s. view</h2>
+<p>// 默认
+function add() external{
+number = number + 1;
+}</p>
+<p>那pure函数能做些什么？举个例子，你可以给函数传递一个参数 _number，然后让他返回 _number+1。</p>
+<p>// pure: 纯纯牛马
+function addPure(uint256 _number) external pure returns(uint256 new_number){
+new_number = _number+1;
+}</p>
+<p>如果add()包含view，比如function add() view external，也会报错。因为view能读取，但不能够改写状态变量。可以稍微改写下方程，让他不改写number，而是返回一个新的变量。</p>
+<pre><code class="language-js">// view: 看客
+function addView() external view returns(uint256 new_number) {
+	new_number = number + 1;
+}
+</code></pre>
+<h2>internal v.s. external</h2>
+<pre><code class="language-js">// internal: 内部
+function minus() internal {
+number = number - 1;
+}
+// 合约内的函数可以调用内部函数
+function minusCall() external {
+minus();
+}
+</code></pre>
+<p>我们定义一个internal的minus()函数，每次调用使得number变量减1。
+由于是internal，只能由合约内部调用，而外部不能。因此，我们必须再定义一个external的minusCall()函数，来间接调用内部的minus()</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/Function/">原文</a>
+更新时间: 2023-07-22 19:47</p>
+<h1> </h1>
+<h1>23-07-22-04. 函数输出  WTF Academy-H8A2C7B</h1><p>%%begin highlights%%</p>
+<h2>返回值 return和returns</h2>
+<p>他们的区别在于：</p>
+<ul>
+<li>returns加在函数名后面，用于声明返回的变量类型及变量名；</li>
+<li>return用于函数主体中，返回指定的变量。</li>
+</ul>
+<pre><code class="language-js">function returnMultiple() public pure returns(uint256, bool, uint256[3] memory){
+return(1, true, [uint256(1),2,5]);
+}
+</code></pre>
+<p>上面这段代码中</p>
+<ul>
+<li>我们声明了returnMultiple()函数将有多个输出：returns(uint256, bool, uint256[3] memory)，</li>
+<li>接着我们在函数主体中用return(1, true, [uint256(1),2,5])确定了返回值。
+我们可以在returns中标明返回变量的名称，这样solidity会自动给这些变量初始化，并且自动返回这些函数的值，不需要加return。</li>
+</ul>
+<p>命名式返回​</p>
+<pre><code class="language-js">function returnNamed() public pure returns(uint256 _number, bool _bool, uint256[3] memory _array){
+	_number = 2;
+	_bool = false;
+	_array = [uint256(3),2,1];
+}
+</code></pre>
+<h2>解构式赋值​</h2>
+<p>读取所有返回值：声明变量，并且将要赋值的变量用,隔开，按顺序排列。
+(_number, _bool, _array) = returnNamed();
+读取部分返回值
+(, _bool2, ) = returnNamed();</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/Return/">原文</a>
+更新时间: 2023-07-22 19:49</p>
+<h1> </h1>
+<h1>23-07-22-05. 变量数据存储和作用域  WTF Academy-H8A2C7E</h1><p>%%begin highlights%%</p>
+<h3>Solidity中的引用类型​</h3>
+<p>引用类型(Reference Type)：包括数组（array），结构体（struct）和映射（mapping），</p>
+<h3>数据存储位置</h3>
+<p>solidity数据存储位置有三类：storage，memory和calldata。
+不同存储位置的gas成本不同。storage类型的数据存在链上，类似计算机的硬盘，消耗gas多；memory和calldata类型的临时存在内存里，消耗gas少。</p>
+<p>storage：合约里的状态变量默认都是storage，存储在链上。
+memory：函数里的参数和临时变量一般用memory，存储在内存中，不上链。
+calldata：和memory类似，存储在内存中，不上链。与memory的不同点在于calldata变量不能修改（immutable），一般用于函数的参数。例子：</p>
+<pre><code class="language-js">function fCalldata(uint[] calldata _x) public pure returns(uint[] calldata){
+//参数为calldata数组，不能被修改
+// _x[0] = 0 //这样修改会报错
+return(_x);
+}
+</code></pre>
+<h3>不同存储类型相互赋值</h3>
+<p>在不同存储类型相互赋值时候，有时会产生独立的副本（修改新变量不会影响原变量），有时会产生引用（修改新变量会影响原变量）</p>
+<p>规则如下：
+storage（合约的状态变量）赋值给本地storage（函数里的）时候，会创建引用，改变新变量会影响原变量</p>
+<pre><code class="language-js">uint[] x = [1,2,3]; // 状态变量：数组 x
+function fStorage() public{
+//声明一个storage的变量 xStorage，指向x。修改xStorage也会影响x
+uint[] storage xStorage = x;
+xStorage[0] = 100;
+}
+</code></pre>
+<p>storage赋值给memory，会创建独立的复本，修改其中一个不会影响另一个；反之亦然。例子：</p>
+<pre><code class="language-js">uint[] x = [1,2,3]; // 状态变量：数组 x
+function fMemory() public view{
+//声明一个Memory的变量xMemory，复制x。修改xMemory不会影响x
+uint[] memory xMemory = x;
+xMemory[0] = 100;
+xMemory[1] = 200;
+uint[] memory xMemory2 = x;
+xMemory2[0] = 300;
+}
+</code></pre>
+<p>memory赋值给memory，会创建引用，改变新变量会影响原变量。
+其他情况，变量赋值给storage，会创建独立的复本，修改其中一个不会影响另一个。</p>
+<h3>变量</h3>
+<p>Solidity中变量按作用域划分有三种，分别是状态变量（state variable），局部变量（local variable）和全局变量(global variable)</p>
+<p>状态变量是数据存储在链上的变量，所有合约内函数都可以访问 ，gas消耗高。状态变量在合约内、函数外声明：</p>
+<p>局部变量是仅在函数执行过程中有效的变量，函数退出后，变量无效。局部变量的数据存储在内存里，不上链，gas低。局部变量在函数内声明：</p>
+<p>全局变量是全局范围工作的变量，都是solidity预留关键字。</p>
+<p>3个常用的全局变量：msg.sender, block.number和msg.data，他们分别代表请求发起地址，当前区块高度，和请求数据</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/DataStorage/">原文</a>
+更新时间: 2023-07-22 19:52</p>
+<h1> </h1>
+<h1>23-07-22-06. 引用类型  WTF Academy-H8A2CFH</h1><p>%%begin highlights%%</p>
+<h2>引用类型, array, struct</h2>
+<p>数组分为固定长度数组和可变长度数组两种：</p>
+<p>固定长度数组：在声明时指定数组的长度。用T[k]的格式声明，其中T是元素的类型，k是长度
+uint[8] array1;
+可变长度数组（动态数组）：在声明时不指定数组的长度。用T[]的格式声明，其中T是元素的类型，例如（bytes比较特殊，是数组，但是不用加[]）</p>
+<p>address[] array6;
+bytes array7;</p>
+<h3>创建数组的规则​</h3>
+<p>对于memory修饰的动态数组，可以用new操作符来创建，但是必须声明长度，并且声明后长度不能改变。例子：</p>
+<p>uint[] memory array8 = new uint<a href="5"></a>;</p>
+<p>数组字面常数(Array Literals)是写作表达式形式的数组，用方括号包着来初始化array的一种方式，并且里面每一个元素的type是以第一个元素为准的，</p>
+<p>如[1,2,3]里面所有的元素都是uint8类型，因为在solidity中如果一个值没有指定type的话，默认就是最小单位的该type，这里int的默认最小单位类型就是uint8</p>
+<p>下面的合约中，对于f函数里面的调用，如果我们没有显式对第一个元素进行uint强转的话，是会报错的，因为如上所述我们其实是传入了uint8类型的array，可是g函数需要的却是uint类型的array，就会报错了</p>
+<p>function f() public pure {
+g([uint(1), 2, 3]);
+}
+function g(uint[3] memory) public pure {
+// ...
+}</p>
+<p>如果创建的是动态数组，你需要一个一个元素的赋值。</p>
+<p>uint[] memory x = new uint<a href="3"></a>;
+x[0] = 1;
+x[1] = 3;</p>
+<p>数组的属性和 js 基本类似</p>
+<h3>结构体 struct​</h3>
+<p>struct Student{
+uint256 id;
+uint256 score;
+}</p>
+<p>给结构体赋值的两种方法：</p>
+<p>// 方法1:在函数中创建一个storage的struct引用</p>
+<pre><code class="language-js">Student storage _student = student; // assign a copy of student
+_student.id = 11;
+_student.score = 100;
+
+</code></pre>
+<p>// 方法2:直接引用状态变量的struct
+function initStudent2() external{
+student.id = 1;
+student.score = 80;
+}
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/ArrayAndStruct/">原文</a>
+更新时间: 2023-07-22 20:10</p>
+<h1> </h1>
+<h1>23-07-22-07. 映射类型  WTF Academy-H8A2CF3</h1><p>%%begin highlights%%</p>
+<h2>映射Mapping​</h2>
+<p>在映射中，人们可以通过键（Key）来查询对应的值（Value），比如：通过一个人的id来查询他的钱包地址。</p>
+<p>声明映射的格式为mapping(_KeyType =&gt; _ValueType)
+mapping(uint =&gt; address) public idToAddress; // id映射到地址</p>
+<h3>映射的规则​</h3>
+<p>规则1：映射的_KeyType只能选择solidity默认的类型，比如uint，address等，不能用自定义的结构体。
+_ValueType可以使用自定义的类型。</p>
+<p>规则2：映射的存储位置必须是storage，因此可以用于合约的状态变量，函数中的storage变量，和library函数的参数（见例子）。</p>
+<p>不能用于public函数的参数或返回结果中，因为mapping记录的是一种关系 (key - value pair)。</p>
+<p>规则3：如果映射声明为public，那么solidity会自动给你创建一个getter函数，可以通过Key来查询对应的Value。</p>
+<p>规则4：给映射新增的键值对的语法为_Var[_Key] = _Value，其中_Var是映射变量名，_Key和_Value对应新增的键值对。例子：</p>
+<p>function writeMap (uint _Key, address _Value) public{
+idToAddress[_Key] = _Value;
+}</p>
+<h3>映射的原理​</h3>
+<p>原理1: 映射不储存任何键（Key）的资讯，也没有length的资讯。
+原理2: 映射使用keccak256(key)当成offset存取value。
+原理3: 因为Ethereum会定义所有未使用的空间为0，所以未赋值（Value）的键（Key）初始值都是0。</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/Mapping/">原文</a>
+更新时间: 2023-07-22 20:15</p>
+<h1> </h1>
+<h1>23-07-22-08. 变量初始值  WTF Academy-H8A2CF9</h1><p>%%begin highlights%%
+变量初始值​
+delete a会让变量a的值变为初始值。</p>
+<h2>值类型初始值​</h2>
+<p>boolean: false
+string: &quot;&quot;
+int: 0
+uint: 0
+enum: 枚举中的第一个元素
+address: 0x0000000000000000000000000000000000000000 (或 address(0))
+function
+internal: 空白方程
+external: 空白方程</p>
+<h2>引用类型初始值​</h2>
+<p>映射mapping: 所有元素都为其默认值的mapping
+结构体struct: 所有成员设为其默认值的结构体
+数组array
+动态数组: []
+静态数组（定长）: 所有成员设为其默认值的静态数组</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/InitialValue/">原文</a>
+更新时间: 2023-07-22 20:18</p>
+<h1> </h1>
+<h1>23-07-22-09. 常数  WTF Academy-H8A2CFF</h1><p>%%begin highlights%%</p>
+<h2>sol 中的常数</h2>
+<p>constant（常量）和immutable（不变量）</p>
+<p>只有数值变量可以声明constant和immutable；
+string和bytes可以声明为constant，但不能为immutable。</p>
+<ul>
+<li>constant变量必须在声明的时候初始化，之后再也不能改变。尝试改变的话，编译不通过。</li>
+<li>immutable变量可以在声明时或构造函数中初始化，因此更加灵活。</li>
+</ul>
+<p>你可以使用全局变量例如address(this)，block.number ，或者自定义的函数给immutable变量初始化。在下面这个例子，我们利用了test()函数给IMMUTABLE_TEST初始化为9：</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/Constant/">原文</a>
+更新时间: 2023-07-22 20:20</p>
+<h1> </h1>
+<h1>23-07-22-10. 控制流  WTF Academy-H8A2C9M</h1><p>%%begin highlights%%</p>
+<h2>正确的solidity插入排序</h2>
+<p>solidity中最常用的变量类型是uint，也就是正整数，取到负值的话，会报underflow错误。
+而在插入算法中，变量j有可能会取到-1</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/InsertionSort/">原文</a>
+更新时间: 2023-07-22 20:22</p>
+<h1> </h1>
+<h1>23-07-22-11. 构造函数和修饰器  WTF Academy-H8A2C9K</h1><p>%%begin highlights%%</p>
+<h2>构造函数</h2>
+<p>用合约权限控制（Ownable）的例子介绍solidity语言中构造函数（constructor）和独有的修饰器（modifier）。</p>
+<p>构造函数（constructor）是一种特殊的函数，每个合约可以定义一个，并在部署合约的时候自动运行一次。</p>
+<p>可以用来初始化合约的一些参数，例如初始化合约的owner地址：</p>
+<p>在Solidity 0.4.22之前，构造函数不使用 constructor 而是使用与合约名同名的函数作为构造函数而使用0.4.22版本及之后，采用了全新的 constructor 写法。</p>
+<h2>修饰器</h2>
+<p>修饰器（modifier）是solidity特有的语法，类似于面向对象编程中的decorator，声明函数拥有的特性，并减少代码冗余</p>
+<p>modifier的主要使用场景是运行函数前的检查，例如地址，变量，余额等。</p>
+<p>定义一个叫做onlyOwner的modifier：</p>
+<pre><code class="language-solidity">modifier onlyOwner {
+	require(msg.sender == owner); // 检查调用者是否为owner地址
+	_; // 如果是的话，继续运行函数主体；否则报错并revert交易
+}
+
+</code></pre>
+<p>代有onlyOwner修饰符的函数只能被owner地址调用，比如下面这个例子：</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/Modifier/">原文</a>
+更新时间: 2023-07-22 20:31</p>
+<h1> </h1>
+<h1>23-07-22-12. 事件  WTF Academy-H8A2C95</h1><p>%%begin highlights%%</p>
+<h2>事件</h2>
+<p>Solidity中的事件（event）是EVM上日志的抽象，它具有两个特点：</p>
+<p>响应：应用程序（ether.js）可以通过RPC接口订阅和监听这些事件，并在前端做响应。
+经济：事件是EVM上比较经济的存储数据的方式，每个大概消耗2,000 gas；相比之下，链上存储一个新变量至少需要20,000 gas。</p>
+<p>事件的声明由event关键字开头，然后跟事件名称，括号里面写好事件需要记录的变量类型和变量名。</p>
+<h2>ERC20代币合约的Transfer事件为例：</h2>
+<p>event Transfer(address indexed from, address indexed to, uint256 value);</p>
+<p>Transfer事件共记录了3个变量from，to和value，分别对应代币的转账地址，接收地址和转账数量</p>
+<p>from和to前面带着indexed关键字，每个indexed标记的变量可以理解为检索事件的索引“键”，在以太坊上单独作为一个topic进行存储和索引，程序可以轻松的筛选出特定转账地址和接收地址的转账事件</p>
+<p>每个事件最多有3个带indexed的变量
+每个 indexed 变量的大小为固定的256比特</p>
+<p>事件的哈希以及这三个带indexed的变量在EVM日志中通常被存储为topic。</p>
+<ul>
+<li>其中topic[0]是此事件的keccak256哈希，</li>
+<li>topic[1]到topic[3]存储了带indexed变量的keccak256哈希。</li>
+</ul>
+<p>value 不带 indexed 关键字，会存储在事件的 data 部分中，可以理解为事件的“值”
+data 部分的变量不能被直接检索，但可以存储任意大小的数据。因此一般 data 部分可以用来存储复杂的数据结构，例如数组和字符串等等
+因为这些数据超过了256比特，即使存储在事件的 topic 部分中，也是以哈希的方式存储</p>
+<p>data 部分的变量在存储上消耗的gas相比于 topic 更少。
+我们可以在函数里释放事件</p>
+<h3>Transfer事件例子</h3>
+<p>例子中，每次用_transfer()函数进行转账操作的时候，都会释放Transfer事件，并记录相应的变量。</p>
+<p>// 定义_transfer函数，执行转账逻辑</p>
+<pre><code class="language-js">function _transfer(
+address from,
+address to,
+uint256 amount
+) external {
+_balances[from] = 10000000; // 给转账地址一些初始代币
+_balances[from] -=  amount; // from地址减去转账数量
+_balances[to] += amount; // to地址加上转账数量
+// 释放事件
+emit Transfer(from, to, amount);
+}
+
+</code></pre>
+<p>Topics里面有三个元素，[0]是这个事件的哈希，[1]和[2]是我们定义的两个indexed变量的信息，即转账的转出地址和接收地址。Data里面是剩下的不带indexed的变量，也就是转账数量。</p>
+<p>很多链上分析工具包括Nansen和Dune Analysis都是基于事件工作的。</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/Event/">原文</a>
+更新时间: 2023-07-22 20:36</p>
+<h1> </h1>
+<h1>23-07-22-13. 继承  WTF Academy-H8A2C99</h1><p>%%begin highlights%%</p>
+<h2>继承（inheritance），</h2>
+<p>包括简单继承，多重继承，以及修饰器（modifier）和构造函数（constructor）的继承。</p>
+<p>规则
+virtual: 父合约中的函数，如果希望子合约重写，需要加上virtual关键字。
+override：子合约重写了父合约中的函数，需要加上override关键字。</p>
+<p>先写一个简单的爷爷合约Yeye，里面</p>
+<p>再定义一个爸爸合约Baba，让他继承Yeye合约，语法就是contract Baba is Yeye，非常直观</p>
+<p>在Baba合约里，我们重写一下hip()和pop()这两个函数，加上override关键字</p>
+<pre><code class="language-js">function pop() public virtual override{
+emit Log(&quot;Baba&quot;);
+}
+function baba() public virtual{
+emit Log(&quot;Baba&quot;);
+}
+</code></pre>
+<h2>多重继承​</h2>
+<p>solidity的合约可以继承多个合约。规则：</p>
+<p>继承时要按辈分最高到最低的顺序排。</p>
+<p>比如我们写一个Erzi合约，继承Yeye合约和Baba合约，那么就要写成contract Erzi is Yeye, Baba，而不能写成contract Erzi is Baba, Yeye，不然就会报错。</p>
+<p>如果某一个函数在多个继承的合约里都存在，比如例子中的hip()和pop()，在子合约里必须重写，不然会报错。</p>
+<p>重写在多个父合约中都重名的函数时，override关键字后面要加上所有父合约名字，例如override(Yeye, Baba)。</p>
+<p>function hip() public virtual override(Yeye, Baba){
+emit Log(&quot;Erzi&quot;);
+}</p>
+<h2>修饰器的继承​</h2>
+<p>Solidity中的修饰器（Modifier）同样可以继承，用法与函数继承类似，在相应的地方加virtual和override关键字即可。</p>
+<pre><code class="language-solidity">contract Base1 {
+	modifier exactDividedBy2And3(uint _a) virtual {
+	require(_a % 2 == 0 &amp;&amp; _a % 3 == 0);
+	_;
+}
+}
+</code></pre>
+<p>Identifier合约可以直接在代码中使用父合约中的exactDividedBy2And3修饰器，也可以利用override关键字重写修饰器：</p>
+<pre><code class="language-js">modifier exactDividedBy2And3(uint _a) override {
+_;
+require(_a % 2 == 0 &amp;&amp; _a % 3 == 0);
+}
+</code></pre>
+<h2>构造函数的继承​</h2>
+<p>子合约有两种方法继承父合约的构造函数</p>
+<p>在继承时声明父构造函数的参数，例如：contract B is A(1)</p>
+<p>在子合约的构造函数中声明构造函数的参数，例如：</p>
+<p>contract C is A {
+constructor(uint _c) A(_c * _c) {}
+}</p>
+<h2>调用父合约的函数​</h2>
+<p>两种方式调用父合约的函数，直接调用和利用super关键字</p>
+<p>直接调用：子合约可以直接用父合约名.函数名()的方式来调用父合约函数，例如Yeye.pop()。</p>
+<p>super关键字：子合约可以利用super.函数名()来调用最近的父合约函数。</p>
+<p>solidity继承关系按声明时从右到左的顺序是：contract Erzi is Yeye, Baba，那么Baba是最近的父合约，super.pop()将调用Baba.pop()而不是Yeye.pop()：
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/Inheritance/">原文</a>
+更新时间: 2023-07-22 20:41</p>
+<h1> </h1>
+<h1>23-07-22-14. 抽象合约和接口  WTF Academy-H8A2C9F</h1><p>%%begin highlights%%
+用ERC721的接口合约为例介绍solidity中的抽象合约（abstract）和接口（interface）</p>
+<h2>抽象合约​</h2>
+<p>如果一个智能合约里至少有一个未实现的函数，即某个函数缺少主体{}中的内容，则必须将该合约标为abstract，不然编译会报错；</p>
+<p>未实现的函数需要加virtual，以便子合约重写</p>
+<h2>接口​</h2>
+<p>接口类似于抽象合约，但它不实现任何功能</p>
+<p>接口的规则：
+不能包含状态变量
+不能包含构造函数
+不能继承除接口外的其他合约
+所有函数都必须是external且不能有函数体
+继承接口的合约必须实现接口定义的所有功能</p>
+<h2>why 接口</h2>
+<p>接口是智能合约的骨架，定义了合约的功能以及如何触发它们：如果智能合约实现了某种接口（比如ERC20或ERC721），其他Dapps和智能合约就知道如何与它交互</p>
+<p>因为接口提供了两个重要的信息：
+合约里每个函数的bytes4选择器，以及基于它们的函数签名函数名(每个参数类型）。
+接口id（更多信息见EIP165）</p>
+<p>接口与合约ABI（Application Binary Interface）等价，可以相互转换：编译接口可以得到合约的ABI，利用abi-to-sol工具也可以将ABI json文件转换为接口sol文件</p>
+<h2>以ERC721接口合约IERC721为例</h2>
+<p>它定义了3个event和9个function，所有ERC721标准的NFT都实现了这些函数</p>
+<p>接口和常规合约的区别在于每个函数都以;代替函数体{ }结尾。</p>
+<pre><code class="language-js">interface IERC721 is IERC165 {
+event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+function balanceOf(address owner) external view returns (uint256 balance);
+function ownerOf(uint256 tokenId) external view returns (address owner);
+function safeTransferFrom(address from, address to, uint256 tokenId) external;
+function transferFrom(address from, address to, uint256 tokenId) external;
+function approve(address to, uint256 tokenId) external;
+function getApproved(uint256 tokenId) external view returns (address operator);
+function setApprovalForAll(address operator, bool _approved) external;
+function isApprovedForAll(address owner, address operator) external view returns (bool);
+function safeTransferFrom( address from, address to, uint256 tokenId, bytes calldata data) external;
+}
+</code></pre>
+<p>IERC721包含3个事件，其中Transfer和Approval事件在ERC20中也有。
+Transfer事件：在转账时被释放，记录代币的发出地址from，接收地址to和tokenid。
+Approval事件：在授权时释放，记录授权地址owner，被授权地址approved和tokenid。
+ApprovalForAll事件：在批量授权时释放，记录批量授权的发出地址owner，被授权地址operator和授权与否的approved。</p>
+<p>IERC721函数​
+balanceOf：返回某地址的NFT持有量balance。
+ownerOf：返回某tokenId的主人owner。
+transferFrom：普通转账，参数为转出地址from，接收地址to和tokenId。
+safeTransferFrom：安全转账（如果接收方是合约地址，会要求实现ERC721Receiver接口）。参数为转出地址from，接收地址to和tokenId。
+approve：授权另一个地址使用你的NFT。参数为被授权地址approve和tokenId。
+getApproved：查询tokenId被批准给了哪个地址。
+setApprovalForAll：将自己持有的该系列NFT批量授权给某个地址operator。
+isApprovedForAll：查询某地址的NFT是否批量授权给了另一个operator地址。
+safeTransferFrom：安全转账的重载函数，参数里面包含了data。</p>
+<h2>什么时候使用接口</h2>
+<p>我们知道一个合约实现了IERC721接口，我们不需要知道它具体代码实现，就可以与它交互。
+无聊猿BAYC属于ERC721代币，实现了IERC721接口的功能。</p>
+<pre><code class="language-js">contract interactBAYC {
+// 利用BAYC地址创建接口合约变量（ETH主网）
+IERC721 BAYC = IERC721(0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D);
+// 通过接口调用BAYC的balanceOf()查询持仓量
+function balanceOfBAYC(address owner) external view returns (uint256 balance){
+return BAYC.balanceOf(owner);
+}
+// 通过接口调用BAYC的safeTransferFrom()安全转账
+function safeTransferFromBAYC(address from, address to, uint256 tokenId) external{
+BAYC.safeTransferFrom(from, to, tokenId);
+}
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/Interface/">原文</a>
+更新时间: 2023-07-22 20:44</p>
+<h1> </h1>
+<h1>23-07-22-15. 异常  WTF Academy-H8A25HM</h1><p>%%begin highlights%%
+solidity三种抛出异常的方法：error，require和assert
+error方法gas最少，其次是assert，require方法消耗gas最多！因此，error既可以告知用户抛出异常的原因，又能省gas，大家要多用</p>
+<h2>Error​</h2>
+<p>error是solidity 0.8版本新加的内容，方便且高效（省gas）地向用户解释操作失败的原因</p>
+<p>们可以在contract之外定义异常</p>
+<p>定义一个TransferNotOwner异常，当用户不是代币owner的时候尝试转账，会抛出错误</p>
+<p>error TransferNotOwner(); // 自定义error</p>
+<p>在执行当中，error必须搭配revert（回退）命令使用。</p>
+<pre><code class="language-js">function transferOwner1(uint256 tokenId, address newOwner) public {
+if(_owners[tokenId] != msg.sender){
+revert TransferNotOwner();
+}
+_owners[tokenId] = newOwner;
+}
+</code></pre>
+<h2>Require</h2>
+<p>require命令是solidity 0.8版本之前抛出异常的常用方法，目前很多主流合约仍然还在使用它</p>
+<p>缺点就是gas随着描述异常的字符串长度增加，比error命令要高</p>
+<p>使用方法：require(检查条件，&quot;异常的描述&quot;)</p>
+<pre><code class="language-js">function transferOwner2(uint256 tokenId, address newOwner) public {
+require(_owners[tokenId] == msg.sender, &quot;Transfer Not Owner&quot;);
+_owners[tokenId] = newOwner;
+}
+
+</code></pre>
+<h2>Assert</h2>
+<p>assert命令一般用于程序员写程序debug，因为它不能解释抛出异常的原因（比require少个字符串）</p>
+<p>用法很简单，assert(检查条件），当检查条件不成立的时候，就会抛出异常</p>
+<pre><code class="language-js">function transferOwner3(uint256 tokenId, address newOwner) public {
+assert(_owners[tokenId] == msg.sender);
+_owners[tokenId] = newOwner;
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-start/Errors/">原文</a>
+更新时间: 2023-07-22 20:47</p>
+<h1> </h1>
+<h1>前端面试查漏补缺 --(十五) Event Loop</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903782296338440">juejin.cn</a></p>
+</blockquote>
+<h2>Event loop 的初步理解</h2>
+<p>Event loop 大概步骤是:</p>
+<ul>
+<li>1,Javascript 的事件分为同步任务和异步任务.</li>
+<li>2, 遇到同步任务就放在执行栈中执行.</li>
+<li>3, 遇到异步任务就放到任务队列之中，等到执行栈执行完毕之后再去执行任务队列之中的事件.</li>
+</ul>
+<h2>Event loop 相关概念</h2>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/533990d8a6a449cf9e67c6b86e6f6a1d~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<h3>JS 调用栈</h3>
+<p>Javascript 有一个 主线程 (main thread) 和 调用栈 (call-stack)
+所有的代码都要通过函数, 放到调用栈(也被称为执行栈) 中的任务等待主线程执行。
+JS 调用栈采用的是后进先出的规则，当函数执行的时候，会被添加到栈的顶部，当执行栈执行完成后，就会从栈顶移出，直到栈内被清空。</p>
+<h3>WebAPIs</h3>
+<p><strong>MDN 的解释:</strong> Web 提供了各种各样的 API 来完成各种的任务。这些 API 可以用 JavaScript 来访问， 就是浏览器提供一些接口, 让 JavaScript 可以调用, 这样就可以把任务甩给浏览器了, 这样就可以实现异步了!</p>
+<h3>任务队列 (Task Queue)</h3>
+<p>&quot;任务队列&quot; 是一个先进先出的数据结构，排在前面的事件，优先被主线程读取。
+主线程的读取过程基本上是自动的，只要执行栈一清空，&quot;任务队列&quot; 上第一位的事件就自动进入主线程。
+但是，如果存在 &quot;定时器&quot;，主线程首先要检查一下执行时间，某些事件只有到了规定的时间，才能返回主线程。</p>
+<h3>同步任务和异步任务</h3>
+<p>Javascript 单线程任务被分为同步任务和异步任务.</p>
+<ul>
+<li>同步任务会<strong>在调用栈</strong> 中按照顺序等待主线程依次执行.</li>
+<li>异步任务会甩给在 WebAPIs 处理, 处理完后有了结果后，将注册的回调函数放入任务队列中等待主线程空闲的时候（调用栈被清空），被读取到栈内等待主线程的执行。</li>
+</ul>
+<h3>宏任务（MacroTask）和 微任务（MicroTask）</h3>
+<p>宏任务（<code>MacroTask</code>）也叫<code>Task</code>，一种叫微任务（<code>MicroTask</code>）。
+<strong>宏任务（MacroTask）</strong></p>
+<ul>
+<li><code>script(整体代码)</code>、<code>setTimeout</code>、<code>setInterval</code>、<code>setImmediate</code>（浏览器暂时不支持，只有 IE10 支持，具体可见 <a href="https://link.juejin.im?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FWindow%2FsetImmediate" title="https://link.juejin.im?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FWindow%2FsetImmediate"><code>MDN</code></a>）、<code>I/O</code>、<code>UI Rendering</code>。</li>
+</ul>
+<p><strong>微任务（MicroTask）</strong></p>
+<ul>
+<li><code>Process.nextTick（Node独有）</code>、<code>Promise</code>、<code>Object.observe(废弃)</code>、<code>MutationObserver</code></li>
+</ul>
+<h2>Event loop 执行过程</h2>
+<p>注意:</p>
+<ul>
+<li><strong>只要主线程空了，就会去读取 &quot;任务队列&quot;，这就是 JavaScript 的运行机制。这个过程会不断重复。</strong></li>
+<li>在上图的 Event Table 里存放着宏任务与微任务, 所以在它里面 还发生了一些更细致的事情.</li>
+</ul>
+<p>前面介绍宏任务的时候, 提过 script 也属于其中. 那么一段代码块就是一个宏任务。
+故所有一般执行代码块的时候，先执行的是宏任务 script, 也就是程序执行进入主线程了，主线程再会根据不同的代码再分微任务和宏任务等待主线程执行完成后，不停地循环执行。</p>
+<p>主线程（宏任务） =&gt; 微任务 =&gt; 宏任务 =&gt; 主线程</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc84e6e4875245e5aa9b1f32c9cc58fa~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<p>事件循环的顺序是从 script 开始第一次循环，随后全局上下文进入函数调用栈，</p>
+<ul>
+<li>碰到 macro-task 就将其交给处理它的模块处理完之后将回调函数放进 macro-task 的队列之中，</li>
+<li>碰到 micro-task 也是将其回调函数放进 micro-task 的队列之中。</li>
+<li>直到函数调用栈清空只剩全局执行上下文，然后开始执行所有的 micro-task。</li>
+<li>当所有可执行的 micro-task 执行完毕之后。</li>
+<li>接着浏览器会执行下必要的渲染 UI, 然后循环再次执行 macro-task 中的一个任务队列，执行完之后再执行所有的 micro-task，就这样一直循环。</li>
+</ul>
+<p><strong>注意:</strong> 通过上述的 Event loop 顺序可知，如果宏任务中的异步代码有大量的计算并且需要操作 DOM 的话，为了更快的 界面响应，我们可以把操作 DOM 放入微任务中。</p>
+<h2>例子分析</h2>
+<p>这里需要先理解<code>async/await</code>。</p>
+<h3><strong>引用贺老师知乎上的一个例子</strong></h3>
+<pre><code>async function f() {
+  await p
+  console.log('ok')
+}
+</code></pre>
+<p>简化理解为：</p>
+<pre><code>function f() {
+  return RESOLVE(p).then(() =&gt; {
+    console.log('ok')
+  })
+}
+</code></pre>
+<p><code>async/await</code> 在底层转换成了 <code>promise</code> 和 <code>then</code> 回调函数。 也就是说，这是 <code>promise</code> 的语法糖。
+每次我们使用 <code>await</code>, 解释器都创建一个 <code>promise</code> 对象，然后把<strong>剩下的</strong> <code>async</code> 函数中的操作放到 <code>then</code> 回调函数中</p>
+<ul>
+<li>如果 <code>RESOLVE(p)</code> 对于 <code>p</code> 为 <code>promise</code> 直接返回 <code>p</code> 的话，那么 <code>p</code>的 <code>then</code> 方法就会被马上调用，其回调就立即进入 <code>job</code> 队列。</li>
+<li>而如果 <code>RESOLVE(p)</code> 严格按照标准，应该是产生一个新的 <code>promise</code>，尽管该 <code>promise</code>确定会 <code>resolve</code> 为 <code>p</code>，但这个过程本身是异步的，也就是现在进入 <code>job</code> 队列的是新 <code>promise</code> 的 <code>resolve</code>过程，所以该 <code>promise</code> 的 <code>then</code> 不会被立即调用，而要等到当前 <code>job</code> 队列执行到前述 <code>resolve</code> 过程才会被调用，然后其回调（也就是继续 <code>await</code> 之后的语句）才加入 <code>job</code> 队列，所以时序上就晚了。</li>
+</ul>
+<h3>谷歌 (金丝雀)73 版本</h3>
+<p><strong>主要原因是因为在谷歌 (金丝雀)73 版本中更改了规范，如下图所示：</strong></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/50e66c59d922431988acc97241835da1~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt=""></p>
+<ul>
+<li>区别在于<code>RESOLVE(thenable)</code>和之间的区别<code>Promise.resolve(thenable)</code>。</li>
+</ul>
+<h3><strong>在 73 以下版本中</strong></h3>
+<pre><code>console.log('script start')
+
+async function async1() {
+  await async2()
+  console.log('async1 end')
+}
+async function async2() {
+  console.log('async2 end') 
+}
+async1()
+
+setTimeout(function() {
+  console.log('setTimeout')
+}, 0)
+
+new Promise(resolve =&gt; {
+  console.log('Promise')
+  resolve()
+})
+  .then(function() {
+    console.log('promise1')
+  })
+  .then(function() {
+    console.log('promise2')
+  })
+
+console.log('script end')
+</code></pre>
+<ul>
+<li>
+<p>首先，传递给 <code>await</code> 的值被包裹在一个 <code>Promise</code> 中。</p>
+</li>
+<li>
+<p>然后，处理程序附加到这个包装的 <code>Promise</code>，以便在 <code>Promise</code> 变为 <code>fulfilled</code> 后恢复该函数，并且暂停执行异步函数，一旦 <code>promise</code> 变为 <code>fulfilled</code>，恢复异步函数的执行。</p>
+</li>
+<li>
+<p>每个 <code>await</code> 引擎必须创建两个额外的 Promise（即使右侧已经是一个 <code>Promise</code>）并且它需要至少三个 <code>microtask</code> 队列 <code>ticks</code>（<code>tick</code>为系统的相对时间单位，也被称为系统的时基，来源于定时器的周期性中断（输出脉冲），一次中断表示一个<code>tick</code>，也被称做一个 “时钟滴答”、时标。）。</p>
+</li>
+<li>
+<p>在 73 版本以下，先执行<code>promise1</code>和<code>promise2</code>，再执行<code>async1</code>。
+<strong>详细过程：</strong></p>
+</li>
+<li>
+<p>首先，打印<code>script start</code>，调用<code>async1()</code>时，返回一个<code>Promise</code>，所以打印出来<code>async2 end</code>。</p>
+</li>
+<li>
+<p>每个 <code>await</code>，会新产生一个<code>promise</code>, 但这个过程本身是异步的，所以该<code>await</code>后面不会立即调用。</p>
+</li>
+<li>
+<p>继续执行同步代码，打印<code>Promise</code>和<code>script end</code>，将<code>then</code>函数放入<strong>微任务</strong>队列中等待执行。</p>
+</li>
+<li>
+<p>同步执行完成之后，检查<strong>微任务</strong>队列是否为<code>null</code>，然后按照先入先出规则，依次执行。</p>
+</li>
+<li>
+<p>然后先执行打印<code>promise1</code>, 此时<code>then</code>的回调函数返回<code>undefinde</code>，此时又有<code>then</code>的链式调用，又放入<strong>微任务</strong>队列中，再次打印<code>promise2</code>。</p>
+</li>
+<li>
+<p>再回到<code>await</code>的位置执行返回的 <code>Promise</code> 的 <code>resolve</code> 函数，这又会把 <code>resolve</code> 丢到微任务队列中，打印<code>async1 end</code>。</p>
+</li>
+<li>
+<p>当<strong>微任务</strong>队列为空时，执行宏任务, 打印<code>setTimeout</code>。</p>
+</li>
+</ul>
+<h3><strong>谷歌（金丝雀）73 版本中</strong></h3>
+<pre><code>console.log('script start')
+
+async function async1() {
+  await async2()
+  console.log('async1 end')
+}
+async function async2() {
+  console.log('async2 end') 
+}
+async1()
+
+setTimeout(function() {
+  console.log('setTimeout')
+}, 0)
+
+new Promise(resolve =&gt; {
+  console.log('Promise')
+  resolve()
+})
+  .then(function() {
+    console.log('promise1')
+  })
+  .then(function() {
+    console.log('promise2')
+  })
+
+console.log('script end')
+</code></pre>
+<p>在 73 版本，先执行<code>async1</code>再执行<code>promise1</code>和<code>promise2</code>。</p>
+<ul>
+<li>
+<p>使用对<code>PromiseResolve</code>的调用来更改<code>await</code>的语义，以减少在公共<code>awaitPromise</code>情况下的转换次数。</p>
+</li>
+<li>
+<p>如果传递给 <code>await</code> 的值已经是一个 <code>Promise</code>，那么这种优化避免了再次创建 <code>Promise</code> 包装器，在这种情况下，我们从最少三个 <code>microtick</code> 到只有一个 <code>microtick</code>。</p>
+</li>
+<li>
+<p>如果传递给 <code>await</code> 的值已经是一个 <code>Promise</code>，那么这种优化避免了再次创建 <code>Promise</code> 包装器，在这种情况下，我们从最少三个 <code>microtick</code> 到只有一个 <code>microtick</code>。</p>
+</li>
+<li>
+<p>引擎不再需要为 <code>await</code> 创造 <code>throwaway Promise</code> - 在绝大部分时间。</p>
+</li>
+<li>
+<p>现在 <code>promise</code> 指向了同一个 <code>Promise</code>，所以这个步骤什么也不需要做。然后引擎继续像以前一样，创建 <code>throwaway Promise</code>，安排 <code>PromiseReactionJob</code> 在 <code>microtask</code> 队列的下一个 <code>tick</code> 上恢复异步函数，暂停执行该函数，然后返回给调用者。</p>
+</li>
+</ul>
+<h2>Node.js 的 Event Loop</h2>
+<p>Node.js 的运行机制如下。</p>
+<p>（1）V8 引擎解析 JavaScript 脚本。
+（2）解析后的代码，调用 Node API。
+（3）libuv 库负责 Node API 的执行。它将不同的任务分配给不同的线程，形成一个 Event Loop（事件循环），以异步的方式将任务的执行结果返回给 V8 引擎。
+（4）V8 引擎再将结果返回给用户。</p>
+<h3><code>Node</code>的<code>Event loop</code>一共分为 6 个阶段，每个细节具体如下：</h3>
+<ul>
+<li><code>timers</code>: 执行<code>setTimeout</code>和<code>setInterval</code>中到期的<code>callback</code>。</li>
+<li><code>pending callback</code>: 上一轮循环中少数的<code>callback</code>会放在这一阶段执行。</li>
+<li><code>idle, prepare</code>: 仅在内部使用。</li>
+<li><code>poll</code>: 最重要的阶段，执行<code>pending callback</code>，在适当的情况下回阻塞在这个阶段。</li>
+<li><code>check</code>: 执行<code>setImmediate</code>(<code>setImmediate()</code>是将事件插入到事件队列尾部，主线程和事件队列的函数执行完成之后立即执行<code>setImmediate</code>指定的回调函数) 的<code>callback</code>。</li>
+<li><code>close callbacks</code>: 执行<code>close</code>事件的<code>callback</code>，例如<code>socket.on('close'[,fn])</code>或者<code>http.server.on('close, fn)</code>。</li>
+</ul>
+<h2>线程和进程</h2>
+<h3>比喻理解</h3>
+<p>一个进程好比是一个工厂，每个工厂有它的独立资源（类比到计算机上就是系统分配的一块独立内存），而且每个工厂之间是相互独立、无法进行通信。都是由私有的虚拟地址空间、代码、数据和其它系统资源所组成；进程在运行过程中能够申请创建和使用系统资源</p>
+<p>每个工厂都有若干个工人（一个工人即是一个线程，一个进程由一个或多个线程组成），多个工人可以协作完成任务（即多个线程在进程中协作完成任务），当然每个工人可以共享此工厂的空间和资源（即同一进程下的各个线程之间共享程序的内存空间（包括代码段、数据集、堆等））。</p>
+<p>到此你应该能初步理解了进程和线程之间的关系，这将有助于我们理解浏览器为什么是多进程的，而 JavaScript 是单线程。</p>
+<p><strong>浏览器是多进程的 (一个窗口就是一个进程), 每个进程包含多个线程. 但 JavaScript 是单线程的. 一个主线程 (一个 stack), 多个子线程.</strong></p>
+<h1> </h1>
+<h1>手把手教你使用 Vuex，猴子都能看懂的教程</h1><p>Vuex是一个程序里面的<strong>状态管理模式</strong>，它是<strong>集中式</strong>存储<strong>所有</strong>组件的状态的小仓库，并且保持我们存储的状态以一种<strong>可以预测</strong>的方式发生变化。</p>
+<h1>第一步，了解 Vuex</h1>
+<h3>🤯 想象一个场景</h3>
+<p>如果你的项目里有很多页面（组件 / 视图），页面之间存在多级的嵌套关系，此时，这些页面假如都需要共享一个状态的时候，此时就会产生以下两个问题：</p>
+<ul>
+<li>
+<p>多个视图依赖同一个状态</p>
+</li>
+<li>
+<p>来自不同视图的行为需要变更同一个状态</p>
+</li>
+<li>
+<p>对于第一个问题，</p>
+<ul>
+<li>假如是多级嵌套关系，你可以使用父子组件传参进行解决，虽有些麻烦，但好在可以解决；</li>
+<li>对于兄弟组件或者关系更复杂组件之间，就很难办了，等项目做大了，代码就会变成屎山，实在令人心烦。</li>
+</ul>
+</li>
+<li>
+<p>对于第二个问题，你可以通过父子组件直接引用，或者通过事件来变更或者同步状态的多份拷贝，这种模式很脆弱，往往使得代码难以维护，而且同样会让代码变成屎山。</p>
+</li>
+</ul>
+<h3>😇 换一种思路呢：</h3>
+<ul>
+<li>把各个组件都需要依赖的同一个状态抽取出来，在全局使用单例模式进行管理。</li>
+<li>在这种模式下，任何组件都可以直接访问到这个状态，或者当状态发生改变时，所有的组件都获得更新。</li>
+</ul>
+<p>这时候，Vuex 诞生了！</p>
+<ul>
+<li>这就是 Vuex 背后的基本思想，借鉴了 Flux、Redux。</li>
+<li>与其他模式不同的是，Vuex 是专门为 Vue 设计的状态管理库，以利用 Vue.js 的细粒度数据响应机制来进行高效的状态更新。</li>
+</ul>
+<h3>🤩 什么时候应该用 vuex 呢？</h3>
+<ul>
+<li>假如你的项目达到了中大型应用的规模，此时您很可能会考虑如何更好地在组件外部管理状态，Vuex 将会成为自然而然的选择。</li>
+</ul>
+<h1>第二步 使用 vuex</h1>
+<ul>
+<li>安装<code>npm install vuex --save</code></li>
+<li>配置 vuex：创建src/store/index.js</li>
+<li>修改 main.js：</li>
+<li>修改 App.vue：</li>
+<li>启动项目<code>npm run dev</code></li>
+</ul>
+<p>配置 vuex：</p>
+<ul>
+<li>创建src/store/index.js</li>
+<li>使用 Vue.use方法，</li>
+<li>使用Vue.Store方法构造实例
+Vue.Store方法的构造函数
+{state:xxx}</li>
+</ul>
+<pre><code>import Vue from 'vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
+
+const store = new Vuex.Store({
+  state: {
+    name: '张三',
+    number: 0,
+    list: [
+      { id: 1, name: '111' },
+      { id: 2, name: '222' },
+      { id: 3, name: '333' },
+    ],
+  },
+});
+
+export default store;
+</code></pre>
+<ul>
+<li>修改 main.js： 引入前面导出的store对象，添加到 Vue 的构造函数里</li>
+</ul>
+<pre><code>import Vue from 'vue';
+import App from './App';
+import router from './router';
+import store from './store'; // 引入我们前面导出的store对象
+
+Vue.config.productionTip = false;
+
+new Vue({
+  el: '#app',
+  router,
+  store, // 把store对象添加到vue实例上
+  components: { App },
+  template: '&lt;App/&gt;',
+});
+
+</code></pre>
+<ul>
+<li>最后修改 App.vue：使用this.$store.state.XXX可以直接访问到仓库中的状态</li>
+</ul>
+<pre><code>&lt;template&gt;
+  &lt;div&gt;&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  mounted() {
+    // 使用this.$store.state.XXX可以直接访问到仓库中的状态
+    console.log(this.$store.state.name);
+  },
+};
+&lt;/script&gt;
+
+</code></pre>
+<ul>
+<li>启动项目<code>npm run dev</code>，即可在控制台输出刚才我们定义在 store 中的 name 的值。</li>
+</ul>
+<h2>使用建议</h2>
+<ul>
+<li>🤖 官方建议 1： 操作 this.$store.state.XXX 最好放在计算属性中，就像这样：</li>
+</ul>
+<pre><code>export default {
+  mounted() {
+    console.log(this.getName);
+  },
+  computed: {
+    getName() {
+      return this.$store.state.name;
+    },
+  },
+};
+</code></pre>
+<ul>
+<li>🤖 官方建议 2： 是不是每次都写 this.$store.state.XXX 让你感到厌烦，有解决方案，就像下面这样：</li>
+</ul>
+<pre><code>&lt;script&gt;
+import { mapState } from 'vuex'; // 从vuex中导入mapState
+export default {
+  mounted() {
+    console.log(this.name);
+  },
+  computed: {
+    ...mapState(['name']), // 经过解构后，自动就添加到了计算属性中，此时就可以直接像访问计算属性一样访问它
+  },
+};
+&lt;/script&gt;
+
+</code></pre>
+<p>你甚至可以在解构的时候给它赋别名，取外号，就像这样：</p>
+<pre><code>...mapState({ aliasName: 'name' }),  // 赋别名的话，这里接收对象，而不是数组
+</code></pre>
+<h1>第三步，了解修饰器：Getter</h1>
+<ul>
+<li>🤨 设想一个场景，产品经理：所有的 name 前面都要加上 “hello”！</li>
+</ul>
+<p>我们可以直接在 store 中对 name 进行一些操作或者加工，从源头解决问题！</p>
+<h2>Getter使用</h2>
+<ul>
+<li>在 store 对象中增加 getters 属性</li>
+<li>在组件中把 state 更改为 getter</li>
+</ul>
+<p>在 store 对象中增加 getters 属性</p>
+<pre><code>const store = new Vuex.Store({
+  state: {
+    name: '张三',
+    number: 0,
+    list: [
+      { id: 1, name: '111' },
+      { id: 2, name: '222' },
+      { id: 3, name: '333' },
+    ],
+  },
+  // 在store对象中增加getters属性
+  getters: {
+    getMessage(state) {
+      // 获取修饰后的name，第一个参数state为必要参数，必须写在形参上
+      return `hello${state.name}`;
+    },
+  },
+});
+
+export default store;
+</code></pre>
+<p>在组件中使用：</p>
+<pre><code>export default {
+  mounted() {
+    // 注意不是$store.state了，而是$store.getters
+    console.log(this.$store.state.name);
+    console.log(this.$store.getters.getMessage);
+  },
+};
+</code></pre>
+<h2>Getter官方建议</h2>
+<p>🤖 官方建议： 是不是每次都写 this.$store.getters.XXX 让你感到厌烦，官方建议我们可以使用 mapGetters 去解构到计算属性中，就像使用 mapState 一样，就可以直接使用 this 调用了，就像下面这样：</p>
+<pre><code>&lt;script&gt;
+import { mapState, mapGetters } from 'vuex';
+export default {
+  mounted() {
+    console.log(this.name);
+    console.log(this.getMessage);
+  },
+  computed: {
+    ...mapState(['name']),
+    ...mapGetters(['getMessage']),
+  },
+};
+&lt;/script&gt;
+
+</code></pre>
+<p>和 mapState 一样你也可以取别名，取外号，就像下面这样：</p>
+<pre><code>...mapGetters({ aliasName: 'getMessage' }),  // 赋别名的话，这里接收对象，而不是数组
+</code></pre>
+<h1>第四步，了解如何修改值：Mutation</h1>
+<pre><code>// 错误示范
+this.$store.state.XXX = XXX;
+</code></pre>
+<h4>简单实现 mutations 的方法（没有传参）</h4>
+<ul>
+<li>修改 store/index.js，增加mutations属性</li>
+<li>对this.$store commit 对应的 mutationcommit('setNumber')</li>
+</ul>
+<p>修改 store/index.js，增加mutations属性</p>
+<ul>
+<li>mutation 方法的参数为 state</li>
+</ul>
+<pre><code>import Vue from 'vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
+
+const store = new Vuex.Store({
+  state: {
+    name: '张三',
+    number: 0,
+  },
+  mutations: {
+    // 增加nutations属性
+    setNumber(state) {
+      // 增加一个mutations的方法，方法的作用是让num从0变成5，state是必须默认参数
+      state.number = 5;
+    },
+  },
+});
+
+export default store;
+
+</code></pre>
+<ul>
+<li>修改 App.vue</li>
+</ul>
+<pre><code>&lt;script&gt;
+export default {
+  mounted() {
+    console.log(`旧值：${this.$store.state.number}`);
+    this.$store.commit('setNumber');
+    console.log(`新值：${this.$store.state.number}`);
+  },
+};
+&lt;/script&gt;
+
+</code></pre>
+<h3>mutation 传参</h3>
+<ul>
+<li>修改 store/index.js
+<ul>
+<li>mutation 方法的参数为 state，number</li>
+</ul>
+</li>
+</ul>
+<pre><code>const store = new Vuex.Store({
+  state: {
+    name: '张三',
+    number: 0,
+  },
+  mutations: {
+    setNumber(state) {
+      state.number = 5;
+    },
+    setNumberIsWhat(state, number) {
+      // 增加一个带参数的mutations方法
+      state.number = number;
+    },
+  },
+});
+
+export default store;
+
+</code></pre>
+<ul>
+<li>修改 App.vue</li>
+</ul>
+<pre><code>&lt;script&gt;
+export default {
+  mounted() {
+    console.log(`旧值：${this.$store.state.number}`);
+    this.$store.commit('setNumberIsWhat', 666);
+    console.log(`新值：${this.$store.state.number}`);
+  },
+};
+&lt;/script&gt;
+
+</code></pre>
+<h3>官方建议 mutation 传参</h3>
+<ul>
+<li>官方建议传递一个对象进去，对象一般命名为 payload</li>
+<li>修改 store/index.js</li>
+</ul>
+<pre><code>mutations: {
+    setNumber(state) {
+      state.number = 5;
+    },
+    setNumberIsWhat(state, payload) {
+      // 增加一个带参数的mutations方法，并且官方建议payload为一个对象
+      state.number = payload.number;
+    },
+  },
+
+</code></pre>
+<ul>
+<li>修改 App.vue</li>
+</ul>
+<pre><code>&lt;script&gt;
+export default {
+  mounted() {
+    console.log(`旧值：${this.$store.state.number}`);
+    this.$store.commit('setNumberIsWhat', { number: 666 }); // 调用的时候也需要传递一个对象
+    console.log(`新值：${this.$store.state.number}`);
+  },
+};
+&lt;/script&gt;
+
+</code></pre>
+<h2>mutation 重要原则：</h2>
+<p>Mutations里面的函数必须是同步操作，不能包含异步操作！</p>
+<h2>mutation 的 map</h2>
+<ul>
+<li>我们在组件中可以使用 mapMutations 以代替 this.$store.commit('XXX')</li>
+</ul>
+<pre><code>&lt;script&gt;
+import { mapMutations } from 'vuex';
+export default {
+  mounted() {
+    this.setNumberIsWhat({ number: 999 });
+  },
+  methods: {
+    // 注意，mapMutations是解构到methods里面的，而不是计算属性了
+    ...mapMutations(['setNumberIsWhat']),
+  },
+};
+&lt;/script&gt;
+
+</code></pre>
+<ul>
+<li>当然你也可以给它叫别名，取外号，就像这样：</li>
+</ul>
+<pre><code>methods: {
+  ...mapMutations({ setNumberIsAlias: 'setNumberIsWhat' }), // 赋别名的话，这里接收对象，而不是数组
+},
+
+</code></pre>
+<h1>第五步，异步操作：Actions</h1>
+<ul>
+<li>修改 store/index.js</li>
+</ul>
+<pre><code>const store = new Vuex.Store({
+  state: {
+    name: '张三',
+    number: 0,
+  },
+  mutations: {
+    setNumberIsWhat(state, payload) {
+      state.number = payload.number;
+    },
+  },
+  actions: {
+    // 增加actions属性
+    setNum(content) {
+      // 增加setNum方法，默认第一个参数是content，其值是复制的一份store
+      return new Promise(resolve =&gt; {
+        // 我们模拟一个异步操作，1秒后修改number为888
+        setTimeout(() =&gt; {
+          content.commit('setNumberIsWhat', { number: 888 });
+          resolve();
+        }, 1000);
+      });
+    },
+  },
+});
+
+</code></pre>
+<ul>
+<li>修改 App.vue</li>
+</ul>
+<pre><code>async mounted() {
+  console.log(`旧值：${this.$store.state.number}`);
+  await this.$store.dispatch('setNum');
+  console.log(`新值：${this.$store.state.number}`);
+},
+
+</code></pre>
+<p>action 就是去提交 mutation 的，什么异步操作都在 action 中消化了，最后再去提交 mutation 的。</p>
+<h3>action 的 map</h3>
+<ul>
+<li>🤖 官方建议 1：你如果不想一直使用 this.$store.dispatch('XXX') 这样的写法调用 action，你可以采用 mapActions 的方式，把相关的 actions 解构到 methods 中，用 this 直接调用：</li>
+</ul>
+<pre><code>&lt;script&gt;
+import { mapActions } from 'vuex';
+export default {
+  methods: {
+    ...mapActions(['setNum']), // 就像这样，解构到methods中
+  },
+  async mounted() {
+    await this.setNum({ number: 123 }); // 直接这样调用即可
+  },
+};
+&lt;/script&gt;
+
+</code></pre>
+<p>当然，你也可以取别名，取外号，就像下面这样：</p>
+<pre><code>...mapActions({ setNumAlias: 'setNum' }),   // 赋别名的话，这里接收对象，而不是数组
+
+</code></pre>
+<h3>action 的结构</h3>
+<ul>
+<li>🤖 官方建议 2：在 store/index.js 中的 actions 里面，方法的形参可以直接将 commit 解构出来，这样可以方便后续操作：</li>
+</ul>
+<pre><code>actions: {
+  setNum({ commit }) {
+    // 直接将content结构掉，解构出commit，下面就可以直接调用了
+    return new Promise(resolve =&gt; {
+      setTimeout(() =&gt; {
+        commit('XXXX'); // 直接调用
+        resolve();
+      }, 1000);
+    });
+  },
+},
+
+</code></pre>
+<ul>
+<li>不要将 action 和 mutation 混为一谈，action 其实就是 mutation 的上一级，在 action 这里处理完异步的一些操作后，后面的修改 state 就交给 mutation 去做了。</li>
+</ul>
+<h1>第六步，按属性进行拆分</h1>
+<p>如果你是一个稍微有些规格的项目，那么你将会得到一个成百上千行的 index.js，然后查找一些东西就会非常费劲，
+既然问题出来了，我们看一下怎么拆分一下。
+我们看到，一个 store/index.js 里面大致包含 state/getters/mutations/actions 这四个属性，
+我们可以彻底点，index.js 里面就保持这个架子，把里面的内容四散到其他文件中。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc39e92fcf7242d78da6329d64ce1d44~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?" alt=""></p>
+<p>于是我们可以新建四个文件，分别是<code>state.js</code> <code>getters.js</code> <code>mutations.js</code> <code>actions.js</code>：</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9443814df5e48579e1bac65e48a22f4~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?" alt=""></p>
+<ul>
+<li>
+<ol>
+<li>拆出来<code>state</code>放到<code>state.js</code>中：</li>
+</ol>
+</li>
+</ul>
+<pre><code>// state.js
+
+export const state = {
+  name: '张三',
+  number: 0,
+  list: [
+    { id: 1, name: '111' },
+    { id: 2, name: '222' },
+    { id: 3, name: '333' },
+  ],
+};
+
+</code></pre>
+<ul>
+<li>
+<ol start="2">
+<li>拆出来<code>getters</code>放到<code>getters.js</code>中：</li>
+</ol>
+</li>
+</ul>
+<pre><code>// getters.js
+
+export const getters = {
+  getMessage(state) {
+    return `hello${state.name}`;
+  },
+};
+
+</code></pre>
+<ul>
+<li>
+<ol start="3">
+<li>拆出来<code>mutations</code>放到<code>mutations.js</code>中：</li>
+</ol>
+</li>
+</ul>
+<pre><code>// mutations.js
+
+export const mutations = {
+  setNumber(state) {
+    state.number = 5;
+  },
+};
+
+</code></pre>
+<ul>
+<li>
+<ol start="4">
+<li>拆出来<code>actions</code>放到<code>actions.js</code>中：</li>
+</ol>
+</li>
+</ul>
+<pre><code>// actions.js
+
+export const actions = {
+  setNum(content) {
+    return new Promise(resolve =&gt; {
+      setTimeout(() =&gt; {
+        content.commit('setNumberIsWhat', { number: 888 });
+        resolve();
+      }, 1000);
+    });
+  },
+};
+
+</code></pre>
+<ol start="5">
+<li>组装到主文件里面：</li>
+</ol>
+<pre><code>import Vue from 'vue';
+import Vuex from 'vuex';
+import { state } from './state'; // 引入 state
+import { getters } from './getters'; // 引入 getters
+import { mutations } from './mutations'; // 引入 mutations
+import { actions } from './actions'; // 引入 actions
+
+Vue.use(Vuex);
+
+const store = new Vuex.Store({
+  state: state,
+  getters: getters,
+  mutations: mutations,
+  actions: actions,
+});
+
+// 可以简写成下面这样：
+
+// const store = new Vuex.Store({ state, getters, mutations, actions });
+
+export default store;
+
+</code></pre>
+<h1>第七步，按功能进行拆分 - Module</h1>
+<p>‘按<strong>功能</strong>’，按功能拆分的话，就是我们的标题 <strong>Module(模块)</strong> 。</p>
+<ol>
+<li>新增仓库</li>
+<li>modules 属性引入</li>
+<li>this.$store.state.store2.name访问</li>
+</ol>
+<ul>
+<li>
+<ol>
+<li>增加一个新的仓库 store2，主要代码如下：</li>
+</ol>
+</li>
+</ul>
+<pre><code>const store2 = {
+  state: {
+    name: '我是store2',
+  },
+  mutations: {},
+  getters: {},
+  actions: {},
+};
+
+export default store2;
+</code></pre>
+<ul>
+<li>
+<ol start="2">
+<li>然后在 store 中的 modules 属性引入我们新创建的 store2 模块：</li>
+</ol>
+</li>
+</ul>
+<pre><code>import Vue from 'vue';
+import Vuex from 'vuex';
+import { state } from './state';
+import { getters } from './getters';
+import { mutations } from './mutations';
+import { actions } from './actions';
+import store2 from './store2'; // 引入store2模块
+
+Vue.use(Vuex);
+
+const store = new Vuex.Store({
+  modules: { store2 }, // 把store2模块挂载到store里面
+  state: state,
+  getters: getters,
+  mutations: mutations,
+  actions: actions,
+});
+
+export default store;
+
+</code></pre>
+<ul>
+<li>
+<ol start="3">
+<li>访问 state 通过this.$store.state.store2.name</li>
+</ol>
+</li>
+</ul>
+<pre><code>&lt;template&gt;
+  &lt;div&gt;&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  mounted() {
+    console.log(this.$store.state.store2.name); // 访问store2里面的name属性
+  },
+};
+&lt;/script&gt;
+
+</code></pre>
+<p>我们通过下面的代码可以了解到在不同的属性里是怎么访问 <strong>模块内的状态</strong> 或者 <strong>根状态</strong>：</p>
+<pre><code>mutations: {
+  changeName(state, payload) {
+    // state 局部状态
+    console.log(state);
+    console.log(payload.where);
+  },
+},
+getters: {
+  testGetters(state, getters, rootState) {
+    // state 局部状态
+    console.log(state);
+    // 局部 getters,
+    console.log(getters);
+    // rootState 根节点状态
+    console.log(rootState);
+  },
+},
+actions: {
+  increment({ state, commit, rootState }) {
+    // state 局部状态
+    console.log(state);
+    // rootState 根节点状态
+    console.log(rootState);
+  },
+},
+
+</code></pre>
+<h3>module 的其他内容</h3>
+<p>其实以上并不是 module 的全部，还有一些比如<code>命名空间</code>、<code>模块注册全局 action</code>、<code>带命名空间的绑定函数</code>、<code>模块动态注册</code>、<code>模块重用</code>等方法这里就没介绍，如果你在项目中使用到了，再进行查阅即可，有时候不需要完全理解，知道有这个东西就行，知道出了问题的时候该去哪查资料就够啦。😊</p>
+<h1> </h1>
+<h1>浅谈常见的七种加密算法及实现</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903638117122056?searchId=20230722164117366D8610A656DA70F4E6">juejin.cn</a></p>
+</blockquote>
+<h1>前言</h1>
+<p><strong>数字签名</strong>、<strong>信息加密</strong> 是前后端开发都经常需要使用到的技术，应用场景包括了用户登入、交易、信息通讯、<code>oauth</code> 等等，不同的应用场景也会需要使用到不同的签名加密算法，</p>
+<h2>1.数字签名</h2>
+<p><strong>数字签名</strong>，简单来说就是通过提供 <strong>可鉴别</strong> 的 <strong>数字信息</strong> 验证 <strong>自身身份</strong> 的一种方式。一
+套 <strong>数字签名</strong> 通常定义两种 <strong>互补</strong> 的运算，一个用于 <strong>签名</strong>，另一个用于 <strong>验证</strong>。分别由 <strong>发送者</strong> 持有能够 <strong>代表自己身份</strong> 的 <strong>私钥</strong> (私钥不可泄露), 由 <strong>接受者</strong> 持有与私钥对应的 <strong>公钥</strong> ，能够在 <strong>接受</strong> 到来自发送者信息时用于 <strong>验证</strong> 其身份。</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/13/16493f2bfa18df72~tplv-t2oaga2asx-zoom-in-crop-mark:3024:0:0:0.awebp" alt=""></p>
+<blockquote>
+<p><strong>注意</strong>：图中 <strong>加密过程</strong> 有别于 <strong>公钥加密</strong>，更多 <a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.zhihu.com%2Fquestion%2F25912483" title="https://www.zhihu.com/question/25912483">介绍戳这里</a>。<strong>签名</strong> 最根本的用途是要能够唯一 <strong>证明发送方的身份</strong>，防止 <strong>中间人攻击</strong>、<code>CSRF</code> <strong>跨域身份伪造</strong>。基于这一点在诸如 <strong>设备认证</strong>、<strong>用户认证</strong>、<strong>第三方认证</strong> 等认证体系中都会使用到 <strong>签名算法</strong> (彼此的实现方式可能会有差异)。</p>
+</blockquote>
+<h2>2.加密和解密</h2>
+<h3>2.1. 加密</h3>
+<p><strong>数据加密</strong> 的基本过程，就是对原来为 <strong>明文</strong> 的文件或数据按 <strong>某种算法</strong> 进行处理，使其成为 <strong>不可读</strong> 的一段代码，通常称为 <strong>“密文”</strong>。通过这样的途径，来达到 <strong>保护数据</strong> 不被 <strong>非法人窃取</strong>、阅读的目的。</p>
+<h3>2.2. 解密</h3>
+<p><strong>加密</strong> 的 <strong>逆过程</strong> 为 <strong>解密</strong>，即将该 <strong>编码信息</strong> 转化为其 <strong>原来数据</strong> 的过程。</p>
+<h2>3 对称加密和非对称加密</h2>
+<p>加密算法分 <strong>对称加密</strong> 和 <strong>非对称加密</strong>，其中对称加密算法的加密与解密 <strong>密钥相同</strong>，非对称加密算法的加密密钥与解密 <strong>密钥不同</strong>，此外，还有一类 <strong>不需要密钥</strong> 的 <strong>散列算法</strong>。</p>
+<blockquote>
+<p>常见的 <strong>对称加密</strong> 算法主要有 <code>DES</code>、<code>3DES</code>、<code>AES</code> 等，常见的 <strong>非对称算法</strong> 主要有 <code>RSA</code>、<code>DSA</code> 等，<strong>散列算法</strong> 主要有 <code>SHA-1</code>、<code>MD5</code> 等。</p>
+</blockquote>
+<h3>3.1. 对称加密</h3>
+<p><strong>对称加密算法</strong> 是应用较早的加密算法，又称为 <strong>共享密钥加密算法</strong>。在 <strong>对称加密算法</strong> 中，使用的密钥只有一个，<strong>发送</strong> 和 <strong>接收</strong> 双方都使用这个密钥对数据进行 <strong>加密</strong> 和 <strong>解密</strong>。这就要求加密和解密方事先都必须知道加密的密钥。</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/13/16493f2bfa02dbcd~tplv-t2oaga2asx-zoom-in-crop-mark:3024:0:0:0.awebp" alt=""></p>
+<ol>
+<li>
+<p>数据加密过程：在对称加密算法中，<strong>数据发送方</strong> 将 <strong>明文</strong> (原始数据) 和 <strong>加密密钥</strong> 一起经过特殊 <strong>加密处理</strong>，生成复杂的 <strong>加密密文</strong> 进行发送。</p>
+</li>
+<li>
+<p>数据解密过程：<strong>数据接收方</strong> 收到密文后，若想读取原数据，则需要使用 <strong>加密使用的密钥</strong> 及相同算法的 <strong>逆算法</strong> 对加密的密文进行解密，才能使其恢复成 <strong>可读明文</strong>。</p>
+</li>
+</ol>
+<h3>3.2. 非对称加密</h3>
+<p><strong>非对称加密算法</strong>，又称为 <strong>公开密钥加密算法</strong>。它需要两个密钥，一个称为 <strong>公开密钥</strong> (<code>public key</code>)，即 <strong>公钥</strong>，另一个称为 <strong>私有密钥</strong> (<code>private key</code>)，即 <strong>私钥</strong>。</p>
+<p>因为 <strong>加密</strong> 和 <strong>解密</strong> 使用的是两个不同的密钥，所以这种算法称为 <strong>非对称加密算法</strong>。</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/13/16493f2bfa06e955~tplv-t2oaga2asx-zoom-in-crop-mark:3024:0:0:0.awebp" alt=""></p>
+<ol>
+<li>如果使用 <strong>公钥</strong> 对数据 <strong>进行加密</strong>，只有用对应的 <strong>私钥</strong> 才能 <strong>进行解密</strong>。</li>
+<li>如果使用 <strong>私钥</strong> 对数据 <strong>进行加密</strong>，只有用对应的 <strong>公钥</strong> 才能 <strong>进行解密</strong>。</li>
+</ol>
+<blockquote>
+<p><strong>例子</strong>：甲方生成 <strong>一对密钥</strong> 并将其中的一把作为 <strong>公钥</strong> 向其它人公开，得到该公钥的 <strong>乙方</strong> 使用该密钥对机密信息 <strong>进行加密</strong> 后再发送给甲方，甲方再使用自己保存的另一把 <strong>专用密钥</strong> (<strong>私钥</strong>)，对 <strong>加密</strong> 后的信息 <strong>进行解密</strong>。</p>
+</blockquote>
+<h2>4 常见的签名加密算法</h2>
+<h3>4.1. MD5 算法</h3>
+<p><code>MD5</code> 用的是 <strong>哈希函数</strong>，它的典型应用是对一段信息产生 <strong>信息摘要</strong>，以 <strong>防止被篡改</strong>。严格来说，<code>MD5</code> 不是一种 <strong>加密算法</strong> 而是 <strong>摘要算法</strong>。无论是多长的输入，<code>MD5</code> 都会输出长度为 <code>128bits</code> 的一个串 (通常用 <code>16</code> <strong>进制</strong> 表示为 <code>32</code> 个字符)。</p>
+<pre><code>public static final byte[] computeMD5(byte[] content) {
+    try {
+        MessageDigest md5 = MessageDigest.getInstance(&quot;MD5&quot;);
+        return md5.digest(content);
+    } catch (NoSuchAlgorithmException e) {
+        throw new RuntimeException(e);
+    }
+}
+</code></pre>
+<h3>4.2. SHA1 算法</h3>
+<p><code>SHA1</code> 是和 <code>MD5</code> 一样流行的 <strong>消息摘要算法</strong>，然而 <code>SHA1</code> 比 <code>MD5</code> 的 <strong>安全性更强</strong>。对于长度小于 <code>2 ^ 64</code> 位的消息，<code>SHA1</code> 会产生一个 <code>160</code> 位的 <strong>消息摘要</strong>。基于 <code>MD5</code>、<code>SHA1</code> 的信息摘要特性以及 <strong>不可逆</strong> (一般而言)，可以被应用在检查 <strong>文件完整性</strong> 以及 <strong>数字签名</strong> 等场景。</p>
+<pre><code>public static byte[] computeSHA1(byte[] content) {
+    try {
+        MessageDigest sha1 = MessageDigest.getInstance(&quot;SHA1&quot;);
+        return sha1.digest(content);
+    } catch (NoSuchAlgorithmException e) {
+        throw new RuntimeException(e);
+    }
+}
+</code></pre>
+<h3>4.3. HMAC 算法</h3>
+<p><code>HMAC</code> 是密钥相关的 <strong>哈希运算消息认证码</strong>（Hash-based Message Authentication Code），<code>HMAC</code> 运算利用 <strong>哈希算法</strong> (<code>MD5</code>、<code>SHA1</code> 等)，以 <strong>一个密钥</strong> 和 <strong>一个消息</strong> 为输入，生成一个 <strong>消息摘要</strong> 作为 <strong>输出</strong>。</p>
+<p><code>HMAC</code> <strong>发送方</strong> 和 <strong>接收方</strong> 都有的 <code>key</code> 进行计算，而没有这把 <code>key</code> 的第三方，则是 <strong>无法计算</strong> 出正确的 <strong>散列值</strong>的，这样就可以 <strong>防止数据被篡改</strong>。</p>
+<blockquote>
+<p><strong>测试结论</strong>：<code>HMAC</code> 算法实例在 <strong>多线程环境</strong> 下是 <strong>不安全的</strong>。但是需要在 <strong>多线程访问</strong> 时，进行同步的辅助类，使用 <code>ThreadLocal</code> 为 <strong>每个线程缓存</strong> 一个实例可以避免进行锁操作。</p>
+</blockquote>
+<h3>4.4. AES/DES/3DES 算法</h3>
+<p><code>AES</code>、<code>DES</code>、<code>3DES</code> 都是 <strong>对称</strong> 的 <strong>块加密算法</strong>，<strong>加解密</strong> 的过程是 <strong>可逆的</strong>。常用的有 <code>AES128</code>、<code>AES192</code>、<code>AES256</code> (默认安装的 <code>JDK</code> 尚不支持 <code>AES256</code>，需要安装对应的 <code>jce</code> 补丁进行升级 <code>jce1.7</code>，<code>jce1.8</code>)。</p>
+<h4>4.4.1. DES 算法</h4>
+<p><code>DES</code> 加密算法是一种 <strong>分组密码</strong>，以 <code>64</code> 位为 <strong>分组对数据</strong> 加密，它的 <strong>密钥长度</strong> 是 <code>56</code> 位，<strong>加密解密</strong> 用 <strong>同一算法</strong>。
+<code>DES</code> 加密算法是对 <strong>密钥</strong> 进行保密，而 <strong>公开算法</strong>，包括加密和解密算法。这样，只有掌握了和发送方 <strong>相同密钥</strong> 的人才能解读由 <code>DES</code>加密算法加密的密文数据。因此，破译 <code>DES</code> 加密算法实际上就是 <strong>搜索密钥的编码</strong>。对于 <code>56</code> 位长度的 <strong>密钥</strong> 来说，如果用 <strong>穷举法</strong> 来进行搜索的话，其运算次数为 <code>2 ^ 56</code> 次。</p>
+<h4>4.4.2. 3DES 算法</h4>
+<p>是基于 <code>DES</code> 的 <strong>对称算法</strong>，对 <strong>一块数据</strong> 用 <strong>三个不同的密钥</strong> 进行 <strong>三次加密</strong>，<strong>强度更高</strong>。</p>
+<h4>4.4.3. AES 算法</h4>
+<p><code>AES</code> 加密算法是密码学中的 <strong>高级加密标准</strong>，该加密算法采用 <strong>对称分组密码体制</strong>，密钥长度的最少支持为 <code>128</code> 位、 <code>192</code> 位、<code>256</code> 位，分组长度 <code>128</code> 位，算法应易于各种硬件和软件实现。这种加密算法是美国联邦政府采用的 <strong>区块加密标准</strong>。</p>
+<p><code>AES</code> 本身就是为了取代 <code>DES</code> 的，<code>AES</code> 具有更好的 <strong>安全性</strong>、<strong>效率</strong> 和 <strong>灵活性</strong>。</p>
+<h3>4.5. RSA 算法</h3>
+<p><code>RSA</code> 加密算法是目前最有影响力的 <strong>公钥加密算法</strong>，并且被普遍认为是目前 <strong>最优秀的公钥方案</strong> 之一。<code>RSA</code> 是第一个能同时用于 <strong>加密</strong> 和 <strong>数字签名</strong> 的算法，它能够 <strong>抵抗</strong> 到目前为止已知的 <strong>所有密码攻击</strong>，已被 <code>ISO</code> 推荐为公钥数据加密标准。</p>
+<blockquote>
+<p><code>RSA</code> <strong>加密算法</strong> 基于一个十分简单的数论事实：将两个大 <strong>素数</strong> 相乘十分容易，但想要对其乘积进行 <strong>因式分解</strong> 却极其困难，因此可以将 <strong>乘积</strong> 公开作为 <strong>加密密钥</strong>。</p>
+</blockquote>
+<h3>4.6. ECC 算法</h3>
+<p><code>ECC</code> 也是一种 <strong>非对称加密算法</strong>，主要优势是在某些情况下，它比其他的方法使用 <strong>更小的密钥</strong>，比如 <code>RSA</code> <strong>加密算法</strong>，提供 <strong>相当的或更高等级</strong> 的安全级别。不过一个缺点是 <strong>加密和解密操作</strong> 的实现比其他机制 <strong>时间长</strong> (相比 <code>RSA</code> 算法，该算法对 <code>CPU</code> 消耗严重)。</p>
+<h2>5 各种加密算法对比</h2>
+<h3>5.1. 散列算法比较</h3>
+<table><thead><tr><th>名称</th><th>安全性</th><th>速度</th></tr></thead><tbody><tr><td>SHA-1</td><td>高</td><td>慢</td></tr><tr><td>MD5</td><td>中</td><td>快</td></tr></tbody></table>
+<h3>5.2. 对称加密算法比较</h3>
+<table><thead><tr><th>名称</th><th>密钥名称</th><th>运行速度</th><th>安全性</th><th>资源消耗</th></tr></thead><tbody><tr><td>DES</td><td>56 位</td><td>较快</td><td>低</td><td>中</td></tr><tr><td>3DES</td><td>112 位或 168 位</td><td>慢</td><td>中</td><td>高</td></tr><tr><td>AES</td><td>128、192、256 位</td><td>快</td><td>高</td><td>低</td></tr></tbody></table>
+<h3>5.3. 非对称加密算法比较</h3>
+<table><thead><tr><th>名称</th><th>成熟度</th><th>安全性</th><th>运算速度</th><th>资源消耗</th></tr></thead><tbody><tr><td>RSA</td><td>高</td><td>高</td><td>中</td><td>中</td></tr><tr><td>ECC</td><td>高</td><td>高</td><td>慢</td><td>高</td></tr></tbody></table>
+<h3>5.4. 对称算法与非对称加密算法</h3>
+<p>对称算法</p>
+<ol>
+<li><strong>密钥管理</strong>：比较难，不适合互联网，一般用于内部系统</li>
+<li><strong>安全性</strong>：中</li>
+<li><strong>加密速度</strong>：快好 <strong>几个数量级</strong> (软件加解密速度至少快 <code>100</code> 倍，每秒可以加解密数 <code>M</code> <strong>比特</strong> 数据)，适合大数据量的加解密处理</li>
+</ol>
+<p>非对称算法</p>
+<ol>
+<li><strong>密钥管理</strong>：密钥容易管理</li>
+<li><strong>安全性</strong>：高</li>
+<li><strong>加密速度</strong>：比较慢，适合 <strong>小数据量</strong> 加解密或数据签名</li>
+</ol>
+<h1> </h1>
