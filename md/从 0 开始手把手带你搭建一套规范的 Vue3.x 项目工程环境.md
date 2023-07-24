@@ -513,9 +513,7 @@ trim_trailing_whitespace = false
 
 注意：
 
-*   VSCode 使用 EditorConfig 需要去插件市场下载插件 **EditorConfig for VS Code** 。
-    
-    ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51ca554c3b01470397de87ef0a92481d~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp)
+*   VSCode 使用 EditorConfig 需要去插件市场下载插件 **EditorConfig for VS Code** 。    ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51ca554c3b01470397de87ef0a92481d~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp)
     
 *   JetBrains 系列（WebStorm、IntelliJ IDEA 等）则不用额外安装插件，可直接使用 EditorConfig 配置。
     

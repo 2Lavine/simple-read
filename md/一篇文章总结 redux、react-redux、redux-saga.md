@@ -1,16 +1,5 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844903846666321934?searchId=202307221642455A486F0EE437F36B080F) ![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/5/8/16a94b981baecfa7~tplv-t2oaga2asx-zoom-in-crop-mark:3024:0:0:0.awebp)
+>原文地址 [juejin.cn](https://juejin.cn/post/6844903846666321934?searchId=202307221642455A486F0EE437F36B080F) 
 
-不愿清醒，宁愿一直沉迷放纵。 不知归路，宁愿一世无悔追逐。      --- 王小波
-
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/5/8/16a94b981b0702d0~tplv-t2oaga2asx-zoom-in-crop-mark:3024:0:0:0.awebp)
-
-> 本篇主要将 react 全家桶的产品非常精炼的提取了核心内容，精华程度堪比精油。各位大人，既然来了，客官您坐，来人，给客官看茶~~
-
-redux
-=====
-
-前言
---
 
 首先，本篇文章要求您对 js,react 等知识有一定的了解，如果不曾了解，建议您先看一下：[React 精髓！一篇全概括 (急速)](https://juejin.cn/post/6844903843151478791 "https://juejin.cn/post/6844903843151478791")
 
