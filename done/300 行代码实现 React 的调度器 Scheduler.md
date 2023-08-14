@@ -427,7 +427,6 @@ function compare(a, b) {
   const diff = a.sortIndex - b.sortIndex;
   return diff !== 0 ? diff : a.id - b.id;
 }
-复制代码
 ```
 
 测试代码
@@ -458,7 +457,6 @@ unstable_scheduleCallback(3, () => {
 })
 
 unstable_scheduleCallback(3, () => {console.log(5)})
-复制代码
 ```
 
 它的执行结果如下：

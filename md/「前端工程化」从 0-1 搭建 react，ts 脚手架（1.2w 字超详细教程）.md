@@ -1,111 +1,36 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6919308174151385096)
 
-一 前言
-====
-
-**读完这篇文章你可能会学到哪些知识？**
-
-**①node 实现终端命令行**  
-**②终端命令行交互**  
-**③深 copy 整个文件夹**  
-**④nodejs 执行终端命令 如 `npm install`**  
-**⑤建立子进程通信**  
-**⑥webpack 底层操作，启动`webpack`, 合并配置项**  
-**⑦编写一个 plugin, 理解各阶段**  
-**⑧require.context 实现前端自动化**
-
-1 实现效果展示
---------
-
-### 项目效果
-
-#### `mycli creat` 创建项目
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a61804aa4d74c6483ac513463daa4e0~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-#### `mycli start` 运行项目
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3409a0a825e441e883e6be65f3cba45f~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-#### `mycli build` 打包项目
-
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d34a9dd94f44cc58afb7aa7f5f35614~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-### 体验步骤
-
-**我们在这边文章里面用的是`mycli` ，但是我并没有上传项目到`npm`, 但是这篇文章的技术是笔者之前的一个脚手架原型，感兴趣的同学本地下载可以体验效果。**
-
-全局下载脚手架`rux-cli`
-
-windows
-
-```
-npm install rux-cli -g 
-复制代码
-```
-
-mac
-
-```
-sodu npm install rux-cli -g 
-复制代码
-```
-
-一条命令创建项目，安装依赖，编译项目，运行项目。
-
-```
-rux create 
-复制代码
-```
-
-2 设置目标
-------
-
 ### 设置目标，分解目标
 
-我们希望用一条命令行, 实现**项目创建**，**依赖下载**, **项目运行**，**依赖收集**等众多流程。如果一口气设计整个功能，可能会感到脑袋一片空白，所以我们要学会分解目标。实际纵览整个流程，主要分为 **创建文件阶段** ， **构建，集成 webpack 阶段** ， **运行项目阶段** 。梳理每个阶段我们需要做的事情。
+整个流程，主要分为 
+- 创建文件阶段 ， 
+- 构建，
+- 集成 webpack 阶段， 
+- 运行项目阶段
 
 二 创建文件阶段
 ========
 
 1 终端命令行交互
----------
 
+1 终端命令行交互
+---
 ### ① node 修改 bin
+我们希望的终端能够识别`mycli` , 然后通过 `mycli create`创建一个项目。
+实际上流程大致是这样的通过`mycli`可以指向性执行指定的`node`文件。
 
-我们期望像`vue-cli`那样 ，通过自定义的命令行`vue create`，开始创建一个项目，首先能够让程序终端识别我们的自定义指令，我们首先需要修改`bin`。
-
-**例子：**
-
-```
-mycli create 
-复制代码
-```
-
-我们希望的终端能够识别`mycli` , 然后通过 `mycli create`创建一个项目。实际上流程大致是这样的通过`mycli`可以指向性执行指定的`node`文件。接下来我们一起分析一下具体步骤。
-
-执行终端命令号，期望结果是执行当前的`node`文件。
-
-**建立工程**
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5eadefff04f441309e7050ad3446b8b6~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-如上图所示我们在终端执行命令行的时候，统一走`bin`文件夹下面的 `mycli.js`文件。
-
-**mycli.js 文件**
-
+1. 新建**mycli.js 文件**
+在`bin`文件夹创建的 `mycli.js`文件
 ```
 #!/usr/bin/env node
 'use strict';
 console.log('hello,world')
-复制代码
 ```
 
-然后在`package.json`中声明一下`bin`。
+2. 在`package.json`中声明一下`bin`。
 
 ```
 {
-  "name": "my-cli",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -116,27 +41,29 @@ console.log('hello,world')
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "👽",
-  "license": "ISC",
-  "dependencies": {
-    "chalk": "^4.0.0",
-    "commander": "^5.1.0",
-    "inquirer": "^7.1.0",
-    "which": "^2.0.2"
-  }
 }
-复制代码
 ```
 
-万事俱备，为了在本地调试，`my-cli`文件夹下用`npm link`, 如果在`mac`上需要执行 `sudo npm link`
 
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/389046bf94c44b1eb37fe85c4cb8214d~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
+为了在本地调试，`my-cli`文件夹下用`npm link`, 如果在`mac`上需要执行 `sudo npm link`
+然后我们随便新建一个文件夹，执行一下 `mycli`。看到成功打印`hello,world`, 第一步算是成功了。
 
-然后我们随便新建一个文件夹，执行一下 `mycli`。看到成功打印`hello,world`, 第一步算是成功了。接下来我们做的是让`node`文件 (`demo`项目中的`mycli.js`) 能够读懂我们的终端命令。比如说 `mycli create` 创建项目； `mycli start`运行项目; `mycli build` 打包项目； 为了能够在终端流利的操纵命令行 ，我们引入 `commander` 模块。
+---
+在package.json文件中，bin字段用于指定可执行文件的路径。它允许您将项目中的某个脚本或命令行工具作为全局命令使用。
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/575f487f533f4e4bac4a5714c4b7f4f0~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
+当您在全局安装项目时，bin字段中指定的脚本将被链接到全局的可执行文件路径中，从而使您可以在命令行中直接运行该脚本。这样，您就可以像运行其他全局命令一样运行项目中的脚本。
+
+例如，假设您的项目有一个名为"my-script.js"的脚本，并且您在package.json的bin字段中指定了该脚本的路径为"./bin/my-script.js"。当您在全局安装项目后，可以在命令行中直接运行"my-script"命令，而不需要指定完整的脚本路径。
+
+这对于将项目作为命令行工具分发给其他开发人员或用户非常有用。他们可以通过全局安装您的项目，然后直接在命令行中使用您的工具。
 
 ### ② commander -nodejs 终端命令行
+---
+接下来我们做的是让`node`文件 (`demo`项目中的`mycli.js`) 能够读懂我们的终端命令。
+比如说 `mycli create` 创建项目； `mycli start`运行项目; `mycli build` 打包项目； 
+为了能够在终端流利的操纵命令行 ，我们引入 `commander` 模块。
 
+---
 为了能在终端打印出花里胡哨的颜色，我们引入`chalk`库。
 
 ```
@@ -150,32 +77,26 @@ colors.forEach(color=>{
     }
 })
 module.exports = consoleColors
-复制代码
 ```
-
-接下来需要我们用 `commander` 来声明的我们终端命令。
 
 #### 简介 commander 常用 api
 
-`Commander.js node.js`命令行界面的完整解决方案, 受 `Ruby Commander`启发。 前端开发`node cli` 必备技能。
-
+`Commander.js node.js`命令行界面的完整解决方案, 受 `Ruby Commander`启发。 
+前端开发`node cli` 必备技能。
 ##### 1 `version`版本
 
 ```
 var program = require('commander');
- 
 program
     .version('0.0.1')
     .parse(process.argv);  
-#执行结果：
+```
+执行结果
 node index.js -V
 0.0.1
-复制代码
-```
-
 ##### 2 `option`选项
-
-使用`.option()`方法定义`commander`的选项`options`, 示例：.option('-n, --name [items2]', 'name description', 'default value')。
+使用`.option()`方法定义`commander`的选项`options`
+示例：.option('-n, --name [items2]', 'name description', 'default value')。
 
 ```
 program
@@ -187,19 +108,10 @@ if( program.debug ){
 }else if(program.small){
     blue('option is small')
 }
-复制代码
 ```
 
-**终端输入**
-
-```
-mycli -d
-复制代码
-```
-
-**终端输出**
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fb865707ed2d421d961f8aa70967a9e5~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
+**终端输入** mycli -d
+**终端输出** option is debug
 
 ##### 3 `commander`自定义指令 (重点)
 
@@ -208,10 +120,9 @@ mycli -d
 1 命令名称 <必须>：命令后面可跟用 <> 或 [] 包含的参数；命令的最后一个参数可以是可变的，像实例中那样在数组后面加入 ... 标志；在命令后面传入的参数会被传入到 `action` 的回调函数以及 `program.args` 数组中。
 
 2 命令描述 <可省略>：如果存在，且没有显示调用 `action(fn)` ，就会启动子命令程序，否则会报错 配置选项 <可省略>：可配置`noHelp、isDefault`等。
-
 #### 使用 commander，添加自定义命令
 
-因为我们做的是脚手架，最基本的功能，创建项目，运行项目 (开发环境), 打包项目 (生产环境)，所以我们添加三个命令，代码如下：
+因为我们做的是脚手架，最基本的功能，创建项目，运行项目 (开发环境), 打包项目 (生产环境)，所以我们添加三个命令
 
 ```
 /* mycli create 创建项目 */
@@ -239,26 +150,13 @@ program
 })
 
 program.parse(process.argv)
-复制代码
 ```
-
-**效果**
-
-```
-mycli create
-复制代码
-```
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a2692ccd58594f6b92e182c0032cf644~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-第一步算是完成了。
 
 ### ③ inquirer 模块命令行交互
 
-我们期望像`vue-cli`或者`dva-cli`再或者是`taro-cli`一样，实现和终端的交互功能。这就需要另外一个 `nodejs`模块 `inquirer`。`Inquirer.js`提供用户界面和查询会话。
-
+我们期望像`vue-cli`或者`dva-cli`再或者是`taro-cli`一样，实现和终端的交互功能。
+这就需要另外一个 `nodejs`模块 `inquirer`。`Inquirer.js`提供用户界面和查询会话。
 上手：
-
 ```
 var inquirer = require('inquirer');
 inquirer
@@ -271,10 +169,12 @@ inquirer
   .catch(error => {
     /* 出现错误 */
   });
-复制代码
 ```
 
-由于我们做的是`react`脚手架，所以我们和用户交互问题设定为，是否创建新的项目？(是 / 否) -> 请输入项目名称？(文本输入) -> 请输入作者？(文本输入) -> 请选择公共管理状态？(单选) `mobx` 或 `redux`。上述`prompt`第一个参数需要对这些问题做基础配置。我们的 `question` 配置大致是这样
+---
+由于我们做的是`react`脚手架，所以我们和用户交互问题设定为，
+是否创建新的项目？(是 / 否) -> 请输入项目名称？(文本输入) -> 请输入作者？(文本输入) -> 请选择公共管理状态？(单选) `mobx` 或 `redux`。
+上述`prompt`第一个参数需要对这些问题做基础配置。我们的 `question` 配置大致是这样
 
 ```
 const question = [
@@ -302,9 +202,9 @@ const question = [
     }
 ]
 
-复制代码
 ```
 
+---
 然后我们在 `command('create')` 回调 `action()`里面继续加上如下代码。
 
 ```
@@ -317,43 +217,21 @@ program
             console.log('answer=', answer )
         })
     })
-复制代码
 ```
 
-**运行**
-
-```
-mycli create 
-复制代码
-```
-
-**效果如下** ![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ccfc8868b3fc4e7ead731cfc58b6760a~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-接下来我们要做的是，根据用户提供的信息`copy`项目文件，`copy`文件有两种方案，第一种项目模版存在脚手架中，第二种就是向`github`这种远程拉取项目模版，我们在这里用的是第一种方案。我们在脚手架项目中新建`template`文件夹。放入`react-typescript`模版。接下来要做的是就是复制整个`template`项目模版了。
+---
+接下来我们要做的是，根据用户提供的信息`copy`项目文件，
+`copy`文件有两种方案，
+第一种项目模版存在脚手架中，第二种就是向`github`这种远程拉取项目模版，
+我们在这里用的是第一种方案。
+我们在脚手架项目中新建`template`文件夹。放入`react-typescript`模版。接下来要做的是就是复制整个`template`项目模版了。
 
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c851b111b10f4766a3bd4dc98cd4e9e2~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
 
 2 深拷贝文件
--------
+---
 
 由于我们的`template`项目模版，有可能是深层次的 文件夹 -> 文件 结构，我们需要深复制项目文件和文件夹。所以需要`node`中原生模块`fs`模块来助阵。`fs`大部分`api`是异步 I/O 操作, 所以需要一些小技巧来处理这些异步操作，我们稍后会讲到。
-
-### 1 准备工作： 理解 异步 I/O 和 fs 模块
-
-笔者看过一些朴灵《深入浅出 nodejs》，里面有一段关于异步 I/O 描述。
-
-```
-const fs = require('fs')
-fs.readFile('/path',()=>{
-    console.log('读取文件完成')
-})
-console.log('发起读取文件')
-复制代码
-```
-
-'发起读取文件'是在'读取文件完成'之前输出的，说明用`readFile`读取文件过程是异步的，这样的意义在于，在`node`中，我们可以在语言层面很自然地进行并行的 I/O 操作。每个调用之间无须等待之前的 I/O 调用结束，在编程模型上可以极大提升效率。回到我们的脚手架项目上来，我们需要一次性大规模读取模板文件，复制模版文件，也就是会操作很多上述所说的异步 I/O 操作。
-
-我们需要`nodejs` 中 `fs`模块，实现拷贝整个项目功能。相信对于使用过`nodejs`开发者来说，`fs`模块并不陌生，基本上涉及到文件操作的功能都有用到，由于篇幅的原因，这里就不一一讲了，感兴趣的同学可以看看 [nodejs 中文文档 - fs 模块基础教程](https://link.juejin.cn?target=http%3A%2F%2Fnodejs.cn%2Fapi%2Ffs.html "http://nodejs.cn/api/fs.html")
 
 ### 2 递归复制项目文件
 
@@ -368,11 +246,6 @@ console.log('发起读取文件')
 ③ 复制模版生成项目： 选择好了项目模版，首先我们遍历整个`template`文件夹下面所有文件，判断子文件**文件类型**，如果是文件就直接复制文件，如果是文件夹，创建文件夹，然后**递归**遍历文件夹下子文件，重复以上的操作。直到所有的文件全部复制完成。
 
 ④ 通知主程序执行下一步操作。
-
-我们在`mycli`项目`src`文件夹下面创建`create.js`专门用于创建项目。废话不多说，直接上代码。
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce62611d5fdc43cdae4092c2e69821b0~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
 #### 核心代码
 
 ```
@@ -392,7 +265,6 @@ program
         })
     })
 
-复制代码
 ```
 
 接下来就是第一阶段核心：
@@ -413,7 +285,6 @@ module.exports = function(res){
         copy( sourcePath , process.cwd() ,npm() )
     })
 }
-复制代码
 ```
 
 在这里我们要弄明白两个路径的意义：
@@ -451,7 +322,6 @@ module.exports = function(res){
     //...更多内容
   },
 }
-复制代码
 ```
 
 **revisePackageJson 修改`package.json`**
@@ -476,7 +346,6 @@ function revisePackageJson(res,sourcePath){
         })
     })
 }
-复制代码
 ```
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d89889e9b394cfcb1ef3ae88f90e517~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
@@ -557,14 +426,13 @@ function dirExist(sourcePath,currentPath,copyCallback,cb){
     }))
 }
 
-复制代码
 ```
 
 这一步的流程大致是这样的，首先用 `fs.readdir`读取`template`文件夹下面的文件，然后通过 `fs.stat`读取文件信息，判断文件的类型，如果当前文件类型是**文件类型**，那么通过读写流`fs.createReadStream`和`fs.createWriteStream`创建文件；如果当前文件类型是**文件夹类型**，判断文件夹是否存在，如果当前文件夹存在，递归调用`copy`复制文件夹下面的文件, 如果不存在，那么重新新建文件夹，然后执行递归调用。这里有一点注意的是，由于我们对`package.json`单独处理，所以这里的一切文件操作应该排除`package.json`。因为我们要在整个项目文件全部复制后，进行自动下载依赖等后续操作。
 
-**小技巧：三变量计数法控制异步 I/O 操作**
+### **小技巧：三变量计数法控制异步 I/O 操作**
 
-上面的内容讲到了`fs`模块基本都是异步 I/O 操作，而且我们的复制文件是深层次递归调用，这就有一个问题，**如何才能够判断所有的文件都已经复制完成呢** ，对于这种层次和数量都是未知的文件结构，很难通过`promise`等异步解决方案来处理。这里我们没有引入第三方异步流程库，而是巧妙的运用**变量计数法**来判断是否所有文件均以复制完毕。
+**如何才能够判断所有的文件都已经复制完成呢** ，这里我们没有引入第三方异步流程库，而是巧妙的运用**变量计数法**来判断是否所有文件均以复制完毕。
 
 变量一`flat`: 每一次 **copy** 函数调用, 会执行异步`fs.readdir`读取文件夹下面的所有文件, 我们用 `flat++`记录 `readdir`数量， 每次`readdir`完成执行`flat--`。
 
@@ -589,44 +457,28 @@ function completeControl(cb){
     }
 }
 
-复制代码
 ```
 
 我们在每次创建文件或文件夹事件执行之后，都会调用`completeControl`方法，通过判断`flat`,`fileCount`,`dirCount`三个变量均为 **0**，就能判断出整个复制流程, 执行完毕, 并作出下一步操作。
 
-**效果**
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2a61804aa4d74c6483ac513463daa4e0~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-**创建项目阶段完毕**
-
 三 构建，集成项目阶段
 ===========
-
-**第二阶段我们主要完成的功能有以下两个方面:**
-
-**第一部分：** 上述我们复制了整个项目，接下来需要**下载依赖**和**运行项目**；
-
-**第二部分：** 我们只是完成了 `mycli create` 创建项目流程，对于 `mycli start` 运行项目 ，和 `mycli build` 打包编译项目，还没有弄。接下来我们慢慢道来。
-
 1 解析命令，自动运行命令行。
 ---------------
-
-之前我们介绍了，通过修改`bin`，借助`commander`模块来通过输入终端**命令行**，来执行`node`文件，来对应启动我们的程序。接下来我们要做的是通过`nodejs`代码，来执行对应的**终端命令**。这个功能的背景是，我们需要在复制整个项目目录之后，来**自动下载依赖`npm, install`，启动项目`npm start`**。
-
+之前我们通过修改`bin`，借助`commander`模块来通过输入终端**命令行**，来执行`node`文件，来对应启动我们的程序。
+接下来我们要做的是通过`nodejs`代码，来执行对应的**终端命令**。
+我们需要在复制整个项目目录之后，来**自动下载依赖`npm, install`，启动项目`npm start`**。
 首先我们在`mycli`脚手架项目的`src`文件夹下，新建`npm.js`，用来处理下载依赖，启动项目操作。
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b8b497b342684a82bbe9f87b829cb36a~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
 ### ①`which`模块助力找到`npm`
 
-像 unixwhich 实用程序一样。在 PATH 环境变量中查找指定可执行文件的第一个实例。不缓存结果，因此 hash -rPATH 更改时不需要。也就是说我们可以找到`npm`实例，通过代码层面控制`npm`做某些事。
+像 unixwhich 实用程序一样。在 PATH 环境变量中查找指定可执行文件的第一个实例。
+不缓存结果，因此 hash -rPATH 更改时不需要。
+也就是说我们可以找到`npm`实例，通过代码层面控制`npm`做某些事。
 
 **例子🌰🌰🌰：**
 
 ```
 var which = require('which')
- 
 //异步用法
 which('node', function (er, resolvedPath) {
   // 如果在PATH上找不到“节点”，则返回er
@@ -634,11 +486,9 @@ which('node', function (er, resolvedPath) {
 })
 //同步用法
 const resolved = which.sync('node')
-复制代码
 ```
 
 **在 npm.js 下**
-
 ```
 const which = require('which')
 /* 找到npm */
@@ -654,16 +504,15 @@ function findNpm() {
   }
   throw new Error('please install npm')
 }
-复制代码
 ```
 
 ### ② child_process.spawn 运行终端命令
 
 在上面我们成功找到`npm`之后，需要用 `child_process.spawn`运行当前命令。
-
 `child_process.spawn(command[, args][, options])`
+`command <string>` 要运行的命令。 `args <string[]>` 字符串参数列表。 
 
-`command <string>` 要运行的命令。 `args <string[]>` 字符串参数列表。 `options <Object>` 配置参数。
+`options <Object>` 配置参数。
 
 ```
 /**
@@ -685,7 +534,6 @@ function runCmd(cmd, args, fn) {
   })
 }
 
-复制代码
 ```
 
 ### ③编写 npm 方法
@@ -708,7 +556,6 @@ module.exports = function (installArg = [ 'install' ]) {
      })
   }
 }
-复制代码
 ```
 
 **使用例子🌰🌰**
@@ -724,7 +571,6 @@ install()
 const start = npm(['start])
 start()
 
-复制代码
 ```
 
 ### ④ 完成自动项目安装，项目启动
@@ -734,12 +580,12 @@ start()
 ```
 const npm = require('./npm')
  copy( sourcePath , process.cwd() ,npm() )
-复制代码
 ```
 
 `cb` 函数就是执行`npm install` 的方法。
 
-我们接着上述的复制成功后，启动项目来讲。在三变量判断项目创建成功之后, 我们开始执行安装项目.
+我们接着上述的复制成功后，启动项目来讲。
+在三变量判断项目创建成功之后, 我们开始执行安装项目.
 
 ```
 function completeControl(cb){
@@ -756,7 +602,6 @@ function completeControl(cb){
         }
     }
 }
-复制代码
 ```
 
 我们在安装依赖成功的回调函数中，继续调用`runProject`启动项目。
@@ -771,13 +616,9 @@ function runProject(){
        color.red('自动启动失败，请手动npm start 启动项目')
     }
 } 
-复制代码
 ```
 
 **效果：由于安装依赖时间过长，运行项目阶段没有在视频里展示**
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/33bc6958f1a140edb9fa1bb10738f0cb~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
 `runProject`代码很简单，继续调用 `npm`， 执行 `npm start` 命令。
 
 到此为止，我们实现了通过 `mycli create` **创建项目**，**安装依赖**，**运行项目**全流程，里面还有集成`webpack`, 进程通信等细节，我们马上慢慢道来。
@@ -833,7 +674,6 @@ program
 	})
 })
 
-复制代码
 ```
 
 #### 第二步：start.js 进程通信
@@ -895,7 +735,6 @@ module.exports = (type) => {
         })
     })
 }
-复制代码
 ```
 
 这一步实际很简单，大致分为二步:
@@ -946,7 +785,6 @@ process.on('message',message=>{
       )
    }
 })
-复制代码
 ```
 
 我们这里用`RunningWebpack`来执行一系列的`webpack`启动, 打包操作。
@@ -976,7 +814,6 @@ event.on('some_event', function() {
 setTimeout(function() { 
     event.emit('some_event'); 
 }, 1000); 
-复制代码
 ```
 
 ### ② 合并`webpack`配置项
@@ -985,7 +822,6 @@ setTimeout(function() {
 
 ```
 runner.listen(msg).then
-复制代码
 ```
 
 ```
@@ -1006,7 +842,6 @@ const runMergeGetConfig = require('../config/webpack.base')
            this.once('end',resolve)
        })
     }
-复制代码
 ```
 
 `listen`入参参数有两个,`type`是主线程的传递过来的`webpack`命令，分为`start`和`build`,`cwdPath`是我们输入终端命令行的绝对路径，接下来我们要做的是读取新创建项目的`mycli.config.js`。然后和我们的**默认配置**进行**合并**操作。
@@ -1026,7 +861,6 @@ module.exports = function(path){
     }
   }
 }
-复制代码
 ```
 
 `runMergeGetConfig` 很简单就是将 `base`基础配置，和 `dev`或者`pro`环境进行合并得到脚手架的基本配置，然后再和`mycli.config.js`文件下的自定义配置项合并，我们接着看。
@@ -1074,7 +908,6 @@ function megreConfig(config){
 }
 
 module.exports = megreConfig
-复制代码
 ```
 
 这一步实际很简单，获取开发者的自定义配置，然后和脚手架的默认配置合并，得到最终的配置。并会返回给我们的`running`实例。
@@ -1122,7 +955,6 @@ const Server = require('webpack-dev-server/lib/Server')
             })
         })
     }
-复制代码
 ```
 
 ### ④效果展示
@@ -1207,7 +1039,6 @@ class RunningWebpack extends EventEmitter{
     }
 }
 module.exports = RunningWebpack
-复制代码
 ```
 
 四 运行项目，实现 plugin, 自动化收集 model 阶段
@@ -1303,7 +1134,6 @@ class MycliConsolePlugin {
     }
 }
 module.exports = RuxConsolePlugin
-复制代码
 ```
 
 #### 使用
@@ -1336,7 +1166,6 @@ const devConfig =(path)=>{
   }
 }
 module.exports = devConfig
-复制代码
 ```
 
 #### 效果
@@ -1352,7 +1181,6 @@ module.exports = devConfig
 
 ```
 require.context(directory, useSubdirectories = true, regExp = /^\.\/.*$/, mode = 'sync');
-复制代码
 ```
 
 可以给这个函数传入三个参数： ① `directory` 要搜索的目录， ② `useSubdirectories` 标记表示是否还搜索其子目录， ③ `regExp` 匹配文件的正则表达式。
@@ -1368,7 +1196,6 @@ require.context('./test', false, /\.test\.js$/);
 /* （创建出）一个 context，其中所有文件都来自父文件夹及其所有子级文件夹，request 以 `.stories.js` 结尾。 */
 require.context('../', true, /\.stories\.js$/);
 
-复制代码
 ```
 
 ### 实现自动化
@@ -1385,7 +1212,6 @@ require.context('../', true, /\.stories\.js$/);
 const a = 'demo'
 
 export default a
-复制代码
 ```
 
 · **demo1.ts**
@@ -1394,7 +1220,6 @@ export default a
 const b = 'demo1'
 
 export default b
-复制代码
 ```
 
 **demo2.ts**
@@ -1403,7 +1228,6 @@ export default b
 const b = 'demo2'
 
 export default b
-复制代码
 ```
 
 **探索 `require.context`**
@@ -1412,7 +1236,6 @@ export default b
 const file  = require.context('./model',false,/\.tsx?|jsx?$/)
 console.log(file)
 
-复制代码
 ```
 
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2806e1a51cc54088a5b5a2c32fd505f2~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
@@ -1422,7 +1245,6 @@ console.log(file)
 ```
 const file  = require.context('./model',false,/\.tsx?|jsx?$/)
 console.log(file.keys())
-复制代码
 ```
 
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9aaacad35554330b51cdc9177ad7e76~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
@@ -1441,7 +1263,6 @@ file.keys().map(item=>{
 })
 
 console.log(model)
-复制代码
 ```
 
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adae9722fc234aee93e9e3f920146d07~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
@@ -1450,7 +1271,6 @@ console.log(model)
 
 ```
 require.context('./model',true,/\.tsx?|jsx?$/)
-复制代码
 ```
 
 **项目目录**
@@ -1463,41 +1283,9 @@ require.context('./model',true,/\.tsx?|jsx?$/)
 const d = 'demo3'
 
 export default d
-复制代码
 ```
 
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bc4722b618fd402a8f01c6ba2fe773d2~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
 
 **打印完美递归收集了子文件下的`model`**
 
-五 总结
-====
-
-技术汇总
-----
-
-整个自定义脚手架包含的技术有；
-
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60bc2ee6b6d4467bab4010614e68e86c~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-源码地址
-----
-
-[rux-cli 脚手架](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FGoodLuckAlien%2Frux-cli "https://github.com/GoodLuckAlien/rux-cli")
-
-[rux-react-webpack-plugin](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FGoodLuckAlien%2Frux-react-webpack-plugin "https://github.com/GoodLuckAlien/rux-react-webpack-plugin")
-
-感兴趣的同学可以自己去尝试写一个属于自己的脚手架，过程中会学会很多知识。
-
-送人玫瑰，手留余香，阅读的朋友可以给笔者**点赞，关注**一波 。 陆续更新前端文章。
-
-**感觉有用的朋友可以关注笔者公众号 前端 Sharing 持续更新好文章。**
-
-参考文档
-----
-
-[1. Commander.js 中文文档 (cli 必备)](https://link.juejin.cn?target=https%3A%2F%2Fsegmentfault.com%2Fa%2F1190000019350684 "https://segmentfault.com/a/1190000019350684")
-
-[2. 深入浅出 webpack]
-
-[3.webpack 中文文档](https://link.juejin.cn?target=https%3A%2F%2Fwebpack.docschina.org%2F "https://webpack.docschina.org/")

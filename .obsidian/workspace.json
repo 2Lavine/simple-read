@@ -4,35 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "14dac321550f67ab",
+        "id": "325a77bf5bf07d8a",
         "type": "tabs",
         "children": [
           {
-            "id": "8bed40b51caed8a8",
+            "id": "87453314856a5bee",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "WuCai/23-07-24-16. 函数重载  WTF Academy-H8AKHAB.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "f6a1698e93552c7f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "md/【React Scheduler 源码第三篇】React Scheduler 原理及手写源码.md",
+                "file": "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -61,10 +48,10 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "复制代码",
                 "matchingCase": false,
                 "explainSearch": false,
-                "collapseAll": false,
+                "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
               }
@@ -76,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/【React Scheduler 源码第三篇】React Scheduler 原理及手写源码.md"
+                "file": "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md"
               }
             }
           },
@@ -108,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/【React Scheduler 源码第三篇】React Scheduler 原理及手写源码.md",
+                "file": "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -125,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/【React Scheduler 源码第三篇】React Scheduler 原理及手写源码.md",
+                "file": "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -168,8 +155,28 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "f6a1698e93552c7f",
+  "active": "87453314856a5bee",
   "lastOpenFiles": [
+    "md/「react 进阶」一文吃透 react-hooks 原理.md",
+    "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
+    "done/React Scheduler 原理及手写源码.md",
+    "3.md",
+    "done/React 之 Scheduler 源码中的三个小知识点，看看你知不知道？.md",
+    "done/前端面试查漏补缺 --前端加密.md",
+    "done/React 之最小堆（min heap）.md",
+    "done/一次弄懂 Event Loop（彻底解决此类面试问题）.md",
+    "done/一篇文章总结 redux、react-redux、redux-saga.md",
+    "done/顾凡及丨脑科学的范式革命.md",
+    "md/mini-react/docs/schedule/scheduler 用法详解. md at master · lizuncong/mini-react.md",
+    "md/mini-react/docs/schedule / 哪些 API 适合用于任务调度. md at master · lizuncong/mini-react.md",
+    "md/mini-react/docs/schedule / 手写 scheduler 源码. md at master · lizuncong/mini-react.md",
+    "md/mini-react/docs/schedule / 手写 scheduler 源码. md at master · lizuncong",
+    "md/mini-react/docs/schedule / 哪些 API 适合用于任务调度. md at master · lizuncong",
+    "md/mini-react/docs/schedule/scheduler 用法详解. md at master · lizuncong",
+    "md/mini-react/docs/schedule ",
+    "md/mini-react/docs/schedule",
+    "md/mini-react/docs",
+    "md/mini-react",
     "mini-react-docs/译文/time_slicing.md",
     "mini-react-docs/译文/in-depth_overview_of_the_new_reconciliation_algorithm.md",
     "mini-react-docs/译文/in-depth-explanation-of-state-and-props-update-in-react.md",
@@ -183,29 +190,9 @@
     "mini-react-docs/异常/JS异常捕获基础.md",
     "mini-react-docs/合成事件/合成事件源码中浏览器兼容相关的API.md",
     "mini-react-docs/合成事件/从0到1模拟合成事件.md",
-    "mini-react-docs/合成事件/react合成事件与原生事件执行顺序.md",
-    "mini-react-docs/合成事件/mouseenter_delegate.md",
-    "mini-react-docs/合成事件/React源码中合成事件的实现过程.md",
-    "mini-react-docs/合成事件/JavaScript事件基础.md",
-    "mini-react-docs/schedule/手写scheduler源码之延迟任务.md",
-    "mini-react-docs/schedule/手写scheduler源码之优先级.md",
-    "mini-react-docs/schedule/手写scheduler源码.md",
-    "mini-react-docs/schedule/哪些API适合用于任务调度.md",
-    "mini-react-docs/schedule/schedule核心源码精讲.md",
-    "mini-react-docs/schedule/scheduler用法详解.md",
     "mini-react-docs/schedule/scheduler_priority.html",
     "mini-react-docs/schedule/schedule_delay.html",
     "mini-react-docs/schedule/schedule.js",
-    "mini-react-docs/render/深入概述 React初次渲染及状态更新主流程.md",
-    "mini-react-docs/render/render和commit阶段主要函数.md",
-    "mini-react-docs/ref/ref基础用法.md",
-    "mini-react-docs/译文",
-    "mini-react-docs/异常",
-    "mini-react-docs/合成事件",
-    "mini-react-docs/schedule",
-    "mini-react-docs/render",
-    "mini-react-docs/ref",
-    "mini-react-docs/reconciler",
     "Pasted image 20230814132849.png",
     "Pasted image 20230814120443.png",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8074c71fa8ae2e699cb73bf4f1a710aa_MD5.webp",

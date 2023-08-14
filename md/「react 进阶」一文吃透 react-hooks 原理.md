@@ -45,7 +45,6 @@ class Index extends React.Component<any,any>{
         </div>
     }
 }
-复制代码
 ```
 
 打印结果？
@@ -65,7 +64,6 @@ function Index(){
     }
     return <button onClick={ handerClick } >{ num }</button>
 }
-复制代码
 ```
 
 打印结果？
@@ -92,7 +90,6 @@ function Index(){
 
 ```
 import { useState } from 'react'
-复制代码
 ```
 
 于是乎我们去找`useState`, 看看它到底是哪路神仙？
@@ -106,7 +103,6 @@ export function useState(initialState){
   const dispatcher = resolveDispatcher();
   return dispatcher.useState(initialState);
 }
-复制代码
 ```
 
 `useState()` 的执行等于 `dispatcher.useState(initialState)` 这里面引入了一个`dispatcher`，我们看一下`resolveDispatcher`做了些什么？
@@ -118,7 +114,6 @@ function resolveDispatcher() {
   const dispatcher = ReactCurrentDispatcher.current
   return dispatcher
 }
-复制代码
 ```
 
 **ReactCurrentDispatcher**
@@ -129,7 +124,6 @@ function resolveDispatcher() {
 const ReactCurrentDispatcher = {
   current: null,
 };
-复制代码
 ```
 
 我们看到`ReactCurrentDispatcher.current`初始化的时候为`null`，然后就没任何下文了。我们暂且只能把 **`ReactCurrentDispatcher`** 记下来。看看`ReactCurrentDispatcher`什么时候用到的 ？
@@ -156,7 +150,6 @@ renderWithHooks(
     context,             // 上下文
     renderExpirationTime,// 渲染 ExpirationTime
 );
-复制代码
 ```
 
 对于初始化是没有`current`树的，之后完成一次组件更新后，会把当前`workInProgress`树赋值给`current`树。
@@ -172,7 +165,6 @@ renderWithHooks(
     context,
     renderExpirationTime,
 );
-复制代码
 ```
 
 我们从上边可以看出来，`renderWithHooks`函数作用是**调用`function`组件函数**的主要函数。我们重点看看`renderWithHooks`做了些什么？
@@ -218,7 +210,6 @@ export function renderWithHooks(
 
   return children;
 }
-复制代码
 ```
 
 **所有的函数组件执行，都是在这里方法中**, 首先我们应该明白几个感念，这对于后续我们理解`useState`是很有帮助的。
@@ -260,7 +251,6 @@ function throwInvalidHookError() {
       'See https://fb.me/react-invalid-hook-call for tips about how to debug and fix this problem.',
   );
 }
-复制代码
 ```
 
 原来如此，`react-hooks`就是通过这种函数组件执行赋值不同的`hooks`对象方式，判断在`hooks`执行是否在函数组件内部，捕获并抛出异常的。
@@ -284,7 +274,6 @@ const HooksDispatcherOnMount = {
   useRef: mountRef,
   useState: mountState,
 };
-复制代码
 ```
 
 **更新组件：**
@@ -299,7 +288,6 @@ const HooksDispatcherOnUpdate = {
   useRef: updateRef,
   useState: updateState
 };
-复制代码
 ```
 
 看来对于第一次渲染组件，和更新组件，`react-hooks`采用了两套`Api`，本文的第二部分和第三部分，将重点两者的联系。
@@ -332,7 +320,6 @@ function Index(){
         <button onClick={() => setNumber(number+1) } >number++</button>
      </div>
 }
-复制代码
 ```
 
 接下来我们一起研究一下我们上述写的四个`hooks`最终会变成什么？
@@ -360,7 +347,6 @@ function mountWorkInProgressHook() {
   }
   return workInProgressHook;
 }
-复制代码
 ```
 
 `mountWorkInProgressHook`这个函数做的事情很简单，首先每次执行一个`hooks`函数，都产生一个`hook`对象，里面保存了当前`hook`信息, 然后将每个`hooks`以链表形式串联起来，并赋值给`workInProgress`的`memoizedState`。也就证实了上述所说的，函数组件用`memoizedState`存放`hooks`链表。
@@ -392,7 +378,6 @@ let curRef  = null
  if(isFisrt){
   curRef = useRef(null)
  }
-复制代码
 ```
 
 ![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/54a38675154a483885a3c5c9a80f360e~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
@@ -430,7 +415,6 @@ function mountState(
   )))
   return [hook.memoizedState, dispatch];
 }
-复制代码
 ```
 
 `mountState`到底做了些什么，首先会得到初始化的`state`，将它赋值给`mountWorkInProgressHook`产生的`hook`对象的 `memoizedState`和`baseState`属性，然后创建一个`queue`对象，里面保存了负责更新的信息。
@@ -445,12 +429,10 @@ function dispatchAction<S, A>(
   queue: UpdateQueue<S, A>,
   action: A,
 )
-复制代码
 ```
 
 ```
 const [ number , setNumber ] = useState(0)
-复制代码
 ```
 
 **`dispatchAction` 就是 `setNumber`** , `dispatchAction` 第一个参数和第二个参数，已经被`bind`给改成`currentlyRenderingFiber`和 `queue`, 我们传入的参数是第三个参数`action`
@@ -507,7 +489,6 @@ function dispatchAction(fiber, queue, action) {
     scheduleUpdateOnFiber(fiber, expirationTime);
   }
 }
-复制代码
 ```
 
 无论是类组件调用`setState`, 还是函数组件的`dispatchAction` ，都会产生一个 `update`对象，里面记录了此次更新的信息，然后将此`update`放入待更新的`pending`队列中，`dispatchAction`第二步就是判断当前函数组件的`fiber`对象是否处于渲染阶段，如果处于渲染阶段，那么不需要我们在更新当前函数组件，只需要更新一下当前`update`的`expirationTime`即可。
@@ -540,7 +521,6 @@ function mountEffect(
   );
 }
 
-复制代码
 ```
 
 每个`hooks`初始化都会创建一个`hook`对象，然后将 hook 的`memoizedState`保存当前`effect hook`信息。
@@ -581,7 +561,6 @@ function pushEffect(tag, create, destroy, deps) {
   }
   return effect;
 }
-复制代码
 ```
 
 这一段实际很简单，首先创建一个 `effect` ，判断组件如果第一次渲染，那么创建 `componentUpdateQueue` ，就是`workInProgress`的`updateQueue`。然后将`effect`放入`updateQueue`中。
@@ -598,7 +577,6 @@ useEffect(()=>{
 useEffect(()=>{
     console.log(3)
 },[])
-复制代码
 ```
 
 最后`workInProgress.updateQueue`会以这样的形式保存：
@@ -622,7 +600,6 @@ function mountMemo(nextCreate,deps){
   hook.memoizedState = [nextValue, nextDeps];
   return nextValue;
 }
-复制代码
 ```
 
 初始化`useMemo`，就是创建一个`hook`，然后执行`useMemo`的第一个参数, 得到需要缓存的值，然后将值和`deps`记录下来，赋值给当前`hook`的`memoizedState`。整体上并没有复杂的逻辑。
@@ -639,7 +616,6 @@ function mountRef(initialValue) {
   hook.memoizedState = ref;
   return ref;
 }
-复制代码
 ```
 
 `mountRef`初始化很简单, 创建一个 ref 对象， 对象的`current` 属性来保存初始化的值，最后用`memoizedState`保存`ref`，完成整个操作。
@@ -710,7 +686,6 @@ function updateWorkInProgressHook() {
   }
   return workInProgressHook;
 }
-复制代码
 ```
 
 这一段的逻辑大致是这样的：
@@ -722,7 +697,6 @@ function updateWorkInProgressHook() {
 if (workInProgress.expirationTime === renderExpirationTime) { 
        // ....这里的逻辑我们先放一放
   }
-复制代码
 ```
 
 这里面的逻辑，实际就是判定，如果当前函数组件执行后，当前函数组件的还是处于渲染优先级，说明函数组件又有了新的更新任务，那么循坏执行函数组件。这就造成了上述的，`nextWorkInProgressHook`不为 `null` 的情况。
@@ -797,7 +771,6 @@ function updateReducer(
   const dispatch = queue.dispatch
   return [hook.memoizedState, dispatch];
 }
-复制代码
 ```
 
 这一段看起来很复杂，让我们慢慢吃透，首先将上一次更新的`pending queue` 合并到 `basequeue`，为什么要这么做，比如我们再一次点击事件中这么写，
@@ -821,7 +794,6 @@ function Index(){
        <button onClick={ ()=> handerClick() } >点击</button>
    </div>
 }
-复制代码
 ```
 
 **点击按钮， 打印 3**
@@ -872,7 +844,6 @@ function updateEffect(create, deps): void {
     nextDeps,
   );
 }
-复制代码
 ```
 
 `useEffect` 做的事很简单，判断两次`deps` 相等，如果相等说明此次更新不需要执行，则直接调用 `pushEffect`, 这里注意 `effect`的标签，`hookEffectTag`, 如果不相等，那么更新 `effect` , 并且赋值给`hook.memoizedState`，这里标签是 `HookHasEffect | hookEffectTag`, 然后在`commit`阶段，`react`会通过标签来判断，是否执行当前的 `effect` 函数。
@@ -900,7 +871,6 @@ function updateMemo(
   hook.memoizedState = [nextValue, nextDeps];
   return nextValue;
 }
-复制代码
 ```
 
 在组件更新过程中，我们执行`useMemo`函数，做的事情实际很简单，就是判断两次 `deps`是否相等，如果不想等，证明依赖项发生改变，那么执行 `useMemo`的第一个函数，得到新的值，然后重新赋值给`hook.memoizedState`, 如果相等 证明没有依赖项改变，那么直接获取缓存的值。
@@ -917,7 +887,6 @@ function updateRef(initialValue){
   const hook = updateWorkInProgressHook()
   return hook.memoizedState
 }
-复制代码
 ```
 
 函数组件更新 useRef 做的事情更简单，就是返回了缓存下来的值，也就是无论函数组件怎么执行，执行多少次，`hook.memoizedState`内存中都指向了一个对象，所以解释了`useEffect`,`useMemo` 中，为什么`useRef`不需要依赖注入，就能访问到最新的改变值。
