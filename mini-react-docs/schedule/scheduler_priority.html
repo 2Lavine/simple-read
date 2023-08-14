@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>schedule调度优先级源码</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
+    />
+    <style>
+      #animation {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100px;
+        height: 100px;
+        background: red;
+        animation: myfirst 5s;
+        animation-iteration-count: infinite;
+      }
+
+      @keyframes myfirst {
+        from {
+          width: 30px;
+          height: 30px;
+          border-radius: 0;
+          background: red;
+        }
+        to {
+          width: 300px;
+          height: 300px;
+          border-radius: 50%;
+          background: yellow;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <button id="btn">perform work</button>
+    <div id="animation">Animation</div>
+    <script>
+      const btn = document.getElementById("btn");
+      const animate = document.getElementById("animation");
+      const sleep = (ms = 2) => {
+        const start = new Date().getTime();
+        while (new Date().getTime() - start < ms) {}
+      };
+      let startTime;
+      btn.onclick = () => {
+        function printA(didTimeout) {
+          const start = new Date().getTime();
+          while (new Date().getTime() - start < 7) {}
+          console.log("A didTimeout：", didTimeout);
+        }
+        function printB(didTimeout) {
+          const start = new Date().getTime();
+          while (new Date().getTime() - start < 7) {}
+          console.log("B didTimeout：", didTimeout);
+        }
+        function printC(didTimeout) {
+          const start = new Date().getTime();
+          while (new Date().getTime() - start < 7) {}
+          console.log("C didTimeout：", didTimeout);
+        }
+        scheduleCallback(UserBlockingPriority, printA);
+        scheduleCallback(UserBlockingPriority, printB);
+        scheduleCallback(UserBlockingPriority, printC);
+      };
+    </script>
+    <script>
+      // 将Message Channel触发宏任务事件封装成一个方法requestHostCallback，使用performWorkUntilDeadline监听Message Channel事件
+      const yieldInterval = 5;
+      let deadline = 0;
+      const channel = new MessageChannel();
+      let port = channel.port2;
+      channel.port1.onmessage = performWorkUntilDeadline;
+      function performWorkUntilDeadline() {
+        console.log("触发了performWorkUntilDeadline执行");
+        if (scheduledHostCallback) {
+          // 当前宏任务事件开始执行
+          let currentTime = new Date().getTime();
+          // 计算当前宏任务事件结束时间
+          deadline = currentTime + yieldInterval;
+          const hasMoreWork = scheduledHostCallback(currentTime);
+          if (!hasMoreWork) {
+            scheduledHostCallback = null;
+          } else {
+            // 如果还有工作，则触发下一个宏任务事件
+            port.postMessage(null);
+          }
+        }
+      }
+      function requestHostCallback(callback) {
+        scheduledHostCallback = callback;
+        port.postMessage(null);
+      }
+      function shouldYield() {
+        return new Date().getTime() >= deadline;
+      }
+    </script>
+    <script>
+      // 每次插入一个任务，都需要重新排序以确定新的优先级。就像没插入一个需求，都需要重新按照截止日期排期以确定新的优先级
+      // 高优先级的任务在前面
+      // 在react scheduler源码中，采用的是最小堆排序算法。这里为了简化，咱就不那么卷了
+      function push(queue, task) {
+        queue.push(task);
+        queue.sort((a, b) => {
+          return a.sortIndex - b.sortIndex;
+        });
+      }
+    </script>
+    <script>
+      const ImmediatePriority = 1;
+      const UserBlockingPriority = 2;
+      const NormalPriority = 3;
+      const LowPriority = 4;
+      const IdlePriority = 5;
+      // 以下过期时间单位都是毫秒
+      const maxSigned31BitInt = 1073741823; // 最大整数
+      const IMMEDIATE_PRIORITY_TIMEOUT = -1; // 过期时间-1毫秒，超高优先级，需要立即执行
+      const USER_BLOCKING_PRIORITY_TIMEOUT = 250;
+      const NORMAL_PRIORITY_TIMEOUT = 5000;
+      const LOW_PRIORITY_TIMEOUT = 10000;
+      const IDLE_PRIORITY_TIMEOUT = maxSigned31BitInt; // 永不过期，最低优先级
+      // 调度以及执行任务
+      let taskQueue = [];
+      let currentTask = null;
+      let isHostCallbackScheduled = false;
+      function flushWork(initialTime) {
+        return workLoop(initialTime);
+      }
+
+      function workLoop(initialTime) {
+        let currentTime = initialTime;
+
+        currentTask = taskQueue[0];
+
+        while (currentTask) {
+          if (currentTask.expirationTime > currentTime && shouldYield()) {
+            // 当前的currentTask还没过期，但是当前宏任务事件已经到达执行的最后期限，即我们需要
+            // 将控制权交还给浏览器，剩下的任务在下一个事件循环中再继续执行
+            // console.log("yield");
+            break;
+          }
+          const callback = currentTask.callback;
+          if (typeof callback === "function") {
+            currentTask.callback = null;
+            const didUserCallbackTimeout =
+              currentTask.expirationTime <= currentTime;
+            callback(didUserCallbackTimeout);
+            currentTime = new Date().getTime();
+            if (currentTask === taskQueue[0]) {
+              taskQueue.shift();
+            }
+          } else {
+            taskQueue.shift();
+          }
+          currentTask = taskQueue[0];
+        }
+        if (currentTask) {
+          // 如果taskQueue中还有剩余工作，则返回true
+          return true;
+        } else {
+          isHostCallbackScheduled = false;
+          return false;
+        }
+      }
+      function scheduleCallback(priorityLevel, callback) {
+        const startTime = new Date().getTime();
+        let timeout;
+        // 不同优先级代表不同的过期时间
+        switch (priorityLevel) {
+          case ImmediatePriority:
+            timeout = IMMEDIATE_PRIORITY_TIMEOUT;
+            break;
+
+          case UserBlockingPriority:
+            timeout = USER_BLOCKING_PRIORITY_TIMEOUT;
+            break;
+
+          case IdlePriority:
+            timeout = IDLE_PRIORITY_TIMEOUT;
+            break;
+
+          case LowPriority:
+            timeout = LOW_PRIORITY_TIMEOUT;
+            break;
+
+          case NormalPriority:
+          default:
+            timeout = NORMAL_PRIORITY_TIMEOUT;
+            break;
+        }
+        // 计算任务的截止时间
+        const expirationTime = startTime + timeout;
+
+        let newTask = {
+          callback: callback,
+          priorityLevel,
+          startTime,
+          expirationTime: expirationTime,
+          sortIndex: expirationTime,
+        };
+        push(taskQueue, newTask);
+        if (!isHostCallbackScheduled) {
+          isHostCallbackScheduled = true;
+          requestHostCallback(flushWork);
+        }
+        return newTask;
+      }
+    </script>
+  </body>
+</html>

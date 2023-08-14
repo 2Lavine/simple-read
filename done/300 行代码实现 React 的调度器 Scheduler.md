@@ -1,27 +1,18 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7171728961473347614?searchId=20230722164549C90E0B97E39FDD8357CF)
 
-> 本文为稀土掘金技术社区首发签约文章，14 天内禁止转载，14 天后未获授权禁止转载，侵权必究！
-> 
-> 本篇是 React 基础与进阶系列第 16 篇，[关注专栏](https://juejin.cn/column/7142674773930147853 "https://juejin.cn/column/7142674773930147853")
-
-前言
---
-
-说是实现，但其实我们只是在 React Scheduler 源码的基础上进行了简化，省略掉一些繁琐的细节，添加了丰富的注释，保证代码可直接执行。
-
-大家可以复制代码到编辑器中，直接运行，非常适合学习 React 源码用。
-
-如果看注释还不了解，欢迎补充学习这个专栏的文章。
 
 源码 Schedule.js
 --------------
 
-```
-// 引入最小堆封装代码
-import {push, pop, peek} from './ScheduleMinHeap.js';
 
+
+---
 // 浏览器提供的 API，获取从 time origin（当前文档生命周期的开始节点时间） 之后到当前调用时经过的时间，它以一个恒定的速率慢慢增加的，不会受到系统时间的影响，具体参考：https://juejin.cn/post/7171633315336683528
 let getCurrentTime = () => performance.now();
+
+---
+// 引入最小堆封装代码
+import {push, pop, peek} from './ScheduleMinHeap.js';
 
 // Scheduler 优先级划分，数字越小优先级越高，0 表示没有优先级
 const NoPriority = 0;
@@ -32,22 +23,26 @@ const LowPriority = 4;
 const IdlePriority = 5;
 
 // Scheduler 根据优先级设置的对应 timeout 时间，越小越紧急
-// 在 React 中，任务是可以被打断的，但是任务不能一直被打断，所以要设置一个超时时间，过了这个时间就必须立刻执行
+
+---
+在 React 中，任务是可以被打断的，但是任务不能一直被打断，所以要设置一个超时时间，过了这个时间就必须立刻执行
 // timeout 就表示超时时间
 var IMMEDIATE_PRIORITY_TIMEOUT = -1;
 var USER_BLOCKING_PRIORITY_TIMEOUT = 250;
 var NORMAL_PRIORITY_TIMEOUT = 5000;
 var LOW_PRIORITY_TIMEOUT = 10000;
-// 为什么是 1073741823，查看：https://juejin.cn/post/7171633315336683528
+// 为什么是 1073741823，用了 31（30+1） 位来保存
 var IDLE_PRIORITY_TIMEOUT = 1073741823;
 
-// 普通任务队列，它是一个最小堆结构，最小堆查看：https://juejin.cn/post/7168283003037155359
+---
+// 普通任务队列，它是一个最小堆结构
 var taskQueue = [];
 // 延时任务队列，它同样是一个最小堆结构
 var timerQueue = [];
 // taskId
 var taskIdCounter = 1;
 
+---
 // 任务队列是否正在被遍历执行，workLoop 执行前为 true，执行完成后改为 false
 var isPerformingWork = false;
 // 是否有正在执行的 requestHostCallback，它会在 requestHostCallback 调用前设为 true，workLoop 执行前改为 false
@@ -66,6 +61,7 @@ let taskTimeoutID = -1;
 var currentTask = null;
 var currentPriorityLevel = NormalPriority;
 
+---
 // 这里是调度的开始
 function unstable_scheduleCallback(priorityLevel, callback, options) {
   var currentTime = getCurrentTime();
@@ -104,6 +100,7 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
       break;
   }
 
+---
   // 任务的过期时间 = 开始调度的时间 + 超时时间
   var expirationTime = startTime + timeout;
 
@@ -150,6 +147,7 @@ function unstable_scheduleCallback(priorityLevel, callback, options) {
   return newTask;
 }
 
+---
 // 你可以把这个函数理解为 requestIdleCallback，都实现了空闲时期执行代码
 function requestHostCallback(callback) {
   // 将 callback 函数存为全局变量，传入的是 flushWork 这个函数
@@ -168,6 +166,7 @@ function schedulePerformWorkUntilDeadline() {
   port.postMessage(null);
 };
 
+---
 // 批量任务的开始时间
 // React 并不是每一个任务执行完都执行 schedulePerformWorkUntilDeadline 让出线程的，而是执行完一个任务，看看过了多久，如果时间不超过 5ms，那就再执行一个任务，等做完一个任务，发现过了 5ms，这才让出线程，所以 React 是一批一批任务执行的，startTime 记录的是这一批任务的开始时间，而不是单个任务的开始时间。
 var startTime = -1;
@@ -194,6 +193,7 @@ function performWorkUntilDeadline() {
   }
 };
 
+---
 function flushWork(hasTimeRemaining, initialTime) {
   isHostCallbackScheduled = false;
   // 定时器的目的表面上是为了保证最早的延时任务准时安排调度，实际上是为了保证 timerQueue 中的任务都能被执行。定时器到期后，我们会执行 advanceTimers 和 flushWork，flushWork 中会执行 workLoop，workLoop 中会将 taskQueue 中的任务不断执行，当 taskQueue 执行完毕后，workLoop 会选择 timerQueue 中的最早的任务重新设置一个定时器。所以如果 flushWork 执行了，定时器也就没有必要了，所以可以取消了。
@@ -213,6 +213,7 @@ function flushWork(hasTimeRemaining, initialTime) {
   }
 }
 
+---
 // 遍历 taskQueue，执行任务
 function workLoop(hasTimeRemaining, initialTime) {
   console.log('workLoop start')
@@ -269,6 +270,7 @@ function workLoop(hasTimeRemaining, initialTime) {
   }
 }
 
+---
 // 检查 timerQueue 中的任务，将到期的任务转到 taskQueue 中
 function advanceTimers(currentTime) {
   let timer = peek(timerQueue);
@@ -289,6 +291,7 @@ function advanceTimers(currentTime) {
   }
 }
 
+---
 // 默认时间切片为 5ms
 let frameInterval = 5;
 
@@ -302,6 +305,7 @@ function shouldYieldToHost() {
   return true;
 }
 
+---
 function requestHostTimeout(callback, ms) {
   taskTimeoutID = setTimeout(() => {
     callback(getCurrentTime());
@@ -331,13 +335,11 @@ function handleTimeout(currentTime) {
     }
   }
 }
-复制代码
-```
 
 源码 ScheduleMinHeap.js
 ---------------------
 
-```
+```js
 // 源码地址：https://github.com/facebook/react/blob/main/packages/scheduler/src/SchedulerMinHeap.js
 
 export function push(heap, node) {
@@ -462,24 +464,3 @@ unstable_scheduleCallback(3, () => {console.log(5)})
 它的执行结果如下：
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a04414af9954279bbd1e2e6a41b72c4~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-React 系列
---------
-
-1.  [React 之 createElement 源码解读](https://juejin.cn/post/7160981608885927972 "https://juejin.cn/post/7160981608885927972")
-2.  [React 之元素与组件的区别](https://juejin.cn/post/7161320926728945701 "https://juejin.cn/post/7161320926728945701")
-3.  [React 之 Refs 的使用和 forwardRef 的源码解读](https://juejin.cn/post/7161719602652086308 "https://juejin.cn/post/7161719602652086308")
-4.  [React 之 Context 的变迁与背后实现](https://juejin.cn/post/7162002168529027079 "https://juejin.cn/post/7162002168529027079")
-5.  [React 之 Race Condition](https://juejin.cn/post/7163202327594139679 "https://juejin.cn/post/7163202327594139679")
-6.  [React 之 Suspense](https://juejin.cn/post/7163934860694781989 "https://juejin.cn/post/7163934860694781989")
-7.  [React 之从视觉暂留到 FPS、刷新率再到显卡、垂直同步再到 16ms 的故事](https://juejin.cn/post/7164394153848078350 "https://juejin.cn/post/7164394153848078350")
-8.  [React 之 requestAnimationFrame 执行机制探索](https://juejin.cn/post/7165780929439334437 "https://juejin.cn/post/7165780929439334437")
-9.  [React 之 requestIdleCallback 来了解一下](https://juejin.cn/post/7166547963517337614 "https://juejin.cn/post/7166547963517337614")
-10.  [React 之从 requestIdleCallback 到时间切片](https://juejin.cn/post/7167335700424196127 "https://juejin.cn/post/7167335700424196127")
-11.  [React 之最小堆（min heap）](https://juejin.cn/post/7168283003037155359 "https://juejin.cn/post/7168283003037155359")
-12.  [React 之如何调试源码](https://juejin.cn/post/7168821587251036167 "https://juejin.cn/post/7168821587251036167")
-13.  [React 之 Scheduler 源码解读（上）](https://juejin.cn/post/7171000978278187038 "https://juejin.cn/post/7171000978278187038")
-14.  [React 之 Scheduler 源码解读（下）](https://juejin.cn/post/7171319288849137694 "https://juejin.cn/post/7171319288849137694")
-15.  [React 之 Scheduler 源码中的三个小知识点，看看你知不知道？](https://juejin.cn/post/7171633315336683528 "https://juejin.cn/post/7171633315336683528")
-
-React 系列的预热系列，带大家从源码的角度深入理解 React 的各个 API 和执行过程，全目录不知道多少篇，预计写个 50 篇吧。
