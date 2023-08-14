@@ -1,14 +1,14 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6944863057000529933?searchId=202307221642455A486F0EE437F36B080F)
 
 一 前言
 ====
 
-之前的两篇文章，分别介绍了`react-hooks`如何使用，以及自定义`hooks`设计模式及其实战，本篇文章主要从`react-hooks`起源，原理，源码角度，开始剖析`react-hooks`运行机制和内部原理，相信这篇文章过后，对于面试的时候那些`hooks`问题，也就迎刃而解了。实际`react-hooks`也并没有那么难以理解，听起来很`cool`，实际就是函数组件**解决没有`state`，生命周期，逻辑不能复用**的一种技术方案。
+本篇文章主要从`react-hooks`起源，原理，源码角度，开始剖析`react-hooks`运行机制和内部原理，
+
+实际`react-hooks`就是函数组件**解决没有`state`，生命周期，逻辑不能复用**的一种技术方案。
 
 > Hook 是 React 16.8 的添加特性。它可以让你在不编写 class 的情况下使用 state 以及其他的 React 特性。
 
-老规矩,🤔️🤔️🤔️我们带着疑问开始今天的探讨 (**能回答上几个，自己可以尝试一下，掌握程度**)：
-
+## 我们带着疑问开始今天的探讨 
 *   1 在无状态组件每一次函数上下文执行的时候，`react`用什么方式记录了`hooks`的状态？
 *   2 多个`react-hooks`用什么来记录每一个`hooks`的顺序的 ？ 换个问法！为什么不能条件语句中，声明`hooks`? `hooks`声明为什么在组件的最顶部？
 *   3 `function`函数组件中的`useState`，和 `class`类组件 `setState`有什么区别？
@@ -16,11 +16,6 @@
 *   5 `useEffect`,`useMemo` 中，为什么`useRef`不需要依赖注入，就能访问到最新的改变值？
 *   6 `useMemo`是怎么对值做缓存的？如何应用它优化性能？
 *   7 为什么两次传入`useState`的值相同，函数组件不更新?
-*   ...
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d99a12ad708647d4bfd075a59d518c8b~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
-
-如果你认真读完这篇文章，这些问题全会迎刃而解。
 
 function 组件和 class 组件本质的区别
 --------------------------

@@ -8,7 +8,7 @@
   "refreshNotes": false,
   "notesToRefresh": [],
   "reimportShowConfirmation": true,
-  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6OTkzNTA4LCJja1BLSUQiOjAsImNrTklEIjowLCJja1hOSUQiOjAsImNrVCI6MTY5MDYzMTI2Nn0=",
+  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6MTA1NTU1NCwiY2tQS0lEIjowLCJja05JRCI6MCwiY2tYTklEIjowLCJja1QiOjE2OTE5ODU1NTV9",
   "dataVersion": 0,
   "notePaths": {
     "H8A6H72": "WuCai/LearnVim_zh_cnch01_starting_vim.md at master · wsdjegLearnVim_zh_cn · GitHub-H8A6H72.md",
@@ -107,7 +107,8 @@
     "H8AA73C": "WuCai/23-07-29-47. 可升级合约  WTF Academy-H8AA73C.md",
     "H8AA73D": "WuCai/23-07-29-48. 透明代理  WTF Academy-H8AA73D.md",
     "H8AA7BH": "WuCai/23-07-29-49. 通用可升级代理  WTF Academy-H8AA7BH.md",
-    "H8AA7B9": "WuCai/23-07-29-50. 多签钱包  WTF Academy-H8AA7B9.md"
+    "H8AA7B9": "WuCai/23-07-29-50. 多签钱包  WTF Academy-H8AA7B9.md",
+    "H8KCCEA": "WuCai/23-08-13-Vite App-H8KCCEA.md"
   },
   "exportConfig": {
     "titleFormat": 5,

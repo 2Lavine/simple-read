@@ -1,34 +1,45 @@
 >原文地址 [juejin.cn](https://juejin.cn/post/6844903846666321934?searchId=202307221642455A486F0EE437F36B080F) 
 
 
-首先，本篇文章要求您对 js,react 等知识有一定的了解，如果不曾了解，建议您先看一下：[React 精髓！一篇全概括 (急速)](https://juejin.cn/post/6844903843151478791 "https://juejin.cn/post/6844903843151478791")
-
 React 有 props 和 state:
-
 1.  props 意味着父级分发下来的属性
 2.  state 意味着组件内部可以自行管理的状态，并且整个 React 没有数据向上回溯的能力，这就是 react 的单向数据流
 
-这就意味着如果是一个数据状态非常复杂的应用，更多的时候发现 **React 根本无法让两个组件互相交流**，使用对方的数据，react 的通过层级传递数据的这种方法是非常难受的，这个时候，迫切需要一个机制，**把所有的 state 集中到组件顶部，能够灵活的将所有 state 各取所需的分发给所有的组件**，是的，这就是 redux
-
-简介
+有时候发现 **React 根本无法让两个组件互相交流**，使用对方的数据，react 的通过层级传递数据的这种方法是非常难受的，
+redux**把所有的 state 集中到组件顶部，能够灵活的将所有 state 各取所需的分发给所有的组件**
+redux 是的诞生是为了给 React 应用提供「可预测化的状态管理」机制。
+redux简介
 --
+Redux 会将**整个应用状态 (其实也就是数据) 存储到到一个地方，称为 store,这个 store 里面保存一棵状态树 (state tree)
 
-1.  redux 是的诞生是为了给 React 应用提供「可预测化的状态管理」机制。
-2.  Redux 会将整个应用状态 (其实也就是数据) 存储到到一个地方，称为 store
-3.  这个 store 里面保存一棵状态树 (state tree)
-4.  组件改变 state 的唯一方法是通过调用 store 的 dispatch 方法，触发一个 action，这个 action 被对应的 reducer 处理，于是 state 完成更新
-5.  组件可以派发 (dispatch) 行为 (action) 给 store, 而不是直接通知其它组件
-6.  其它组件可以通过订阅 store 中的状态 (state) 来刷新自己的视图
+---
+组件改变 state 的唯一方法是通过调用 store 的 dispatch 方法，触发一个 action，这个 action 被对应的 reducer 处理，于是 state 完成更新
+
+--- 
+组件可以派发 (dispatch) 行为 (action) 给 store, 而不是直接通知其它组件,其它组件**可以通过订阅 store 中的状态 (state) 来刷新自己的视图
+
+---
+流程图，方便理解 redux 的工作流程
+![[Pasted image 20230814120443.png]]
+
 
 使用步骤
 ----
+1. **创建 reducer**
+2. **创建 action**
+3. **创建的 store，使用 createStore 方法**
 
+---
 1.  **创建 reducer**
     *   可以使用单独的一个 reducer, 也可以将多个 reducer 合并为一个 reducer，即：`combineReducers()`
     *   action 发出命令后将 state 放入 reucer 加工函数中，返回新的 state, 对 state 进行加工处理
+
+---
 2.  **创建 action**
     *   用户是接触不到 state 的，只能有 view 触发，所以，这个 action 可以理解为指令，需要发出多少动作就有多少指令
     *   action 是一个对象，必须有一个叫 type 的参数，定义 action 类型
+
+---
 3.  **创建的 store，使用 createStore 方法**
     *   store 可以理解为有多个加工机器的总工厂
     *   提供 subscribe，dispatch，getState 这些方法。
@@ -37,6 +48,9 @@ React 有 props 和 state:
 ---------
 
 上述步骤，对应的序号，我会在相关代码标出
+1. **创建 reducer**
+2. **创建 action**
+3. **创建的 store，使用 createStore 方法**
 
 ```
 npm install redux -S // 安装
@@ -67,9 +81,6 @@ store.dispatch(actions.increase()) // {count: 2}
 store.dispatch(actions.increase()) // {count: 3}
 ```
 
-自己画了一张非常简陋的流程图，方便理解 redux 的工作流程
-
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/5/20/16ad40d90c5d46fa~tplv-t2oaga2asx-zoom-in-crop-mark:3024:0:0:0.awebp)
 
 react-redux
 ===========
@@ -82,47 +93,42 @@ react-redux
 </顶层组件>
 ```
 
-不就 ok 了吗？这就是 react-redux。Redux 官方提供的 React 绑定库。 具有高效且灵活的特性。
-
+这就是 react-redux。Redux 官方提供的 React 绑定库。 具有高效且灵活的特性。
 **React Redux 将组件区分为 容器组件 和 UI 组件**
 -----------------------------------
 
-1.  前者会处理逻辑
-2.  后者只负责显示和交互，内部不处理逻辑，状态完全由外部掌控
+1.  容器组件会处理逻辑
+2.  UI 组件只负责显示和交互，内部不处理逻辑，状态完全由外部掌控
 
-两个核心
+**React Redux 两个核心
 ----
+ Provider和 connect
 
-*   ### Provider
-    
-    看我上边那个代码的**顶层组件** 4 个字。对，你没有猜错。这个顶级组件就是 Provider, 一般我们都将顶层组件包裹在 Provider 组件之中，这样的话，所有组件就都可以在 react-redux 的控制之下了, **但是 store 必须作为参数放到 Provider 组件中去**
-    
-    ```
-    <Provider store = {store}>
-        <App />
-    <Provider>
-    ```
-    
-    ```
-    这个组件的目的是让所有组件都能够访问到Redux中的数据。
-    ```
-    
-*   ### connect
-    
-    这个才是 react-redux 中比较难的部分，我们详细解释一下
-    
-    首先，先记住下边的这行代码：
-    
-    ```
-    connect(mapStateToProps, mapDispatchToProps)(MyComponent)
-    ```
-    
-    #### mapStateToProps
-    
-    这个单词翻译过来就是**把 state 映射到 props 中去** , 其实也就是**把 Redux 中的数据映射到 React 中的 props 中去。**
-    
-    举个栗子：
-    
+* ### Provider
+
+看我上边那个代码的**顶层组件**这个顶级组件就是 Provider, 一般我们都将
+顶层组件包裹在 Provider 组件之中，因为这个组件的目的是让所有组件都能够访问到Redux中的数据。
+store 必须作为参数放到 Provider 组件中去
+
+```
+<Provider store = {store}>
+	<App />
+<Provider>
+```
+
+* ### connect
+
+这是 react-redux 中比较难的部分
+
+首先，先记住下边的这行代码：
+
+```
+connect(mapStateToProps, mapDispatchToProps)(MyComponent)
+```
+
+#### mapStateToProps
+
+这个单词翻译过来就是**把 state 映射到 props 中去** , 就是**把 Redux 中的数据映射到 React 中的 props 中去。**
 
 ```
 const mapStateToProps = (state) => {
@@ -198,28 +204,30 @@ redux-saga
 
 这个时候急需一个中间件来处理这种业务场景，目前最优雅的处理方式自然就是 redux-saga
 
-核心讲解
+redux-saga核心讲解
 ----
-
+- Saga 辅助函数
+- Effect Creators
 ### **1、Saga 辅助函数**
 
 redux-saga 提供了一些辅助函数，用来在一些特定的 action 被发起到 Store 时派生任务，下面我先来讲解两个辅助函数：`takeEvery` 和 `takeLatest`
 
-*   #### takeEvery
-    
+#### takeEvery
 
 **takeEvery 就像一个流水线的洗碗工，过来一个脏盘子就直接执行后面的洗碗函数，一旦你请了这个洗碗工他会一直执行这个工作，绝对不会停止接盘子的监听过程和触发洗盘子函数**
 
-例如：每次点击 按钮去 Fetch 获取数据时时，我们发起一个 FETCH_REQUESTED 的 action。 我们想通过启动一个任务从服务器获取一些数据，来处理这个 action，类似于
+#### takeEvery例子
+例如：每次点击 按钮去 Fetch 获取数据时时，我们发起一个 FETCH_REQUESTED 的 action。 
+我们想通过启动一个任务从服务器获取一些数据，来处理这个 action，类似于
 
 ```
 window.addEventLister('xxx',fn)
 ```
-
 当 dispatch xxx 的时候，就会执行 fn 方法，
 
-首先我们创建一个将执行异步 action 的任务 (也就是上边的 fn)：
+首先我们创建一个将执行异步 action 的任务 (也就是上边的 fn），然后在每次 FETCH_REQUESTED action 被发起时启动上面的任务, 也就**相当于每次触发一个名字为 FETCH_REQUESTED 的 action 就会执行上边的任务**
 
+创建将执行异步 action 的任务
 ```
 // put：你就认为put就等于 dispatch就可以了；
 
@@ -238,8 +246,7 @@ export function* fetchData(action) {
 }
 ```
 
-然后在每次 FETCH_REQUESTED action 被发起时启动上面的任务, 也就**相当于每次触发一个名字为 FETCH_REQUESTED 的 action 就会执行上边的任务**, 代码如下
-
+每次触发一个名字为 FETCH_REQUESTED 的 action 就会执行上边的任务, 代码如下
 ```
 import { takeEvery } from 'redux-saga'
 
@@ -249,7 +256,7 @@ function* watchFetchData() {
 }
 ```
 
-**注意**：上面的 takeEvery 函数可以使用下面的写法替换
+takeEvery 函数可以使用下面的写法替换
 
 ```
 function* watchFetchData() {
@@ -261,10 +268,9 @@ function* watchFetchData() {
 }
 ```
 
-*   #### takeLatest
-    
+#### takeLatest
 
-在上面的例子中，takeEvery **允许多个 fetchData 实例同时启动**，在某个特定时刻，我们可以启动一个新的 fetchData 任务， 尽管之前还有一个或多个 fetchData 尚未结束
+takeEvery **允许多个 fetchData 实例同时启动**，在某个特定时刻，我们可以启动一个新的 fetchData 任务， 尽管之前还有一个或多个 fetchData 尚未结束
 
 如果我们**只想得到最新那个请求的响应**（例如，始终显示最新版本的数据），我们可以使用 takeLatest 辅助函数
 
@@ -462,7 +468,3 @@ export default function counter(state = 0, action) {
 
 1.  **使用 createSagaMiddleware 方法创建 saga 的 Middleware ，然后在创建的 redux 的 store 时，使用 applyMiddleware 函数将创建的 saga Middleware 实例绑定到 store 上，最后可以调用 saga Middleware 的 run 函数来执行某个或者某些 Middleware 。**
 2.  **在 saga 的 Middleware 中，可以使用 takeEvery 或者 takeLatest 等 API 来监听某个 action ，当某个 action 触发后， saga 可以使用 call 发起异步操作，操作完成后使用 put 函数触发 action ，同步更新 state ，从而完成整个 State 的更新。**
-
-ok, 故事到这里就接近尾声了，以上主要介绍了 redux,react-redux 和 redux-saga 目前 redux 全家桶主流的一些产品, 接下来, 主要会产出一下根据源码, **手写一下 redux 和 react-redux 的轮子**
-
-### 希望各位大佬点赞, 关注, 鼓励一下, 不足之处，还望斧正~
