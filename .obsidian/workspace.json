@@ -11,12 +11,8 @@
             "id": "87453314856a5bee",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "done/「react 进阶」一文吃透 react-hooks 原理.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -62,9 +58,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "done/「react 进阶」一文吃透 react-hooks 原理.md"
-              }
+              "state": {}
             }
           },
           {
@@ -95,7 +89,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/「react 进阶」一文吃透 react-hooks 原理.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +105,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/「react 进阶」一文吃透 react-hooks 原理.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -155,10 +147,22 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "87453314856a5bee",
   "lastOpenFiles": [
-    "done/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
     "done/「react 进阶」一文吃透 react-hooks 原理.md",
+    "output/2023-8-15 15-25-48.html",
+    "achieve/顾凡及丨脑科学的范式革命.md",
+    "achieve/前端面试查漏补缺 --前端加密.md",
+    "achieve/一篇文章总结 redux、react-redux、redux-saga.md",
+    "achieve/一次弄懂 Event Loop（彻底解决此类面试问题）.md",
+    "achieve/一套规范的 Vue3.x 项目工程环境.md",
+    "achieve/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
+    "achieve/「react 进阶」一文吃透 react-hooks 原理.md",
+    "achieve/React 之最小堆（min heap）.md",
+    "achieve/React 之 Scheduler 源码中的三个小知识点，看看你知不知道？.md",
+    "achieve/React Scheduler 原理及手写源码.md",
+    "achieve/300 行代码实现 React 的调度器 Scheduler.md",
+    "done/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
     "Pasted image 20230815134417.png",
     "Pasted image 20230815133430.png",
     "done/React Scheduler 原理及手写源码.md",
@@ -180,20 +184,8 @@
     "md/mini-react/docs",
     "md/mini-react",
     "mini-react-docs/译文/time_slicing.md",
-    "mini-react-docs/译文/in-depth_overview_of_the_new_reconciliation_algorithm.md",
-    "mini-react-docs/译文/in-depth-explanation-of-state-and-props-update-in-react.md",
-    "mini-react-docs/译文/how_to_prevent_xss.md",
-    "mini-react-docs/译文/function_component_class_component_difference.md",
-    "mini-react-docs/译文/component-identifiers-must-be-capitalized-in-react.md",
-    "mini-react-docs/译文/build_your_own_react.md",
-    "mini-react-docs/异常/dispatchEvent基础.md",
-    "mini-react-docs/异常/React错误边界.md",
-    "mini-react-docs/异常/React异常捕获机制及源码.md",
-    "mini-react-docs/异常/JS异常捕获基础.md",
-    "mini-react-docs/合成事件/合成事件源码中浏览器兼容相关的API.md",
     "mini-react-docs/schedule/scheduler_priority.html",
     "mini-react-docs/schedule/schedule_delay.html",
-    "mini-react-docs/schedule/schedule.js",
     "Pasted image 20230814132849.png",
     "Pasted image 20230814120443.png",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8074c71fa8ae2e699cb73bf4f1a710aa_MD5.webp",
