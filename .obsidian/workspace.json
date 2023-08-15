@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
+                "file": "done/「react 进阶」一文吃透 react-hooks 原理.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md"
+                "file": "done/「react 进阶」一文吃透 react-hooks 原理.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
+                "file": "done/「react 进阶」一文吃透 react-hooks 原理.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
+                "file": "done/「react 进阶」一文吃透 react-hooks 原理.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -155,10 +155,12 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "87453314856a5bee",
+  "active": "7c656948499aebb2",
   "lastOpenFiles": [
-    "md/「react 进阶」一文吃透 react-hooks 原理.md",
-    "md/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
+    "done/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
+    "done/「react 进阶」一文吃透 react-hooks 原理.md",
+    "Pasted image 20230815134417.png",
+    "Pasted image 20230815133430.png",
     "done/React Scheduler 原理及手写源码.md",
     "3.md",
     "done/React 之 Scheduler 源码中的三个小知识点，看看你知不知道？.md",
@@ -189,7 +191,6 @@
     "mini-react-docs/异常/React异常捕获机制及源码.md",
     "mini-react-docs/异常/JS异常捕获基础.md",
     "mini-react-docs/合成事件/合成事件源码中浏览器兼容相关的API.md",
-    "mini-react-docs/合成事件/从0到1模拟合成事件.md",
     "mini-react-docs/schedule/scheduler_priority.html",
     "mini-react-docs/schedule/schedule_delay.html",
     "mini-react-docs/schedule/schedule.js",
@@ -201,8 +202,6 @@
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8384ea4c8037ea8e30f600fccb7f46dc_MD5.webp",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/3d11232072b778d66c0307c90dc2e5c0_MD5.webp",
     "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/5ce24faea89d0c4b646ab52d28a55a7a_MD5.webp",
-    "_resources/手写 Promise 教程/e78bf7663c5eae57f812102dc0583f46_MD5.webp",
-    "_resources/前端监控和前端埋点方案设计/198e424559d99162965d913cd76e56ab_MD5.png",
     "未命名.canvas"
   ]
 }
