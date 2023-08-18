@@ -11,8 +11,12 @@
             "id": "87453314856a5bee",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "WuCai/23-07-24-25. Create2  WTF Academy-H8AKHFM.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -58,7 +62,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "WuCai/23-07-24-25. Create2  WTF Academy-H8AKHFM.md"
+              }
             }
           },
           {
@@ -89,6 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "WuCai/23-07-24-25. Create2  WTF Academy-H8AKHFM.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,6 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "WuCai/23-07-24-25. Create2  WTF Academy-H8AKHFM.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -149,6 +157,20 @@
   },
   "active": "87453314856a5bee",
   "lastOpenFiles": [
+    "3.js",
+    "WuCai/23-07-24-24. 在合约中创建新合约  WTF Academy-H8AKH76.md",
+    "done/23-07-24-23. Delegatecall  WTF Academy-H8AKHDE.md",
+    "done/23-07-24-22. Call -H8AKHDM.md",
+    "done/23-07-24-21. 调用其他合约  WTF Academy-H8AKH6M.md",
+    "WuCai/23-07-29-49. 通用可升级代理  WTF Academy-H8AA7BH.md",
+    "WuCai/23-07-29-50. 多签钱包  WTF Academy-H8AA7B9.md",
+    "done/23-07-24-20. 发送ETH  WTF Academy-H8AKHEK.md",
+    "done/23-07-24-19. 接收ETH  WTF Academy-H8AKHCC.md",
+    "done/23-07-24-18. Import  WTF Academy-H8AKHAF.md",
+    "done/23-07-24-17. 库合约  WTF Academy-H8AKHA5.md",
+    "done/23-07-24-16. 函数重载  WTF Academy-H8AKHAB.md",
+    "WuCai/23-07-20-电影院,机场服务新加坡樟宜机场官网-H8A2H7E.md",
+    "WuCai/23-06-16-首页  知乎-H8A65KM.md",
     "done/「react 进阶」一文吃透 react-hooks 原理.md",
     "output/2023-8-15 15-25-48.html",
     "achieve/顾凡及丨脑科学的范式革命.md",
@@ -162,20 +184,8 @@
     "achieve/React 之 Scheduler 源码中的三个小知识点，看看你知不知道？.md",
     "achieve/React Scheduler 原理及手写源码.md",
     "achieve/300 行代码实现 React 的调度器 Scheduler.md",
-    "done/「前端工程化」从 0-1 搭建 react，ts 脚手架（1.2w 字超详细教程）.md",
     "Pasted image 20230815134417.png",
     "Pasted image 20230815133430.png",
-    "done/React Scheduler 原理及手写源码.md",
-    "3.md",
-    "done/React 之 Scheduler 源码中的三个小知识点，看看你知不知道？.md",
-    "done/前端面试查漏补缺 --前端加密.md",
-    "done/React 之最小堆（min heap）.md",
-    "done/一次弄懂 Event Loop（彻底解决此类面试问题）.md",
-    "done/一篇文章总结 redux、react-redux、redux-saga.md",
-    "done/顾凡及丨脑科学的范式革命.md",
-    "md/mini-react/docs/schedule/scheduler 用法详解. md at master · lizuncong/mini-react.md",
-    "md/mini-react/docs/schedule / 哪些 API 适合用于任务调度. md at master · lizuncong/mini-react.md",
-    "md/mini-react/docs/schedule / 手写 scheduler 源码. md at master · lizuncong/mini-react.md",
     "md/mini-react/docs/schedule / 手写 scheduler 源码. md at master · lizuncong",
     "md/mini-react/docs/schedule / 哪些 API 适合用于任务调度. md at master · lizuncong",
     "md/mini-react/docs/schedule/scheduler 用法详解. md at master · lizuncong",
@@ -183,7 +193,6 @@
     "md/mini-react/docs/schedule",
     "md/mini-react/docs",
     "md/mini-react",
-    "mini-react-docs/译文/time_slicing.md",
     "mini-react-docs/schedule/scheduler_priority.html",
     "mini-react-docs/schedule/schedule_delay.html",
     "Pasted image 20230814132849.png",
