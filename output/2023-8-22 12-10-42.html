@@ -1,0 +1,2306 @@
+<h1>23-07-24-16. 函数重载  WTF Academy-H8AKHAB</h1><p>%%begin highlights%%
+重载</p>
+<p>solidity中允许函数进行重载（overloading），
+solidity不允许修饰器（modifier）重载。</p>
+<h2>函数重载</h2>
+<p>函数重载，即名字相同但输入参数类型不同的函数可以同时存在</p>
+<p>举个例子，我们可以定义两个都叫saySomething()的函数，</p>
+<ul>
+<li>一个没有任何参数，输出&quot;Nothing&quot;；</li>
+<li>另一个接收一个string参数，输出这个string。</li>
+</ul>
+<h2>多个匹配的重载函数</h2>
+<p>函数会把输入的实际参数和函数参数的变量类型做匹配。
+如果出现多个匹配的重载函数，则会报错。
+下面这个例子有两个叫f()的函数，一个参数为uint8，另一个为uint256：
+我们调用f(50)，因为50既可以被转换为uint8，也可以被转换为uint256，因此会报错。
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Overloading/">原文</a>
+更新时间: 2023-07-24 15:41</p>
+<h1> </h1>
+<h1>23-07-24-17. 库合约  WTF Academy-H8AKHA5</h1><p>%%begin highlights%%</p>
+<p>库函数是一种特殊的合约，为了提升solidity代码的复用性和减少gas而存在</p>
+<hr>
+<p>库函数和普通合约主要有以下几点不同：
+不能存在状态变量
+不能够继承或被继承
+不能接收以太币
+不可以被销毁</p>
+<h2>String库合约</h2>
+<p>String库合约是将uint256类型转换为相应的string类型的代码库，</p>
+<hr>
+<p>String库合约主要包含两个函数，</p>
+<ul>
+<li>toString()将uint256转为string</li>
+<li>toHexString()将uint256转换为16进制，在转换为string</li>
+</ul>
+<h2>使用库函数</h2>
+<ol>
+<li>利用using for指令使用库合约</li>
+<li>通过库合约名称调用库函数</li>
+</ol>
+<h2>利用using for指令使用库合约</h2>
+<p>指令using A for B;  可用于附加库函数（从库 A）到任何类型（B）</p>
+<pre><code class="language-js">// 利用using for指令
+using Strings for uint256;
+function getString1(uint256 _number) public pure returns(string memory){
+// 库函数会自动添加为uint256型变量的成员
+	return _number.toHexString();
+}
+</code></pre>
+<h2>通过库合约名称调用库函数</h2>
+<pre><code class="language-js">function getString2(uint256 _number) public pure returns(string memory){
+	return Strings.toHexString(_number);
+}
+</code></pre>
+<h2>常用的库函数有：</h2>
+<p>String：将uint256转换为String
+Address：判断某个地址是否为合约地址
+Create2：更安全的使用Create2 EVM opcode
+Arrays：跟数组相关的库函数
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Library/">原文</a>
+更新时间: 2023-07-24 15:43</p>
+<h1> </h1>
+<h1>23-07-24-18. Import  WTF Academy-H8AKHAF</h1><p>%%begin highlights%%
+import用法</p>
+<p>通过源文件相对位置导入 import './Yeye.sol';
+通过npm的目录导入 import '@openzeppelin/contracts/access/Ownable.sol';
+通过全局符号导入特定的合约  import {Yeye} from './Yeye.sol';
+通过源文件网址导入网上的合约
+import 'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Address.sol';</p>
+<hr>
+<p>引用(import)在代码中的位置为：在声明版本号之后，在其余代码之前
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Import/">原文</a>
+更新时间: 2023-07-24 15:46</p>
+<h1> </h1>
+<h1>23-07-24-19. 接收ETH  WTF Academy-H8AKHCC</h1><p>%%begin highlights%%
+Solidity支持两种特殊的回调函数，receive()和fallback()，
+主要在两种情况下被使用：</p>
+<ul>
+<li>接收ETH</li>
+<li>处理合约中不存在的函数调用（代理合约proxy contract）</li>
+</ul>
+<hr>
+<p>在solidity 0.6.x版本之前，语法上只有 fallback() 函数，用来接收用户发送的ETH时调用以及在被调用函数签名没有匹配到时，来调用。
+0.6版本之后，solidity才将 fallback() 函数拆分成 receive() 和 fallback() 两个函数</p>
+<h2>接收ETH函数 receive</h2>
+<p>receive()只用于处理接收ETH, 一个合约最多有一个receive()函数
+当合约接收ETH的时候，receive()会被触发</p>
+<h4>receive声明</h4>
+<p>声明方式与一般函数不一样，不需要function关键字：receive() external payable { ... }
+receive()函数不能有任何的参数，不能返回任何值，必须包含external和payable。</p>
+<h4>receive 最佳实践</h4>
+<p>receive()最好不要执行太多的逻辑</p>
+<ul>
+<li>因为如果别人用send和transfer方法发送ETH的话，gas会限制在2300，receive()太复杂可能会触发Out of Gas报错；</li>
+</ul>
+<p>如果用call就可以自定义gas执行更复杂的逻辑（这三种发送ETH的方法我们之后会讲到）。</p>
+<hr>
+<p>我们可以在receive()里发送一个event
+receive() external payable {
+emit Received(msg.sender, msg.value);
+}</p>
+<hr>
+<p>有些恶意合约，会在receive() 函数（老版本的话，就是 fallback() 函数）嵌入恶意消耗gas的内容或者使得执行故意失败的代码，</p>
+<h2>回退函数 fallback</h2>
+<p>fallback()函数会在调用合约不存在的函数时被触发
+可用于接收ETH，也可以用于代理合约proxy contract</p>
+<h4>fallback 声明</h4>
+<p>fallback()声明时不需要function关键字，必须由external修饰，一般也会用payable修饰，</p>
+<p>fallback() external payable{
+emit fallbackCalled(msg.sender, msg.value, msg.data);
+}</p>
+<h2>receive和fallback的区别</h2>
+<p>合约接收ETH时，
+msg.data为空且存在receive()时，会触发receive()；
+msg.data不为空或不存在receive()时，会触发fallback()，此时fallback()必须为payable。</p>
+<p>receive()和payable fallback()均不存在的时候，向合约直接发送ETH将会报错（你仍可以通过带有payable的函数向合约发送ETH）。</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Fallback/">原文</a>
+更新时间: 2023-07-24 15:49</p>
+<h1> </h1>
+<h1>23-07-24-20. 发送ETH  WTF Academy-H8AKHEK</h1><p>%%begin highlights%%
+Solidity有三种方法向其他合约发送ETH call transfer send</p>
+<p>最佳 call没有gas限制，不会revert，返回值是(bool, data)，.
+次优 transfer有2300 gas限制，但是发送失败会自动revert交易，
+send有2300 gas限制，而且发送失败不会自动revert交易，返回bool，</p>
+<h2>接收ETH合约</h2>
+<p>我们先部署一个接收ETH合约ReceiveETH</p>
+<pre><code class="language-js">contract ReceiveETH {
+	// 收到eth事件，记录amount和gas
+	event Log(uint amount, uint gas);
+	// receive方法，接收eth时被触发
+	receive() external payable{
+		emit Log(msg.value, gasleft());
+	}
+	// 返回合约ETH余额
+	function getBalance() view public returns(uint) {
+		return address(this).balance;
+	}
+}
+</code></pre>
+<h2>发送ETH合约</h2>
+<p>我们将实现三种方法向ReceiveETH合约发送ETH</p>
+<p>在发送ETH合约SendETH中实现payable的构造函数和receive()，让我们能够在部署时和部署后向合约转账</p>
+<pre><code class="language-js">contract SendETH {
+	// 构造函数，payable使得部署的时候可以转eth进去
+	constructor() payable{}
+	// receive方法，接收eth时被触发
+	receive() external payable{}
+}
+
+</code></pre>
+<h3>transfer​</h3>
+<p>用法是： 接收方地址.  transfer(发送ETH数额)。
+transfer()的gas限制是2300，足够用于转账，但对方合约的fallback()或receive()函数不能实现太复杂的逻辑。</p>
+<p>transfer()如果转账失败，会自动revert（回滚交易）。</p>
+<pre><code class="language-js">// 用transfer()发送ETH
+function transferETH(address payable _to, uint256 amount) external payable{
+	_to.transfer(amount);
+}
+</code></pre>
+<h3>send</h3>
+<p>用法是：接收方地址. send(发送ETH数额)。
+send()的gas限制是2300，足够用于转账，但对方合约的fallback()或receive()函数不能实现太复杂的逻辑。
+send()如果转账失败，不会revert。
+send()的返回值是bool，代表着转账成功或失败，需要额外代码处理一下。</p>
+<pre><code class="language-js">// send()发送ETH
+function sendETH(address payable _to, uint256 amount) external payable{
+// 处理下send的返回值，如果失败，revert交易并发送error
+	bool success = _to.send(amount);
+	if(!success){
+	revert SendFailed();
+	}
+}
+</code></pre>
+<h4>call</h4>
+<p>用法是：接收方地址.call{value: 发送ETH数额}(&quot;&quot;)。
+call()没有gas限制，可以支持对方合约fallback()或receive()函数实现复杂逻辑。
+call()如果转账失败，不会revert。
+call()的返回值是(bool, data)，其中bool代表着转账成功或失败，需要额外代码处理一下。</p>
+<pre><code class="language-js">/ call()发送ETH
+function callETH(address payable _to, uint256 amount) external payable{
+	// 处理下call的返回值，如果失败，revert交易并发送error
+	(bool success,) = _to.call{value: amount}(&quot;&quot;);
+	if(!success){
+	revert CallFailed();
+	}
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/SendETH/">原文</a>
+更新时间: 2023-07-24 15:58</p>
+<h1> </h1>
+<h1>23-07-24-21. 调用其他合约  WTF Academy-H8AKH6M</h1><p>%%begin highlights%%</p>
+<h3>调用已部署合约</h3>
+<p>我们可以利用合约的地址和合约代码（或接口）来创建合约的引用：
+_Name(_Address)，其中_Name是合约名，_Address是合约地址。
+然后用合约的引用来调用它的函数：_Name(_Address).f()，其中f()是要调用的函数。</p>
+<h4>传入合约地址</h4>
+<p>我们可以在函数里传入目标合约地址，生成目标合约的引用，然后调用目标函数</p>
+<p>以调用OtherContract合约的setX函数为例，
+我们在新合约中写一个callSetX函数，传入已部署好的OtherContract合约地址_Address和setX的参数x
+复制OtherContract合约的地址，填入callSetX函数的参数中，成功调用后，调用OtherContract合约中的getX验证x变为123</p>
+<h4>传入合约变量​</h4>
+<p>我们可以直接在函数里传入合约的引用，只需要把上面参数的address类型改为目标合约名，比如OtherContract。
+下面例子实现了调用目标合约的getX()函数
+注意该函数参数OtherContract _Address底层类型仍然是address，
+生成的ABI中、调用callGetX时传入的参数都是address类型</p>
+<pre><code class="language-js">function callGetX(OtherContract _Address) external view returns(uint x){
+	x = _Address.getX();
+}
+</code></pre>
+<p>复制OtherContract合约的地址，填入callGetX函数的参数中，调用后成功获取x的值</p>
+<h4>创建合约变量</h4>
+<p>我们可以创建合约变量，然后通过它来调用目标函数</p>
+<pre><code class="language-js">function callGetX2(address _Address) external view returns(uint x){
+	OtherContract oc = OtherContract(_Address);
+	x = oc.getX();
+}
+</code></pre>
+<p>复制OtherContract合约的地址，填入callGetX2函数的参数中，调用后成功获取x的值</p>
+<h4>调用合约并发送ETH​</h4>
+<p>如果目标合约的函数是payable的，那么我们可以通过调用它来给合约转账</p>
+<p>Name(_Address).f{value: _Value}()，其中_Name是合约名，_Address是合约地址，f是目标函数名，_Value是要转的ETH数额（以wei为单位）</p>
+<pre><code class="language-js">function setXTransferETH(address otherContract, uint256 x) payable external{
+	OtherContract(otherContract).setX{value: msg.value}(x);
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/CallContract/">原文</a>
+更新时间: 2023-07-24 16:03</p>
+<h1> </h1>
+<h1>23-07-24-22. Call -H8AKHDM</h1><p>%%begin highlights%%
+call 是address类型的低级成员函数，它用来与其他合约交互
+它的返回值为(bool, data)，分别对应call是否成功以及目标函数的返回值。</p>
+<hr>
+<p>call是solidity官方推荐的通过触发fallback或receive函数发送ETH的方法。</p>
+<hr>
+<p>当我们不知道对方合约的源代码或ABI，就没法生成合约变量；
+这时，我们仍可以通过call调用对方合约的函数。
+不推荐用call来调用另一个合约，因为当你调用不安全合约的函数时，你就把主动权交给了它。
+推荐的方法仍是声明合约变量后调用函数</p>
+<h2>call的使用规则​</h2>
+<p>目标合约地址.call(二进制编码);</p>
+<p>其中二进制编码利用结构化编码函数abi.encodeWithSignature获得：
+abi.encodeWithSignature(&quot;函数签名&quot;, 逗号分隔的具体参数)</p>
+<hr>
+<p>函数签名为&quot;函数名（逗号分隔的参数类型)&quot;。例如abi.encodeWithSignature(&quot;f(uint256,address)&quot;, _x, _addr)。</p>
+<hr>
+<p>call在调用合约时可以指定交易发送的ETH数额和gas：
+目标合约地址.call{value:发送数额, gas:gas数额}(二进制编码);</p>
+<h3>实践：利用call调用目标合约​</h3>
+<p>我们写一个Call合约来调用目标合约函数。
+首先定义一个Response事件，输出call返回的success和data，方便我们观察返回值。</p>
+<p>event Response(bool success, bytes data);</p>
+<h4>调用setX函数</h4>
+<p>我们定义callSetX函数来调用目标合约的setX()，转入msg.value数额的ETH，并释放Response事件输出success和data：</p>
+<pre><code class="language-js">function callSetX(address payable _addr, uint256 x) public payable {
+	// call setX()，同时可以发送ETH
+	(bool success, bytes memory data) = _addr.call{value: msg.value}(
+	abi.encodeWithSignature(&quot;setX(uint256)&quot;, x)
+	);
+	emit Response(success, data); //释放事件
+}
+</code></pre>
+<p>接下来我们调用callSetX把状态变量_x改为5，参数为OtherContract地址和5，由于目标函数setX()没有返回值，因此Response事件输出的data为0x，也就是空。</p>
+<h5>调用getX函数</h5>
+<p>下面我们调用getX()函数，它将返回目标合约_x的值，类型为uint256。
+我们可以利用abi.decode来解码call的返回值data，并读出数值。</p>
+<pre><code class="language-js">function callGetX(address _addr) external returns(uint256){
+	// call getX()
+	(bool success, bytes memory data) = _addr.call(
+	abi.encodeWithSignature(&quot;getX()&quot;)
+	);
+	emit Response(success, data); //释放事件
+	return abi.decode(data, (uint256));
+}
+</code></pre>
+<h4>调用不存在的函数</h4>
+<p>如果我们给call输入的函数不存在于目标合约，那么目标合约的fallback函数会被触发。
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Call/">原文</a>
+更新时间: 2023-07-24 16:08</p>
+<h1> </h1>
+<h1>23-07-24-23. Delegatecall  WTF Academy-H8AKHDE</h1><p>%%begin highlights%%
+<img src="https://images.mirror-media.xyz/publication-images/VgMR533pA8WYtE5Lr65mQ.png?height=698&amp;width=1860" alt=""></p>
+<p>delegatecall与call类似，是solidity中地址类型的低级成员函数
+delegate中是委托/代表的意思，一个富商把它的资产（状态变量）都交给一个VC代理（目标合约的函数）来打理。执行的是VC的函数，但是改变的是富商的状态。</p>
+<hr>
+<p>当用户A通过合约B来call合约C的时候，</p>
+<ul>
+<li>执行的是合约C的函数，语境(Context，可以理解为包含变量和状态的环境)也是合约C的，并且如果函数改变一些状态变量，产生的效果会作用于合约C的变量上。</li>
+<li>msg.sender是B的地址，</li>
+</ul>
+<p>而当用户A通过合约B来delegatecall合约C的时候，</p>
+<ul>
+<li>执行的是合约C的函数，但是语境仍是合约B的，如果函数改变一些状态变量，产生的效果会作用于合约B的变量上。</li>
+<li>msg.sender是A的地址，</li>
+</ul>
+<h2>delegatecall语法</h2>
+<p>delegatecall语法和call类似，也是：目标合约地址.delegatecall(二进制编码);</p>
+<p>delegatecall和call不一样，delegatecall在调用合约时可以指定交易发送的gas，但不能指定发送的ETH数额</p>
+<hr>
+<p>注意：delegatecall有安全隐患，使用时要保证当前合约和目标合约的状态变量存储结构相同，并且目标合约安全，不然会造成资产损失。</p>
+<h2>什么情况下会用到delegatecall?​</h2>
+<p>代理合约（Proxy Contract）：将智能合约的存储合约和逻辑合约分开：</p>
+<ul>
+<li>所有相关的变量，逻辑合约的地址存储在代理合约（Proxy Contract）</li>
+<li>所有函数存在逻辑合约（Logic Contract）里，通过delegatecall执行。
+当升级时，只需要将代理合约指向新的逻辑合约即可。</li>
+</ul>
+<p>EIP-2535 Diamonds（钻石）：钻石是一个支持构建可在生产中扩展的模块化智能合约系统的标准。钻石是具有多个实施合约的代理合约
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>[[星标]] #五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Delegatecall/">原文</a>
+更新时间: 2023-07-24 16:12</p>
+<h1> </h1>
+<h1>23-07-24-24. 在合约中创建新合约  WTF Academy-H8AKH76</h1><p>%%begin highlights%%
+以太坊链上，用户（外部账户，EOA）可以创建智能合约，智能合约同样也可以创建新的智能合约
+去中心化交易所uniswap就是利用工厂合约（Factory）创建了无数个币对合约（Pair）</p>
+<h2>合约中创建新合约</h2>
+<p>有两种方法可以在合约中创建新合约，create和create2，</p>
+<p>create的用法很简单，就是new一个合约，并传入新合约构造函数所需的参数：
+Contract x = new Contract{value: _value}(params)</p>
+<ul>
+<li>Contract是要创建的合约名</li>
+<li>x是合约对象（地址</li>
+<li>如果构造函数是payable，可以创建时转入_value数量的ETH，params是新合约构造函数的参数</li>
+</ul>
+<h2>极简Uniswap​</h2>
+<p>Uniswap V2核心合约中包含两个合约</p>
+<ul>
+<li>UniswapV2Pair: 币对合约，用于管理币对地址、流动性、买卖。</li>
+<li>UniswapV2Factory: 工厂合约，用于创建新的币对，并管理币对地址。</li>
+</ul>
+<h2>UniswapV2Pai合约​</h2>
+<p>Pair合约包含3个状态变量
+address public factory; // 工厂合约地址
+address public token0; // 代币1
+address public token1; // 代币2</p>
+<p>UniswapV2Pai构造函数constructor在部署时将factory赋值为工厂合约地址
+initialize函数会在Pair合约创建的时候被工厂合约调用一次，将token0和token1更新为币对中两种代币的地址。</p>
+<hr>
+<p>提问：为什么uniswap不在constructor中将token0和token1地址更新好？
+答：因为uniswap使用的是create2创建合约，限制构造函数不能有参数。
+当使用create时，Pair合约允许构造函数有参数，可以在constructor中将token0和token1地址更新好</p>
+<h3>PairFactory​合约</h3>
+<p>工厂合约（PairFactory）有两个状态变量</p>
+<ul>
+<li>mapping(address =&gt; mapping(address =&gt; address)) public getPair; // 两个代币地址到币对地址的map，方便根据代币找到币对地址</li>
+<li>address[] public allPairs; // 保存所有币对地址的数组，存储了所有代币地址</li>
+</ul>
+<p>只有一个createPair函数</p>
+<ul>
+<li>根据输入的两个代币地址tokenA和tokenB来创建新的Pair合约。</li>
+</ul>
+<p>Pair pair = new Pair();就是创建合约的代码，非常简单
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Create/">原文</a>
+更新时间: 2023-07-24 16:16</p>
+<h1> </h1>
+<h1>23-07-24-25. Create2  WTF Academy-H8AKHFM</h1><p>%%begin highlights%%
+CREATE2 操作码使我们在智能合约部署在以太坊网络之前就能预测合约的地址
+Uniswap创建Pair合约用的就是CREATE2而不是CREATE</p>
+<h2>CREATE如何计算地址​</h2>
+<p>智能合约可以由其他合约和普通账户利用CREATE操作码创建</p>
+<p>在这两种情况下，新合约的地址都以相同的方式计算：
+新地址 = hash(创建者地址, nonce)</p>
+<ul>
+<li>创建者的地址(通常为部署的钱包地址或者合约地址)</li>
+<li>nonce(该地址发送交易的总数,对于合约账户是创建的合约总数,每创建一个合约nonce+1))</li>
+</ul>
+<p>创建者地址不会变，但nonce可能会随时间而改变，因此用CREATE创建的合约地址不好预测。</p>
+<h2>CREATE2如何计算地址​</h2>
+<p>CREATE2的目的是为了让合约地址独立于未来的事件。
+不管未来区块链上发生了什么，你都可以把合约部署在事先计算好的地址上</p>
+<p>CREATE2创建的合约地址由4个部分决定：
+新地址 = hash(&quot;0xFF&quot;,创建者地址, salt, bytecode)</p>
+<ul>
+<li>0xFF：一个常数，避免和CREATE冲突</li>
+<li>创建者地址</li>
+<li>salt（盐）：一个创建者给定的数值</li>
+<li>待部署合约的字节码（bytecode）</li>
+</ul>
+<hr>
+<p>CREATE2 确保，如果创建者使用 CREATE2 和提供的 salt 部署给定的合约bytecode，它将存储在 新地址 中。</p>
+<h3>如何使用CREATE2​</h3>
+<p>CREATE2的用法和之前讲的Create类似，只不过要多传一个salt参数：
+Contract x = new Contract{salt: _salt, value: _value}(params)</p>
+<p>如果构造函数是payable，可以创建时转入_value数量的ETH，params是新合约构造函数的参数。</p>
+<h3>极简Uniswap2​</h3>
+<p>PairFactory2​
+PairFactory2合约只有一个createPair2函数，使用CREATE2根据输入的两个代币地址tokenA和tokenB来创建新的Pair合约。其中</p>
+<p>Pair pair = new Pair{salt: salt}();</p>
+<p>利用CREATE2创建合约的代码，非常简单，而salt为token1和token2的hash：</p>
+<p>bytes32 salt = keccak256(abi.encodePacked(token0, token1));</p>
+<p>事先计算Pair地址</p>
+<pre><code class="language-js">// 提前计算pair合约地址
+function calculateAddr(address tokenA, address tokenB) public view returns(address predictedAddress){
+require(tokenA != tokenB, 'IDENTICAL_ADDRESSES'); //避免tokenA和tokenB相同产生的冲突
+// 计算用tokenA和tokenB地址计算salt
+(address token0, address token1) = tokenA &lt; tokenB ? (tokenA, tokenB) : (tokenB, tokenA); //将tokenA和tokenB按大小排序
+bytes32 salt = keccak256(abi.encodePacked(token0, token1));
+// 计算合约地址方法 hash()
+predictedAddress = address(uint160(uint(keccak256(abi.encodePacked(
+bytes1(0xff),
+address(this),
+salt,
+keccak256(type(Pair).creationCode)
+)))));
+}
+</code></pre>
+<p>我们写了一个calculateAddr函数来事先计算tokenA和tokenB将会生成的Pair地址。
+通过它，我们可以验证我们事先计算的地址和实际地址是否相同。</p>
+<h2>create2的实际应用场景</h2>
+<p>交易所为新用户预留创建钱包合约地址。
+由 CREATE2 驱动的 factory 合约，在uniswapV2中交易对的创建是在 Factory中调用create2完成。这样做的好处是:</p>
+<ul>
+<li>它可以得到一个确定的pair地址, 使得 Router中就可以通过 (tokenA, tokenB) 计算出pair地址, 不再需要执行一次 Factory.getPair(tokenA, tokenB) 的跨合约调用。
+%%end highlights%%</li>
+</ul>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Create2/">原文</a>
+更新时间: 2023-07-24 16:21</p>
+<h1> </h1>
+<h1>23-07-24-26. 删除合约  WTF Academy-H8AKHFF</h1><p>%%begin highlights%%
+selfdestruct命令可以用来删除智能合约，并将该合约剩余ETH转到指定地址
+selfdestruct是为了应对合约出错的极端情况而设计的
+selfdestruct是智能合约的紧急按钮，销毁合约并将剩余ETH转移到指定账户。
+当著名的The DAO攻击发生时，以太坊的创始人们一定后悔过没有在合约里加入selfdestruct来停止黑客的攻击吧。</p>
+<h2>如何使用selfdestruct​</h2>
+<p>selfdestruct(_addr)； 其中_addr是接收合约中剩余ETH的地址。</p>
+<p>function getBalance() external view returns(uint balance){
+balance = address(this).balance;
+}</p>
+<p>部署好合约后，我们向DeleteContract合约转入1 ETH。
+这时，getBalance()会返回1 ETH，value变量是10。
+当我们调用deleteContract()函数，合约将自毁，所有变量都清空，此时value变为默认值0，getBalance()也返回空值。</p>
+<h2>selfdestruct注意事项​</h2>
+<p>对外提供合约销毁接口时，最好设置为只有合约所有者可以调用，可以使用函数修饰符onlyOwner进行函数声明。
+当合约被销毁后与智能合约的交互也能成功，并且返回0。</p>
+<h2>selfdestruct安全问题</h2>
+<p>当合约中有selfdestruct功能时常常会带来安全问题和信任问题，合约中的Selfdestruct功能会为攻击者打开攻击向量
+(例如使用selfdestruct向一个合约频繁转入token进行攻击，这将大大节省了GAS的费用，虽然很少人这么做)
+此功能还会降低用户对合约的信心。</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/DeleteContract/">原文</a>
+更新时间: 2023-07-24 16:24</p>
+<h1> </h1>
+<h1>23-07-24-27. ABI编码解码  WTF Academy-H8AKH9H</h1><p>%%begin highlights%%
+ABI (Application Binary Interface，应用二进制接口)是与以太坊智能合约交互的标准
+数据基于他们的类型编码；并且由于编码后不包含类型信息，解码时需要注明它们的类型</p>
+<h2>ABI编码解码函数</h2>
+<p>ABI编码有4个函数：abi.encode, abi.encodePacked, abi.encodeWithSignature, abi.encodeWithSelector</p>
+<p>ABI解码有1个函数：abi.decode，用于解码abi.encode的数据</p>
+<h2>ABI编码​</h2>
+<p>编码有4个变量，他们的类型分别是uint256, address, string, uint256[2]</p>
+<hr>
+<h3>abi.encode​</h3>
+<p>将给定参数利用ABI规则编码。
+如果你要和合约交互，你要用的就是abi.encode.他将每个参数填充为32字节的数据，并拼接在一起</p>
+<h3>abi.encode​用法</h3>
+<p>result = abi.encode(x, addr, name, array);
+由于abi.encode将每个数据都填充为32字节，中间有很多0</p>
+<h3>abi.encodePacked</h3>
+<p>将给定参数根据其所需最低空间编码。它类似 abi.encode，但是会把其中填充的很多0省略
+当你想省空间，并且不与合约交互的时候，可以使用abi.encodePacked，例如算一些数据的hash时。</p>
+<h3>abi.encodeWithSignature</h3>
+<pre><code class="language-js">result = 
+abi.encodeWithSignature(&quot;foo(uint256,address,string,uint256[2])&quot;, x, addr, name, array);
+</code></pre>
+<p>等同于在abi.encode编码结果前加上了4字节的函数选择器说明。
+说明: 函数选择器就是通过函数名和参数进行签名处理(Keccak–Sha3)来标识函数，可以用于不同合约之间的函数调用</p>
+<h3>abi.encodeWithSelector​</h3>
+<p>与abi.encodeWithSignature功能类似，只不过第一个参数为函数选择器，为函数签名Keccak哈希的前4个字节</p>
+<pre><code class="language-js">result =
+abi.encodeWithSelector(bytes4(keccak256(&quot;foo(uint256,address,string,uint256[2])&quot;)), x, addr, name, array);
+</code></pre>
+<h3>abi.decode​</h3>
+<p>abi.decode用于解码abi.encode生成的二进制编码，将它还原成原本的参数。</p>
+<p>(dx, daddr, dname, darray) = abi.decode(data, (uint, address, string, uint[2]));</p>
+<h2>ABI的使用场景​</h2>
+<p>在合约开发中，ABI常配合call来实现对合约的底层调用。</p>
+<pre><code class="language-js">bytes4 selector = contract.getValue.selector;
+bytes memory data = abi.encodeWithSelector(selector, _x);
+
+(bool success, bytes memory returnedData) = address(contract).staticcall(data);
+require(success);
+return abi.decode(returnedData, (uint256));
+</code></pre>
+<h3>ethers.js中常用ABI实现合约的导入和函数调用。</h3>
+<pre><code class="language-js">const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+/*
+* Call the getAllWaves method from your Smart Contract
+*/
+const waves = await wavePortalContract.getAllWaves();
+</code></pre>
+<h2>调用不开源合约</h2>
+<p>对不开源合约进行反编译后，某些函数无法查到函数签名，可通过ABI进行调用。</p>
+<p>0x533ba33a() 是一个反编译后显示的函数，只有函数编码后的结果，并且无法查到函数签名
+这种情况无法通过构造interface接口或contract来进行调用</p>
+<p>可以通过ABI函数选择器来调用</p>
+<pre><code class="language-js">bytes memory data = abi.encodeWithSelector(bytes4(0x533ba33a));
+(bool success, bytes memory returnedData) = address(contract).staticcall(data);
+require(success);
+return abi.decode(returnedData, (uint256));
+</code></pre>
+<p>在以太坊中，数据必须编码成字节码才能和智能合约交互
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/ABIEncode/">原文</a>
+更新时间: 2023-07-24 16:29</p>
+<h1> </h1>
+<h1>23-07-24-28. Hash  WTF Academy-H8AK2H2</h1><p>%%begin highlights%%</p>
+<h3>Hash的性质​</h3>
+<h2>灵敏性：输入的消息改变一点对它的哈希改变很大
+均一性：每个哈希值被取到的概率应该基本相等。
+抗碰撞性
+抗碰撞性：</h2>
+<p>弱抗碰撞性：给定一个消息x，找到另一个消息x'使得hash(x) = hash(x')是困难的。
+强抗碰撞性：找到任意x和x'，使得hash(x) = hash(x')是困难的。</p>
+<h2>Keccak256</h2>
+<p>Keccak256函数是solidity中最常用的哈希函数，用法非常简单：
+哈希 = keccak256(数据);</p>
+<h2>Keccak256和sha3​</h2>
+<p>sha3由keccak标准化而来，在很多场合下Keccak和SHA3是同义词，
+但在2015年8月SHA3最终完成标准化时，NIST调整了填充算法。所以SHA3就和keccak计算的结果不一样，这点在实际开发中要注意。</p>
+<p>以太坊在开发的时候sha3还在标准化中，所以采用了keccak，所以Ethereum和Solidity智能合约代码中的SHA3是指Keccak256，而不是标准的NIST-SHA3，为了避免混淆，直接在合约代码中写成Keccak256是最清晰的。</p>
+<h2>生成数据唯一标识</h2>
+<p>比如我们有几个不同类型的数据：uint，string，address，我们可以先用abi.encodePacked方法将他们打包编码，然后再用keccak256来生成唯一标识
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Hash/">原文</a>
+更新时间: 2023-07-24 16:31</p>
+<h1> </h1>
+<h1>23-07-24-29. 选择器  WTF Academy-H8AK2H7</h1><p>%%begin highlights%%</p>
+<h2>调用智能合约的本质</h2>
+<p>当我们调用智能合约时，本质上是向目标合约发送了一段calldata
+在remix中发送一次交易后，可以在详细信息中看见input即为此次交易的calldata</p>
+<h2>calldata</h2>
+<p>发送的calldata中前4个字节是selector（函数选择器）,后面字节为输入的参数
+calldata就是告诉智能合约，我要调用哪个函数，以及参数是什么</p>
+<h2>msg.data</h2>
+<p>msg.data是solidity中的一个全局变量，值为完整的calldata（调用函数时传入的数据）。</p>
+<pre><code class="language-js">event Log(bytes data);
+function mint(address to) external{
+	emit Log(msg.data);
+}
+</code></pre>
+<p>当参数为0x2c44b726ADF1963cA47Af88B284C06f30380fC78时，
+输出的calldata为0x6a6278420000000000000000000000002c44b726adf1963ca47af88b284c06f30380fc78</p>
+<ul>
+<li>前4个字节为函数选择器selector：0x6a627842</li>
+<li>后面32个字节为输入的参数：
+0x0000000000000000000000002c44b726adf1963ca47af88b284c06f30380fc78</li>
+</ul>
+<h3>method id</h3>
+<p>method id定义为函数签名的Keccak哈希后的前4个字节，当selector与method id相匹配时，即表示调用该函数</p>
+<h2>selector和函数签名</h2>
+<h3>函数签名是什么？</h3>
+<p>函数签名，为&quot;函数名（逗号分隔的参数类型)&quot;
+在同一个智能合约中，不同的函数有不同的函数签名，因此我们可以通过函数签名来确定要调用哪个函数</p>
+<h3>验证函数的method id</h3>
+<p>注意，在函数签名中，uint和int要写为uint256和int256
+验证mint函数的method id是否为0x6a627842</p>
+<pre><code class="language-js">function mintSelector() external pure returns(bytes4 mSelector){
+	return bytes4(keccak256(&quot;mint(address)&quot;));
+}
+</code></pre>
+<p>结果正是0x6a627842：</p>
+<h2>使用selector调用目标函数</h2>
+<p>调用mint函数，我只需要利用abi.encodeWithSelector将mint函数的method id作为selector和参数打包编码，传给call函数：</p>
+<pre><code class="language-js">(bool success, bytes memory data) = address(this).call(abi.encodeWithSelector(0x6a627842, &quot;0x2c44b726ADF1963cA47Af88B284C06f30380fC78&quot;));
+return(success, data);
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-advanced/Selector/">原文</a>
+更新时间: 2023-07-24 16:36</p>
+<h1> </h1>
+<h1>23-07-24-30. Try Catch  WTF Academy-H8AK223</h1><p>%%begin highlights%%</p>
+<h2>try-catch</h2>
+<p>在solidity中，try-catch只能被用于external函数或创建合约时constructor的调用。</p>
+<ul>
+<li>创建合约时的constructor被视为external函数</li>
+</ul>
+<h2>try-catch基本语法如下：</h2>
+<pre><code class="language-js">try externalContract.f() {
+// call成功的情况下 运行一些代码
+} catch {
+// call失败的情况下 运行一些代码
+}
+</code></pre>
+<p>可以使用this.f()来替代externalContract.f()，</p>
+<ul>
+<li>this.f()也被视作为外部调用，但不可在构造函数中使用，因为此时合约还未创建。</li>
+</ul>
+<h2>try 有返回值</h2>
+<p>如果调用的函数有返回值，那么必须在try之后声明returns(returnType val)，并且在try模块中可以使用返回的变量；
+如果是创建合约，那么返回值是新创建的合约变量。</p>
+<p>try externalContract.f() returns(returnType val)</p>
+<h2>catch模块支持捕获特殊的异常原因：</h2>
+<p>catch Error(string memory reason) {
+// 捕获失败的 revert() 和 require()
+}
+catch (bytes memory reason) {
+// 捕获失败的 assert()
+}</p>
+<h2>处理合约创建时的异常</h2>
+<p>用try-catch来处理合约创建时的异常。只需要把try模块改写为OnlyEven合约的创建就行：
+try new OnlyEven(a) returns(OnlyEven _even)</p>
+<h2>try-catch处理异常注意点：</h2>
+<ul>
+<li>只能用于外部合约调用和合约创建。</li>
+<li>如果try执行成功，返回变量必须声明，并且与返回的变量类型相同。
+%%end highlights%%</li>
+</ul>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>[[星标]] #五彩插件 <a href="https://www.wtf.academy/solidity-advanced/TryCatch/">原文</a>
+更新时间: 2023-07-24 16:42</p>
+<h1> </h1>
+<h1>23-07-28-31. ERC20  WTF Academy-H8AAABE</h1><p>%%begin highlights%%
+ERC20是以太坊上的代币标准，来自2015年11月V神参与的EIP20。它实现了代币转账的基本逻辑</p>
+<h2>IERC20</h2>
+<p>IERC20是ERC20代币标准的接口合约，规定了ERC20代币需要实现的函数和事件
+因为有了规范后，就存在所有的ERC20代币都通用的函数名称，输入参数，输出参数</p>
+<p>由此，函数就分为内部和外部两个内容，一个重点是实现，另一个是对外接口，约定共同数据。 这就是为什么需要ERC20.sol和IERC20.sol两个文件实现一个合约</p>
+<h2>IERC20的事件和函数</h2>
+<p>IERC20定义了2个事件：Transfer事件和Approval事件，分别在转账和授权时被释放
+IERC20定义了6个函数，提供了转移代币的基本功能，并允许代币获得批准，以便其他链上第三方使用</p>
+<h2>ERC20状态变量</h2>
+<p>账户余额，授权额度和代币信息balanceOf, allowance和totalSupply为public类型，会自动生成一个同名getter函数
+name, symbol, decimals则对应代币的名称，代号和小数位数</p>
+<ul>
+<li>mapping(address =&gt; uint256) public override balanceOf;</li>
+<li>mapping(address =&gt; mapping(address =&gt; uint256)) public override allowance;</li>
+</ul>
+<hr>
+<p>注意：用override修饰public变量，会重写继承自父合约的与变量同名的getter函数，</p>
+<h2>ERC20函数</h2>
+<p>构造函数：初始化代币名称、代号
+transferFrom()函数：实现IERC20中的transferFrom函数，授权转账逻辑。
+transfer()函数：实现IERC20中的transfer函数，代币转账逻辑。</p>
+<pre><code class="language-js">balanceOf[msg.sender] -= amount;
+balanceOf[recipient] += amount;
+</code></pre>
+<p>approve()函数：实现IERC20中的approve函数，代币授权逻辑。</p>
+<ul>
+<li>被授权方spender可以支配授权方的amount数量的代币。</li>
+<li>spender可以是EOA账户，也可以是合约账户</li>
+<li>allowance msg.sender][spender] = amount;</li>
+</ul>
+<h2>ERC20Mint 函数</h2>
+<p>mint()函数：铸造代币函数，不在IERC20标准中。
+为了教程方便，任何人可以铸造任意数量的代币，实际应用中会加权限管理，只有owner可以铸造代币</p>
+<pre><code class="language-js">function mint(uint amount) external {
+	balanceOf[msg.sender] += amount;
+	totalSupply += amount;
+	emit Transfer(address(0), msg.sender, amount);
+}
+
+</code></pre>
+<p>有了ERC20标准后，在ETH链上发行代币变得非常简单。</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/ERC20/">原文</a>
+更新时间: 2023-07-28 14:04</p>
+<h1> </h1>
+<h1>23-07-28-32. 代币水龙头  WTF Academy-H8AAAKB</h1><p>%%begin highlights%%
+代币水龙头就是让用户免费领代币的网站/应用
+实现一个简版的ERC20水龙头，逻辑非常简单：</p>
+<ul>
+<li>我们将一些ERC20代币转到水龙头合约里，用户可以通过合约的requestToken()函数来领取100单位的代币，每个地址只能领一次</li>
+</ul>
+<h2>代币水龙头</h2>
+<p>状态变量</p>
+<ul>
+<li>amountAllowed设定每次能领取代币数量（默认为100，不是一百枚，因为代币有小数位数）。</li>
+<li>tokenContract记录发放的ERC20代币合约地址。</li>
+<li>requestedAddress记录领取过代币的地址。</li>
+</ul>
+<p>事件​</p>
+<ul>
+<li>SendToken事件，记录了每次领取代币的地址和数量，在requestTokens()函数被调用时释放。</li>
+<li>event SendToken(address indexed Receiver, uint256 indexed Amount);</li>
+</ul>
+<p>函数​</p>
+<ul>
+<li>requestTokens()函数，用户调用它可以领取ERC20代币。</li>
+</ul>
+<pre><code class="language-js">function requestTokens() external {
+	require(requestedAddress[msg.sender] == false, &quot;Can't Request Multiple Times!&quot;); // 每个地址只能领一次
+	IERC20 token = IERC20(tokenContract); // 创建IERC20合约对象
+	require(token.balanceOf(address(this)) &gt;= amountAllowed, &quot;Faucet Empty!&quot;); // 水龙头空了
+	token.transfer(msg.sender, amountAllowed); // 发送token
+	requestedAddress[msg.sender] = true; // 记录领取地址
+	emit SendToken(msg.sender, amountAllowed); // 释放SendToken事件
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/Faucet/">原文</a>
+更新时间: 2023-07-28 14:07</p>
+<h1> </h1>
+<h1>23-07-28-33. 空投合约  WTF Academy-H8AAAK9</h1><p>%%begin highlights%%</p>
+<h2>空投 Airdrop​</h2>
+<p>空投是币圈中一种营销策略，项目方将代币免费发放给特定用户群体。为了拿到空投资格，用户通常需要完成一些简单的任务，如测试产品、分享新闻、介绍朋友等。项目方通过空投可以获得种子用户，而用户可以获得一笔财富，两全其美。</p>
+<h2>空投代币合约​</h2>
+<p>Airdrop空投合约逻辑非常简单：利用循环，一笔交易将ERC20代币发送给多个地址</p>
+<h2>空投代币合约函数getSum</h2>
+<p>getSum()函数：返回uint数组的和。</p>
+<pre><code class="language-js">function getSum(uint256[] calldata _arr) public pure returns(uint sum)
+{
+	for(uint i = 0; i &lt; _arr.length; i++)
+	sum = sum + _arr[i];
+}
+</code></pre>
+<h2>空投代币合约函数multiTransferToken</h2>
+<p>multiTransferToken()函数：发送ERC20代币空投，包含3个参数：</p>
+<ul>
+<li>_token：代币合约地址（address类型）</li>
+<li>_addresses：接收空投的用户地址数组（address[]类型）</li>
+<li>_amounts：空投数量数组，对应_addresses里每个地址的数量（uint[]类型）</li>
+</ul>
+<pre><code class="language-js">IERC20 token = IERC20(_token); // 声明IERC合约变量
+uint _amountSum = getSum(_amounts); // 计算空投代币总量
+
+for (uint8 i; i &lt; _addresses.length; i++) {
+	token.transferFrom(msg.sender, _addresses[i], _amounts[i]);
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/Airdrop/">原文</a>
+更新时间: 2023-07-28 14:09</p>
+<h1> </h1>
+<h1>23-07-28-34. ERC721  WTF Academy-H8AAAA6</h1><p>%%begin highlights%%
+BTC和ETH这类代币都属于同质化代币，矿工挖出的第1枚BTC与第10000枚BTC是等价的。
+世界中很多物品是不同质的，其中包括房产、古董、虚拟艺术品等等，这类物品无法用同质化代币抽象
+以太坊EIP721提出了ERC721标准，来抽象非同质化的物品</p>
+<h2>EIP与ERC</h2>
+<p>EIP全称 Ethereum Imporvement Proposals(以太坊改进建议), 是以太坊开发者社区提出的改进建议,
+EIP可以是 Ethereum 生态中任意领域的改进, 比如新特性、ERC</p>
+<p>ERC全称 Ethereum Request For Comment (以太坊意见征求稿), 用以记录以太坊上应用级的各种开发标准和协议。</p>
+<p>最终结论：EIP包含ERC。</p>
+<h2>ERC165</h2>
+<p>通过ERC165标准，智能合约可以声明它支持的接口，供其他合约检查
+ERC165就是检查一个智能合约是不是支持了ERC721，ERC1155的接口</p>
+<p>IERC165接口合约只声明了一个supportsInterface函数，输入要查询的interfaceId接口id，若合约实现了该接口id，则返回true</p>
+<pre><code class="language-js">function supportsInterface(bytes4 interfaceId) external pure override returns (bool)
+{
+	return
+	interfaceId == type(IERC721).interfaceId ||
+	interfaceId == type(IERC165).interfaceId;
+}
+</code></pre>
+<h2>IERC721</h2>
+<p>IERC721是ERC721标准的接口合约，规定了ERC721要实现的基本函数.它利用tokenId来表示特定的非同质化代币，授权或转账都要明确tokenId；
+而ERC20只需要明确转账的数额即可。</p>
+<p>interface IERC721 is IERC165</p>
+<h2>IERC721事件​</h2>
+<p>IERC721包含3个事件，其中Transfer和Approval事件在ERC20中也有
+ApprovalForAll事件：在批量授权时释放，记录批量授权的发出地址owner，被授权地址operator和授权与否的approved。</p>
+<h2>IERC721函数​</h2>
+<p>getApproved：查询tokenId被批准给了哪个地址。
+setApprovalForAll：将自己持有的该系列NFT批量授权给某个地址operator。
+isApprovedForAll：查询某地址的NFT是否批量授权给了另一个operator地址。
+safeTransferFrom：安全转账的重载函数，参数里面包含了data。</p>
+<p>IERC721Receiver
+如果一个合约没有实现ERC721的相关函数，转入的NFT就进了黑洞，永远转不出来了。</p>
+<h2>IERC721Receiver</h2>
+<p>为了防止误转账，ERC721实现了safeTransferFrom()安全转账函数，目标合约必须实现了IERC721Receiver接口才能接收ERC721代币，不然会revert。</p>
+<p>IERC721Receiver接口只包含一个onERC721Received()函数。</p>
+<p>/ ERC721接收者接口：合约必须实现这个接口来通过安全转账接收ERC721</p>
+<pre><code class="language-js">interface IERC721Receiver {
+	function onERC721Received(
+	address operator,
+	address from,
+	uint tokenId,
+	bytes calldata data
+	) external returns (bytes4);
+}
+</code></pre>
+<h2>onERC721Received()</h2>
+<p>看下ERC721利用_checkOnERC721Received来确保目标合约实现了onERC721Received()函数（返回onERC721Received的selector）</p>
+<pre><code class="language-js">function _checkOnERC721Received(
+address from,
+address to,
+uint tokenId,
+bytes memory _data
+) private returns (bool) {
+	if (to.isContract()) {
+		return
+			IERC721Receiver(to).onERC721Received(msg.sender,from,tokenId,_data) 
+			== IERC721Receiver.onERC721Received.selector;
+	} else {
+		return true;
+	}
+}
+</code></pre>
+<h2>IERC721Metadata​</h2>
+<p>IERC721Metadata是ERC721的拓展接口，实现了3个查询metadata元数据的常用函数：
+name()：返回代币名称。
+symbol()：返回代币代号。
+tokenURI()：通过tokenId查询metadata的链接url，ERC721特有的函数。</p>
+<h2>ERC721主合约​</h2>
+<p>ERC721主合约实现了IERC721，IERC165和IERC721Metadata定义的所有功能，包含4个状态变量和17个函数。</p>
+<p>pragma solidity ^0.8.4;
+import &quot;./IERC165.sol&quot;;
+import &quot;./IERC721.sol&quot;;
+import &quot;./IERC721Receiver.sol&quot;;
+import &quot;./IERC721Metadata.sol&quot;;
+import &quot;./Address.sol&quot;;
+import &quot;./String.sol&quot;;
+contract ERC721 is IERC721, IERC721Metadata{
+using Address for address; // 使用Address库，用isContract来判断地址是否为合约
+using Strings for uint256; // 使用String库，
+// Token名称
+string public override name;
+// Token代号
+string public override symbol;
+// tokenId 到 owner address 的持有人映射
+mapping(uint =&gt; address) private _owners;
+// address 到 持仓数量 的持仓量映射
+mapping(address =&gt; uint) private _balances;
+// tokenID 到 授权地址 的授权映射
+mapping(uint =&gt; address) private _tokenApprovals;
+//  owner地址。到operator地址 的批量授权映射
+mapping(address =&gt; mapping(address =&gt; bool)) private _operatorApprovals;
+/**</p>
+<ul>
+<li>构造函数，初始化<code>name</code> 和<code>symbol</code> .
+<em>/
+constructor(string memory name_, string memory symbol_) {
+name = name_;
+symbol = symbol_;
+}
+// 实现IERC165接口supportsInterface
+function supportsInterface(bytes4 interfaceId)
+external
+pure
+override
+returns (bool)
+{
+return
+interfaceId == type(IERC721).interfaceId ||
+interfaceId == type(IERC165).interfaceId ||
+interfaceId == type(IERC721Metadata).interfaceId;
+}
+// 实现IERC721的balanceOf，利用_balances变量查询owner地址的balance。
+function balanceOf(address owner) external view override returns (uint) {
+require(owner != address(0), &quot;owner = zero address&quot;);
+return _balances[owner];
+}
+// 实现IERC721的ownerOf，利用_owners变量查询tokenId的owner。
+function ownerOf(uint tokenId) public view override returns (address owner) {
+owner = _owners[tokenId];
+require(owner != address(0), &quot;token doesn't exist&quot;);
+}
+// 实现IERC721的isApprovedForAll，利用_operatorApprovals变量查询owner地址是否将所持NFT批量授权给了operator地址。
+function isApprovedForAll(address owner, address operator)
+external
+view
+override
+returns (bool)
+{
+return _operatorApprovals[owner][operator];
+}
+// 实现IERC721的setApprovalForAll，将持有代币全部授权给operator地址。调用_setApprovalForAll函数。
+function setApprovalForAll(address operator, bool approved) external override {
+_operatorApprovals[msg.sender][operator] = approved;
+emit ApprovalForAll(msg.sender, operator, approved);
+}
+// 实现IERC721的getApproved，利用_tokenApprovals变量查询tokenId的授权地址。
+function getApproved(uint tokenId) external view override returns (address) {
+require(_owners[tokenId] != address(0), &quot;token doesn't exist&quot;);
+return _tokenApprovals[tokenId];
+}
+// 授权函数。通过调整_tokenApprovals来，授权 to 地址操作 tokenId，同时释放Approval事件。
+function _approve(
+address owner,
+address to,
+uint tokenId
+) private {
+_tokenApprovals[tokenId] = to;
+emit Approval(owner, to, tokenId);
+}
+// 实现IERC721的approve，将tokenId授权给 to 地址。条件：to不是owner，且msg.sender是owner或授权地址。调用_approve函数。
+function approve(address to, uint tokenId) external override {
+address owner = _owners[tokenId];
+require(
+msg.sender == owner || _operatorApprovals[owner][msg.sender],
+&quot;not owner nor approved for all&quot;
+);
+_approve(owner, to, tokenId);
+}
+// 查询 spender地址是否可以使用tokenId（他是owner或被授权地址）。
+function _isApprovedOrOwner(
+address owner,
+address spender,
+uint tokenId
+) private view returns (bool) {
+return (spender == owner ||
+_tokenApprovals[tokenId] == spender ||
+_operatorApprovals[owner][spender]);
+}
+/</em></li>
+<li>转账函数。通过调整_balances和_owner变量将 tokenId 从 from 转账给 to，同时释放Transfer事件。</li>
+<li>条件:</li>
+<li>
+<ol>
+<li>tokenId 被 from 拥有</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>to 不是0地址
+<em>/
+function _transfer(
+address owner,
+address from,
+address to,
+uint tokenId
+) private {
+require(from == owner, &quot;not owner&quot;);
+require(to != address(0), &quot;transfer to the zero address&quot;);
+_approve(owner, address(0), tokenId);
+_balances[from] -= 1;
+_balances[to] += 1;
+_owners[tokenId] = to;
+emit Transfer(from, to, tokenId);
+}
+// 实现IERC721的transferFrom，非安全转账，不建议使用。调用_transfer函数
+function transferFrom(
+address from,
+address to,
+uint tokenId
+) external override {
+address owner = ownerOf(tokenId);
+require(
+_isApprovedOrOwner(owner, msg.sender, tokenId),
+&quot;not owner nor approved&quot;
+);
+_transfer(owner, from, to, tokenId);
+}
+/</em>*</li>
+</ol>
+</li>
+<li>安全转账，安全地将 tokenId 代币从 from 转移到 to，会检查合约接收者是否了解 ERC721 协议，以防止代币被永久锁定。调用了_transfer函数和_checkOnERC721Received函数。条件：</li>
+<li>from 不能是0地址.</li>
+<li>to 不能是0地址.</li>
+<li>tokenId 代币必须存在，并且被 from拥有.</li>
+<li>如果 to 是智能合约, 他必须支持 IERC721Receiver-onERC721Received.
+<em>/
+function _safeTransfer(
+address owner,
+address from,
+address to,
+uint tokenId,
+bytes memory _data
+) private {
+_transfer(owner, from, to, tokenId);
+require(_checkOnERC721Received(from, to, tokenId, _data), &quot;not ERC721Receiver&quot;);
+}
+/</em>*</li>
+<li>实现IERC721的safeTransferFrom，安全转账，调用了_safeTransfer函数。
+<em>/
+function safeTransferFrom(
+address from,
+address to,
+uint tokenId,
+bytes memory _data
+) public override {
+address owner = ownerOf(tokenId);
+require(
+_isApprovedOrOwner(owner, msg.sender, tokenId),
+&quot;not owner nor approved&quot;
+);
+_safeTransfer(owner, from, to, tokenId, _data);
+}
+// safeTransferFrom重载函数
+function safeTransferFrom(
+address from,
+address to,
+uint tokenId
+) external override {
+safeTransferFrom(from, to, tokenId, &quot;&quot;);
+}
+/</em>*</li>
+<li>铸造函数。通过调整_balances和_owners变量来铸造tokenId并转账给 to，同时释放Transfer事件。铸造函数。通过调整_balances和_owners变量来铸造tokenId并转账给 to，同时释放Transfer事件。</li>
+<li>这个mint函数所有人都能调用，实际使用需要开发人员重写，加上一些条件。</li>
+<li>条件:</li>
+<li>
+<ol>
+<li>tokenId尚不存在。</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>to不是0地址.
+<em>/
+function _mint(address to, uint tokenId) internal virtual {
+require(to != address(0), &quot;mint to zero address&quot;);
+require(_owners[tokenId] == address(0), &quot;token already minted&quot;);
+_balances[to] += 1;
+_owners[tokenId] = to;
+emit Transfer(address(0), to, tokenId);
+}
+// 销毁函数，通过调整_balances和_owners变量来销毁tokenId，同时释放Transfer事件。条件：tokenId存在。
+function _burn(uint tokenId) internal virtual {
+address owner = ownerOf(tokenId);
+require(msg.sender == owner, &quot;not owner of token&quot;);
+_approve(owner, address(0), tokenId);
+_balances[owner] -= 1;
+delete _owners[tokenId];
+emit Transfer(owner, address(0), tokenId);
+}
+// _checkOnERC721Received：函数，用于在 to 为合约的时候调用IERC721Receiver-onERC721Received, 以防 tokenId 被不小心转入黑洞。
+function _checkOnERC721Received(
+address from,
+address to,
+uint tokenId,
+bytes memory _data
+) private returns (bool) {
+if (to.isContract()) {
+return
+IERC721Receiver(to).onERC721Received(
+msg.sender,
+from,
+tokenId,
+_data
+) == IERC721Receiver.onERC721Received.selector;
+} else {
+return true;
+}
+}
+/</em>*</li>
+</ol>
+</li>
+<li>实现IERC721Metadata的tokenURI函数，查询metadata。
+<em>/
+function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+require(_owners[tokenId] != address(0), &quot;Token Not Exist&quot;);
+string memory baseURI = _baseURI();
+return bytes(baseURI).length &gt; 0 ? string(abi.encodePacked(baseURI, tokenId.toString())) : &quot;&quot;;
+}
+/</em>*</li>
+<li>计算{tokenURI}的BaseURI，tokenURI就是把baseURI和tokenId拼接在一起，需要开发重写。</li>
+<li>BAYC的baseURI为ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/
+*/
+function _baseURI() internal view virtual returns (string memory) {
+return &quot;&quot;;
+}
+}</li>
+</ul>
+<h2>写一个免费铸造的APE</h2>
+<p>利用ERC721来写一个免费铸造的WTF APE，总量设置为10000
+只需要重写一下mint()和baseURI()函数即可</p>
+<p>contract WTFApe is ERC721</p>
+<p>//BAYC的baseURI为ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/
+function _baseURI() internal pure override returns (string memory) {
+return &quot;ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/&quot;;
+}</p>
+<p>function mint(address to, uint tokenId) external {
+require(tokenId &gt;= 0 &amp;&amp; tokenId &lt; MAX_APES, &quot;tokenId out of range&quot;);
+_mint(to, tokenId);
+}</p>
+<h2>发行NFT</h2>
+<p>有了ERC721标准后，在ETH链上发行NFT变得非常简单。</p>
+<h2>ERC165与ERC721详解​</h2>
+<p>为了防止NFT被转到一个没有能力操作NFT的合约中去,目标必须正确实现ERC721TokenReceiver接口</p>
+<pre><code class="language-js">interface ERC721TokenReceiver {
+	function onERC721Received(address _operator, address _from, uint256 _tokenId, bytes _data) external returns(bytes4);
+}
+</code></pre>
+<h2>编程语言中的接口</h2>
+<p>只要是和接口沾边的，都在透露着一种这样的意味：接口是某些行为的集合(在solidity中更甚，接口完全等价于函数选择器的集合)</p>
+<p>一个类型只要实现了某个接口，就表明该类型拥有这样的一种功能。
+因此，只要某个contract类型实现了上述的ERC721TokenReceiver接口(更具体而言就是实现了onERC721Received这个函数),该contract类型就对外表明了自己拥有管理NFT的能力</p>
+<p>ERC721标准在执行safeTransferFrom的时候会检查目标合约是否实现了onERC721Received函数,这是一种利用ERC165思想进行的操作。</p>
+<h2>究竟什么是ERC165呢?</h2>
+<p>ERC165是一种对外表明自己实现了哪些接口的技术标准。就像上面所说的，实现了一个接口就表明合约拥有种特殊能力</p>
+<p>以ERC721合约为例，当外部对某个合约进行检查其是否是ERC721时，怎么做？ 。按照这个说法，检查步骤应该是首先检查该合约是否实现了ERC165, 再检查该合约实现的其他特定接口。</p>
+<p>此时该特定接口是IERC721.
+IERC721的是ERC721的基本接口(为什么说基本，是因为还有其他的诸如ERC721Metadata ERC721Enumerable 这样的拓展</p>
+<pre><code class="language-js">0x80ac58cd= bytes4(keccak256(ERC721.Transfer.selector) ^ keccak256(ERC721.Approval.selector) ^ ··· ^keccak256(ERC721.isApprovedForAll.selector))
+</code></pre>
+<p>，这是ERC165规定的计算方式</p>
+<h2>erc165 计算实例</h2>
+<p>类似的，能够计算出ERC165本身的接口(它的接口里只有一个 function supportsInterface(bytes4 interfaceID) external view returns (bool); 函数，对其进行bytes4(keccak256(supportsInterface.selector)) 得到0x01ffc9a7</p>
+<pre><code class="language-js">///  Note: the ERC-165 identifier for this interface is 0x5b5e139f.
+interface ERC721Metadata /* is ERC721 */ {
+function name() external view returns (string _name);
+function symbol() external view returns (string _symbol);
+function tokenURI(uint256 _tokenId) external view returns (string); 
+// 这个很重要，前端展示的小图片的链接都是这个函数返回的
+}
+</code></pre>
+<p>这个0x5b5e139f 的计算就是:</p>
+<p>bytes4(keccak256(ERC721Metadata.name.selector)^keccak256(ERC721Metadata.symbol.selector)^keccak256(ERC721Metadata.tokenURI.selector))</p>
+<p>ERC721.sol是怎么完成这些ERC165要求的特性的呢？</p>
+<pre><code class="language-js">function supportsInterface(bytes4 interfaceId) public view virtual returns (bool) {
+return
+interfaceId == 0x01ffc9a7 || // ERC165 Interface ID for ERC165
+interfaceId == 0x80ac58cd || // ERC165 Interface ID for ERC721
+interfaceId == 0x5b5e139f; // ERC165 Interface ID for ERC721Metadata
+}
+</code></pre>
+<p>由于该函数是virtual的。因此该合约的使用者可以继承该合约，然后继续实现ERC721Enumerable 接口。实现完里面的什么totalSupply 啊之类的函数之后，把继承的supportsInterface重实现为</p>
+<pre><code class="language-js">function supportsInterface(bytes4 interfaceId) public view virtual returns (bool) {
+return
+interfaceId == 0x01ffc9a7 || // ERC165 Interface ID for ERC165
+interfaceId == 0x80ac58cd || // ERC165 Interface ID for ERC721
+interfaceId == 0x5b5e139f || // ERC165 Interface ID for ERC721Metadata
+interfaceId == 0x780e9d63;   // ERC165 Interface ID for ERC721Enumerable
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/ERC721/">原文</a>
+更新时间: 2023-07-28 14:30</p>
+<h1> </h1>
+<h1>23-07-28-35. 荷兰拍卖  WTF Academy-H8AAAD9</h1><p>%%begin highlights%%</p>
+<h2>荷兰拍卖</h2>
+<p>荷兰拍卖（Dutch Auction）是一种特殊的拍卖形式。 亦称“减价拍卖”，
+指拍卖标的的竞价由高到低依次递减直到第一个竞买人应价（达到或超过底价）时击槌成交的一种拍卖</p>
+<p>项目方非常喜欢这种拍卖形式，主要有两个原因
+荷兰拍卖的价格由最高慢慢下降，能让项目方获得最大的收入。
+拍卖持续较长时间（通常6小时以上），可以避免gas war。</p>
+<h2>DutchAuction合约</h2>
+<p>DucthAuction合约继承了之前介绍的ERC721和Ownable合约</p>
+<h3>DutchAuction状态变量​</h3>
+<p>一共有9个状态变量，其中有6个和拍卖相关
+COLLECTOIN_SIZE：NFT总量。
+AUCTION_START_PRICE：荷兰拍卖起拍价，也是最高价。
+AUCTION_END_PRICE：荷兰拍卖结束价，也是最低价/地板价。
+AUCTION_TIME：拍卖持续时长。
+AUCTION_DROP_INTERVAL：每过多久时间，价格衰减一次。
+auctionStartTime：拍卖起始时间（区块链时间戳，block.timestamp）。</p>
+<h3>DutchAuction函数</h3>
+<p>设定拍卖起始时间：我们在构造函数中会声明当前区块时间为起始时间，项目方也可以通过setAuctionStartTime()函数来调整：</p>
+<h3>DutchAuction获取拍卖实时价格：</h3>
+<p>getAuctionPrice()函数通过当前区块时间以及拍卖相关的状态变量来计算实时拍卖价格。</p>
+<p>当block.timestamp小于起始时间，价格为最高价AUCTION_START_PRICE；
+当block.timestamp大于结束时间，价格为最低价AUCTION_END_PRICE；
+当block.timestamp处于两者之间时，则计算出当前的衰减价格</p>
+<pre><code class="language-js">else {
+	uint256 steps = (block.timestamp - auctionStartTime) /AUCTION_DROP_INTERVAL;
+	return AUCTION_START_PRICE - (steps * AUCTION_DROP_PER_STEP);
+</code></pre>
+<h3>DutchAuction 用户拍卖并铸造NFT：</h3>
+<p>用户通过调用auctionMint()函数，支付ETH参加荷兰拍卖并铸造NFT
+首先检查拍卖是否开始/铸造是否超出NFT总量
+接着，合约通过getAuctionPrice()和铸造数量计算拍卖成本，并检查用户支付的ETH是否足够
+如果足够，则将NFT铸造给用户，并退回超额的ETH</p>
+<pre><code class="language-js">// 拍卖mint函数
+function auctionMint(uint256 quantity) external payable{
+    uint256 _saleStartTime = uint256(auctionStartTime); // 建立local变量，减少gas花费
+    require(
+        _saleStartTime != 0 &amp;&amp; block.timestamp &gt;= _saleStartTime,
+        &quot;sale has not started yet&quot;
+    ); // 检查是否设置起拍时间，拍卖是否开始
+    require(
+        totalSupply() + quantity &lt;= COLLECTOIN_SIZE,
+        &quot;not enough remaining reserved for auction to support desired mint amount&quot;
+    ); // 检查是否超过NFT上限
+    uint256 totalCost = getAuctionPrice() * quantity; // 计算mint成本
+    require(msg.value &gt;= totalCost, &quot;Need to send more ETH.&quot;); // 检查用户是否支付足够ETH
+    // Mint NFT
+    for (uint256 i = 0; i &lt; quantity; i++) {
+    uint256 mintIndex = totalSupply();
+        _mint(msg.sender, mintIndex);
+        _addTokenToAllTokensEnumeration(mintIndex);
+    }
+    // 多余ETH退款
+    if (msg.value &gt; totalCost) {
+        payable(msg.sender).transfer(msg.value - totalCost); //注意一下这里是否有重入的风险
+    }
+}
+</code></pre>
+<p>目方取出筹集的ETH：项目方可以通过withdrawMoney()函数提走拍卖筹集的ETH
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/DutchAuction/">原文</a>
+更新时间: 2023-07-28 14:39</p>
+<h1> </h1>
+<h1>23-07-28-36. 默克尔树  WTF Academy-H8AAAFA</h1><p>%%begin highlights%%
+<img src="https://www.wtf.academy/assets/images/36-3-103c247bca0ed9063cf8d27e06f0530f.png" alt=""></p>
+<p>Merkle Tree，也叫默克尔树或哈希树，是区块链的底层加密技术
+Merkle Tree是一种自下而上构建的加密树，每个叶子是对应数据的哈希，而每个非叶子为它的2个子节点的哈希</p>
+<h2>Merkle Tree验证</h2>
+<p>对于有N个叶子结点的Merkle Tree，在已知root根值的情况下，验证某个数据是否有效（属于Merkle Tree叶子结点）只需要log(N)个数据（也叫proof），非常高效
+如果数据有误，或者给的proof错误，则无法还原出root根植</p>
+<h2>如何生成Merkle Tree​</h2>
+<p>我们可以利用网页或者Javascript库merkletreejs来生成Merkle Tree。
+这里我们用网页来生成4个地址作为叶子结点的Merkle Tree。叶子结点输入
+在菜单里选上Keccak-256, hashLeaves和sortPairs选项，然后点击Compute，Merkle Tree就生成好了。Merkle Tree展开为：</p>
+<h2>Merkle Proof验证</h2>
+<p>我们利用MerkleProof库来验证</p>
+<pre><code class="language-js">library MerkleProof {
+    /**
+    * @dev 当通过`proof`和`leaf`重建出的`root`与给定的`root`相等时，返回`true`，数据有效。
+    * 在重建时，叶子节点对和元素对都是排序过的。
+    */
+    function verify(
+        bytes32[] memory proof,
+        bytes32 root,
+        bytes32 leaf
+    ) internal pure returns(bool) {
+        return processProof(proof, leaf) == root;
+    }
+    /**
+    * @dev Returns 通过Merkle树用`leaf`和`proof`计算出`root`. 当重建出的`root`和给定的`root`相同时，`proof`才是有效的。
+    * 在重建时，叶子节点对和元素对都是排序过的。
+    */
+    function processProof(bytes32[] memory proof, bytes32 leaf) internal pure returns(bytes32) {
+    bytes32 computedHash = leaf;
+        for (uint256 i = 0; i &lt; proof.length; i++) {
+            computedHash = _hashPair(computedHash, proof[i]);
+        }
+        return computedHash;
+    }
+    // Sorted Pair Hash
+    function _hashPair(bytes32 a, bytes32 b) private pure returns(bytes32) {
+        return a &lt; b ? keccak256(abi.encodePacked(a, b)) : keccak256(abi.encodePacked(b, a));
+    }
+}
+</code></pre>
+<h2>MerkleProof库函数</h2>
+<p>verify()函数：利用proof数来验证leaf是否属于根为root的Merkle Tree中，如果是，则返回true</p>
+<ul>
+<li>verify()调用了processProof()函数。
+processProof()函数：利用proof和leaf依次计算出Merkle Tree的root。它调用了_hashPair()函数
+_hashPair()函数：用keccak256()函数计算非根节点对应的两个子节点的哈希（排序后）</li>
+</ul>
+<p>我们将地址0，root和对应的proof输入到verify()函数，将返回ture
+因为地址0在根为root的Merkle Tree中，且proof正确。如果改变了其中任意一个值，都将返回false。</p>
+<h2>利用Merkle Tree发放NFT白名单</h2>
+<p>一份拥有800个地址的白名单，更新一次所需的gas fee很容易超过1个ETH。
+而由于Merkle Tree验证时，leaf和proof可以存在后端，链上仅需存储一个root的值，非常节省gas，项目方经常用它来发放白名单</p>
+<pre><code class="language-js">function _verify(bytes32 leaf, bytes32[] memory proof)
+internal view returns (bool)
+{
+	return MerkleProof.verify(proof, root, leaf);
+}
+</code></pre>
+<h2>Merkle Tree发放NFT白名单合约</h2>
+<p>root存储了Merkle Tree的根，部署合约的时候赋值。
+mintedAddress是一个mapping，记录了已经mint过的地址，某地址mint成功后进行赋值。</p>
+<p>合约中共有4个函数：</p>
+<ul>
+<li>构造函数：初始化NFT的名称和代号，还有Merkle Tree的root。</li>
+<li>_leaf()函数：计算了Merkle Tree的叶子地址的哈希。</li>
+<li>_verify()函数：调用了MerkleProof库的verify()函数，进行Merkle Tree验证。
+mint()函数：利用白名单铸造NFT。</li>
+<li>参数为白名单地址account，铸造的tokenId，和proof。首先验证address是否在白名单中，验证通过则把序号为tokenId的NFT铸造给该地址，并将它记录到mintedAddress。此过程中调用了_leaf()和_verify()函数。</li>
+</ul>
+<p>实际使用中，复杂的Merkle Tree可以利用javascript库merkletreejs来生成和管理，链上只需要存储一个根值，非常节省gas</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/MerkleTree/">原文</a>
+更新时间: 2023-07-28 14:50</p>
+<h1> </h1>
+<h1>23-07-28-37. 数字签名  WTF Academy-H8AAA9B</h1><p>%%begin highlights%%</p>
+<h2>ECDSA合约​</h2>
+<p>ECDSA是以太坊中的数字签名，我们可以利用它发放NFT白名单。</p>
+<h2>数字签名​</h2>
+<p>可以证明你拥有私钥的同时不需要对外公布私钥
+以太坊使用的数字签名算法叫双椭圆曲线数字签名算法（ECDSA），基于双椭圆曲线“私钥-公钥”对的数字签名算法</p>
+<h2>数字签名​的作用：</h2>
+<p>身份认证：证明签名方是私钥的持有人。
+不可否认：发送方不能否认发送过这个消息。
+完整性：消息在传输过程中无法被修改。</p>
+<h2>ECDSA合约​</h2>
+<p>ECDSA标准中包含两个部分</p>
+<p>签名者利用私钥（隐私的）对消息（公开的）创建签名（公开的）。
+其他人使用消息（公开的）和签名（公开的）恢复签名者的公钥（公开的）并验证签名</p>
+<p>私钥: 0x227dbb8586117d55284e26620bc76534dfbd2394be34cf4a09cb775d593b6f2b
+公钥: 0xe16C1623c1AA7D919cd2241d8b36d9E79C1Be2A2
+消息: 0x1bf2c0ce4546651a1a2feb457b39d891a6b83931cc2454434f39961345ac378c
+以太坊签名消息: 0xb42ca4636f721c7a331923e764587e98ec577cea1a185f60dfcc14dbb9bd900b
+签名: 0x390d704d7ab732ce034203599ee93dd5d3cb0d4d1d7c600ac11726659489773d559b12d220f99f41d17651b0c1c6a669d346a397f8541760d6b32a5725378b241c</p>
+<h2>创建签名顺序</h2>
+<ol>
+<li>打包消息</li>
+<li>计算以太坊签名消息</li>
+<li>利用钱包或者web3.py签名</li>
+</ol>
+<h3>打包消息</h3>
+<p>在以太坊的ECDSA标准中，被签名的消息是一组数据的keccak256哈希，为bytes32类型
+我们可以把任何想要签名的内容利用abi.encodePacked()函数打包，然后用keccak256()计算哈希，作为消息</p>
+<h3>计算以太坊签名消息</h3>
+<p>消息可以是能被执行的交易，也可以是其他任何形式</p>
+<p>为了避免用户误签了恶意交易，EIP191提倡在消息前加上&quot;\x19Ethereum Signed Message:\n32&quot;字符，并再做一次keccak256哈希，作为以太坊签名消息</p>
+<h3>利用钱包签名</h3>
+<p>在获取到需要签名的消息之后，我们需要使用metamask钱包进行签名
+metamask的personal_sign方法会自动把消息转换为以太坊签名消息，然后发起签名。所以我们只需要输入消息和签名者钱包account即可</p>
+<p>注意的是输入的签名者钱包account需要和metamask当前连接的account一致才能使用。</p>
+<p>打开浏览器的console页面</p>
+<p>在连接钱包的状态下（如连接opensea，否则会出现错误），依次输入以下指令进行签名</p>
+<pre><code class="language-js">ethereum.enable()
+account = &quot;0xe16C1623c1AA7D919cd2241d8b36d9E79C1Be2A2&quot;
+hash = &quot;0x1bf2c0ce4546651a1a2feb457b39d891a6b83931cc2454434f39961345ac378c&quot;
+ethereum.request({method: &quot;personal_sign&quot;, params: [account, hash]})
+</code></pre>
+<h3>利用web3.py签名：</h3>
+<p>批量调用中更倾向于使用代码进行签名</p>
+<pre><code class="language-js">from web3 import Web3, HTTPProvider
+from eth_account.messages import encode_defunct
+private_key = &quot;0x227dbb8586117d55284e26620bc76534dfbd2394be34cf4a09cb775d593b6f2b&quot;
+address = &quot;0x5B38Da6a701c568545dCfcB03FcB875f56beddC4&quot;
+rpc = 'https://rpc.ankr.com/eth'
+w3 = Web3(HTTPProvider(rpc))
+#打包信息
+msg = Web3.solidityKeccak(['address','uint256'], [address,0])
+print(f&quot;消息：{msg.hex()}&quot;)
+#构造可签名信息
+message = encode_defunct(hexstr=msg.hex())
+#签名
+signed_message = w3.eth.account.sign_message(message, private_key=private_key)
+print(f&quot;签名：{signed_message['signature'].hex()}&quot;)
+</code></pre>
+<h2>验证签名</h2>
+<p>为了验证签名，验证者需要拥有消息，签名，和签名使用的公钥</p>
+<ol>
+<li>
+<p>通过签名和消息恢复公钥</p>
+</li>
+<li>
+<p>比对恢复的公钥与签名者公钥_signer是否相等：</p>
+</li>
+<li>
+<p>通过签名和消息恢复公钥
+签名是由数学算法生成的。这里我们使用的是rsv签名，签名中包含r, s, v三个值的信息
+可以通过r, s, v及以太坊签名消息来求得公钥</p>
+</li>
+<li>
+<p>对比公钥并验证签名：
+接下来，我们只需要比对恢复的公钥与签名者公钥_signer是否相等：</p>
+</li>
+</ol>
+<h2>利用签名发放白名单​</h2>
+<p>NFT项目方可以利用ECDSA的这个特性发放白名单。由于签名是链下的，不需要gas，因此这种白名单发放模式比Merkle Tree模式还要经济</p>
+<p>项目方利用项目方账户把白名单发放地址签名（可以加上地址可以铸造的tokenId）。
+然后mint的时候利用ECDSA检验签名是否有效，如果有效，则给他mint</p>
+<h2>签名发放白名单合约</h2>
+<p>中共有两个状态变量：
+signer：公钥，项目方签名地址。
+mintedAddress是一个mapping，记录了已经mint过的地址</p>
+<p>合约中共有4个函数：
+构造函数：初始化NFT的名称和代号，还有ECDSA的签名地址signer。
+mint()函数接受地址address，tokenId和_signature三个参数，验证签名是否有效：</p>
+<ul>
+<li>如果有效，则把tokenId的NFT铸造给address地址，并将它记录到mintedAddress。</li>
+<li>它调用了getMessageHash()，ECDSA.toEthSignedMessageHash()和verify()函数。</li>
+</ul>
+<p>getMessageHash()函数将mint地址（address类型）和tokenId（uint256类型）拼成消息。
+verify()函数调用了ECDSA库的verify()函数，来进行ECDSA签名验证。</p>
+<h2>利用签名发放白名单​优缺点</h2>
+<p>由于签名是链下的，不需要gas，因此这种白名单发放模式比Merkle Tree模式还要经济；
+但由于用户要请求中心化接口去获取签名，不可避免的牺牲了一部分去中心化；
+额外还有一个好处是白名单可以动态变化，而不是提前写死在合约里面了，因为项目方的中心化后端接口可以接受任何新地址的请求并给予白名单签名。
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/Signature/">原文</a>
+更新时间: 2023-07-28 14:58</p>
+<h1> </h1>
+<h1>23-07-28-38. NFT交易所  WTF Academy-H8AACHD</h1><p>%%begin highlights%%
+利用智能合约搭建一个零手续费的去中心化NFT交易所：。</p>
+<h2>NFTSwap 交易所设计逻辑​</h2>
+<p>卖家：出售NFT的一方，可以挂单list、撤单revoke、修改价格update。
+买家：购买NFT的一方，可以购买purchase。
+订单：卖家发布的NFT链上订单，一个系列的同一tokenId最多存在一个订单，其中包含挂单价格price和持有人owner信息。当一个订单交易完成或被撤单后，其中信息清零</p>
+<h3>订单事件</h3>
+<p>订单应该有4个事件，对应挂单list、撤单revoke、修改价格update、购买purchase这四个行为</p>
+<h2>NFTSwap合约</h2>
+<p>NFT订单抽象为Order结构体，包含挂单价格price和持有人owner信息
+nftList映射记录了订单是对应的NFT系列（合约地址）和tokenId信息。</p>
+<ul>
+<li>mapping(address =&gt; mapping(uint256 =&gt; Order)) public nftList;</li>
+</ul>
+<h2>NFTSwap接收ETH</h2>
+<p>在NFTSwap中，用户使用ETH购买NFT。因此，合约需要实现fallback()函数来接收ETH
+fallback() external payable{}
+ERC721的安全转账函数会检查接收合约是否实现了onERC721Received()函数，并返回正确的选择器selector。
+用户下单之后，需要将NFT发送给NFTSwap合约。因此NFTSwap继承IERC721Receiver接口，并实现onERC721Received()函数：</p>
+<h2>NFTSwap交易函数</h2>
+<p>挂单list()：卖家创建NFT并创建订单，并释放List事件</p>
+<ul>
+<li>参数为NFT合约地址_nftAddr，NFT对应的_tokenId，挂单价格_price（注意：单位是wei</li>
+</ul>
+<p>撤单revoke()：卖家撤回挂单，并释放Revoke事件。</p>
+<ul>
+<li>参数为NFT合约地址_nftAddr，NFT对应的_tokenId。成功后，NFT会从NFTSwap合约转回卖家</li>
+</ul>
+<p>修改价格update()：卖家修改NFT订单价格，并释放Update事件。</p>
+<ul>
+<li>参数为NFT合约地址_nftAddr，NFT对应的_tokenId，更新后的挂单价格_newPrice（注意：单位是wei）
+购买purchase：买家支付ETH购买挂单的NFT，并释放Purchase事件。</li>
+<li>参数为NFT合约地址_nftAddr，NFT对应的_tokenId。成功后，ETH将转给卖家，NFT将从NFTSwap合约转给买家。
+%%end highlights%%</li>
+</ul>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/NFTSwap/">原文</a>
+更新时间: 2023-07-28 15:06</p>
+<h1> </h1>
+<h1>23-07-28-39. 链上随机数  WTF Academy-H8AACMH</h1><p>%%begin highlights%%
+很多以太坊上的应用都需要用到随机数，例如NFT随机抽取tokenId、抽盲盒
+由于以太坊上所有数据都是公开透明（public）且确定性（deterministic）的，它没法像其他编程语言一样给开发者提供生成随机数的方法</p>
+<h2>链上随机数生成​</h2>
+<p>将一些链上的全局变量作为种子，利用keccak256()哈希函数来获取伪随机数
+注意:，这个方法并不安全</p>
+<p>首先，block.number，msg.sender和blockhash(block.timestamp-1)这些变量都是公开的，使用者可以预测出用这些种子生成出的随机数，并挑出他们想要的随机数执行合约。
+其次，矿工可以操纵blockhash和block.timestamp，使得生成的随机数符合他的利益</p>
+<h2>链下随机数生成​</h2>
+<p>在链下生成随机数，然后通过预言机把随机数上传到链上
+Chainlink提供VRF（可验证随机函数）服务，链上开发者可以支付LINK代币来获取随机数</p>
+<h2>Chainlink VRF使用步骤</h2>
+<p>用一个简单的合约介绍使用Chainlink VRF的步骤。
+RandomNumberConsumer合约可以向VRF请求一个随机数，并存储在状态变量randomResult中。</p>
+<ol>
+<li>用户合约继承VRFConsumerBase并转入LINK代币</li>
+<li>用户合约申请随机数</li>
+<li>Chainlink节点链下生成随机数和数字签名，并发送给VRF合约</li>
+<li>VRF合约验证签名有效性</li>
+<li>用户合约接收并使用随机数</li>
+</ol>
+<hr>
+<ol>
+<li>用户合约继承VRFConsumerBase并转入LINK代币
+为了使用VRF获取随机数，合约需要继承VRFConsumerBase合约，并在构造函数中初始化VRF Coordinator地址，LINK代币地址，唯一标识符Key Hash，和使用费用fee</li>
+</ol>
+<p>我们使用Rinkeby测试网。部署好合约后，用户需要向合约转一些LINK代币</p>
+<hr>
+<ol start="2">
+<li>用户合约申请随机数</li>
+</ol>
+<p>用户可以调用从VRFConsumerBase合约继承来的requestRandomness()申请随机数，并返回申请标识符requestId。这个申请会传递给VRF合约。</p>
+<pre><code class="language-js">function getRandomNumber() public returns (bytes32 requestId) {
+	// 合约中需要有足够的LINK
+	require(LINK.balanceOf(address(this)) &gt;= fee, &quot;Not enough LINK - fill contract with faucet&quot;);
+	return requestRandomness(keyHash, fee);
+}
+
+</code></pre>
+<hr>
+<ol start="5">
+<li>用户合约接收并使用随机数
+在VRF合约验证签名有效之后，会自动调用用户合约的回退函数fulfillRandomness()，将链下生成的随机数发送过来。
+用户要把消耗随机数的逻辑写在这里。</li>
+</ol>
+<hr>
+<p>注意: 用户申请随机数时调用的requestRandomness()和VRF合约返回随机数时调用的回退函数fulfillRandomness()是两笔交易，调用者分别是用户合约和VRF合约，后者比前者晚几分钟（不同链延迟不一样）</p>
+<h2>tokenId随机铸造的NFT​</h2>
+<p>状态变量​
+NFT相关</p>
+<ul>
+<li>totalSupply：NFT总供给。</li>
+<li>ids：数组，用于计算可供mint的tokenId，见pickRandomUniqueId()函数。</li>
+<li>mintCount：已经mint的数量。</li>
+</ul>
+<p>Chainlink VRF相关</p>
+<ul>
+<li>keyHash:VRF唯一标识符。</li>
+<li>fee：VRF手续费。</li>
+<li>requestToSender：记录申请VRF用于铸造的用户地址。</li>
+<li>初始化继承的VRFConsumerBase和ERC721合约的相关变量</li>
+</ul>
+<p>除了构造函数以外，合约里还定义了5个函数</p>
+<ul>
+<li>pickRandomUniqueId()：输入随机数，获取可供mint的tokenId。</li>
+<li>getRandomOnchain()：获取链上随机数（不安全）。</li>
+<li>mintRandomOnchain()：利用链上随机数铸造NFT，调用了getRandomOnchain()和pickRandomUniqueId()。</li>
+<li>mintRandomVRF()：申请Chainlink VRF用于铸造随机数。由于使用随机数铸造的逻辑在回调函数fulfillRandomness()，而回调函数的调用者是VRF合约，而非铸造NFT的用户，这里必须利用requestToSender状态变量记录VRF申请标识符对应的用户地址。</li>
+<li>fulfillRandomness()：VRF的回调函数，由VRF合约在验证随机数真实性后自动调用，用返回的链下随机数铸造NFT。
+%%end highlights%%</li>
+</ul>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/Random/#%E9%93%BE%E4%B8%8A%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90">原文</a>
+更新时间: 2023-07-28 15:20</p>
+<h1> </h1>
+<h1>23-07-29-40. ERC1155  WTF Academy-H8AAD7K</h1><p>%%begin highlights%%</p>
+<h2>Why EIP1155</h2>
+<p>不论是ERC20还是ERC721标准，每个合约都对应一个独立的代币
+假设我们要在以太坊上打造一个类似《魔兽世界》的大型游戏，这需要我们对每个装备都部署一个合约。上千种装备就要部署和管理上千个合约
+以太坊EIP1155提出了一个多代币标准ERC1155，允许一个合约包含多个同质化和非同质化代币</p>
+<h2>ERC different</h2>
+<p>ERC1155与之前介绍的非同质化代币标准ERC721类似
+在ERC721中，每个代币都有一个tokenId作为唯一标识，每个tokenId只对应一个代币
+在ERC1155中，每一种代币都有一个id作为唯一标识，每个id对应一种代币</p>
+<p>每种代币都有一个网址uri来存储它的元数据，类似ERC721的tokenURI
+function uri(uint256 id) external view returns (string memory);</p>
+<h2>区分同质化还是非同质化</h2>
+<p>怎么区分ERC1155中的某类代币是同质化还是非同质化代币呢</p>
+<p>如果某个id对应的代币总量为1，那么它就是非同质化代币，类似ERC721；如果某个id对应的代币总量大于1，那么他就是同质化代币，因为这些代币都分享同一个id，类似ERC20</p>
+<h2>IERC1155接口合约</h2>
+<p>包含4个事件和6个函数
+因为ERC1155包含多类代币，它实现了批量转账和批量余额查询，一次操作多种代币</p>
+<p>ERC1155接收合约与ERC721标准类似，为了避免代币被转入黑洞合约，ERC1155要求代币接收合约继承IERC1155Receiver并实现两个接收函数：</p>
+<p>onERC1155Received()：单币转账接收函数，接受ERC1155安全转账safeTransferFrom 需要实现并返回自己的选择器0xf23a6e61。</p>
+<p>onERC1155BatchReceived()：多币转账接收函数，接受ERC1155安全多币转账safeBatchTransferFrom 需要实现并返回自己的选择器0xbc197c81。</p>
+<h2>ERC1155主合约​</h2>
+<p>ERC1155主合约包含4个状态变量：
+name：代币名称
+symbol：代币代号
+_balances：代币持仓映射，记录代币种类id下某地址account的持仓量balances。
+_operatorApprovals：批量授权映射，记录持有地址给另一个地址的授权情况。</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/ERC1155/#eip1155">原文</a>
+更新时间: 2023-07-29 17:38</p>
+<h1> </h1>
+<h1>23-07-29-41. WETH  WTF Academy-H8AAD75</h1><p>%%begin highlights%%
+WETH (Wrapped ETH)是ETH的带包装版本</p>
+<h2>为什么包装ETH？</h2>
+<p>以太币本身并不符合ERC20标准。
+WETH的开发是为了提高区块链之间的互操作性 ，并使ETH可用于去中心化应用程序（dApps）
+ERC20标准出现，该代币标准旨在为以太坊上的代币制定一套标准化的规则，从而简化了新代币的发布，并使区块链上的所有代币相互可比
+它就像是给原生代币穿了一件智能合约做的衣服：穿上衣服的时候，就变成了WETH，符合ERC20同质化代币标准，可以跨链，可以用于dApp；脱下衣服，它可1:1兑换ETH</p>
+<h2>WETH合约</h2>
+<p>WETH符合ERC20标准，它比普通的ERC20多了两个功能
+存款：包装，用户将ETH存入WETH合约，并获得等量的WETH。
+取款：拆包装，用户销毁WETH，并获得等量的ETH。</p>
+<h2>WETH代码</h2>
+<pre><code class="language-js">contract WETH is ERC20{
+    // 事件：存款和取款
+    event  Deposit(address indexed dst, uint wad);
+    event  Withdrawal(address indexed src, uint wad);
+    // 构造函数，初始化ERC20的名字和代号
+    constructor() ERC20(&quot;WETH&quot;, &quot;WETH&quot;){
+    }
+    // 回调函数，当用户往WETH合约转ETH时，会触发deposit()函数
+    fallback() external payable {
+        deposit();
+    }
+    // 回调函数，当用户往WETH合约转ETH时，会触发deposit()函数
+    receive() external payable {
+        deposit();
+    }
+    // 存款函数，当用户存入ETH时，给他铸造等量的WETH
+    function deposit() public payable {
+        _mint(msg.sender, msg.value);
+	    emit Deposit(msg.sender, msg.value);
+    }
+    // 提款函数，用户销毁WETH，取回等量的ETH
+    function withdraw(uint amount) public {
+        require(balanceOf(msg.sender) &gt;= amount);
+        _burn(msg.sender, amount);
+        payable(msg.sender).transfer(amount);
+    emit Withdrawal(msg.sender, amount);
+    }
+}
+</code></pre>
+<p>回调函数：fallback()和receive()，当用户往WETH合约转ETH的时候，会自动触发deposit()存款函数，获得等量的WETH。</p>
+<p>deposit()：存款函数，当用户存入ETH时，给他铸造等量的WETH。
+withdraw()：取款函数，让用户销毁WETH，并归还等量的ETH。</p>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/WETH/">原文</a>
+更新时间: 2023-07-29 17:42</p>
+<h1> </h1>
+<h1>23-07-29-42. 分账  WTF Academy-H8AAD77</h1><p>%%begin highlights%%</p>
+<p>分账就是按照一定比例分钱财。分账合约，该合约允许将ETH按权重转给一组账户中，进行分账</p>
+<h2>分账合约特点</h2>
+<p>分账合约(PaymentSplit)具有以下几个特点</p>
+<ul>
+<li>在创建合约时定好分账受益人payees和每人的份额share，份额可以是相等，也可以是其他任意比例。</li>
+<li>在该合约收到的所有ETH中，每个受益人将能够提取与其分配的份额成比例的金额。</li>
+<li>分账合约遵循Pull Payment模式，付款不会自动转入账户，而是保存在此合约中。受益人通过调用release()函数触发实际转账。</li>
+</ul>
+<h2>分账合约中共有3个事件</h2>
+<p>event PayeeAdded(address account, uint256 shares); // 增加受益人事件
+event PaymentReleased(address to, uint256 amount); // 受益人提款事件
+event PaymentReceived(address from, uint256 amount); // 合约收款事件</p>
+<h2>分账合约中5个状态变量，</h2>
+<p>用来记录受益地址、份额、支付出去的ETH等变量：</p>
+<p>uint256 public totalShares; // 总份额
+uint256 public totalReleased; // 总支付
+mapping(address =&gt; uint256) public shares; // 每个受益人的份额
+mapping(address =&gt; uint256) public released; // 支付给每个受益人的金额
+address[] public payees; // 受益人数组</p>
+<h2>分账合约中共有6个函数</h2>
+<p>构造函数：始化受益人数组_payees和分账份额数组_shares，其中数组长度不能为0，两个数组长度要相等。_shares中元素要大于0，_payees中地址不能为0地址且不能有重复地址。
+receive()：回调函数，在分账合约收到ETH时释放PaymentReceived事件。
+release()：分账函数，为有效受益人地址_account分配相应的ETH。任何人都可以触发这个函数，但ETH会转给受益人地址account。调用了releasable()函数。
+releasable()：计算一个受益人地址应领取的ETH。调用了pendingPayment()函数。
+pendingPayment()：根据受益人地址_account, 分账合约总收入_totalReceived和该地址已领取的钱_alreadyReleased，计算该受益人现在应分的ETH。
+_addPayee()：新增受益人函数及其份额函数。在合约初始化的时候被调用，之后不能修改。
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/PaymentSplit/">原文</a>
+更新时间: 2023-07-29 17:47</p>
+<h1> </h1>
+<h1>23-07-29-43. 线性释放  WTF Academy-H8AADFH</h1><p>%%begin highlights%%
+在传统金融领域，一些公司会向员工和管理层提供股权。但大量股权同时释放会在短期产生抛售压力，拖累股价。因此，公司通常会引入一个归属期来延迟承诺资产的所有权。</p>
+<p>项目方一般会约定代币归属条款（token vesting），在归属期内逐步释放代币，减缓抛压，并防止团队和资本方过早躺平</p>
+<h2>线性释放​</h2>
+<p>线性释放指的是代币在归属期内匀速释放。举个例子，某私募持有365,000枚ICU代币，归属期为1年（365天），那么每天会释放1,000枚代币。</p>
+<h2>TokenVesting</h2>
+<p>写一个锁仓并线性释放ERC20代币的合约TokenVesting</p>
+<p>项目方规定线性释放的起始时间、归属期和受益人。
+项目方将锁仓的ERC20代币转账给TokenVesting合约。
+受益人可以调用release函数，从合约中取出释放的代币。</p>
+<h2>TokenVesting合约</h2>
+<p>1个事件。
+event ERC20Released(address indexed token, uint256 amount); // 提币事件</p>
+<p>4个状态变量。</p>
+<p>mapping(address =&gt; uint256) public erc20Released; // 代币地址-&gt;释放数量的映射，记录已经释放的代币
+address public immutable beneficiary; // 受益人地址
+uint256 public immutable start; // 起始时间戳
+uint256 public immutable duration; // 归属期</p>
+<h2>TokenVesting函数</h2>
+<p>构造函数：初始化受益人地址，归属期(秒), 起始时间戳
+release()：提取代币函数，将已释放的代币转账给受益人。</p>
+<ul>
+<li>用了vestedAmount()函数计算可提取的代币数量，释放ERC20Released事件，然后将代币transfer给受益人。
+vestedAmount()：根据线性释放公式，查询已经释放的代币数量</li>
+</ul>
+<pre><code class="language-js">constructor(
+    address beneficiaryAddress,
+    uint256 durationSeconds
+) {
+    require(beneficiaryAddress != address(0), &quot;VestingWallet: beneficiary is zero address&quot;);
+    beneficiary = beneficiaryAddress;
+    start = block.timestamp;
+    duration = durationSeconds;
+}
+/**
+* @dev 受益人提取已释放的代币。
+* 调用vestedAmount()函数计算可提取的代币数量，然后transfer给受益人。
+* 释放 {ERC20Released} 事件.
+*/
+function release(address token) public {
+    // 调用vestedAmount()函数计算可提取的代币数量
+    uint256 releasable = vestedAmount(token, uint256(block.timestamp)) - erc20Released[token];
+    // 更新已释放代币数量
+    erc20Released[token] += releasable;
+    // 转代币给受益人
+    emit ERC20Released(token, releasable);
+    IERC20(token).transfer(beneficiary, releasable);
+}
+/**
+* @dev 根据线性释放公式，计算已经释放的数量。开发者可以通过修改这个函数，自定义释放方式。
+* @param token: 代币地址
+* @param timestamp: 查询的时间戳
+*/
+function vestedAmount(address token, uint256 timestamp) public view returns(uint256) {
+    // 合约里总共收到了多少代币（当前余额 + 已经提取）
+    uint256 totalAllocation = IERC20(token).balanceOf(address(this)) + erc20Released[token];
+    // 根据线性释放公式，计算已经释放的数量
+    if (timestamp &lt; start) {
+        return 0;
+    } else if (timestamp &gt; start + duration) {
+        return totalAllocation;
+    } else {
+        return (totalAllocation * (timestamp - start)) / duration;
+    }
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/TokenVesting/">原文</a>
+更新时间: 2023-07-29 17:54</p>
+<h1> </h1>
+<h1>23-07-29-44. 代币锁  WTF Academy-H8AADFB</h1><p>%%begin highlights%%
+代币锁(Token Locker)是一种简单的时间锁合约，它可以把合约中的代币锁仓一段时间，受益人在锁仓期满后可以取走代币</p>
+<p>代币锁一般是用来锁仓流动性提供者LP代币的。</p>
+<h2>什么是LP代币？​</h2>
+<p>区块链中，用户在去中心化交易所DEX上交易代币，例如Uniswap交易所</p>
+<p>DEX和中心化交易所(CEX)不同，去中心化交易所使用自动做市商(AMM)机制，需要用户或项目方提供资金池，以使得其他用户能够即时买卖</p>
+<p>用户/项目方需要质押相应的币对（比如ETH/DAI）到资金池中，作为补偿，DEX会给他们铸造相应的流动性提供者LP代币凭证，证明他们质押了相应的份额，供他们收取手续费</p>
+<h2>为什么要锁定流动性？​</h2>
+<p>如果项目方毫无征兆的撤出流动性池中的LP代币，那么投资者手中的代币就无法变现，直接归零了</p>
+<p>行为也叫rug-pull，仅2021年，各种rug-pull骗局从投资者那里骗取了价值超过28亿美元的加密货币</p>
+<h2>TokenLocker</h2>
+<p>写一个锁仓ERC20代币的合约TokenLocker
+逻辑很简单
+开发者在部署合约时规定锁仓的时间，受益人地址，以及代币合约。
+开发者将代币转入TokenLocker合约。
+在锁仓期满，受益人可以取走合约里的代币。</p>
+<h2>TokenLocker事件和变量</h2>
+<p>2个事件
+event TokenLockStart(address indexed beneficiary, address indexed token, uint256 startTime, uint256 lockTime);
+event Release(address indexed beneficiary, address indexed token, uint256 releaseTime, uint256 amount);</p>
+<p>4个状态变量。</p>
+<p>// 被锁仓的ERC20代币合约
+IERC20 public immutable token;
+// 受益人地址
+address public immutable beneficiary;
+// 锁仓时间(秒)
+uint256 public immutable lockTime;
+// 锁仓起始时间戳(秒)
+uint256 public immutable startTime;</p>
+<h2>TokenLocker函数</h2>
+<p>构造函数：初始化代币合约，受益人地址，以及锁仓时间。
+release()：在锁仓期满后，将代币释放给受益人。需要受益人主动调用release()函数提取代币。</p>
+<pre><code class="language-js">function release() public {
+    require(block.timestamp &gt;= startTime + lockTime, &quot;TokenLock: current time is before release time&quot;);
+    uint256 amount = token.balanceOf(address(this));
+    require(amount &gt; 0, &quot;TokenLock: no tokens to release&quot;);
+    token.transfer(beneficiary, amount);
+    emit Release(msg.sender, address(token), block.timestamp, amount);
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/TokenLocker/">原文</a>
+更新时间: 2023-07-29 18:00</p>
+<h1> </h1>
+<h1>23-07-29-45. 时间锁  WTF Academy-H8AADF9</h1><p>%%begin highlights%%
+时间锁（Timelock）是银行金库和其他高安全性容器中常见的锁定机制。
+它是一种计时器，旨在防止保险箱或保险库在预设时间之前被打开，即便开锁的人知道正确密码。
+在区块链，时间锁被DeFi和DAO大量采用。它是一段代码，他可以将智能合约的某些功能锁定一段时间</p>
+<p>假如一个黑客黑了Uniswap的多签，准备提走金库的钱，但金库合约加了2天锁定期的时间锁，那么黑客从创建提钱的交易，到实际把钱提走，需要2天的等待期。</p>
+<h2>时间锁Timelock合约。</h2>
+<p>它的逻辑并不复杂
+在创建Timelock合约时，项目方可以设定锁定期，并把合约的管理员设为自己</p>
+<h2>时间锁主要有三个功能：</h2>
+<p>创建交易，并加入到时间锁队列。
+在交易的锁定期满后，执行交易。
+后悔了，取消时间锁队列中的某些交易。</p>
+<p>项目方一般会把时间锁合约设为重要合约的管理员，例如金库合约，再通过时间锁操作他们。
+时间锁合约的管理员一般为项目的多签钱包，保证去中心化。</p>
+<h2>Timelock合约</h2>
+<p>共有4个事件。</p>
+<p>// 交易取消事件
+event CancelTransaction(bytes32 indexed txHash, address indexed target, uint value, string signature,  bytes data, uint executeTime);
+// 交易执行事件
+event ExecuteTransaction(bytes32 indexed txHash, address indexed target, uint value, string signature,  bytes data, uint executeTime);
+// 交易创建并进入队列 事件
+event QueueTransaction(bytes32 indexed txHash, address indexed target, uint value, string signature, bytes data, uint executeTime);
+// 修改管理员地址的事件
+event NewAdmin(address indexed newAdmin);</p>
+<p>4个状态变量。</p>
+<p>address public admin; // 管理员地址
+uint public constant GRACE_PERIOD = 7 days; // 交易有效期，过期的交易作废
+uint public delay; // 交易锁定时间 （秒）
+mapping (bytes32 =&gt; bool) public queuedTransactions; // txHash到bool，记录所有在时间锁队列中的交易</p>
+<h2>Timelock合约modifier</h2>
+<pre><code class="language-js">// onlyOwner modifier
+modifier onlyOwner() {
+	require(msg.sender == admin, &quot;Timelock: Caller not admin&quot;);
+	_;
+}
+// onlyTimelock modifier
+modifier onlyTimelock() {
+	require(msg.sender == address(this), &quot;Timelock: Caller not Timelock&quot;);
+	_;
+}
+
+</code></pre>
+<h2>Timelock合约函数。</h2>
+<p>queueTransaction()：创建交易并添加到时间锁队列中。参数比较复杂，因为要描述一个完整的交易：
+target：目标合约地址
+value：发送ETH数额
+signature：调用的函数签名（function signature）
+data：交易的call data
+executeTime：交易执行的区块链时间戳。
+调用这个函数时，要保证交易预计执行时间executeTime大于当前区块链时间戳+锁定时间delay。交易的唯一标识符为所有参数的哈希值，利用getTxHash()函数计算。进入队列的交易会更新在queuedTransactions变量中，并释放QueueTransaction事件。</p>
+<p>executeTransaction()：执行交易。它的参数与queueTransaction()相同。要求被执行的交易在时间锁队列中，达到交易的执行时间，且没有过期。执行交易时用到了solidity的低级成员函数call，在第22讲中有介绍。
+cancelTransaction()：取消交易。它的参数与queueTransaction()相同。它要求被取消的交易在队列中，会更新queuedTransactions并释放CancelTransaction事件。
+changeAdmin()：修改管理员地址，只能被Timelock合约调用。
+getBlockTimestamp()：获取当前区块链时间戳。
+getTxHash()：返回交易的标识符，为很多交易参数的hash。</p>
+<h2>Timelock合约函数code</h2>
+<pre><code class="language-js">function release() public {
+    require(block.timestamp &gt;= startTime + lockTime, &quot;TokenLock: current time is before release time&quot;);
+    uint256 amount = token.balanceOf(address(this));
+    require(amount &gt; 0, &quot;TokenLock: no tokens to release&quot;);
+    token.transfer(beneficiary, amount);
+    emit Release(msg.sender, address(token), block.timestamp, amount);
+    /**
+    * @dev 改变管理员地址，调用者必须是Timelock合约。
+    */
+    function changeAdmin(address newAdmin) public onlyTimelock {
+        admin = newAdmin;
+    emit NewAdmin(newAdmin);
+    }
+    /**
+    * @dev 创建交易并添加到时间锁队列中。
+    * @param target: 目标合约地址
+    * @param value: 发送eth数额
+    * @param signature: 要调用的函数签名（function signature）
+    * @param data: call data，里面是一些参数
+    * @param executeTime: 交易执行的区块链时间戳
+    *
+    * 要求：executeTime 大于 当前区块链时间戳+delay
+    */
+    function queueTransaction(address target, uint256 value, string memory signature, bytes memory data, uint256 executeTime) public onlyOwner returns(bytes32) {
+        // 检查：交易执行时间满足锁定时间
+        require(executeTime &gt;= getBlockTimestamp() + delay, &quot;Timelock::queueTransaction: Estimated execution block must satisfy delay.&quot;);
+    // 计算交易的唯一识别符：一堆东西的hash
+    bytes32 txHash = getTxHash(target, value, signature, data, executeTime);
+        // 将交易添加到队列
+        queuedTransactions[txHash] = true;
+    emit QueueTransaction(txHash, target, value, signature, data, executeTime);
+        return txHash;
+    }
+    /**
+    * @dev 取消特定交易。
+    *
+    * 要求：交易在时间锁队列中
+    */
+    function cancelTransaction(address target, uint256 value, string memory signature, bytes memory data, uint256 executeTime) public onlyOwner{
+    // 计算交易的唯一识别符：一堆东西的hash
+    bytes32 txHash = getTxHash(target, value, signature, data, executeTime);
+        // 检查：交易在时间锁队列中
+        require(queuedTransactions[txHash], &quot;Timelock::cancelTransaction: Transaction hasn't been queued.&quot;);
+        // 将交易移出队列
+        queuedTransactions[txHash] = false;
+    emit CancelTransaction(txHash, target, value, signature, data, executeTime);
+    }
+    /**
+    * @dev 执行特定交易。
+    *
+    * 要求：
+    * 1. 交易在时间锁队列中
+    * 2. 达到交易的执行时间
+    * 3. 交易没过期
+    */
+    function executeTransaction(address target, uint256 value, string memory signature, bytes memory data, uint256 executeTime) public payable onlyOwner returns(bytes memory) {
+    bytes32 txHash = getTxHash(target, value, signature, data, executeTime);
+        // 检查：交易是否在时间锁队列中
+        require(queuedTransactions[txHash], &quot;Timelock::executeTransaction: Transaction hasn't been queued.&quot;);
+        // 检查：达到交易的执行时间
+        require(getBlockTimestamp() &gt;= executeTime, &quot;Timelock::executeTransaction: Transaction hasn't surpassed time lock.&quot;);
+        // 检查：交易没过期
+        require(getBlockTimestamp() &lt;= executeTime + GRACE_PERIOD, &quot;Timelock::executeTransaction: Transaction is stale.&quot;);
+        // 将交易移出队列
+        queuedTransactions[txHash] = false;
+    // 获取call data
+    bytes memory callData;
+        if (bytes(signature).length == 0) {
+            callData = data;
+        } else {
+            callData = abi.encodePacked(bytes4(keccak256(bytes(signature))), data);
+        }
+        // 利用call执行交易
+        (bool success, bytes memory returnData) = target.call{ value: value } (callData);
+        require(success, &quot;Timelock::executeTransaction: Transaction execution reverted.&quot;);
+    emit ExecuteTransaction(txHash, target, value, signature, data, executeTime);
+        return returnData;
+    }
+    /**
+    * @dev 获取当前区块链时间戳
+    */
+    function getBlockTimestamp() public view returns(uint) {
+        return block.timestamp;
+    }
+    /**
+    * @dev 将一堆东西拼成交易的标识符
+    */
+    function getTxHash(
+        address target,
+        uint value,
+        string memory signature,
+        bytes memory data,
+        uint executeTime
+    ) public pure returns(bytes32) {
+        return keccak256(abi.encode(target, value, signature, data, executeTime));
+    }
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/Timelock/">原文</a>
+更新时间: 2023-07-29 19:47</p>
+<h1> </h1>
+<h1>23-07-29-46. 代理合约  WTF Academy-H8AA73B</h1><p>%%begin highlights%%</p>
+<h2>合约不可变的优缺点</h2>
+<p>Solidity合约部署在链上之后，代码是不可变的（immutable）。这样既有优点，也有缺点：
+优点：安全，用户知道会发生什么（大部分时候）。
+坏处：就算合约中存在bug，也不能修改或升级，只能部署新合约。
+但是新合约的地址与旧的不一样，且合约的数据也需要花费大量gas进行迁移。</p>
+<h2>如何迁移合约</h2>
+<p>有没有办法在合约部署后进行修改或升级呢？答案是有的，那就是代理模式。
+代理模式将合约数据和逻辑分开，分别保存在不同合约中。</p>
+<h2>代理合约</h2>
+<p>数据（状态变量）存储在代理合约中，而逻辑（函数）保存在另一个逻辑合约中
+代理合约（Proxy）通过delegatecall，将函数调用全权委托给逻辑合约（Implementation）执行，再把最终的结果返回给调用者（Caller）</p>
+<h2>代理合约有点</h2>
+<p>可升级：当我们需要升级合约的逻辑时，只需要将代理合约指向新的逻辑合约。
+省gas：如果多个合约复用一套逻辑，我们只需部署一个逻辑合约，然后再部署多个只保存数据的代理合约，指向逻辑合约。</p>
+<h2>代理合约演示</h2>
+<p>三个部分：代理合约Proxy，逻辑合约Logic，和一个调用示例Caller</p>
+<h2>部署逻辑合约Logic。</h2>
+<p>创建代理合约Proxy，状态变量implementation记录Logic合约地址。
+Proxy合约利用回调函数fallback，将所有调用委托给Logic合约
+最后部署调用示例Caller合约，调用Proxy合约。</p>
+<p>注意：Logic合约和Proxy合约的状态变量存储结构相同，不然delegatecall会产生意想不到的行为，有安全隐患。</p>
+<h2>代理合约logic代码</h2>
+<p>只有一个状态变量，一个构造函数，和一个回调函数
+implementation，在构造函数中初始化，用于保存Logic合约地址
+回调函数将外部对本合约的调用委托给 Logic 合约，这个回调函数很别致，它利用内联汇编（inline assembly），让本来不能有返回值的回调函数有了返回值</p>
+<pre><code class="language-js">fallback() external payable {
+    address _implementation = implementation;
+    assembly {
+        // 将msg.data拷贝到内存里
+        // calldatacopy操作码的参数: 内存起始位置，calldata起始位置，calldata长度
+        calldatacopy(0, 0, calldatasize())
+        // 利用delegatecall调用implementation合约
+        // delegatecall操作码的参数：gas, 目标合约地址，input mem起始位置，input mem长度，output area mem起始位置，output area mem长度
+        // output area起始位置和长度位置，所以设为0
+        // delegatecall成功返回1，失败返回0
+        let result:= delegatecall(gas(), _implementation, 0, calldatasize(), 0, 0)
+        // 将return data拷贝到内存
+        // returndata操作码的参数：内存起始位置，returndata起始位置，returndata长度
+        returndatacopy(0, 0, returndatasize())
+        switch result
+    // 如果delegate call失败，revert
+    case 0 {
+            revert(0, returndatasize())
+        }
+            // 如果delegate call成功，返回mem起始位置为0，长度为returndatasize()的数据（格式为bytes）
+            default {
+                return (0, returndatasize())
+            }
+        }
+    }
+</code></pre>
+<h2>逻辑合约Logic 代码</h2>
+<p>implementation：占位变量，与Proxy合约保持一致，防止插槽冲突。
+increment()函数：会被Proxy合约调用，释放CallSuccess事件，并返回一个uint，它的selector为0xd09de08a。如果直接调用increment()回返回100，但是通过Proxy调用它会返回1</p>
+<pre><code class="language-js">contract Logic {
+    address public implementation; // 与Proxy保持一致，防止插槽冲突
+    uint public x = 99;
+    event CallSuccess(); // 调用成功事件
+    // 这个函数会释放CallSuccess事件并返回一个uint。
+    // 函数selector: 0xd09de08a
+    function increment() external returns(uint) {
+	    emit CallSuccess();
+	    return x + 1;
+    }
+}
+</code></pre>
+<h2>调用者合约Caller 代码</h2>
+<p>proxy：状态变量，记录代理合约地址</p>
+<p>increase()：利用call来调用代理合约的increment()函数，并返回一个uint。在调用时，我们利用abi.encodeWithSignature()获取了increment()函数的selector。在返回时，利用abi.decode()将返回值解码为uint类型。</p>
+<pre><code class="language-js">function increment() external returns(uint) {
+    ( , bytes memory data) = proxy.call(abi.encodeWithSignature(&quot;increment()&quot;));
+    return abi.decode(data, (uint));
+}
+</code></pre>
+<p>为什么通过Proxy调用increment()会返回1呢？</p>
+<ul>
+<li>按照我们在第23讲Delegatecall中所说的，当Caller合约通过Proxy合约来delegatecall Logic合约的时候，如果Logic合约函数改变或读取一些状态变量的时候都会在Proxy的对应变量上操作，而这里Proxy合约的x变量的值是0</li>
+<li>（因为从来没有设置过x这个变量，即Proxy合约的storage区域所对应位置值为0），所以通过Proxy调用increment()会返回1。
+%%end highlights%%</li>
+</ul>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/ProxyContract/">原文</a>
+更新时间: 2023-07-29 20:21</p>
+<h1> </h1>
+<h1>23-07-29-47. 可升级合约  WTF Academy-H8AA73C</h1><p>%%begin highlights%%
+可升级合约。它就是一个可以更改逻辑合约的代理合约</p>
+<h2>实现可升级合约</h2>
+<p>它包含3个合约：代理合约，旧的逻辑合约，和新的逻辑合约
+这个代理合约比第46讲中的简单。</p>
+<ul>
+<li>我们没有在它的fallback()函数中使用内联汇编，而仅仅用了implementation.delegatecall(msg.data);。
+因此，回调函数没有返回值</li>
+</ul>
+<p>旧逻辑合约
+这个逻辑合约包含3个状态变量，与保持代理合约一致，防止插槽冲突。
+只有一个函数foo()，将代理合约中的words的值改为&quot;old&quot;。</p>
+<p>新逻辑合约​
+只有一个函数foo()，将代理合约中的words的值改为&quot;new&quot;。
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/Upgrade/">原文</a>
+更新时间: 2023-07-29 19:55</p>
+<h1> </h1>
+<h1>23-07-29-48. 透明代理  WTF Academy-H8AA73D</h1><p>%%begin highlights%%</p>
+<h2>选择器冲突</h2>
+<p>智能合约中，函数选择器（selector）是函数签名的哈希的前4个字节
+mint(address account)的选择器为bytes4(keccak256(&quot;mint(address)&quot;))，也就是0x6a627842
+由于函数选择器仅有4个字节，范围很小，因此两个不同的函数可能会有相同的选择器
+这种情况被称为“选择器冲突”。在这种情况下，EVM无法通过函数选择器分辨用户调用哪个函数，因此该合约无法通过编译。</p>
+<h2>选择器冲突解决</h2>
+<p>由于代理合约和逻辑合约是两个合约，就算他们之间存在“选择器冲突”也可以正常编译，这可能会导致很严重的安全事故
+目前，有两个可升级合约标准解决了这一问题：透明代理Transparent Proxy和通用可升级代理UUPS。</p>
+<h2>透明代理逻辑</h2>
+<p>管理员可能会因为“函数选择器冲突”，在调用逻辑合约的函数时，误调用代理合约的可升级函数
+那么限制管理员的权限，不让他调用任何逻辑合约的函数，就能解决冲突
+管理员变为工具人，仅能调用代理合约的可升级函数对合约升级，不能通过回调函数调用逻辑合约
+其它用户不能调用可升级函数，但是可以调用逻辑合约的函数
+这里的代理合约和第47讲的非常相近，只是fallback()函数限制了管理员地址的调用</p>
+<pre><code class="language-js">fallback() external payable {
+	require(msg.sender != admin);
+	(bool success, bytes memory data) = implementation.delegatecall(msg.data);
+}
+</code></pre>
+<h2>透明代理优缺点</h2>
+<p>透明代理的逻辑简单，通过限制管理员调用逻辑合约解决“选择器冲突”问题。
+它也有缺点，每次用户调用函数时，都会多一步是否为管理员的检查，消耗更多gas。
+但瑕不掩瑜，透明代理仍是大多数项目方选择的方案。
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/TransparentProxy/#remix%E5%AE%9E%E7%8E%B0">原文</a>
+更新时间: 2023-07-29 20:20</p>
+<h1> </h1>
+<h1>23-07-29-49. 通用可升级代理  WTF Academy-H8AA7BH</h1><p>%%begin highlights%%
+<img src="https://www.wtf.academy/assets/images/49-1-6d28dd55317040f7cbd5866bd4ec613d.png" alt=""></p>
+<h2>UUPS</h2>
+<p>UUPS（universal upgradeable proxy standard，通用可升级代理）将升级函数放在逻辑合约中
+如果有其它函数与升级函数存在“选择器冲突”，编译时就会报错</p>
+<p>复习一下WTF Solidity极简教程第23讲：Delegatecall如果用户A通过合约B（代理合约）去delegatecall合约C（逻辑合约），语境仍是合约B的语境，msg.sender仍是用户A而不是合约B</p>
+<p>因此，UUPS合约可以将升级函数放在逻辑合约中，并检查调用者是否为管理员。</p>
+<h2>UUPS的代理合约</h2>
+<p>UUPS的代理合约看起来像是个不可升级的代理合约，非常简单，因为升级函数被放在了逻辑合约中</p>
+<pre><code class="language-js">contract UUPSProxy {
+	address public implementation; // 逻辑合约地址
+	address public admin; // admin地址
+	string public words; // 字符串，可以通过逻辑合约的函数改变
+	// 构造函数，初始化admin和逻辑合约地址
+	constructor(address _implementation){
+		admin = msg.sender;
+		implementation = _implementation;
+	}
+	// fallback函数，将调用委托给逻辑合约
+	fallback() external payable {
+		(bool success, bytes memory data) = implementation.delegatecall(msg.data);
+	}
+}
+</code></pre>
+<h2>UUPS的逻辑合约​</h2>
+<p>UUPS的逻辑合约与第47讲中的不同是多了个升级函数</p>
+<pre><code class="language-js">// 升级函数，改变逻辑合约地址，只能由admin调用。选择器：0x0900f010
+// UUPS中，逻辑函数中必须包含升级函数，不然就不能再升级了。
+function upgrade(address newImplementation) external {
+	require(msg.sender == admin);
+	implementation = newImplementation;
+	}
+}
+</code></pre>
+<p>UUPS。与透明代理不同，UUPS将升级函数放在了逻辑合约中，从而使得&quot;选择器冲突&quot;不能通过编译。相比透明代理，UUPS更省gas，但也更复杂。
+%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/UUPS/">原文</a>
+更新时间: 2023-07-29 20:20</p>
+<h1> </h1>
+<h1>23-07-29-50. 多签钱包  WTF Academy-H8AA7B9</h1><p>%%begin highlights%%
+V神曾说过，多签钱包要比硬件钱包更加安全
+多签钱包是一种电子钱包，特点是交易被多个私钥持有者（多签人）授权后才能执行
+例如钱包由3个多签人管理，每笔交易需要至少2人签名授权
+多签钱包可以防止单点故障（私钥丢失，单人作恶），更加去中心化</p>
+<p>Gnosis Safe多签钱包是以太坊最流行的多签钱包
+在以太坊上的多签钱包其实是智能合约，属于合约钱包</p>
+<h2>极简版多签钱包MultisigWallet合约</h2>
+<p>设置多签人和门槛（链上）</p>
+<ul>
+<li>部署多签合约时，我们需要初始化多签人列表和执行门槛（至少n个多签人签名授权后，交易才能执行）
+创建交易（链下）
+收集多签签名（链下）
+调用多签合约的执行函数，验证签名并执行交易（链上）</li>
+</ul>
+<h2>创建交易（链下）</h2>
+<p>一笔待授权的交易包含以下内容
+to：目标合约。
+value：交易发送的以太坊数量。
+data：calldata，包含调用函数的选择器和参数。
+nonce：初始为0，随着多签合约每笔成功执行的交易递增的值，可以防止签名重放攻击。
+chainid：链id，防止不同链的签名重放攻击。</p>
+<h2>收集多签签名（链下）</h2>
+<p>将上一步的交易ABI编码并计算哈希，得到交易哈希，然后让多签人签名，并拼接到一起的到打包签名。</p>
+<h2>MultisigWallet合约</h2>
+<p>MultisigWallet合约有2个事件，ExecutionSuccess和ExecutionFailure，分别在交易成功和失败时释放，参数为交易哈希</p>
+<p>MultisigWallet合约有5个状态变量：</p>
+<p>nonce：初始为0，随着多签合约每笔成功执行的交易递增的值，可以防止签名重放攻击。</p>
+<p>address[] public owners;                   // 多签持有人数组
+mapping(address =&gt; bool) public isOwner;   // 记录一个地址是否为多签持有人
+uint256 public ownerCount;                 // 多签持有人数量
+uint256 public threshold;                  // 多签执行门槛，交易至少有n个多签人签名才能被执行。
+uint256 public nonce;                      // nonce，防止签名重放攻击</p>
+<h2>MultisigWallet合约函数</h2>
+<p>_setupOwners()：在合约部署时被构造函数调用，初始化owners，isOwner，ownerCount，threshold状态变量
+传入的参数中，执行门槛需大于等于1且小于等于多签人数；多签地址不能为0地址且不能重复。</p>
+<pre><code class="language-js">/// @dev 初始化owners, isOwner, ownerCount,threshold
+/// @param _owners: 多签持有人数组
+/// @param _threshold: 多签执行门槛，至少有几个多签人签署了交易
+function _setupOwners(address[] memory _owners, uint256 _threshold) internal {
+	// threshold没被初始化过
+	require(threshold == 0, &quot;WTF5000&quot;);
+	// 多签执行门槛 小于 多签人数
+	require(_threshold &lt;= _owners.length, &quot;WTF5001&quot;);
+	// 多签执行门槛至少为1
+	require(_threshold &gt;= 1, &quot;WTF5002&quot;);
+	for (uint256 i = 0; i &lt; _owners.length; i++) {
+	address owner = _owners[i];
+	// 多签人不能为0地址，本合约地址，不能重复
+	require(owner != address(0) &amp;&amp; owner != address(this) &amp;&amp; !isOwner[owner], &quot;WTF5003&quot;);
+	owners.push(owner);
+	isOwner[owner] = true;
+	}
+	ownerCount = _owners.length;
+	threshold = _threshold;
+	}
+
+</code></pre>
+<h2>MultisigWallet合约函数</h2>
+<p>execTransaction()：在收集足够的多签签名后，验证签名并执行交易。</p>
+<p>传入的参数为目标地址to，发送的以太坊数额value，数据data，以及打包签名signatures。打包签名就是将收集的多签人对交易哈希的签名，按多签持有人地址从小到大顺序，打包到一个[bytes]数据中。这一步调用了encodeTransactionData()编码交易，调用了checkSignatures()检验签名是否有效、数量是否达到执行门槛。</p>
+<pre><code class="language-js">/// @dev 在收集足够的多签签名后，执行交易
+/// @param to 目标合约地址
+/// @param value msg.value，支付的以太坊
+/// @param data calldata
+/// @param signatures 打包的签名，对应的多签地址由小到达，方便检查。 ({bytes32 r}{bytes32 s}{uint8 v}) (第一个多签的签名, 第二个多签的签名 ... )
+function execTransaction(
+address to,
+uint256 value,
+bytes memory data,
+bytes memory signatures
+) public payable virtual returns (bool success) {
+	// 编码交易数据，计算哈希
+	bytes32 txHash = encodeTransactionData(to, value, data, nonce, block.chainid);
+	nonce++;  // 增加nonce
+	checkSignatures(txHash, signatures); // 检查签名
+	// 利用call执行交易，并获取交易结果
+	(success, ) = to.call{value: value}(data);
+	require(success , &quot;WTF5004&quot;);
+	if (success) emit ExecutionSuccess(txHash);
+	else emit ExecutionFailure(txHash);
+}
+</code></pre>
+<h2>MultisigWallet合约函数</h2>
+<p>checkSignatures()：检查签名和交易数据的哈希是否对应，数量是否达到门槛，若否，交易会revert。</p>
+<p>单个签名长度为65字节，因此打包签名的长度要长于threshold * 65。调用了signatureSplit()分离出单个签名</p>
+<p>这个函数的大致思路：
+用ecdsa获取签名地址.
+利用 currentOwner &gt; lastOwner 确定签名来自不同多签（多签地址递增）。
+利用isOwner[currentOwner]确定签名者为多签持有人。</p>
+<pre><code class="language-js">/**
+* @dev 检查签名和交易数据是否对应。如果是无效签名，交易会revert
+* @param dataHash 交易数据哈希
+* @param signatures 几个多签签名打包在一起
+*/
+function checkSignatures(
+bytes32 dataHash,
+bytes memory signatures
+) public view {
+// 读取多签执行门槛
+uint256 _threshold = threshold;
+require(_threshold &gt; 0, &quot;WTF5005&quot;);
+// 检查签名长度足够长
+require(signatures.length &gt;= _threshold * 65, &quot;WTF5006&quot;);
+// 通过一个循环，检查收集的签名是否有效
+// 大概思路：
+// 1. 用ecdsa先验证签名是否有效
+// 2. 利用 currentOwner &gt; lastOwner 确定签名来自不同多签（多签地址递增）
+// 3. 利用 isOwner[currentOwner] 确定签名者为多签持有人
+address lastOwner = address(0);
+address currentOwner;
+uint8 v;
+bytes32 r;
+bytes32 s;
+uint256 i;
+for (i = 0; i &lt; _threshold; i++) {
+(v, r, s) = signatureSplit(signatures, i);
+// 利用ecrecover检查签名是否有效
+currentOwner = ecrecover(keccak256(abi.encodePacked(&quot;\x19Ethereum Signed Message:\n32&quot;, dataHash)), v, r, s);
+require(currentOwner &gt; lastOwner &amp;&amp; isOwner[currentOwner], &quot;WTF5007&quot;);
+lastOwner = currentOwner;
+}
+}
+</code></pre>
+<h2>MultisigWallet合约函数</h2>
+<p>signatureSplit()：将单个签名从打包的签名分离出来，参数分别为打包签名signatures和要读取的签名位置pos</p>
+<p>利用了内联汇编，将签名的r，s，和v三个值分离出来。</p>
+<pre><code class="language-js">/// 将单个签名从打包的签名分离出来
+/// @param signatures 打包签名
+/// @param pos 要读取的多签index.
+function signatureSplit(bytes memory signatures, uint256 pos)
+internal
+pure
+returns (
+uint8 v,
+bytes32 r,
+bytes32 s
+)
+{
+// 签名的格式：{bytes32 r}{bytes32 s}{uint8 v}
+	assembly {
+	let signaturePos := mul(0x41, pos)
+	r := mload(add(signatures, add(signaturePos, 0x20)))
+	s := mload(add(signatures, add(signaturePos, 0x40)))
+	v := and(mload(add(signatures, add(signaturePos, 0x41))), 0xff)
+	}
+}
+</code></pre>
+<h2>MultisigWallet合约函数</h2>
+<p>encodeTransactionData()：将交易数据打包并计算哈希，利用了abi.encode()和keccak256()函数
+这个函数可以计算出一个交易的哈希，然后在链下让多签人签名并收集，再调用execTransaction()函数执行。</p>
+<pre><code class="language-js">
+/// @dev 编码交易数据
+/// @param to 目标合约地址
+/// @param value msg.value，支付的以太坊
+/// @param data calldata
+/// @param _nonce 交易的nonce.
+/// @param chainid 链id
+/// @return 交易哈希bytes.
+function encodeTransactionData(
+address to,
+uint256 value,
+bytes memory data,
+uint256 _nonce,
+uint256 chainid
+) public pure returns (bytes32) {
+	bytes32 safeTxHash =
+	keccak256(
+	abi.encode(
+	to,
+	value,
+	keccak256(data),
+	_nonce,
+	chainid
+	)
+	);
+	return safeTxHash;
+}
+</code></pre>
+<p>%%end highlights%%</p>
+<p>!!!PAGE NOTE!!!
+%%begin pagenote%%</p>
+<p>%%end pagenote%%</p>
+<p>#五彩插件 <a href="https://www.wtf.academy/solidity-application/MultisigWallet/">原文</a>
+更新时间: 2023-07-29 20:20</p>
+<h1> </h1>

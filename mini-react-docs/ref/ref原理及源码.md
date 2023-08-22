@@ -5,7 +5,7 @@
 
 ## 前置知识
 
-React Ref 用法可以看[这篇文章](https://github.com/lizuncong/mini-react/blob/master/docs/ref/ref%E5%8E%9F%E7%90%86%E5%8F%8A%E6%BA%90%E7%A0%81.md)
+React Ref 用法可以看[这篇文章](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/ref/ref%E5%8E%9F%E7%90%86%E5%8F%8A%E6%BA%90%E7%A0%81.md)
 
 ## React element 中的 ref 属性
 
@@ -251,7 +251,7 @@ function markRef(current, workInProgress) {
 
 在 render 阶段，会调用 markRef 为 fiber 节点添加 Ref 副作用。在 commit 阶段，React 会判断 fiber 是否具有 Ref 副作用，如果有，则为 fiber.ref 设置 current 值。
 
-在[深入概述 React 初次渲染及状态更新主流程](https://github.com/lizuncong/mini-react/blob/master/docs/render/%E6%B7%B1%E5%85%A5%E6%A6%82%E8%BF%B0%20React%E5%88%9D%E6%AC%A1%E6%B8%B2%E6%9F%93%E5%8F%8A%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0%E4%B8%BB%E6%B5%81%E7%A8%8B.md)中介绍过，commit 分为三个小阶段：
+在[深入概述 React 初次渲染及状态更新主流程](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/render/%E6%B7%B1%E5%85%A5%E6%A6%82%E8%BF%B0%20React%E5%88%9D%E6%AC%A1%E6%B8%B2%E6%9F%93%E5%8F%8A%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0%E4%B8%BB%E6%B5%81%E7%A8%8B.md)中介绍过，commit 分为三个小阶段：
 
 - commitBeforeMutationEffects
 - commitMutationEffects

@@ -1,5 +1,5 @@
 > 本章是手写 React Scheduler 异步任务调度源码系列的第四篇文章，上一篇文章可以查看[【React Scheduler 源码第三篇】React Scheduler 原理及手写源码
-> ](https://github.com/lizuncong/mini-react/blob/master/docs/schedule/%E6%89%8B%E5%86%99scheduler%E6%BA%90%E7%A0%81.md)。本章实现 scheduler 中任务优先级、高优先级任务插队相关的源码
+> ](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/schedule/%E6%89%8B%E5%86%99scheduler%E6%BA%90%E7%A0%81.md)。本章实现 scheduler 中任务优先级、高优先级任务插队相关的源码
 
 ## 优先级
 

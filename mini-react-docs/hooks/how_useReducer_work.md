@@ -46,11 +46,11 @@ setCount(1); // 生成一个更新对象：update1 = { action: 1, next: update1 
 setCount(2); // 生成一个更新对象：update2 = { action: 2, next: update1 }
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/queue-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/queue-01.jpg)
 
 `fiber` 中存储的 `queue` 队列如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/queue-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/queue-02.jpg)
 
 环状链表简单实现如下，这个可以动手写一下，找找感觉
 
@@ -93,20 +93,20 @@ useEffect(() => {
 
 **_注意！！！函数组件中，组件对应的 fiber 节点也有一个 memoizedState 属性，fiber.memoizedState 用于保存组件的 hook 链表_**
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-02.jpg)
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-01.jpg)
 
 #### 如何查看真实的 hook 链表？
 
 这里有两种方法，一种是通过容器节点`root`，一种是在源码中打断点
 
 通过容器节点 `root` 查找对应的 `fiber` 节点
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-03.jpg)
 
 另一种方法是在源码中打断点，这个需要了解源码。在`react-dom.development.js`中搜索`renderWithHooks`方法，在 `var children = Component(props, secondArg)` 处打一个断点，然后在它下面一行再打一个断点，等 `Component(props, secondArg)` 函数执行完成，则 `hook` 链表构造完成，此时可以在控制台打印`console.log(workInProgress)`即可看到当前 `fiber` 节点的信息
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-04.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-04.jpg)
 
 ### 第三节 hook 源码流程
 
@@ -123,15 +123,15 @@ useEffect(() => {
 `React` 源码内部维护一个全局变量 `ReactCurrentDispatcher`。在调用函数组件前，`React`会判断如果是第一次执行组件，即挂载阶段，则将
 `ReactCurrentDispatcher` 变量设置为 `HooksDispatcherOnMount`，如果是更新阶段，则设置为 `HooksDispatcherOnUpdate`。这样当我们调用 `useReducer(reducer, 0)`时，实际上调用的是 `HooksDispatcherOnMount.useReducer` 或者 `HooksDispatcherOnUpdate.useReducer`
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-05.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-05.jpg)
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-06.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-06.jpg)
 
 #### 初次挂载阶段
 
 这个阶段，函数组件第一次执行。这个阶段源码主流程图如下，建议在流程图中每个函数的入口处各打一个断点，并根据流程图走一遍 `React` 源码流程。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-07.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-07.jpg)
 
 在整个流程中，最关键的是 `renderWithHooks` 方法，**不管是初次挂载阶段还是更新阶段，都会走这个方法！！！**。该方法最最最主要做了以下几件事情：
 
@@ -171,7 +171,7 @@ const Counter = () => {
 
 这个阶段，函数组件第 2 次执行或者第 n(n > 2)次执行，这个阶段也是从 `performUnitOfWork` 开始。主流程如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-08.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-08.jpg)
 
 ### 第四节 hook 主流程源码实现
 

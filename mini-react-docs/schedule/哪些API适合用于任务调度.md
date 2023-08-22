@@ -86,11 +86,11 @@
 
 在浏览器控制台的 performance 中查看上例的运行结果，如下图所示：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-01.jpg)
 
 从图中可以看出每一帧的执行时间都是 16.7ms，在这一帧内，浏览器执行 raf，计算样式，布局，重绘，requestIdleCallback、定时器，放大每一帧可以看到：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-02.jpg)
 
 > 在本篇文章中，会复用上面的 html 中的动画 demo
 
@@ -109,7 +109,7 @@ window.requestAnimationFrame(rafCallback);
 
 上面的例子中使用 while 循环模拟耗时 2 毫秒的任务，观察浏览器页面发现动画很流畅，Performance 查看每一帧的执行情况如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-05.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-05.jpg)
 
 如果将 while 循环改成 100 毫秒，页面动画明显的卡顿，Performance 查看会提示一堆长任务
 
@@ -122,7 +122,7 @@ function rafCallback(timestamp) {
 window.requestAnimationFrame(rafCallback);
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-06.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-06.jpg)
 
 > raf 在每一帧开始绘制前执行，两次 raf 之间间隔 16ms。在执行完一次 raf 回调后，会让出控制权给浏览器。嵌套递归调用 raf 不会导致页面死循环
 
@@ -143,7 +143,7 @@ function workLoop(deadline) {
 
 Performance 查看如下，几乎用满了一帧的时间，极致压榨 😁
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-07.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-07.jpg)
 
 > requestIdleCallback 会在每一帧剩余时间执行，两次调用之间的时间间隔不确定，同时这个 API 有兼容性问题。在执行完一次 requestIdleCallback 回调后会主动让出控制权给浏览器，嵌套递归调用不会导致死循环
 
@@ -162,7 +162,7 @@ setTimeout(work, 0);
 
 Performance 查看如下，可以发现，即使我将时间间隔设置为 0 毫秒，两次 setTimeout 之间的间隔差不多是 4 毫秒(如图中红线所示)。可以看出 setTimeout 会有至少 4 毫秒的延迟
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-08.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-08.jpg)
 
 > setTimeout 嵌套调用不会导致死循环，js 引擎执行完一次 settimeout 回调就会将控制权让给浏览器。settimeout 至少有 4 毫秒的延迟
 
@@ -182,11 +182,11 @@ port.postMessage(null);
 
 Performance 查看如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-09.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-09.jpg)
 
 放大每一帧可以看到，一帧内，MessageChannel 回调的调用频次超高
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-10.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-10.jpg)
 
 从图中可以看出，相比于 setTimeout，MessageChannel 有以下特点：
 
@@ -221,7 +221,7 @@ window.requestAnimationFrame(rafCallback);
 
 这里，我在 requestAnimationFrame 调用 mymicrotask，mymicrotask 中会调用 Promise 启用一个微任务，在 Promise then 中又会嵌套调用 mymicrotask 递归的调研 Promise。从图中可以看到，在本次页面更新前执行完全部的微任务
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-03.jpg)
 
 如果像下面这样嵌套调用，页面直接卡死，和死循环效果一样
 
@@ -262,7 +262,7 @@ function rafCallback(timestamp) {
 window.requestAnimationFrame(rafCallback);
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/frame-04.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/frame-04.jpg)
 
 当然，如果取消 count 的限制，页面直接卡死，死循环了。
 

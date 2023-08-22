@@ -26,7 +26,7 @@ React 官方文档很好的概述了该机制：React 元素的角色、生命�
 
 这是一个简单的应用程序，我将在整个系列中使用它。我们有一个按钮，可以简单地增加屏幕上呈现的数字：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/reconciler-04.gif)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/reconciler-04.gif)
 
 这是实现：
 
@@ -160,7 +160,7 @@ React 可能需要基于 key 属性移动节点或者如果 render 方法返回�
 
 因为 React 为每个 React element 创建了一个 fiber，并且由于我们有一个 React element 树，那么对应的我们也会有一个 fiber 节点树。在我们的示例应用程序中，它看起来像这样：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/reconciler-01.png)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/reconciler-01.png)
 
 所有 fiber 节点都通过 child、sibling 以及 return 属性链接成一个链表。可以阅读我这篇文章[ The how and why on React’s usage of linked list in Fiber](https://medium.com/dailyjs/the-how-and-why-on-reacts-usage-of-linked-list-in-fiber-67f1014d0eb7)去了解为什么需要这么做。
 
@@ -202,11 +202,11 @@ React 处理更新非常快，为了达到这种性能水平，它采用了一�
 
 [Dan Abramov](https://medium.com/@dan_abramov) 提供了一个效果列表的类比。他喜欢把它想象成一棵圣诞树，用“圣诞灯”将所有有效的节点绑定在一起。为了直观的感受这一点，假设我们有以下 fiber 节点树，其中高亮的节点表示有一些工作要做。例如，我们的更新导致 c2 插入到 DOM 中，d2 和 c1 需要更新属性(attributes)，b2 调用生命周期方法。这些有副作用的节点会连接成一个链表，这样 React 就可以跳过其他没有副作用的节点
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/reconciler-02.png)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/reconciler-02.png)
 
 你可以看到具有副作用的节点是如何链接在一起的。当遍历节点时，React 使用 firstEffect 指针来确定列表的开始位置。所以上图可以表示为这样的线性列表：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/reconciler-03.png)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/reconciler-03.png)
 
 > 译者注：不管是效果列表还是副作用列表，其实都是指的 effect list。一般称为副作用列表会好点，用于指那些有副作用的 fiber 节点构成的链表
 
@@ -390,7 +390,7 @@ function workLoop(isYieldy) {
 
 为了演示如何使用它们，请查看以下遍历 fiber 树的动画。我在演示中使用了这些函数的简化实现。每个函数都需要处理一个 fiber 节点，当 React 沿着树向下移动时，你可以看到当前活动的 fiber 节点发生了变化。你可以在视频中清楚地看到算法是如何从一个分支转到另一个分支的。**它首先完成了子节点的工作，然后才转移给父节点**。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/reconciler-03.gif)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/reconciler-03.gif)
 
 > 请注意，垂直连接线表示兄弟节点，而弯曲的连线表示子节点，例如 b1 没有子节点，而 b2 有一个子节点 c1。
 

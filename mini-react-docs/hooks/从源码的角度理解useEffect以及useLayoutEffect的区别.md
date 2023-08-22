@@ -6,9 +6,9 @@
 - React 渲染主要分为两个阶段：render 阶段 以及 commit 阶段。render 阶段是可以并发的，可以中断的。render 阶段主要是协调子节点，找出有副作用的节点，构造副作用链表以及 fiber 树。commit 阶段是同步的，一旦开始就不能够中断。commit 阶段对真实的 DOM 进行增删改查，执行对应的生命周期方法。
 - 在 react-dom.development.js 中找到 `commitRootImpl` 函数并在入口处设置断点，然后在 `commitRootImpl` 中找到调用 `commitBeforeMutationEffects`、`commitMutationEffects`、`commitLayoutEffects` 这三个函数的地方并设置断点。后面会具体解释这些函数的作用。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/effect-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/effect-01.jpg)
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/effect-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/effect-02.jpg)
 
 ### useLayoutEffect 和 useEffect 的区别
 

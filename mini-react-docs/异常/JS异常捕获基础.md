@@ -145,7 +145,7 @@ useLayoutEffect(() => {
 
 这个异常我们并没有使用 try catch 捕获，因此如果我们勾上 `Pause on exceptions`，那么浏览器会自动定位到抛出异常的位置，即 console.log(aaadd)这里
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/devtool-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/devtool-01.jpg)
 
 使用 `window.onerror` 全局捕获的异常，`Pause on exceptions`还是起作用的。
 比如，我们在 `index.html`中注册一个全局的异常捕获监听器
@@ -203,4 +203,4 @@ useLayoutEffect(() => {
 }, []);
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/devtool-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/devtool-02.jpg)

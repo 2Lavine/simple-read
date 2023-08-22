@@ -18,20 +18,20 @@ react 官方提供的打包源码，本地调试的方法如下：
 `react` 源码使用 `rollup` 打包，将所有的模块都打包到一个文件中，比如 `react.development.js` 以及 `react-dom.development.js`，没有对应
 的 `sourcemap`，导致阅读源码的过程当中无法得知源码位于哪个文件，如下图中红框内的源码无法映射到原文件，阅读体验不好。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-01.jpg)
 
 同时，`react` 在打包开发环境的代码时，会引入大量的本地调试代码
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-02.jpg)
 
 这段代码对应的源码在于：packages/react/src/ReactDebugCurrentFrame.js 文件中：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-03.jpg)
 
 `react` 源码中大量使用 `__DEV__` 环境变量判断（参考：[**DEV**说明](https://zh-hans.reactjs.org/docs/codebase-overview.html#development-and-production)），如果是开发环境，则括号中的代码会被打包进产物中，如果是生产环境，则不会打包进产物中。这样
 可以在开发环境注入一些调试代码，比如检查 `props` 是否合法、创建 `element` 的时候是否需要校验参数等情况：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-04.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-04.jpg)
 
 实际上，这些开发时的校验代码与`react`主流程没有什么关系，我们不关心这些开发时的场景，只需要专注于主流程，因此如果打包时能够减少这部分代码，对我们阅读
 体验来说还是相当不错的。
@@ -67,7 +67,7 @@ replace({
 }),
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-05.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-05.jpg)
 
 然后终端运行打包命令：
 
@@ -82,11 +82,11 @@ yarn build react, shared, scheduler, react-reconciler, react-dom --type=NODE
 
 最终，优化后，打包出来的代码体积，`react.development.js` 从原先的 2334 行，减少到 1122 行。`react-dom.development.js` 从原先的 26263 行
 减少到 20600 行。
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-06.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-06.jpg)
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-07.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-07.jpg)
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-08.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-08.jpg)
 
 ### 方案二：源码拆分
 
@@ -102,14 +102,14 @@ yarn build react, shared, scheduler, react-reconciler, react-dom --type=NODE
 
 `node_modules` 下出现了很多的模块，但其实我们只需要 `react`、`react-dom` 这两个模块
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/build-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/build-01.jpg)
 
 展开 `react` 或者 `react-dom`，会发现 `cjs` 目录下又有很多文件，我们只需要 `cjs/react.development.js` 以及 `cjs/react-dom.development.js` 这两个文件
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-09.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-09.jpg)
 
 我们知道 `rollup` 打包时需要配置 `entry` 入口文件，因此我们可以从这里入手，打开 scripts/rollup/bundles.js 文件，找到 `const bundles`，如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-09.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-09.jpg)
 
 将 `const bundles` 修改成 `let bundles`，并在下面覆盖掉它：
 
@@ -154,7 +154,7 @@ bundles = [
 ];
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-11.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-11.jpg)
 
 在终端执行打包命令：
 
@@ -164,7 +164,7 @@ yarn build react, shared, scheduler, react-reconciler, react-dom --type=NODE
 
 这一次不用一分钟，打包速度提升很快，然后再看看打包后的目录：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-12.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-12.jpg)
 
 完美，打包后的目录非常赶紧了，打包速度也提升很多。下面我们再看看如何进行源码映射。
 
@@ -183,10 +183,10 @@ yarn build react, shared, scheduler, react-reconciler, react-dom --type=NODE
 },
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-13.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-13.jpg)
 
 执行打包命令，打包完成后我们会看到在当前目录下有个 `dist` 目录：
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/debug-14.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/debug-14.jpg)
 
 可以看到只有简单的几个包，实际上这些包就是我们的 `react`、`react-dom` 两个文件的包及其依赖。这样在我们看代码时就少了很多干扰。实际上源码中那些 `react-native`、`react-client` 等包我们是根本不需要关注的。
 

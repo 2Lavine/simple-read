@@ -4,13 +4,13 @@
 
 > 本文使用具有父组件和子组件的简单案例来演示 Fiber 架构中 React 将 props 传播到子组件的内部流程。
 
-在我之前的文章 [Fiber 内部：React 中新的协调算法的深入概述](https://github.com/lizuncong/mini-react/blob/master/docs/%E8%AF%91%E6%96%87/in-depth_overview_of_the_new_reconciliation_algorithm.md)中，我奠定了理解本文介绍的更新过程的技术细节所需要的基础知识。
+在我之前的文章 [Fiber 内部：React 中新的协调算法的深入概述](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E8%AF%91%E6%96%87/in-depth_overview_of_the_new_reconciliation_algorithm.md)中，我奠定了理解本文介绍的更新过程的技术细节所需要的基础知识。
 
 我已经概述了我将在本文中使用的主要数据结构和概念，特别是 Fiber 节点、current tree 和 workInProgress tree、副作用和副作用列表。我还高度概述了主要的算法，并解释了 render 和 commit 阶段之间的区别。如果你还没有读过，我建议你从上一篇文章开始。
 
 我还介绍了示例应用程序，该应用程序带有一个按钮，点击按钮简单地递增屏幕上呈现的数字：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/reconciler-04.gif)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/reconciler-04.gif)
 
 这是一个简单的组件，render 方法返回 button 和 span 两个子元素。单击按钮时，组件的状态就会更新。这会导致 span 元素的文本更新：
 
@@ -103,7 +103,7 @@ class ClickCounter extends React.Component {
 
 ### 处理 ClickCounter Fiber 节点的更新(Processing updates for the ClickCounter Fiber node)
 
-[我之前的文章中关于工作循环的章节](https://github.com/lizuncong/mini-react/blob/master/docs/%E8%AF%91%E6%96%87/in-depth_overview_of_the_new_reconciliation_algorithm.md)解释了全局变量 nextUnitOfWork 的作用。特别是，它说明了这个变量保存的是 workInProgress 树中需要处理的 fiber 节点的引用。当 React 遍历 Fibers 树时，它使用这个变量来了解是否有尚未完成工作的 fiber 节点。
+[我之前的文章中关于工作循环的章节](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E8%AF%91%E6%96%87/in-depth_overview_of_the_new_reconciliation_algorithm.md)解释了全局变量 nextUnitOfWork 的作用。特别是，它说明了这个变量保存的是 workInProgress 树中需要处理的 fiber 节点的引用。当 React 遍历 Fibers 树时，它使用这个变量来了解是否有尚未完成工作的 fiber 节点。
 
 假设我们已经调用了 setState 方法。React 将 setState 中的回调添加到 ClickCounter Fiber 节点的 updateQueue 中并开始调度。React 进入 render 阶段。它在 renderRoot 函数里面从最顶层的 HostRoot Fiber 节点开始遍历。但是，它会退出（跳过）已处理的 Fiber 节点，直到找到未完成工作的节点。此时只有一个 Fiber 节点需要处理。它是 ClickCounter Fiber 节点。
 
@@ -437,11 +437,11 @@ function completeWork(current, workInProgress, ...) {
 React 在 [completeUnitOfWork](https://github.com/facebook/react/blob/d5e1bf07d086e4fc1998653331adecddcd0f5274/packages/react-reconciler/src/ReactFiberScheduler.js#L999) 函数中构建副作用列表。这是具有更新 span 节点文本和调用 ClickCounter 钩子
 副作用的 Fiber 树的样子：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/update-01.png)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/update-01.png)
 
 这是具有副作用的节点的线性列表：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/update-02.png)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/update-02.png)
 
 ### 提交阶段(Commit phase)
 

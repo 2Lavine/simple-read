@@ -145,11 +145,11 @@ const Counter = () => {
 
 在 `onClick` 函数里加一行 `debugger`。点击按钮，开始 debug。首先执行的是 `dispatchAction` 函数，但是如果我们追溯函数调用栈，可以发现实际上是会先执行合成事件相关的函数：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/batchupdate-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/batchupdate-01.jpg)
 
 合成事件调用了 `batchedEventUpdates`，此时 `executionContext` 已经被设置为**批量更新**了
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/batchupdate-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/batchupdate-02.jpg)
 
 回到 `dispatchAction` 方法中，这个方法主要是构造更新队列，然后调用 `scheduleUpdateOnFiber` 开始调度更新，异步 or 同步更新的逻辑主要在这个函数的流程中！！`scheduleUpdateOnFiber` 主要流程如下：
 
@@ -215,4 +215,4 @@ function flushSyncCallbackQueue() {
 
 当我们点击按钮，从合成事件派发到 `React` 从当前 `fiber` 节点开始调度更新，并且决定是异步或者同步更新的主要流程如下图：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/batchupdate-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/batchupdate-03.jpg)

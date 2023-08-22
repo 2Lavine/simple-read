@@ -50,7 +50,7 @@
 
 通过`addEventListener`在`btn`上注册了两个自定义事件监听器。然后通过`btn.dispatchEvent(event);`手动触发。可以看到事件监听器按照注册的顺序同步执行！如下图所示
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/custom-event-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/custom-event-01.jpg)
 
 ### 自定义事件冒泡
 
@@ -94,7 +94,7 @@
 </html>
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/custom-event-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/custom-event-02.jpg)
 
 ## 如果自定义事件监听器抛出异常，会怎样？
 
@@ -154,4 +154,4 @@ window.onerror = (e) => {
 可以看出，自定义事件监听器中的异常只会终止自身的执行，而不会影响到其他事件监听器的执行。
 
 **注意！！！btn 的第一个监听器中抛出的异常，会立即被全局异常捕获监听器捕获到，并且立即执行，全局异常监听器执行完成后，才接着执行 btn 的第 2 个监听器...**
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/custom-event-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/custom-event-03.jpg)

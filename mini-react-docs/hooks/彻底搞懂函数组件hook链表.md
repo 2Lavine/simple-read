@@ -108,7 +108,7 @@ React 为我们提供的以`use`开头的函数就是 hook，本质上函数在�
 
 上例中，hook 链表如下红色虚线中所示：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-list-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-list-01.jpg)
 
 ## hook 对象及其属性介绍
 
@@ -167,7 +167,7 @@ var update = {
 
 queue.pending 指向最后一个更新对象。queue 队列如下红色实线所示
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-list-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-list-02.jpg)
 
 在 render 阶段，会遍历 hook.queue，计算最终的 state 值，并存入 hook.memoizedState 中
 
@@ -226,10 +226,10 @@ fiber.updateQueue = {
 
 fiber.updateQueue 如下图红色实线所示：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-list-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-list-03.jpg)
 
 hook 对应的 effect 对象如下图红色实线所示：
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-list-04.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-list-04.jpg)
 
 ### useMemo
 
@@ -450,10 +450,10 @@ var firstFiber = {
 ```
 
 经过第一次渲染以后，我们将得到下面的 hook 链表：
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-list-05.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-list-05.jpg)
 
 当我们点击按钮触发更新，renderWithHooks 函数开始调用，但 Home 函数执行前，此时`workInProgressHook`、`currentHook`都为 null。同时新的 fiber 的`memoizedState`、`updateQueue`都被重置为 null
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-list-06.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-list-06.jpg)
 
 `workInProgressHook`用于构建新的 hook 链表
 
@@ -495,7 +495,7 @@ if (workInProgressHook === null) {
 }
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-list-07.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-list-07.jpg)
 
 - 第二步 调用 useRef
 
@@ -510,7 +510,7 @@ currentHook = nextCurrentHook;
 ```
 
 同样的，也需要为 useRef 创建一个新的 hook 对象，并复用上一次的 hook 状态
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hook-list-08.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-list-08.jpg)
 
 后面的 hook 的执行过程和 useRef 一样，都是一边遍历旧的 hook 链表，为当前 hook 函数创建新的 hook 对象，然后复用旧的 hook 对象的状态信息，然后添加到 hook 链表中
 

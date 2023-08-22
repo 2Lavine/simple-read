@@ -20,7 +20,7 @@
   - commitMutationEffects
   - commitLayoutEffects
 
-在 render 阶段，React 为每一个 fiber 节点调用 beginWork 开始执行工作，如果 fiber 没有子节点或者子节点都已经完成了工作，那么这个 fiber 就可以调用 completeUnitOfWork 完成自身的工作，这个过程就是深度优先遍历，具体可以看这篇文章[深入概述 React 初次渲染及状态更新主流程](https://github.com/lizuncong/mini-react/blob/master/docs/render/%E6%B7%B1%E5%85%A5%E6%A6%82%E8%BF%B0%20React%E5%88%9D%E6%AC%A1%E6%B8%B2%E6%9F%93%E5%8F%8A%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0%E4%B8%BB%E6%B5%81%E7%A8%8B.md)。我们可以将进入节点的过程理解为 beginWork，离开节点的过程叫 completeUnitOfWork。
+在 render 阶段，React 为每一个 fiber 节点调用 beginWork 开始执行工作，如果 fiber 没有子节点或者子节点都已经完成了工作，那么这个 fiber 就可以调用 completeUnitOfWork 完成自身的工作，这个过程就是深度优先遍历，具体可以看这篇文章[深入概述 React 初次渲染及状态更新主流程](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/render/%E6%B7%B1%E5%85%A5%E6%A6%82%E8%BF%B0%20React%E5%88%9D%E6%AC%A1%E6%B8%B2%E6%9F%93%E5%8F%8A%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0%E4%B8%BB%E6%B5%81%E7%A8%8B.md)。我们可以将进入节点的过程理解为 beginWork，离开节点的过程叫 completeUnitOfWork。
 
 beginWork 阶段主要是协调子元素，也就是常说的 dom diff。在这个阶段，React 会调用类组件的 render 方法或者执行函数组件。**context 的存取就是作用于 beginWork 阶段。**在 beginWork 阶段，如果当前组件订阅了 context，则从 context 中读取 value 值。
 
@@ -659,7 +659,7 @@ ReactDOM.render(<Home />, document.getElementById("root"));
 
 但是我们点击按钮，观察控制台可以发现：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/context-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/context-01.jpg)
 
 - 第一次渲染时，所有组件都会更新，组件的 render 方法都被执行
 - 在随后的点击过程中，只有 Home 组件以及订阅了 Context 的 Counter 组件更新了，它们对应的 render 方法执行

@@ -13,9 +13,9 @@
 
 如果还不熟悉 JS 异常捕获，比如全局异常捕获，Promise 异常捕获，异步代码异常捕获。自定义事件，以及 dispatchEvent 的用法。React 错误边界等基础知识的，可以参考以下几篇短文。如果已经熟悉了，可以跳过。
 
-- [JS 异常捕获基础](https://github.com/lizuncong/mini-react/blob/master/docs/%E5%BC%82%E5%B8%B8/JS%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E5%9F%BA%E7%A1%80.md)
-- [自定义事件以及 dispatchEvent 基础知识](https://github.com/lizuncong/mini-react/blob/master/docs/%E5%BC%82%E5%B8%B8/dispatchEvent%E5%9F%BA%E7%A1%80.md)
-- [React 错误边界](https://github.com/lizuncong/mini-react/blob/master/docs/%E5%BC%82%E5%B8%B8/React%E9%94%99%E8%AF%AF%E8%BE%B9%E7%95%8C.md)
+- [JS 异常捕获基础](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E5%BC%82%E5%B8%B8/JS%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E5%9F%BA%E7%A1%80.md)
+- [自定义事件以及 dispatchEvent 基础知识](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E5%BC%82%E5%B8%B8/dispatchEvent%E5%9F%BA%E7%A1%80.md)
+- [React 错误边界](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E5%BC%82%E5%B8%B8/React%E9%94%99%E8%AF%AF%E8%BE%B9%E7%95%8C.md)
 
 >目前只有类组件才能作为错误边界，关于函数组件支持错误边界的场景，可以看看这个[issue](https://github.com/facebook/react/issues/14347)
 ## 为什么 Dev 模式下， React 不直接使用 try catch，而是自己模拟 try catch 机制实现异常捕获？
@@ -24,9 +24,9 @@
 
 要回答这个问题，我们先看下 React 源码中一段关于异常捕获机制的描述：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/exception-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/exception-01.jpg)
 
-同时结合这个[issue](https://github.com/facebook/react/issues/4982)可以知道，**React 异常处理最重要的目标之一就是，避免吞没用户业务代码的异常，从而保持浏览器的`Pause on exceptions`行为**。如果对`Pause on exceptions`不熟悉的，可以看[这篇文章](https://github.com/lizuncong/mini-react/blob/master/docs/%E5%BC%82%E5%B8%B8/JS%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E5%9F%BA%E7%A1%80.md#%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8%E8%B0%B7%E6%AD%8C-devtool-%E5%9C%A8%E5%BC%82%E5%B8%B8%E4%BB%A3%E7%A0%81%E5%A4%84%E6%89%93%E6%96%AD%E7%82%B9)
+同时结合这个[issue](https://github.com/facebook/react/issues/4982)可以知道，**React 异常处理最重要的目标之一就是，避免吞没用户业务代码的异常，从而保持浏览器的`Pause on exceptions`行为**。如果对`Pause on exceptions`不熟悉的，可以看[这篇文章](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E5%BC%82%E5%B8%B8/JS%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E5%9F%BA%E7%A1%80.md#%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8%E8%B0%B7%E6%AD%8C-devtool-%E5%9C%A8%E5%BC%82%E5%B8%B8%E4%BB%A3%E7%A0%81%E5%A4%84%E6%89%93%E6%96%AD%E7%82%B9)
 
 为了达到这个目标，React 将用户的所有业务代码包裹在 `invokeGuardedCallback` 函数中执行，比如构造函数，生命周期方法等。在`invokeGuardedCallback`内部，dev 环境下，React 模拟实现了 try catch 机制，而在生产环境中，react 简单的使用了 try catch
 
@@ -88,7 +88,7 @@ React16 以后由于有了 invokeguardcallback 处理异常，在异步代码中
 
 虽然这里用户自行使用 Promise 的 catch 捕获异常，但是 React 还是可以照样抛出异常，控制台还是会打印 Error 信息
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/exception-04.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/exception-04.jpg)
 
 ```jsx
 <div
@@ -106,7 +106,7 @@ React16 以后由于有了 invokeguardcallback 处理异常，在异步代码中
 </div>
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/exception-05.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/exception-05.jpg)
 
 > 这同时也告诉我们一个道理，作为一个库工具开发者，我们不应该吞没用户的异常
 
@@ -114,8 +114,8 @@ React16 以后由于有了 invokeguardcallback 处理异常，在异步代码中
 
 dispatchEvent 能够模拟 try catch，是基于下面的特性：
 
-- 通过 dispatchEvent 触发的事件监听器是按顺序同步执行的，具体例子可以看[这里](https://github.com/lizuncong/mini-react/blob/master/docs/%E5%BC%82%E5%B8%B8/dispatchEvent%E5%9F%BA%E7%A1%80.md#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D)
-- 自定义事件监听器内部抛出的异常可以被全局异常监听器监听到并且会**立即执行!!!!!同时仍然可以被 Pause on exceptions 自动定位到**，具体例子可以看[这里](https://github.com/lizuncong/mini-react/blob/master/docs/%E5%BC%82%E5%B8%B8/dispatchEvent%E5%9F%BA%E7%A1%80.md#%E5%A6%82%E6%9E%9C%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC%E5%99%A8%E6%8A%9B%E5%87%BA%E5%BC%82%E5%B8%B8%E4%BC%9A%E6%80%8E%E6%A0%B7)
+- 通过 dispatchEvent 触发的事件监听器是按顺序同步执行的，具体例子可以看[这里](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E5%BC%82%E5%B8%B8/dispatchEvent%E5%9F%BA%E7%A1%80.md#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D)
+- 自定义事件监听器内部抛出的异常可以被全局异常监听器监听到并且会**立即执行!!!!!同时仍然可以被 Pause on exceptions 自动定位到**，具体例子可以看[这里](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E5%BC%82%E5%B8%B8/dispatchEvent%E5%9F%BA%E7%A1%80.md#%E5%A6%82%E6%9E%9C%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC%E5%99%A8%E6%8A%9B%E5%87%BA%E5%BC%82%E5%B8%B8%E4%BC%9A%E6%80%8E%E6%A0%B7)
 
 这么说有点抽象，我们再来复习一个简单的例子：
 
@@ -160,7 +160,7 @@ dispatchEvent 能够模拟 try catch，是基于下面的特性：
 
 这个例子首先注册一个全局异常监听器，然后创建自定义的事件，给 btn、root 添加监听自定义事件的监听器，其中 btn 的第一个监听器抛出一个异常。最后通过 `dispatchEvent` 触发自定义事件监听器的执行。执行结果如下所示：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/exception-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/exception-02.jpg)
 
 **从图中的执行结果可以看出，btn 的第一个事件监听器抛出的异常会立即被全局异常监听器捕获到，并立即执行。** 这个效果和 try catch 完全一致！！！同时，即使自定义事件监听器的异常被全局异常监听器捕获到了，仍然可以被`Pause on exceptions`自动定位到，这就是 React 想要的效果！！！
 
@@ -174,7 +174,7 @@ try {
 console.log("结束");
 ```
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/exception-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/exception-03.jpg)
 
 在开发环境中，React 将自定义事件(fake event)**同步派发**到自定义 dom(fake dom noe)上，并在自定义事件监听器内调用用户的回调函数，如果用户的回调函数抛出错误，则使用全局异常监听器捕获错误。这为我们提供了 try catch 的行为，而无需实际使用 try catch，又能保持浏览器 `Pause on exceptions` 的预期行为。
 
@@ -249,7 +249,7 @@ function invokeGuardedCallbackProd(func) {
 
 并不是用户的所有业务代码都能被 React 错误边界处理！！！
 
-一般情况下，[React 错误边界](https://github.com/lizuncong/mini-react/blob/master/docs/%E5%BC%82%E5%B8%B8/React%E9%94%99%E8%AF%AF%E8%BE%B9%E7%95%8C.md)能够处理大部分的用户业务代码的异常，包括 render 阶段以及 commit 阶段执行的业务代码，但是并不能捕获并处理以下的用户业务代码异常：
+一般情况下，[React 错误边界](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E5%BC%82%E5%B8%B8/React%E9%94%99%E8%AF%AF%E8%BE%B9%E7%95%8C.md)能够处理大部分的用户业务代码的异常，包括 render 阶段以及 commit 阶段执行的业务代码，但是并不能捕获并处理以下的用户业务代码异常：
 
 - 事件处理
 - 异步代码
@@ -281,7 +281,7 @@ React 会捕获合成事件中的错误，但只会将第一个重新抛出，**
 
 当我们点击 'click me' 时，React 会沿着冒泡阶段调用所有的监听函数，并捕获这些错误打印出来。但是，React 只会将第一个错误**重新抛出(rethrowCaughtError)**。可以发现下图中 React 捕获了这两个监听函数中的错误并打印了出来，但 React 只会将第一个监听函数中的错误重新抛出。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/exception-06.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/exception-06.jpg)
 
 ### handleError 如何处理异常
 
@@ -450,7 +450,7 @@ function handleError(root, thrownValue) {
 
 - 1. 调用`createCapturedValue`从当前抛出异常的 fiber 节点开始往上找出所有的 fiber 节点并收集起来，用于在控制台打印 fiber 栈，如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/exception-07.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/exception-07.jpg)
 
 - 2. while 循环负责往上找 ErrorBoundary 组件，如果找不到 ErrorBoundary 组件，则找到 root fiber 来处理异常。这里需要注意这个查找过程，只会找类组件以及
      root 节点。同时，类组件需要满足实现`getDerivedStateFromError`或者`componentDidCatch`方法才能成为 ErrorBoundary

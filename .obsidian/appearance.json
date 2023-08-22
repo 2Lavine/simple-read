@@ -3,5 +3,6 @@
   "theme": "system",
   "cssTheme": "Atom",
   "translucency": false,
-  "nativeMenus": false
+  "nativeMenus": false,
+  "baseFontSize": 17
 }

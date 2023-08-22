@@ -1,4 +1,4 @@
-> [深入概述 React 初次渲染及状态更新主流程](https://github.com/lizuncong/mini-react/blob/master/docs/render/%E6%B7%B1%E5%85%A5%E6%A6%82%E8%BF%B0%20React%E5%88%9D%E6%AC%A1%E6%B8%B2%E6%9F%93%E5%8F%8A%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0%E4%B8%BB%E6%B5%81%E7%A8%8B.md)一文中介绍过 React 渲染过程，即`ReactDOM.render`执行过程分为两个大的阶段：`render` 阶段以及 `commit` 阶段。`React.hydrate`渲染过程和`ReactDOM.render`差不多，两者之间最大的区别就是，`ReactDOM.hydrate` 在 `render` 阶段，会尝试复用(hydrate)浏览器现有的 dom 节点，并相互关联 dom 实例和 fiber，以及找出 dom 属性和 fiber 属性之间的差异。
+> [深入概述 React 初次渲染及状态更新主流程](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/render/%E6%B7%B1%E5%85%A5%E6%A6%82%E8%BF%B0%20React%E5%88%9D%E6%AC%A1%E6%B8%B2%E6%9F%93%E5%8F%8A%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0%E4%B8%BB%E6%B5%81%E7%A8%8B.md)一文中介绍过 React 渲染过程，即`ReactDOM.render`执行过程分为两个大的阶段：`render` 阶段以及 `commit` 阶段。`React.hydrate`渲染过程和`ReactDOM.render`差不多，两者之间最大的区别就是，`ReactDOM.hydrate` 在 `render` 阶段，会尝试复用(hydrate)浏览器现有的 dom 节点，并相互关联 dom 实例和 fiber，以及找出 dom 属性和 fiber 属性之间的差异。
 
 ## Demo
 
@@ -56,7 +56,7 @@ ReactDOM.hydrate(<Home />, document.getElementById("root"));
 
 在客户端开始执行之前，即 `ReactDOM.hydrate` 开始执行前，由于服务端已经返回了 html 内容，浏览器会立马显示内容。对应的真实 DOM 树如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hydrate-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hydrate-01.jpg)
 
 注意，这不是 fiber 树！！
 
@@ -84,7 +84,7 @@ React 在 render 阶段会根据新的 element tree 构建 workInProgress 树，
 
 **React 渲染更新完成后，React 会为每个真实的 dom 实例挂载两个私有的属性：`__reactFiber$`和`__reactProps$`**，以`div#container`为例：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hydrate-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hydrate-02.jpg)
 
 ## ReactDOM.hydrate
 
@@ -181,7 +181,7 @@ function createRootImpl(container, tag, options) {
   return root;
 }
 ```
-这里`container`就是`div#root`节点。`listenToAllSupportedEvents`会给`div#root`节点注册浏览器支持的所有原生事件，比如`onclick`等。[React合成事件](https://github.com/lizuncong/mini-react/blob/master/docs/%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6/%E4%BB%8E0%E5%88%B01%E6%A8%A1%E6%8B%9F%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6.md)一文介绍过，React采用的是事件委托的机制，将所有事件代理到`div#root`节点上。以下面的为例：
+这里`container`就是`div#root`节点。`listenToAllSupportedEvents`会给`div#root`节点注册浏览器支持的所有原生事件，比如`onclick`等。[React合成事件](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6/%E4%BB%8E0%E5%88%B01%E6%A8%A1%E6%8B%9F%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6.md)一文介绍过，React采用的是事件委托的机制，将所有事件代理到`div#root`节点上。以下面的为例：
 ```jsx
 <div id="A" onClick={this.handleClick}>
 button
@@ -455,7 +455,7 @@ function popHydrationState(fiber) {
 ```
 
 以下图为例：
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hydrate-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hydrate-03.jpg)
 
 在 beginWork 阶段对 `p#B` fiber 工作时，发现 dom 树中同一位置的`h1#B`不满足混合的条件，于是继续对比`h1#B`的兄弟节点，即`div#C`，仍然无法混合，经过最多两轮对比后发现`p#B`这个 fiber 没有可以混合的 dom 节点，于是将 `isHydrating` 标记为 false，`hydrationParentFiber = fiberP#B`。`p#B`的子孙节点都不再进行混合的过程。
 
@@ -464,7 +464,7 @@ function popHydrationState(fiber) {
 由于`p#B` fiber 的子节点都已经完成了工作，因此它也可以调用`completeUnitOfWork`完成工作。同样的，在`popHydrationState`函数内部，第一个判断`fiber !== hydrationParentFiber`不成立，两者是相等的。第二个条件`!isHydrating`成立，进入条件语句，首先调用`popToNextHostParent`将`hydrationParentFiber`设置为`p#B`的第一个类型为`HostComponent`的祖先元素，这里是`div#A` fiber，然后将`isHydrating`设置为 true，指示可以为`p#B`的兄弟节点进行混合。
 
 如果服务端返回的 DOM 有多余的情况，则调用`deleteHydratableInstance`将其删除，比如下图中`div#D`节点将会在`div#A`fiber 的`completeUnitOfWork`阶段删除
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hydrate-04.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hydrate-04.jpg)
 
 ### prepareToHydrateHostInstance
 
@@ -518,7 +518,7 @@ render() {
 
 最后，客户端的文本和服务端的children不同，即文本内容不同，也需要提示错误，同时，客户端会纠正这个文本，以客户端的为主。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/hydrate-05.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hydrate-05.jpg)
 
 
 ### prepareToHydrateHostTextInstance

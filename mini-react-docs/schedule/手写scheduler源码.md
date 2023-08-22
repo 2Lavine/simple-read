@@ -68,7 +68,7 @@
 
 呐，老板，我实现了，效果如下，小李开心的说。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-01.jpg)
 
 老板看了看，摇了摇头，这是啥玩意啊
 
@@ -103,7 +103,7 @@ function flushWork() {
 
 小李屁颠屁颠的跑过去给老板看效果：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-02.jpg)
 
 老板心想小伙子能力不错，10 点钟给的需求，10:02 分就已经完成了，真是一个有(压榨)潜力的员工。于是老板满心欢喜的点了下按钮。结果，过了差不多 6 秒页面才更新，同时页面卡死了。。。再次点击按钮都点不了。老板的脸渐渐黑化，这又是啥玩意，赶紧优化一下
 
@@ -139,17 +139,17 @@ function workLoop() {
 
 小李这次不太敢屁颠屁颠的去找老板了，转而悄咪咪地过去。老板以为会有惊喜，立马点击按钮，这次页面动画终于不卡顿了，老板似乎看到了希望，嘴角微微上扬，然而等了差不多 19 秒的时间，页面才更新。这又是啥玩意啊，老板突然歇斯底里。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-03.jpg)
 
 小李确实大意了，在上一次的时候，任务执行总耗时才 6000 毫秒，每个任务执行耗时 2 毫秒，3000 个任务，最多也就 6000 毫秒，为啥这次执行耗时 19266 毫秒，远比之前多出了 13266 毫秒？
 
 小李看了下 Performance。虽然使用了`setTimeout(workLoop, 0)`0 毫秒的时间间隔，但是浏览器依然会有 4 到 5 毫秒的间隔时间。如果两次 setTimeout 之间最少间隔 4 毫秒，都有至少 3000 \* 4 = 12000 毫秒的耗时了。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-04.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-04.jpg)
 
 ### 问题分析
 
-即使`setTimeout(workLoop, 0)`设置了 0 毫秒的时间间隔，但浏览器也会有至少 4 到 5 毫秒的延迟。在执行一组数量不限的任务时，这个耗时是不容忽视的。**作为一个专业的前端切图仔，我们在追求页面动画流畅、不卡顿的同时，应该还要快速响应用户的输入从而快速更新页面**。显然，setTimeout 由于 4 毫秒间隔的原因，不适用于我们的场景。那还有哪些 API 既可以出发宏任务事件，两次宏任务之间间隔有非常短呢？小李想起了在[哪些 API 适用于任务调度](https://github.com/lizuncong/mini-react/blob/master/docs/schedule/%E5%93%AA%E4%BA%9BAPI%E9%80%82%E5%90%88%E7%94%A8%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6.md)一文中学到的知识，`MessageChannel`在一帧内的调用频率超高，且两次调用的时间间隔极短。于是小李决定尝试一下这个 API
+即使`setTimeout(workLoop, 0)`设置了 0 毫秒的时间间隔，但浏览器也会有至少 4 到 5 毫秒的延迟。在执行一组数量不限的任务时，这个耗时是不容忽视的。**作为一个专业的前端切图仔，我们在追求页面动画流畅、不卡顿的同时，应该还要快速响应用户的输入从而快速更新页面**。显然，setTimeout 由于 4 毫秒间隔的原因，不适用于我们的场景。那还有哪些 API 既可以出发宏任务事件，两次宏任务之间间隔有非常短呢？小李想起了在[哪些 API 适用于任务调度](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/schedule/%E5%93%AA%E4%BA%9BAPI%E9%80%82%E5%90%88%E7%94%A8%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6.md)一文中学到的知识，`MessageChannel`在一帧内的调用频率超高，且两次调用的时间间隔极短。于是小李决定尝试一下这个 API
 
 > 不使用 Promise 或者 MutationObserver 等微任务 API 的原因是，微任务是在页面更新前全部执行完成的，效果和同步执行任务差不多。
 
@@ -182,15 +182,15 @@ function workLoop() {
 
 这次小李学聪明了，自测了下，效果如下，可以发现耗时只用了 6090 毫秒！！！为什么会多出了 90 毫秒？观察 performance 可以看出，虽然两次宏任务之间间隔非常短，但也会导致额外的开销，累积起来就有了几毫秒的差异。不过，这已经很贴近 6000 毫秒的执行耗时了，优势远胜于 setTimeout
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-05.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-05.jpg)
 
 可以看到一帧之内浏览器的绘制时间，以及 message channel 触发的次数
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-06.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-06.jpg)
 
 注意，这里的执行耗时也会受机器性能的影响，目前小李在多台电脑上尝试了下，一样的代码，执行耗时不太一样。当然不影响我们理解 schedule 的原理。在同一台电脑上跑，有时候耗时也不一样，比如：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-07.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-07.jpg)
 
 老板终于满意了
 
@@ -241,11 +241,11 @@ function workLoop() {
 
 效果如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-08.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-08.jpg)
 
 放大每一帧可以看到：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-09.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-09.jpg)
 
 ### 问题分析
 
@@ -303,11 +303,11 @@ function workLoop() {
 
 效果如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-10.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-10.jpg)
 
 放大每一帧可以看到，每一个宏任务事件执行时间大约 5-6ms。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-11.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-11.jpg)
 
 ### 问题分析
 
@@ -326,11 +326,11 @@ for (let i = 0; i < 3000; i++) {
 
 效果如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-12.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-12.jpg)
 
 放大每一帧可以看到：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/schedule-13.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/schedule-13.jpg)
 
 至此，似乎我们的目标已经达成：在尽可能短的时间内完成耗时长的一组工作任务，同时又不会长时间占用浏览器，让浏览器处理高优先级的任务，比如响应用户输入、绘制页面等
 

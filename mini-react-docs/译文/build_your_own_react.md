@@ -248,7 +248,7 @@ MiniReact.render(
 ```
 对应的fiber tree如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/fiberTree.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/fiberTree.jpg)
 
 ```js
 import React from 'react';
@@ -390,7 +390,7 @@ MiniReact.render(element, container)
 - `React Element Tree`是由`React.createElement`方法创建的树形结构对象
 - `Fiber Tree`是根据`React Element Tree`创建来的树。每个Fiber节点保存着真实的DOM节点，并且保存着对`React Element Tree`中对应的`Element`节点的应用。注意，`Element`节点并不会保存对`Fiber`节点的应用
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/elementTree-FiberTree.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/elementTree-FiberTree.jpg)
 
 
 

@@ -195,7 +195,7 @@ unstable_scheduleCallback(NormalPriority, printE);
 
 performance 查看调用栈信息。需要注意，`printA`等任务的执行耗时都是 100 毫秒，远远超过了 5 毫秒，因此每执行完一次 task，都需要让出控制权，这也是为啥我们在 performance 中看到这些任务是分段执行的原因
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/scheduler-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/scheduler-01.jpg)
 
 ### 2.取消某个任务
 
@@ -312,7 +312,7 @@ while (new Date().getTime() - start < 248) {}
 
 这里我们将 taskA、taskB、taskC 打印出来：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/scheduler-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/scheduler-02.jpg)
 
 由于主线程有个耗时 248 毫秒的任务，这个任务执行完后，才开始执行 taskB，此时的 taskB 还没过期。但是 taskB 耗时 100 毫秒，下一个执行 taskC 时，taskC 的执行开始时间就是 248 + 100，很明显 taskC 超时了。由于 taskA 需要 5000 毫秒才超时，时间足够，所以 taskA 不会超时。
 
@@ -348,7 +348,7 @@ while (new Date().getTime() - start < 248) {}
 
 这里，taskA 开始执行的时间就是 `currentTime + 248 + 100 + 4652`，很明显 taskA 超时了。控制台打印如下：
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/scheduler-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/scheduler-03.jpg)
 
 ### 5.任务切片
 
@@ -376,7 +376,7 @@ unstable_scheduleCallback(NormalPriority, printC);
 
 可以发现，printC 执行的总耗时为 4 + 6 + 7 = 17 毫秒。几乎占用了一帧的时间。
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/scheduler-04.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/scheduler-04.jpg)
 
 我们可以将这个任务拆分成几小段执行，任务切片的原理如下：
 
@@ -420,7 +420,7 @@ yield：交出控制权
 
 分成了两段执行，第一段是因为执行 C1 时只用了 4 毫秒，还没达到 5 毫秒的间隔，因此不需要让出控制权，继续执行 C2，由于 C1+C2 总耗时 10 毫秒，此时需要让出控制权，在下一个事件循环中再执行 C3
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/scheduler-05.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/scheduler-05.jpg)
 
 再来看下面的例子
 

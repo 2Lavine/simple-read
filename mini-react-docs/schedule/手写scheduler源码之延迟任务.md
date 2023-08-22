@@ -1,4 +1,4 @@
-> 本章是手写 React Scheduler 异步任务调度源码系列的第五篇文章，在上一篇文章我们已经实现了按优先级调度任务，可以查看[手写 scheduler 源码之优先级](https://github.com/lizuncong/mini-react/blob/master/docs/schedule/%E6%89%8B%E5%86%99scheduler%E6%BA%90%E7%A0%81%E4%B9%8B%E4%BC%98%E5%85%88%E7%BA%A7.md)。本章我们继续实现延迟任务
+> 本章是手写 React Scheduler 异步任务调度源码系列的第五篇文章，在上一篇文章我们已经实现了按优先级调度任务，可以查看[手写 scheduler 源码之优先级](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/schedule/%E6%89%8B%E5%86%99scheduler%E6%BA%90%E7%A0%81%E4%B9%8B%E4%BC%98%E5%85%88%E7%BA%A7.md)。本章我们继续实现延迟任务
 
 ## 延迟任务
 

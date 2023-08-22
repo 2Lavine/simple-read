@@ -176,9 +176,9 @@ existingChildren.forEach(function (child) {
 });
 ```
 
-最终，我们得到下面的副作用链表，如果对 React 构建副作用链表不熟悉的，可以看这篇文章[构建副作用链表算法](https://github.com/lizuncong/mini-react/blob/master/docs/reconciler/%E6%9E%84%E5%BB%BA%E5%89%AF%E4%BD%9C%E7%94%A8%E9%93%BE%E8%A1%A8%E7%AE%97%E6%B3%95.md)
+最终，我们得到下面的副作用链表，如果对 React 构建副作用链表不熟悉的，可以看这篇文章[构建副作用链表算法](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/reconciler/%E6%9E%84%E5%BB%BA%E5%89%AF%E4%BD%9C%E7%94%A8%E9%93%BE%E8%A1%A8%E7%AE%97%E6%B3%95.md)
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-01.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-01.jpg)
 
 ### render 阶段：多节点 Dom Diff 节点移动规则详解
 
@@ -270,7 +270,7 @@ lastPlacedIndex = placeChild(li#F2, lastPlacedIndex, newIdx);
 
 render 阶段我们将得到一个副作用链表，commit 阶段遍历副作用链表上的节点，并执行对应的操作。副作用链表如下
 
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-02.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-02.jpg)
 
 commit 阶段操作真实 dom 的逻辑都在`commitMutationEffects` 函数中，这个函数从头开始遍历副作用链表，其中 `commitPlacement` 执行的是插入的逻辑。`commitWork`执行的是更新的逻辑。`commitDeletion` 执行的是删除的逻辑。
 
@@ -315,17 +315,17 @@ function commitMutationEffects(root, renderPriorityLevel) {
 ```
 
 `commitMutationEffects`执行前，旧节点如下：
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-03.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-03.jpg)
 下面我们开始依次遍历副作用链表：
 
 1. 第一步：删除 li#B 节点
-   ![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-04.jpg)
+   ![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-04.jpg)
 
 2. 第二步：删除 li#E 节点
-   ![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-05.jpg)
+   ![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-05.jpg)
 
 3. 第三步：更新 li#A 节点
-   ![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-06.jpg)
+   ![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-06.jpg)
 
 4. 第四步：插入新节点 li#B2
 
@@ -378,29 +378,29 @@ function insertOrAppendPlacementNode(node, before, parent) {
 首先获取当前节点的父节点，其次调用`getHostSibling`查找第一个**没有插入副作用，即!(node.flags & Placement)为 true**的兄弟节点，如果该兄弟节点存在，则在该兄弟节点前插入新的节点，否则直接追加到父节点的子节点后面。
 
 在我们的例子中，`li#B2` 后面第一个没有插入副作用的节点是 `li#D2`，因此 React 在 `li#D` 前面插入 `li#B2`
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-07.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-07.jpg)
 
 5. 第五步：更新 li#D 节点
-   ![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-08.jpg)
+   ![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-08.jpg)
 
 6. 第六步：插入新节点 li#H
 
    和第四步一样，我们需要找到第一个没有插入副作用的兄弟节点，对于 `li#H` 来说，第一个没有插入副作用的兄弟节点就是 `li#F2`，因此在`li#F`前面插入`li#H`
-   ![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-09.jpg)
+   ![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-09.jpg)
 
 7. 第七步：插入并更新节点 li#C2
 
 注意 `li#C2` 的副作用标志是`6`，这是插入并更新的标志，实际上这是旧节点需要移动的意思。首先执行的是插入操作，和第四步一样，我们需要为 `li#C2` 找到第一个没有插入副作用的兄弟节点，这里是 `li#F`，因此在 `li#F` 前面插入 `li#C`
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-10.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-10.jpg)
 然后执行更新操作
-![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-11.jpg)
+![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-11.jpg)
 
 8. 第八步：更新 li#F 节点
-   ![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-12.jpg)
+   ![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-12.jpg)
 
 9. 第九步：插入新节点 li#G2
    和第四步一样，我们需要为`li#G2`找到第一个没有插入副作用的兄弟节点，`li#G2`已经没有兄弟节点了，因此我们直接调用它父节点的`appendChild`方法往后面追加即可
-   ![image](https://github.com/lizuncong/mini-react/blob/master/imgs/dom-diff-13.jpg)
+   ![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/dom-diff-13.jpg)
 
 ## 多节点 DOM Diff 主要源码
 
