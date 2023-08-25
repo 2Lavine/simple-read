@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "done/盘点fiber中常见的副作用标志flags.md",
+                "file": "md/Untitled.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "beginWork",
+                "query": "输入的消息改变一点对它的哈希改变很大",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "done/盘点fiber中常见的副作用标志flags.md"
+                "file": "md/Untitled.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/盘点fiber中常见的副作用标志flags.md",
+                "file": "md/Untitled.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/盘点fiber中常见的副作用标志flags.md",
+                "file": "md/Untitled.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -155,13 +155,22 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "d91abc27a3f4b66e",
   "lastOpenFiles": [
+    "md/git branch.md",
+    "md/Untitled.md",
+    "md/Utility-First Fundamentals - Tailwind CSS.md",
+    "md/EPAT.md",
+    "md/Scrum 3role,5events,3product.md",
+    "achieve/23-07-24-28. Hash  WTF Academy-H8AK2H2.md",
     "done/fiber.updateQueue.md",
-    "done/盘点fiber中常见的副作用标志flags.md",
     "done/fiber双缓冲树.md",
-    "done/setState同步异步更新的问题.md",
     "done/how_setstate_works.md",
+    "done/setState同步异步更新的问题.md",
+    "done/盘点fiber中常见的副作用标志flags.md",
+    "output/2023-8-22 12-10-42.html",
+    "WuCai/23-07-24-25. Create2  WTF Academy-H8AKHFM.md",
+    "WuCai/23-07-24-24. 在合约中创建新合约  WTF Academy-H8AKH76.md",
     "mini-react-docs/how_to_debug_react_source_code.md",
     "mini-react-docs/React17与React18源码之间的差异.md",
     "mini-react-docs/ReactContext/context源码解析.md",
@@ -176,16 +185,7 @@
     "Untitled.md",
     "星标.md",
     "Pasted image 20230822135159.png",
-    "md/agile.md",
     "done/23-07-29-50. 多签钱包  WTF Academy-H8AA7B9.md",
-    "output/2023-8-22 12-10-42.html",
-    "achieve/23-07-29-50. 多签钱包  WTF Academy-H8AA7B9.md",
-    "achieve/23-07-29-49. 通用可升级代理  WTF Academy-H8AA7BH.md",
-    "achieve/23-07-29-47. 可升级合约  WTF Academy-H8AA73C.md",
-    "achieve/23-07-29-48. 透明代理  WTF Academy-H8AA73D.md",
-    "achieve/23-07-29-45. 时间锁  WTF Academy-H8AADF9.md",
-    "achieve/23-07-29-46. 代理合约  WTF Academy-H8AA73B.md",
-    "achieve/23-07-29-44. 代币锁  WTF Academy-H8AADFB.md",
     "3.js",
     "output/2023-8-15 15-25-48.html",
     "Pasted image 20230815134417.png",
