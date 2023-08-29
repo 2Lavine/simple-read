@@ -5,3 +5,5 @@ git hooks=>work flow=>CI(test scan build)=>CD(delivery
 
 Definition of done
 ui,abi,test,(unit t,inter s)deployment
+
+![[Pasted image 20230815134417.png]]

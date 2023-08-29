@@ -11,8 +11,12 @@
             "id": "8f180537e4ee59af",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "done/VC,CI.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -58,7 +62,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "done/VC,CI.md"
+              }
             }
           },
           {
@@ -89,6 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "done/VC,CI.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,6 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "done/VC,CI.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -149,17 +157,24 @@
   },
   "active": "8f180537e4ee59af",
   "lastOpenFiles": [
+    "加藤惠 2.jpg.md",
+    "done/VC,CI.md",
+    "_resources/Pasted image 20230815134417.png",
+    "_resources/加藤惠 2.jpg",
+    "Pasted image 20230822135159.png",
+    "Pasted image 20230829122004.png",
+    "Pasted image 20230829121633.png",
+    "Pasted image 20230829122153.png",
+    "_resources/百万级数据 excel 导出功能如何实现？/98008aa3d533cfe14da22f58d7402b75_MD5.png",
+    "_resources/百万级数据 excel 导出功能如何实现？/356e7284aaa5791b09e2de96f3f1f64b_MD5.webp",
+    "_resources/百万级数据 excel 导出功能如何实现？/54f2e74e4cb3cc4b0669eb65b4926e78_MD5.webp",
+    "_resources/README/e17b0a45a6a89ba5ffe9598d27865bb8_MD5.svg",
     "md/Untitled.md",
     "done/class digram.md",
     "output/2023-8-29 21-37-27.html",
     "achieve/class digram.md",
     "achieve/VC,CI.md",
-    "done/VC,CI.md",
     "md/README.md",
-    "Pasted image 20230829122153.png",
-    "Pasted image 20230829122004.png",
-    "Pasted image 20230829121633.png",
-    "Pasted image 20230829121404.png",
     "problems/0027.移除元素.md",
     "problems",
     "achieve/盘点fiber中常见的副作用标志flags.md",
@@ -181,20 +196,13 @@
     "done/一次就能看懂的 Tailwind CSS 介绍.md",
     "done/学习的本质是不是 “能理解就理解，不能理解的就硬背”？ - 知乎.md",
     "WuCai/23-08-26-Web 3.0 通识课-H8K8A58.md",
-    "md/Scrum 3role,5events,3product.md",
     "output/2023-8-22 12-10-42.html",
-    "Pasted image 20230822135413.png",
-    "Pasted image 20230822135159.png",
     "3.js",
     "output/2023-8-15 15-25-48.html",
-    "Pasted image 20230815134417.png",
-    "Pasted image 20230815133430.png",
     "md/mini-react/docs/schedule / 手写 scheduler 源码. md at master · lizuncong",
     "md/mini-react/docs/schedule / 哪些 API 适合用于任务调度. md at master · lizuncong",
     "md/mini-react/docs/schedule/scheduler 用法详解. md at master · lizuncong",
     "md/mini-react/docs/schedule ",
-    "Pasted image 20230814132849.png",
-    "Pasted image 20230814120443.png",
     "未命名.canvas"
   ]
 }

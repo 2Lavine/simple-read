@@ -1,7 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const options = {
-  baseURL: "//Mac/Home\/Users/lmelon/myGitHubMac/simple-read/",
+  // \\Mac\Home\Downloads
+  baseURL: "/Users/lmelon/myGitHubMac/simple-read/_resources",
+  relativeBaseURL: "//Mac/Home/myGitHubMac/simple-read/_resources",
 };
 const obsidianImages = require("markdown-it-obsidian-images")(options);
 const md = require("markdown-it")({ html: true }).use(obsidianImages);
@@ -38,8 +40,7 @@ function readDirectory(readPath) {
           "<h1>" +
           path.basename(file, path.extname(file)) +
           "</h1>" +
-          md.render(fileContent) +
-          "<h1> </h1>";
+          md.render(fileContent);
         fs.rename(filePath, path.join(acheievePath, file), (err) => {
           console.error(err);
         });
