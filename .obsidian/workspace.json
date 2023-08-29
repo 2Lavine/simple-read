@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "910a60fb94fdb1ba",
+        "id": "97ae847c5e89adb0",
         "type": "tabs",
         "children": [
           {
-            "id": "d91abc27a3f4b66e",
+            "id": "8f180537e4ee59af",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -44,7 +44,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "(重新)",
+                "query": "副作用主要用来标记某些生命周期方法",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -147,11 +147,24 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "d91abc27a3f4b66e",
+  "active": "8f180537e4ee59af",
   "lastOpenFiles": [
+    "md/Untitled.md",
+    "done/class digram.md",
+    "output/2023-8-29 21-37-27.html",
+    "achieve/class digram.md",
+    "achieve/VC,CI.md",
+    "done/VC,CI.md",
+    "md/README.md",
+    "Pasted image 20230829122153.png",
+    "Pasted image 20230829122004.png",
+    "Pasted image 20230829121633.png",
+    "Pasted image 20230829121404.png",
+    "problems/0027.移除元素.md",
+    "problems",
+    "achieve/盘点fiber中常见的副作用标志flags.md",
     "done/Utility-First Fundamentals - Tailwind CSS.md",
     "output/2023-8-26 21-39-20.html",
-    "achieve/盘点fiber中常见的副作用标志flags.md",
     "achieve/学习的本质是不是 “能理解就理解，不能理解的就硬背”？ - 知乎.md",
     "achieve/一次就能看懂的 Tailwind CSS 介绍.md",
     "achieve/setState同步异步更新的问题.md",
@@ -163,18 +176,12 @@
     "achieve/TailwindCSS 的使用，看这一篇就够了！.md",
     "achieve/EPAT.md",
     "done/TailwindCSS 的使用，看这一篇就够了！.md",
-    "md/Untitled.md",
     "done/git branch.md",
     "done/EPAT.md",
     "done/一次就能看懂的 Tailwind CSS 介绍.md",
     "done/学习的本质是不是 “能理解就理解，不能理解的就硬背”？ - 知乎.md",
     "WuCai/23-08-26-Web 3.0 通识课-H8K8A58.md",
     "md/Scrum 3role,5events,3product.md",
-    "achieve/23-07-24-28. Hash  WTF Academy-H8AK2H2.md",
-    "done/fiber.updateQueue.md",
-    "done/fiber双缓冲树.md",
-    "done/how_setstate_works.md",
-    "done/setState同步异步更新的问题.md",
     "output/2023-8-22 12-10-42.html",
     "Pasted image 20230822135413.png",
     "Pasted image 20230822135159.png",
@@ -186,14 +193,8 @@
     "md/mini-react/docs/schedule / 哪些 API 适合用于任务调度. md at master · lizuncong",
     "md/mini-react/docs/schedule/scheduler 用法详解. md at master · lizuncong",
     "md/mini-react/docs/schedule ",
-    "md/mini-react/docs/schedule",
-    "md/mini-react/docs",
     "Pasted image 20230814132849.png",
     "Pasted image 20230814120443.png",
-    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8074c71fa8ae2e699cb73bf4f1a710aa_MD5.webp",
-    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/eca6befa5d5237f99cf43e97ab0ccb3c_MD5.webp",
-    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/699f80edea9916bd27066c2d0be514ff_MD5.webp",
-    "_resources/看了就会，手写 Promise 原理，最通俗易懂的版本！！！/8384ea4c8037ea8e30f600fccb7f46dc_MD5.webp",
     "未命名.canvas"
   ]
 }
