@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const options = {
-  baseURL: "../",
+  baseURL: "//Mac/Home\/Users/lmelon/myGitHubMac/simple-read/",
 };
 const obsidianImages = require("markdown-it-obsidian-images")(options);
 const md = require("markdown-it")({ html: true }).use(obsidianImages);
