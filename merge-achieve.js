@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const options = {
   // \\Mac\Home\Downloads
-  baseURL: "/Users/lmelon/myGitHubMac/simple-read/_resources/",
-  relativeBaseURL: "//Mac/Home/myGitHubMac/simple-read/_resources/",
+  baseURL: "file://Mac/Home/myGitHubMac/simple-read/_resources/",
+  relativeBaseURL: "file://Mac/Home/myGitHubMac/simple-read/_resources/",
 };
 const obsidianImages = require("markdown-it-obsidian-images")(options);
 const md = require("markdown-it")({ html: true }).use(obsidianImages);
