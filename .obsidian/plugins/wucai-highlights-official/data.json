@@ -8,7 +8,7 @@
   "refreshNotes": false,
   "notesToRefresh": [],
   "reimportShowConfirmation": true,
-  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6MTE1Mjk4OSwibG5pIjowLCJja1BLSUQiOjAsImNrTklEIjowLCJja1QiOjE2OTMwNTYzOTN9",
+  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6MTE4NTIwOCwibG5pIjowLCJja1BLSUQiOjAsImNrTklEIjowLCJja1QiOjE2OTM1NDY0NzB9",
   "dataVersion": 0,
   "notePaths": {
     "H8A6H72": "WuCai/LearnVim_zh_cnch01_starting_vim.md at master · wsdjegLearnVim_zh_cn · GitHub-H8A6H72.md",
@@ -109,7 +109,9 @@
     "H8AA7BH": "WuCai/23-07-29-49. 通用可升级代理  WTF Academy-H8AA7BH.md",
     "H8AA7B9": "WuCai/23-07-29-50. 多签钱包  WTF Academy-H8AA7B9.md",
     "H8KCCEA": "WuCai/23-08-13-Vite App-H8KCCEA.md",
-    "H8K8A58": "WuCai/23-08-26-Web 3.0 通识课-H8K8A58.md"
+    "H8K8A58": "WuCai/23-08-26-Web 3.0 通识课-H8K8A58.md",
+    "H8KHKF5": "WuCai/23-08-31-leetcodemasterproblems0203.移除链表元素.md at master · youngyangyang04leetcodemaster-H8KHKF5.md",
+    "H8KHCB2": "WuCai/23-08-31-leetcodemasterproblems0142.环形链表II.md at master · youngyangyang04leetcodemaster-H8KHCB2.md"
   },
   "exportConfig": {
     "titleFormat": 5,
@@ -121,6 +123,9 @@
     "tagStyle": 2,
     "haveWuCaiTag": 1,
     "obTemplate": "{% block highlights %}\n{% for item in highlights %}\n{{ item | style1({anno:\"> __想法__：\"}) }}\n{% endfor %}\n{% endblock %}\n\n!!!PAGE NOTE!!!\n{% block pagenote %}\n{{pagenote}}\n{% endblock %}\n\n{{tags}} #五彩插件 [原文]({{url}})\n更新时间: {{updateat}}",
-    "obTemplateVer": 0
+    "obTemplateVer": 0,
+    "pageMirrorStyle": 1,
+    "pageMirrorExcludeTag": "",
+    "pageMirrorOnlyTag": ""
   }
 }

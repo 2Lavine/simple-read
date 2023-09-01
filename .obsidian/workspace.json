@@ -11,13 +11,52 @@
             "id": "8f180537e4ee59af",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "_resources/Pasted image 20230829122153.png"
+                "file": "md/day03_designModel.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "0e0cc2f8f6686839",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "md/README.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "1a358194b00838c1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GE/常用词.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "b0b2cd43276b475b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GE/常用词.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -46,7 +85,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "副作用主要用来标记某些生命周期方法",
+                "query": "associat",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -61,7 +100,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_resources/Pasted image 20230829122153.png"
+                "file": "GE/常用词.md"
               }
             }
           },
@@ -93,7 +132,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "_resources/Pasted image 20230829122153.png",
+                "file": "GE/常用词.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +149,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "_resources/Pasted image 20230829122153.png",
+                "file": "GE/常用词.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -153,10 +192,25 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "8f180537e4ee59af",
+  "active": "b0b2cd43276b475b",
   "lastOpenFiles": [
-    "output/2023-8-29 22-16-32.html",
+    "GE/公考成语.md",
+    "md/day03_designModel.md",
+    "GE/常用词.md",
+    "GE/Untitled.md",
+    "md/README.md",
+    "Untitled",
+    "GE",
+    "WuCai/23-08-31-leetcodemasterproblems0142.环形链表II.md at master · youngyangyang04leetcodemaster-H8KHCB2.md",
+    "WuCai/23-08-31-leetcodemasterproblems0203.移除链表元素.md at master · youngyangyang04leetcodemaster-H8KHKF5.md",
+    "python3 leet.md",
+    "_resources/Pasted image 20230830140940.png",
+    "_resources/Pasted image 20230830140936 1.png",
+    "_resources/Pasted image 20230830140936.png",
     "achieve/class digram.md",
+    "_resources/Pasted image 20230830092512.png",
+    "_resources/Pasted image 20230829122153.png",
+    "output/2023-8-29 22-16-32.html",
     "achieve/VC,CI.md",
     "done/class digram.md",
     "done/VC,CI.md",
@@ -168,14 +222,7 @@
     "_resources/Pasted image 20230822135159.png",
     "_resources/Pasted image 20230829122004.png",
     "_resources/Pasted image 20230829121633.png",
-    "_resources/Pasted image 20230829122153.png",
-    "_resources/百万级数据 excel 导出功能如何实现？/98008aa3d533cfe14da22f58d7402b75_MD5.png",
-    "_resources/百万级数据 excel 导出功能如何实现？/356e7284aaa5791b09e2de96f3f1f64b_MD5.webp",
-    "_resources/百万级数据 excel 导出功能如何实现？/54f2e74e4cb3cc4b0669eb65b4926e78_MD5.webp",
-    "_resources/README/e17b0a45a6a89ba5ffe9598d27865bb8_MD5.svg",
-    "md/Untitled.md",
     "output/2023-8-29 21-37-27.html",
-    "md/README.md",
     "problems/0027.移除元素.md",
     "problems",
     "achieve/盘点fiber中常见的副作用标志flags.md",
@@ -191,16 +238,8 @@
     "achieve/Utility-First Fundamentals - Tailwind CSS.md",
     "achieve/TailwindCSS 的使用，看这一篇就够了！.md",
     "achieve/EPAT.md",
-    "done/TailwindCSS 的使用，看这一篇就够了！.md",
-    "done/git branch.md",
-    "done/EPAT.md",
-    "done/一次就能看懂的 Tailwind CSS 介绍.md",
-    "done/学习的本质是不是 “能理解就理解，不能理解的就硬背”？ - 知乎.md",
     "output/2023-8-22 12-10-42.html",
     "3.js",
-    "output/2023-8-15 15-25-48.html",
-    "md/mini-react/docs/schedule / 手写 scheduler 源码. md at master · lizuncong",
-    "md/mini-react/docs/schedule / 哪些 API 适合用于任务调度. md at master · lizuncong",
     "未命名.canvas"
   ]
 }
