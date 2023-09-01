@@ -18,45 +18,8 @@
                 "source": false
               }
             }
-          },
-          {
-            "id": "0e0cc2f8f6686839",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "md/README.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "1a358194b00838c1",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "GE/常用词.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "b0b2cd43276b475b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "GE/常用词.md",
-                "mode": "source",
-                "source": false
-              }
-            }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -100,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "GE/常用词.md"
+                "file": "md/day03_designModel.md"
               }
             }
           },
@@ -132,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "GE/常用词.md",
+                "file": "md/day03_designModel.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -149,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "GE/常用词.md",
+                "file": "md/day03_designModel.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -192,13 +155,18 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "b0b2cd43276b475b",
+  "active": "8f180537e4ee59af",
   "lastOpenFiles": [
-    "GE/公考成语.md",
-    "md/day03_designModel.md",
     "GE/常用词.md",
-    "GE/Untitled.md",
+    "output/2023-9-1 13-56-03.html",
+    "achieve/常用词.md",
+    "achieve/公考成语.md",
+    "output/2023-9-1 13-55-48.html",
+    "GE/公考成语.md",
     "md/README.md",
+    "output/2023-9-1 13-51-53.html",
+    "md/day03_designModel.md",
+    "GE/Untitled.md",
     "Untitled",
     "GE",
     "WuCai/23-08-31-leetcodemasterproblems0142.环形链表II.md at master · youngyangyang04leetcodemaster-H8KHCB2.md",
@@ -227,7 +195,6 @@
     "problems",
     "achieve/盘点fiber中常见的副作用标志flags.md",
     "done/Utility-First Fundamentals - Tailwind CSS.md",
-    "output/2023-8-26 21-39-20.html",
     "achieve/学习的本质是不是 “能理解就理解，不能理解的就硬背”？ - 知乎.md",
     "achieve/一次就能看懂的 Tailwind CSS 介绍.md",
     "achieve/setState同步异步更新的问题.md",
@@ -235,11 +202,6 @@
     "achieve/git branch.md",
     "achieve/fiber双缓冲树.md",
     "achieve/fiber.updateQueue.md",
-    "achieve/Utility-First Fundamentals - Tailwind CSS.md",
-    "achieve/TailwindCSS 的使用，看这一篇就够了！.md",
-    "achieve/EPAT.md",
-    "output/2023-8-22 12-10-42.html",
-    "3.js",
     "未命名.canvas"
   ]
 }
