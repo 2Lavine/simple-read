@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+                "file": "GE/常用词.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md"
+                "file": "GE/常用词.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+                "file": "GE/常用词.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+                "file": "GE/常用词.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -155,53 +155,53 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "4bdc6d71e5f9ec66",
+  "active": "7c656948499aebb2",
   "lastOpenFiles": [
-    "done/学完这篇 Nest.js 实战，还没入门的来锤我！(长文预警).md",
-    "md/README.md",
-    "done/初识 node 框架 Nest.js.md",
-    "done/2023-09-04.md",
-    "done/2023-09-03.md",
     "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
-    "done/Nest.js 的微服务，写起来也太简单了吧！.md",
-    "_resources/0abe74dbdc886c5ee07de8728a89611a_MD5.webp",
-    "_resources/1818494ce5b47994a1209a032bb08432_MD5.webp",
-    "_resources/8d5c9bf6df6a6ef0471387fb443687a5_MD5.webp",
-    "_resources/596f2e64050c59200ca5cc8b9fb2e003_MD5.webp",
-    "_resources/8f025618d32de1121c9c95e16fe86de5_MD5.webp",
-    "_resources/41fc78331409bdf3bf08f80bcaba09a7_MD5.webp",
-    "_resources/cc1fb1f5668814f930e492dea190f575_MD5.webp",
-    "_resources/d9fdc84941e9d6d894eee3c74caf4631_MD5.webp",
-    "_resources/2f2402ffd07fa90647425e8f1954c6d7_MD5.webp",
-    "_resources/6fc030aaa6182f2f423ff17db26dce75_MD5.webp",
+    "output/成语和常用词.html",
+    "output/2000part1.html",
     "done/阅读理解与记忆系统.md",
+    "done/学完这篇 Nest.js 实战，还没入门的来锤我！(长文预警).md",
+    "done/初识 node 框架 Nest.js.md",
     "done/「NestJS」 教程了 - 基础知识准备.md",
     "done/day03_designModel.md",
+    "done/Nest.js 的微服务，写起来也太简单了吧！.md",
+    "done/2023-09-04.md",
+    "done/2023-09-03.md",
+    "done",
+    "achieve/01第一部分  言语理解与表达考点强化 1.md",
+    "_resources/fe59fae96e866d4784a0c27c879f7bc9_MD5.webp",
+    "_resources/fe5198ad897a9864e88c1e8b28a611a9_MD5.webp",
+    "_resources/fb07051cb2813eeb781c6a0da11c7479_MD5.jpg",
+    "_resources/f3609461558ea6f23f63218dafb28804_MD5.webp",
+    "_resources/f27a8d1f1a5c03399a8e9679900eda27_MD5.jpg",
+    "_resources/f0d2aed6910fbff2f3e47778942bee5b_MD5.webp",
+    "_resources/f04bfbf15577847fcc82248ec2e8e71f_MD5.webp",
+    "_resources/ebfefd301fc496268455520e96bb3e23_MD5.webp",
+    "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
+    "md/Java 工厂方法模式讲解和代码示例.md",
+    "md/README.md",
+    "_resources/0abe74dbdc886c5ee07de8728a89611a_MD5.webp",
     "node_modules/argparse/CHANGELOG.md",
     "achieve/TailwindCSS 的使用，看这一篇就够了！.md",
     "python3 leet.md",
-    "GE/vsc_doc/new-公考成语.md",
-    "output/2000part1.html",
-    "output/成语和常用词.html",
+    "GE/new-公考成语.md",
     "output/言语理解与表达考点强化.html",
     "output/2023-9-1 20-32-59.html",
-    "achieve/01第一部分  言语理解与表达考点强化 1.md",
-    "GE/vsc_doc/new-常用词.md",
-    "GE/vsc_doc/常用词.md",
-    "GE/vsc_doc/公考成语.md",
+    "GE/new-常用词.md",
+    "GE/常用词.md",
+    "GE/公考成语.md",
     "done/01第一部分  言语理解与表达考点强化 1.md",
-    "GE/vsc_doc/xingce2000/01第一部分  言语理解与表达考点强化.md",
-    "GE/vsc_doc/xingce2000/06第六部分  资料分析考点强化.md",
-    "GE/vsc_doc/xingce2000/05第五部分 类比推理考点强化.md",
-    "GE/vsc_doc/xingce2000/04第四部分 定义判断考点强化.md",
-    "GE/vsc_doc/xingce2000/03第三部分 逻辑判断考点强化.md",
-    "GE/vsc_doc/xingce2000/02第二部分  图形推理考点强化.md",
+    "GE/xingce2000/01第一部分  言语理解与表达考点强化.md",
+    "GE/xingce2000/06第六部分  资料分析考点强化.md",
+    "GE/xingce2000/05第五部分 类比推理考点强化.md",
+    "GE/xingce2000/04第四部分 定义判断考点强化.md",
+    "GE/xingce2000/03第三部分 逻辑判断考点强化.md",
     "GE/vsc_doc/tool.js",
     "GE/vsc_doc/行测2000.txt",
-    "GE/vsc_doc/xingce2000",
+    "GE/xingce2000",
     "GE/vsc_doc",
     "GE/xingce2000/11第五节 概率问题\r",
-    "GE/xingce2000/02第二部分  图形推理考点强化\r",
     "未命名.canvas"
   ]
 }
