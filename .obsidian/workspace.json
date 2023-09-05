@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "97ae847c5e89adb0",
+        "id": "4a60aee044d0c217",
         "type": "tabs",
         "children": [
           {
-            "id": "8f180537e4ee59af",
+            "id": "4bdc6d71e5f9ec66",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/day03_designModel.md",
+                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabeticalReverse"
+                "sortOrder": "alphabetical"
               }
             }
           },
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "associat",
+                "query": "tag:#setDefaults",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/day03_designModel.md"
+                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/day03_designModel.md",
+                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,9 +112,9 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/day03_designModel.md",
+                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
                 "linksCollapsed": false,
-                "unlinkedCollapsed": true
+                "unlinkedCollapsed": false
               }
             }
           },
@@ -137,8 +137,7 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "horizontal",
@@ -152,56 +151,57 @@
       "daily-notes:Open today's daily note": false,
       "command-palette:Open command palette": false,
       "workspaces:Manage workspace layouts": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "8f180537e4ee59af",
+  "active": "4bdc6d71e5f9ec66",
   "lastOpenFiles": [
-    "GE/常用词.md",
-    "output/2023-9-1 13-56-03.html",
-    "achieve/常用词.md",
-    "achieve/公考成语.md",
-    "output/2023-9-1 13-55-48.html",
-    "GE/公考成语.md",
+    "done/学完这篇 Nest.js 实战，还没入门的来锤我！(长文预警).md",
     "md/README.md",
-    "output/2023-9-1 13-51-53.html",
-    "md/day03_designModel.md",
-    "GE/Untitled.md",
-    "Untitled",
-    "GE",
-    "WuCai/23-08-31-leetcodemasterproblems0142.环形链表II.md at master · youngyangyang04leetcodemaster-H8KHCB2.md",
-    "WuCai/23-08-31-leetcodemasterproblems0203.移除链表元素.md at master · youngyangyang04leetcodemaster-H8KHKF5.md",
+    "done/初识 node 框架 Nest.js.md",
+    "done/2023-09-04.md",
+    "done/2023-09-03.md",
+    "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+    "done/Nest.js 的微服务，写起来也太简单了吧！.md",
+    "_resources/0abe74dbdc886c5ee07de8728a89611a_MD5.webp",
+    "_resources/1818494ce5b47994a1209a032bb08432_MD5.webp",
+    "_resources/8d5c9bf6df6a6ef0471387fb443687a5_MD5.webp",
+    "_resources/596f2e64050c59200ca5cc8b9fb2e003_MD5.webp",
+    "_resources/8f025618d32de1121c9c95e16fe86de5_MD5.webp",
+    "_resources/41fc78331409bdf3bf08f80bcaba09a7_MD5.webp",
+    "_resources/cc1fb1f5668814f930e492dea190f575_MD5.webp",
+    "_resources/d9fdc84941e9d6d894eee3c74caf4631_MD5.webp",
+    "_resources/2f2402ffd07fa90647425e8f1954c6d7_MD5.webp",
+    "_resources/6fc030aaa6182f2f423ff17db26dce75_MD5.webp",
+    "done/阅读理解与记忆系统.md",
+    "done/「NestJS」 教程了 - 基础知识准备.md",
+    "done/day03_designModel.md",
+    "node_modules/argparse/CHANGELOG.md",
+    "achieve/TailwindCSS 的使用，看这一篇就够了！.md",
     "python3 leet.md",
-    "_resources/Pasted image 20230830140940.png",
-    "_resources/Pasted image 20230830140936 1.png",
-    "_resources/Pasted image 20230830140936.png",
-    "achieve/class digram.md",
-    "_resources/Pasted image 20230830092512.png",
-    "_resources/Pasted image 20230829122153.png",
-    "output/2023-8-29 22-16-32.html",
-    "achieve/VC,CI.md",
-    "done/class digram.md",
-    "done/VC,CI.md",
-    "_resources/Pasted image 20230815134417.png",
-    "output/2023-8-29 22-12-46.html",
-    "output/2023-8-29 22-11-50.html",
-    "加藤惠 2.jpg.md",
-    "_resources/加藤惠 2.jpg",
-    "_resources/Pasted image 20230822135159.png",
-    "_resources/Pasted image 20230829122004.png",
-    "_resources/Pasted image 20230829121633.png",
-    "output/2023-8-29 21-37-27.html",
-    "problems/0027.移除元素.md",
-    "problems",
-    "achieve/盘点fiber中常见的副作用标志flags.md",
-    "done/Utility-First Fundamentals - Tailwind CSS.md",
-    "achieve/学习的本质是不是 “能理解就理解，不能理解的就硬背”？ - 知乎.md",
-    "achieve/一次就能看懂的 Tailwind CSS 介绍.md",
-    "achieve/setState同步异步更新的问题.md",
-    "achieve/how_setstate_works.md",
-    "achieve/git branch.md",
-    "achieve/fiber双缓冲树.md",
-    "achieve/fiber.updateQueue.md",
+    "GE/vsc_doc/new-公考成语.md",
+    "output/2000part1.html",
+    "output/成语和常用词.html",
+    "output/言语理解与表达考点强化.html",
+    "output/2023-9-1 20-32-59.html",
+    "achieve/01第一部分  言语理解与表达考点强化 1.md",
+    "GE/vsc_doc/new-常用词.md",
+    "GE/vsc_doc/常用词.md",
+    "GE/vsc_doc/公考成语.md",
+    "done/01第一部分  言语理解与表达考点强化 1.md",
+    "GE/vsc_doc/xingce2000/01第一部分  言语理解与表达考点强化.md",
+    "GE/vsc_doc/xingce2000/06第六部分  资料分析考点强化.md",
+    "GE/vsc_doc/xingce2000/05第五部分 类比推理考点强化.md",
+    "GE/vsc_doc/xingce2000/04第四部分 定义判断考点强化.md",
+    "GE/vsc_doc/xingce2000/03第三部分 逻辑判断考点强化.md",
+    "GE/vsc_doc/xingce2000/02第二部分  图形推理考点强化.md",
+    "GE/vsc_doc/tool.js",
+    "GE/vsc_doc/行测2000.txt",
+    "GE/vsc_doc/xingce2000",
+    "GE/vsc_doc",
+    "GE/xingce2000/11第五节 概率问题\r",
+    "GE/xingce2000/02第二部分  图形推理考点强化\r",
     "未命名.canvas"
   ]
 }

@@ -40,39 +40,40 @@
 	- [ ] # 新建对象没有 new
 	- [ ] 用哑结点,用 next.val 比较
 	- [ ] return dummy.next instead of head bsc head may be deleted 
-- [ ] [链表：707.设计链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0707.设计链表.md)
-- [ ] [链表：206.翻转链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0206.翻转链表.md) 
+- [x] [链表：707.设计链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0707.设计链表.md)
+	- [ ] 临界数据
+- [x] [链表：206.翻转链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0206.翻转链表.md) 
 	- [ ] 纯翻转不用空节点
 	- [ ] 更改 next 之后，原来的 next 会改变,就会有节点变成孤岛
 	- [ ] 注意用 cur.next和 cur 判断的不同
 		- [ ] while cur.next判断，最后一个节点不会执行
 		- [ ] cur判断，最后一个节点执行
-- [ ] [链表：24.两两交换链表中的节点](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0024.两两交换链表中的节点.md)
+- [x] [链表：24.两两交换链表中的节点](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0024.两两交换链表中的节点.md)
 	- [ ] 判断哪个是 temp
 	- [ ] 从左到右一步步转换箭头的方向，直到发现一个“孤岛”
 	- [ ] cur 可以成为孤岛，因为已经有一个 cur 指向了这个节点
 	- [ ] 由于是一次移动多个节点，所以要判断 cur.next是否为空要先判断cur是否为空
-- [ ] [链表：19.删除链表的倒数第 N 个结点](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0019.删除链表的倒数第N个节点.md)
+- [x] [链表：19.删除链表的倒数第 N 个结点](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0019.删除链表的倒数第N个节点.md)
 	- [ ] 可能对第一个节点做操作时就考虑使用dummy节点
 	- [ ] dummy 节点的next指向是不能更改的
-- [ ] [链表：链表相交](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/面试题02.07.链表相交.md)
-- [ ] [链表：142.环形链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0142.环形链表II.md)
+- [x] [链表：链表相交](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/面试题02.07.链表相交.md)
+- [x] [链表：142.环形链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0142.环形链表II.md)
 - [ ] [链表：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/链表总结篇.md)
 
 
 ## 哈希表
 
-[关于哈希表，你该了解这些！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/哈希表理论基础.md)
-[哈希表：242.有效的字母异位词](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0242.有效的字母异位词.md)
-[哈希表：1002.查找常用字符](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1002.查找常用字符.md)
-[哈希表：349.两个数组的交集](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0349.两个数组的交集.md)
-[哈希表：202.快乐数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0202.快乐数.md)
-[哈希表：1.两数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0001.两数之和.md)
-[哈希表：454.四数相加II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0454.四数相加II.md)
-[哈希表：383.赎金信](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0383.赎金信.md)
-[哈希表：15.三数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0015.三数之和.md)
-[双指针法：18.四数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0018.四数之和.md)
-[哈希表：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/哈希表总结.md)
+- [ ] [关于哈希表，你该了解这些！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/哈希表理论基础.md)
+- [ ] [哈希表：242.有效的字母异位词](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0242.有效的字母异位词.md)
+- [ ] [哈希表：1002.查找常用字符](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1002.查找常用字符.md)
+- [ ] [哈希表：349.两个数组的交集](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0349.两个数组的交集.md)
+- [ ] [哈希表：202.快乐数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0202.快乐数.md)
+- [ ] [哈希表：1.两数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0001.两数之和.md)
+- [ ] [哈希表：454.四数相加II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0454.四数相加II.md)
+- [ ] [哈希表：383.赎金信](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0383.赎金信.md)
+- [ ] [哈希表：15.三数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0015.三数之和.md)
+- [ ] [双指针法：18.四数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0018.四数之和.md)
+- [ ] [哈希表：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/哈希表总结.md)
 
 
 ## 字符串
@@ -280,9 +281,8 @@
 [单调栈：84.柱状图中最大的矩形](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0084.柱状图中最大的矩形.md)
 
 
-## 图论 
 
-### 深搜广搜  
+### 图论 深搜广搜  
 
 [图论：深度优先搜索理论基础](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/图论深搜理论基础.md)
 [图论：797.所有可能的路径](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0797.所有可能的路径.md)
