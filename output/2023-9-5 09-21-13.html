@@ -1,0 +1,1417 @@
+<h1>2023-09-03</h1><h1>成语</h1>
+<p>并行不悖：侧重于看似冲突的事物并不冲突，可以共存。不强调时间。
+并驾齐驱：一起发展。相对于齐头并进，形容的词更大一些
+齐头/驱并进：强调同时发生，不强调程度。更具体一些</p>
+
+<h1>2023-09-04</h1><p>跳出框架,解决根本性问题.爱因斯坦:: 问题不能在产生它们的意识层次上得到解决</p>
+
+<h1>Nest.js 的微服务，写起来也太简单了吧！</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7207637337571901495?searchId=20230901115242BA94AF700DEF9495FDC5">juejin.cn</a></p>
+</blockquote>
+<p>大家都写过 http 服务，接受 http 请求、做一些处理、返回 http 响应。
+这样完成 web 服务器的功能没问题，
+但随着功能的越来越多，比如现在有一百多个模块了，放在一个服务里导致管理不方便。
+现在都是拆成微服务的方式，http 服务负责处理 http 请求，微服务完成不同模块的业务逻辑处理。</p>
+<h2>微服务和 http 服务通信</h2>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20230903193834.png" /></p>
+<p>拆分微服务是很自然的事情，但有个问题，微服务和 http 服务之间怎么通信呢？
+HTTP 是文本协议，传输效率太低了。所以一般都直接用 TCP 通信。</p>
+<p>Nest 微服务</p>
+<p>用 nest 跑个微服务的步骤如下：</p>
+<ul>
+<li>用 nest new 创建一个 main 服务，一个微服务</li>
+<li>都要安装 @nestjs/microservices 包，因为用到其中的 api</li>
+<li>微服务里用 createMicroservice 启动服务，选择传输方式为 TCP，指定端口</li>
+<li>微服务里在 Controller 使用 MessagePattern 或者 EventPattern 注册处理消息的 handler</li>
+<li>main 服务使用 ClientsModule.register 来注册微服务</li>
+<li>main 服务里注入 ClientProxy 对象，调用它的 send 方法给微服务发消息</li>
+</ul>
+<h3>createMicroservice启动微服务</h3>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/ab549d4f236b1cec1298425a3b057379_MD5.webp" />
+启动的时候指定用 TCP 来传输消息，然后指定 TCP 启动的端口为 8888。</p>
+<h3>main 服务器calc 微服务</h3>
+<p>在 app.module.ts 里注册 calc 那个微服务：
+<img src="file://Mac/Home/myGitHubMac/simple-read/_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp" /></p>
+<p>调用 ClientModule.register 指定名字、传输方式为 TCP、端口为 8888。</p>
+<h2>ClientProxy 给微服务发请求</h2>
+<p>在 Controller 里注入这个微服务的 clientProxy，也就是客户端代理。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/b0a584439a7a189d9f90d1ca92916576_MD5.webp" /></p>
+<p>这样就可以接收到 http 请求的时候调用微服务来处理了。
+比如上面我们在收到请求的时候，调用代理对象的 send 方法发了一个 TCP 消息给微服务。
+这也是为啥叫做 ClientProxy 了，不用你自己发 TCP 消息，你只要调用 send 方法即可。</p>
+
+<h1>day03_designModel</h1><p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20230830092512.png" /></p>
+<h2>OOAD Workflows</h2>
+<p>requirements-&gt;analyse Model-&gt;Design Model</p>
+<p>-&gt;requirements=user case diagram,use case description
+-&gt;begin analyse Model= sequence(collaboration) and class diagram
+-&gt;begin design Model=</p>
+<p>user case diagram is same as user story,sometime u can only choose one.
+non-functional requirement: security some perfromance... it actually affected by the adesin model
+boundry objs are not interface</p>
+<h2>modele desgin</h2>
+<p>Platform specific
+not only logic design
+<img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20230830140940.png" /></p>
+<h3>Transition Strategies</h3>
+<p>From Anaylse Model to Design Model</p>
+<ol>
+<li>Programming Language</li>
+<li>Distributed System</li>
+<li>Persistence</li>
+</ol>
+<h3>3. Persistence Obj</h3>
+<p>Entity objects are potential candidates of persistent objects(saved in db)</p>
+<ul>
+<li>sometimes entity maybe just be a passing obj between controller objs</li>
+</ul>
+<p>Mapping from Object Model to Relational Model</p>
+<ul>
+<li>Adjusting objects to access database</li>
+<li>normally ER diagram,Data Dictionary</li>
+</ul>
+<hr>
+<p>Use case controller performing database operation -&gt; Not recommended!</p>
+<ul>
+<li>Adopt the simple DAO pattern to communicate with persistence storage</li>
+<li>DTO 用于在不同的层（如应用层、业务逻辑层、表示层等）之间传输数据，</li>
+<li>DAO 封装了与数据库交互的细节，提供了一种抽象的接口</li>
+</ul>
+<h3>DAO</h3>
+<ul>
+<li>conain all collective behaviors(like a list obj)</li>
+<li>contain the persistence related behaviours</li>
+</ul>
+<p>CREATE flow</p>
+<ol>
+<li>interface create a record OBJ</li>
+<li>interface call controller</li>
+<li>controller call DAO</li>
+<li>DAO get the record OBJ</li>
+<li>DAO store</li>
+</ol>
+<hr>
+<p>failover provision 故障转移</p>
+
+<h1>「NestJS」 教程了 - 基础知识准备</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7078847428455530526?searchId=20230901115242BA94AF700DEF9495FDC5">juejin.cn</a></p>
+</blockquote>
+<h1>理论知识</h1>
+<p>Nest 是一个用于构建高效，可扩展的 <a href="https://link.juejin.cn?target=http%3A%2F%2Fnodejs.cn%2F" title="http://nodejs.cn/">Node.js</a> 服务器端应用程序的框架。 它是一个功能比较全面的 Nodejs 后端框架，底层支持 Express 和 Fastify。</p>
+<h2>⚠️在 NestJS 中 OOP 的思想很多
+起步</h2>
+<pre><code># 没有废话，直接上代码
+$ npm i -g @nestjs/cli 
+$ nest new project-name
+</code></pre>
+<p>我们启动文档在哪儿呢？它在main.js</p>
+<pre><code>import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { AppModule } from './app.module';
+
+
+async function bootstrap() {
+  // const app = await NestFactory.create(AppModule);  
+  // 一般来说我们选择 NestExpress ，因为网上对这方面的资源多，出bug好找解决方案，而且官方文档有很多例子都是 Express来说的
+  const app = await NestFactory.create&lt;NestExpressApplication&gt;(AppModule);
+  await app.listen(3000);
+}
+bootstrap();
+</code></pre>
+<h2>Controller理论知识</h2>
+<ul>
+<li>被 @Controller 装饰的类 就是 一个 Controller ，</li>
+<li>在 module 中把它倒入到对应的 controller 中就能够使用它</li>
+<li>其功能是 <strong>处理传入的请求和向客户端返回响应</strong>。</li>
+</ul>
+<h2>Controller代码</h2>
+<pre><code>// app.controller.ts
+// @Controller(‘hello’) 当你访问3000/hello的时候你就能 导航 到这个controoler来了
+@Controller()
+export class AppController {
+}
+
+</code></pre>
+<h2>module 配置 controller</h2>
+<pre><code>//app.module.ts
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+@Module({
+  imports: [],
+  controllers: [AppController],  
+  // 这个就是把 controller放在这个里面就好了 通过@Module 装饰器将元数据附加到模块类中 Nest 可以轻松反射（reflect）出哪些控制器（controller）必须被安装
+  providers: [AppService],  // 这个我们暂且不管
+})
+export class AppModule {}
+</code></pre>
+<h2>在 controller 里面定义路径</h2>
+<pre><code>// app.controller.ts
+// 我们可以使用 @Get @Put @Post @Delete 来定义 
+// 如果你给他传递了参数就是它的路径 
+// 结合前面的代码，当我们使用get访问 3000/hello/nihao的时候就能得到 “你好” string的返回
+@Controller(‘hello’)
+...
+  @Get(‘/nihao’)
+  getHello(): string {
+    return “你好”;
+  }
+</code></pre>
+<h2>在 controller 里面获取参数</h2>
+<p>如果你调用了Req 和Res那么这个时候你就需要手动的res.sed()了，不推荐
+如果你直接 这样做将会导致 失去与依赖于 Nest 标准响应处理的 Nest 功能（例如，拦截器（Interceptors） 和 @HttpCode()/@Header() 装饰器）的兼容性
+// 要解决此问题，可以将 passthrough 选项设置为 true 比如下面的函数 “/getReq2” 这样就能兼容，你只定义了code 其它的定义依然交由Nest处理 比如下面👇 的列子</p>
+<pre><code>// 1. 如何获取req 和res 对象，并且手动的设置值 cookie什么之类的
+@Get(&quot;/getReq&quot;)
+getReq( @Req() request: Request, @Res() response: Response ): any {
+  console.log(request.headers);
+  // HttpStatus.OK是一个枚举值
+  response.status(HttpStatus.OK).send();
+}
+
+@Get(&quot;/getReq2&quot;)
+getReq2( @Req() request: Request, @Res({  passthrough: true }) response:Response ): any {
+  response.status(HttpStatus.OK);
+  return []
+}
+</code></pre>
+<h2>在 controller 里面获取get的query参数和parma参数</h2>
+<pre><code>@Get(&quot;getQueryAndParam/:id?&quot;)
+getQuery( @Param(&quot;id&quot;) params: string  ,@Query() query: { value:number,qx:number }) :any {
+    // 实际上你可以直接通过req去拿，当然通过注入也是可以的
+    console.log(&quot;params&quot;,params)
+    console.log(&quot;query&quot;,query)
+  return &quot;2222&quot;
+}
+</code></pre>
+<h2>在 controller 里面获取POST PUT 等请求的Body参数</h2>
+<pre><code>@Post(&quot;postQuery/:id?&quot;)
+postQuery( @Param(&quot;id&quot;) params: string  ,@Body() body: { value:number,qx:number }) :any {
+    // 实际上你可以直接通过req去拿，当然通过注入也是可以的
+    console.log(&quot;params&quot;,params)
+    console.log(&quot;body&quot;,body)
+  return &quot;PostQuery&quot;
+}
+</code></pre>
+<h2>在 controller 里面自定义状态吗，</h2>
+<p>其实非常的简单 使用装饰器注入就好了@HttpCode 另外同类型的还有 @Redirect</p>
+<pre><code>@Get(&quot;userState&quot;)
+@HttpCode(204)
+@Header('Cache-Control', 'none')
+userState( ) :any {
+  return &quot;userState&quot;
+}
+</code></pre>
+<h2>在 controller 里面重定向</h2>
+<pre><code>@Get('docs')
+@Redirect('https://docs.nestjs.com', 302)
+getDocs(@Query('version') version) {
+  if (version &amp;&amp; version === '5') {
+    return { url: 'https://docs.nestjs.com/v5/' };
+  }
+}
+</code></pre>
+<h2>提供者 Providers</h2>
+<p>在 Nest 中随处可见的都是 Providers ，比如拦截器啊，配置模块啊，中间间
+Provider 只是一个用 <code>@Injectable()</code> 装饰器注释的类。
+在 Nestjs 凡被 @Injectable 装饰的类 都是 Providers ，他们都可以通过 <code>constructor</code> <strong>注入</strong>依赖关系。
+这意味着对象可以彼此创建各种关系，并且 “连接” 对象实例的功能在很大程度上可以委托给 <code>Nest</code>运行时系统。</p>
+<h3>Providers 使用</h3>
+<pre><code>import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+
+</code></pre>
+<p>和controller 类似，你需要在module入口加入到指定的对象中去</p>
+<pre><code>
+@Module({
+  imports: [],
+  controllers: [AppController],  
+  providers: [AppService],    // 声明provider
+})
+export class AppModule {}
+</code></pre>
+<h2>模块 Module</h2>
+<p>模块是具有 <code>@Module()</code> 装饰器的类。
+<code>@Module()</code> 装饰器提供了元数据，Nest 用它来组织应用程序结构。</p>
+<h3>Module 如何使用</h3>
+<p>凡 被 <code>@module()</code>装饰的就是一个 Module 它可以接受下面的参数</p>
+<pre><code>@Global()如果你需要把这个模块 暴露到全局使用可以加 一个装饰器 @Global
+@Module({ 
+    controllers:[], // 前面说过
+    imports:[], // 可以注入 其他module 或者provider
+    exports:[], // 如果你这个模块中的provider 要在别的模块中使用 你必须要在这里声明 导出这鞋provider ，
+    providers:[]  // 由 Nest 注入器实例化的提供者，并且可以至少在整个模块中共享
+})
+</code></pre>
+
+<h1>初识 node 框架 Nest.js</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7054421306845954056?searchId=20230901115242BA94AF700DEF9495FDC5">juejin.cn</a></p>
+</blockquote>
+<h1>初识 Nest</h1>
+<h2>框架简介</h2>
+<ul>
+<li>Nest 结合了 OOP（面向对象编程），FP（函数式编程）和 FRP（函数式响应编程）的元素。</li>
+<li>Nest 框架底层 HTTP 平台默认是基于 Express 实现的，所以无需担心第三方库的缺失。</li>
+<li>Nest 旨在成为一个与平台无关的框架。</li>
+<li>nest 目前有两个支持开箱即用的 HTTP 平台：express 和 fastify 可以在项目中直接引入。</li>
+</ul>
+<h2>不同的 Node 后端</h2>
+<ul>
+<li>Koa.js 是一款微型 Web 框架，写一个 hello world 很简单，但 web 应用离不开 session，视图模板，路由，文件上传，日志管理。这些 Koa 都不提供，需要自行去官方的 Middleware 寻找。然而，100 个人可能找出 100 种搭配。</li>
+<li>Egg.js 是基于 Koa.js，解决了上述问题，将社区最佳实践整合进了 Koa.js，另取名叫 Egg.js，并且将多进程启动，开发时的热更新等问题一并解决了。这对开发者很友好，开箱即用，开箱即是最 (较) 佳配置。Egg.js 发展期间，ECMAScript 又推出了 async await，相比 yield 的语法 async 写起来更直。后面 Koa.js 也同步进行了跟进。</li>
+<li>Midway 是阿里团队，基于渐进式理念研发的 Node.js 框架，结合了 OOP 和函数式两种编程范式。以 egg 是作为底层框架，加上了良好的 TypeScript 的定义支持等众多新特性, 推出了 Midway，有兴趣的小伙伴可以去官方文档学习一下</li>
+</ul>
+<h4>创建项目</h4>
+<ul>
+<li>$  npm i -g @nestjs/cli
+$  nest new project-name</li>
+<li></li>
+</ul>
+<h2>Next 核心文件的简单描述:</h2>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/7bd802c69b0933b42b28591db9dca273_MD5.webp" /></p>
+<table><thead><tr><td>app.controller.ts</td><td>带有单个路由的基本控制器示例</td></tr></thead><tbody><tr><td>app.controller.spec.ts</td><td>对于基本控制器的单元测试样例</td></tr><tr><td>app.module.ts</td><td>应用程序的根模块。</td></tr><tr><td>app.service.ts</td><td>带有单个方法的基本服务</td></tr><tr><td>main.ts</td><td>应用程序入口文件。用来创建 Nest 应用实例。</td></tr></tbody></table>
+<pre><code>/* main.ts */
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule); // 使用核心类 NestFactory 返回一个 接口对象
+  await app.listen(3000);  // 这里是默认设置的端口号
+}
+bootstrap();
+</code></pre>
+<h4>运行项目</h4>
+<p>$ npm run start:watch // 启动项目并监听代码变动
+这里可以在package.json 中进行配置指令
+我们可以看到服务已经启动,输入本机地址并带上端口号3000,发送一次 get 请求 则会返回 <code>Hello World</code>。<br>
+这里是因为在 app.controll.ts 文件中 @Get()HTTP请求装饰器告诉Nest为HTTP请求的特定端点创建处理程序。</p>
+<h2>路由</h2>
+<ul>
+<li>
+<p>在开始写代码之前我们先简单看一下 nest 中的基础路由配置是怎样的，就目前而言我的理解为 nest 的路由是由 全局路由 路由前缀 (局部路由) 方法装饰器 组成路由映射提供给前端使用。</p>
+</li>
+<li>
+<pre><code>/* main.ts */
+ main文件中我们可以在项目监听前配置一个全局的api前缀
+async function bootstrap() {
+const app = await NestFactory.create(AppModule);
+    //设置全局前缀
+    app.setGlobalPrefix('api');
+    await app.listen(3000);
+  }
+/* app.controller.ts */
+@Controller('user') // 控制器设置路由前缀 我理解为局部路由
+  export class AppController {
+    constructor(private readonly appService: AppService) {}
+    @Get('find') // 方法装饰器设置路由路径 这里我理解为设置api子路由
+    getHello(): string {
+      return this.appService.getHello();
+        }
+    }
+</code></pre>
+</li>
+<li>
+<p>以上方法在 api 中映射成完整的路由为 <code>GET api/user/find</code> 。</p>
+</li>
+<li>
+<p>其中 @Get()HTTP 请求装饰器告诉 Nest 为 HTTP 请求的特定端点创建处理程序。</p>
+</li>
+</ul>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e330a77665304aa9a0439378ad5c28de~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?" alt=""></p>
+<ul>
+<li>可以看到上面的 <code>get</code> 接收请求及路由以可以使用，下面我们看一下 <code>nest</code> 中如何接收 <code>post</code> 等其他请求方式</li>
+</ul>
+<h2>不同方式接收请求</h2>
+<ul>
+<li>
+<p>这里用到的 Nest 提供的请求装饰器知识点 <code>Request</code> 对象代表 <code>HTTP</code> 请求，并具有查询字符串，请求参数参数，HTTP 标头（HTTP header） 和 正文（HTTP body）的属性（在<a href="https://link.juejin.cn?target=https%3A%2F%2Fexpressjs.com%2Fen%2Fapi.html%23req" title="https://expressjs.com/en/api.html#req">这里</a>阅读更多）。在多数情况下，不必手动获取它们。 我们可以使用专用的装饰器，比如开箱即用的 <code>@Body()</code> 或 <code>@Query()</code> 。 下面是 Nest 提供的装饰器及其代表的底层平台特定对象的对照列表。</p>
+</li>
+<li>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/530021517f3e4d2f83d4f3c563bcf645~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?" alt=""></p>
+</li>
+<li>
+<p>下面我们看一下 nest 中如何接收 <code>get post put delete</code> 发起的请求，用几个可用的装饰器来创建基本控制器。 该控制器暴露了几个访问和操作内部数据的方法。</p>
+</li>
+</ul>
+<h3>Get</h3>
+<p>我们先创建一个 user 服务</p>
+<pre><code>/ * user.service.ts  */ 先创建一个 user service服务文件
+import { Injectable } from '@nestjs/common';
+   @Injectable() // 
+   // 这里
+   export class UserService {
+	 findUser(sid: string): string {
+	   console.log(sid);
+	   if (sid === '123456') {
+		 return 'kid is here';
+	   }
+	   return 'No one here';
+	 }
+  }
+</code></pre>
+<ul>
+<li>该服务将负责数据存储和检索，其由 <code>UserController</code> 使用，我们用 <code>@Injectable()</code> 来装饰这个类</li>
+</ul>
+<p>创建一个控制器</p>
+<pre><code>/ * user.controller.ts  */ 创建一个 user 控制器文件
+import { Controller, Get, Query } from '@nestjs/common';
+import { UserService } from './user.service';
+
+@Controller('user')
+export class UserController {
+   constructor(private readonly userService: UserService) {}
+   @Get('findOne') //这里暴露出的路由为 user/find
+   findUser(@Query() query: any) {
+	 return this.userService.findUser(query.sid);
+   }
+</code></pre>
+<ul>
+<li>控制器的目的是接收应用的特定请求。<strong>路由</strong>机制控制哪个控制器接收哪些请求。通常，每个控制器有多个路由，不同的路由可以执行不同的操作。</li>
+<li>为了创建一个基本的控制器，我们使用类和<code>装饰器</code>。装饰器将类与所需的元数据相关联，并使 Nest 能够创建路由映射（将请求绑定到相应的控制器）。</li>
+</ul>
+<p>创建一个/ moudle</p>
+<pre><code>/ * user.module.ts  */ 创建一个 user mod
+ import { Module } from '@nestjs/common';
+ import { UserController } from './user.controller';
+ import { UserService } from './user.service';
+ @Module({
+	 controllers: [UserController],
+	 providers: [UserService],
+   })
+   export class UserModule {}
+
+/*  app.module.ts  */ 最后在app.module中引入我们自己写的module
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { UserModule } from './user/user.module';
+
+@Module({
+	 imports: [UserModule],
+	 controllers: [AppController],
+	 providers: [AppService],
+   })
+   export class AppModule {}
+</code></pre>
+<ul>
+<li>控制器已经准备就绪，可以使用，但是 Nest 依然不知道 <code>UserController</code> 是否存在，所以它不会创建这个类的一个实例。</li>
+<li>控制器总是属于模块，这就是为什么我们在 <code>@Module()</code> 装饰器中包含 <code>controllers</code> 数组的原因。 由于除了根模块 <code>AppModule</code>之外，我们还没有定义其他模块，所以我们将使用它来介绍 <code>UserController</code></li>
+</ul>
+<h3>Post</h3>
+<ul>
+<li>user.service 文件<pre><code>/ * user.service.ts  */ 先创建一个 user service服务文件
+import { Injectable } from '@nestjs/common';
+   @Injectable() // 
+   // 这里
+  setUser(sid: string, body: any): any {
+       if (sid === '123456') {
+         return {
+           msg: '设置成功',
+           body,
+         };
+     }
+  }
+</code></pre>
+</li>
+<li>user.controller 文件<pre><code>/ * user.controller.ts  */ 创建一个 user 控制器文件
+import { Controller, Get, Query } from '@nestjs/common';
+import { UserService } from './user.service';
+
+@Controller('user')
+export class UserService {
+    @Post('set')
+    setUser(@Body() body: any, @Query() query: any) {
+      return this.userService.setUser(query.sid, body);
+    } 
+}
+</code></pre>
+</li>
+</ul>
+<h3>Put</h3>
+<ul>
+<li>user.service 文件</li>
+</ul>
+<pre><code>/ * user.service.ts  */ 先创建一个 user service服务文件
+import { Injectable } from '@nestjs/common';
+   @Injectable() // 
+   // 这里
+  updateUser(sid: string, body: any): any {
+	   if (sid === '123456') {
+		 return {
+		   msg: '设置成功',
+		   body,
+		 };
+	 }
+  }
+</code></pre>
+<p>user.controller 文件</p>
+<ul>
+<li>这里用到了 Param 装饰器 <code>@Param()</code> 用于修饰一个方法的参数（上面示例中的 <code>params</code>），并在该方法内将<strong>路由参数</strong>作为被修饰的方法参数的属性。</li>
+</ul>
+<ul>
+<li>
+<p>如上面的代码所示，我们可以通过引用 <code>params.id</code>来访问（路由路径中的） <code>id</code> 参数。 您还可以将特定的参数标记传递给装饰器，然后在方法主体中按参数名称直接引用路由参数。</p>
+<pre><code>/ * user.controller.ts  */ 创建一个 user 控制器文件
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { UserService } from './user.service';
+
+@Controller('user')
+export class UserService {
+   @Put(':sid')
+   updateUser(@Param('sid') sid: string, @Body() body: any) {
+     return this.userService.updateUser(sid, body);
+   }
+}
+</code></pre>
+</li>
+</ul>
+<h3>Delete</h3>
+<ul>
+<li>
+<p>user.service 文件</p>
+<pre><code>/ * user.service.ts  */ 先创建一个 user service服务文件
+import { Injectable } from '@nestjs/common';
+   @Injectable() // 
+   // 这里
+ deleteUser(sid: string): any {
+       if (sid === '123456') {
+         return {
+           msg: '删除成功',
+         };
+     }
+  }
+</code></pre>
+</li>
+<li>
+<p>user.controller 文件</p>
+<pre><code>/ * user.controller.ts  */ 创建一个 user 控制器文件
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { UserService } from './user.service';
+
+@Controller('user')
+export class UserService {
+   @Delete(':sid')
+   deleteUser(@Param('sid') sid: string) {
+     return this.userService.deleteUser(sid);
+   }
+}
+</code></pre>
+</li>
+</ul>
+
+<h1>学完这篇 Nest.js 实战，还没入门的来锤我！(长文预警)</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7032079740982788132?searchId=20230901115242BA94AF700DEF9495FDC5">juejin.cn</a></p>
+</blockquote>
+<h2>初识 Nest.js</h2>
+<p>Nest 在这些常见的 Node.js 框架 (Express/Fastify) 之上提高了一个抽象级别，但仍然向开发者直接暴露了底层框架的 API。这使得开发者可以自由地使用适用于底层平台的无数的第三方模块。</p>
+<p><code>AngularJS</code>、<code>Spring</code>和<code>Nest.js</code>都是基于<code>控制反转</code>原则设计的, 而且都使用了依赖注入的方式来解决解耦问题。</p>
+<h3>第一个接口</h3>
+<p>首先就是找到入口文件<code>main.ts</code></p>
+<pre><code>import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
+}
+bootstrap();
+</code></pre>
+<p>说明<code>Nest.js</code>创建项目默认就给写了一个接口例子、
+使用<code>Nest.js</code>的工厂函数<code>NestFactory</code>来创建了一个<code>AppModule</code>实例，启动了 HTTP 侦听器，以侦听<code>main.ts</code> 中所定义的端口。</p>
+<hr>
+<p>查看<code>AppModule</code>, 打开<code>src/app.module.ts</code>:</p>
+<pre><code>import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+</code></pre>
+<p><code>AppModule</code>是应用程序的根模块，根模块提供了用来启动应用的引导机制，可以包含很多功能模块。mudule文件需要使用一个<code>@Module()</code> 装饰器的类，</p>
+<hr>
+<p><code>@Module()</code> 装饰器接收四个属性：<code>providers</code>、<code>controllers</code>、<code>imports</code>、<code>exports</code>。</p>
+<ul>
+<li>providers：<code>Nest.js</code>注入器实例化的提供者（服务提供者），处理具体的业务逻辑，各个模块之间可以共享；</li>
+<li>controllers：处理 http 请求，包括路由控制，向客户端返回响应，将具体业务逻辑委托给 providers 处理；</li>
+<li>imports：导入模块的列表，如果需要使用其他模块的服务，需要通过这里导入；</li>
+<li>exports：导出服务的列表，供其他模块导入使用。如果希望当前模块下的服务可以被其他模块共享，需要在这里配置导出；</li>
+</ul>
+<hr>
+<p>在<code>app.module.ts</code>中，看到它引入了<code>app.controller.ts</code>和<code>app.service.ts</code>，分别看一下这两个文件：</p>
+<p>使用<code>@Controller</code>装饰器来定义控制器, <code>@Get</code>是请求方法的装饰器，对<code>getHello</code>方法进行修饰， 表示这个方法会被 GET 请求调用。</p>
+<pre><code>// app.controller.ts
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+</code></pre>
+<p>我们可以看出使用<code>@Injectable</code>修饰后的 <code>AppService</code>, 在<code>AppModule</code>中注册之后，在<code>app.controller.ts</code>中使用，我们就不需要使用<code>new AppService()</code>去实例化，直接引入过来就可以用。</p>
+<pre><code>// app.service.ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService { 
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+</code></pre>
+<h2>路由装饰器</h2>
+<p><code>Nest.js</code>中没有单独配置路由的地方，而是使用装饰器。<code>Nest.js</code>中定义了若干的装饰器用于处理路由。</p>
+<h3>@Controller</h3>
+<p>如每一个要成为控制器的类，都需要借助<code>@Controller</code>装饰器的装饰，
+该装饰器可以传入一个路径参数，作为访问这个控制器的主路径：
+对<code>app.controller.ts</code>文件进行修改</p>
+<pre><code>// 主路径为 app
+@Controller(&quot;app&quot;)
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+</code></pre>
+<p>此时可以通过<code>http://localhost:9080/app</code>来访问。</p>
+<h3>HTTP 方法处理装饰器</h3>
+<p><code>@Get</code>、<code>@Post</code>、<code>@Put</code>等众多用于 HTTP 方法处理装饰器，经过它们装饰的方法，可以对相应的 HTTP 请求进行响应。
+它们可以接受一个字符串或一个字符串数组作为参数，这里的<strong>字符串</strong>可以是固定的路径，也可以是通配符。</p>
+<p>继续修改<code>app.controller.ts</code>，看下面的例子：</p>
+<pre><code>// 主路径为 app
+@Controller(&quot;app&quot;)
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+  // 2.通配符路径(?+* 三种通配符 )
+  // 可以匹配到 get请求, http://localhost:9080/app/user_xxx
+  @Get(&quot;user_*&quot;)
+  getUser(){return &quot;getUser&quot;}
+  
+  // 3.带参数路径
+  // 可以匹配到put请求，http://localhost:9080/app/list/xxxx
+  @Put(&quot;list/:id&quot;)
+  update(){ return &quot;update&quot;}
+}
+</code></pre>
+<hr>
+<p>由于修改了文件， 需要重启才能看到路由， 每次都重启简直就是噩梦，本来打算配置一个实时监听文件变化，发现<code>Nest.js</code>非常贴心的配置好了， 我们只要运行命令即可：</p>
+<pre><code>npm run start:dev
+</code></pre>
+<p>这样再修改什么内容， 保存后都会自动重启服务了。</p>
+<hr>
+<p>关于路由匹配时的注意点， 当我们有一个 put 请求，路径为<code>/app/list/user</code>, 此时，我们在<code>app.controller.ts</code>控制器文件中增加一个方法：</p>
+<pre><code>@Put(&quot;list/user&quot;)
+ updateUser(){
+      return {userId:1}
+  }
+</code></pre>
+<p>你觉得这个路由会被匹配到吗？我们测试一下：
+发现<code>/app/list/user</code>匹配到的并不是<code>updateUser</code>方法， 而是<code>update</code>方法。这就是我要说的注意点。</p>
+<blockquote>
+<p>如果因为在匹配过程中， 发现<code>@Put(&quot;list/:id&quot;)</code>已经满足了, 就不会继续往下匹配了，所以 <code>@Put(&quot;list/user&quot;)</code>装饰的方法应该写在它之前。</p>
+</blockquote>
+<h3>全局路由前缀</h3>
+<p>除了上面这些装饰器可以设置路由外， 我们还可以设置全局路由前缀， 比如给所以路由都加上<code>/api</code>前缀。此时需要修改<code>main.ts</code></p>
+<pre><code>async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api'); // 设置全局路由前缀
+  await app.listen(9080);
+}
+bootstrap();
+</code></pre>
+<p>此时之前的路由，都要变更为：</p>
+<pre><code>http://localhost/api/xxxx
+</code></pre>
+<h2>nest-cli 命令</h2>
+<p>写代码之前首先介绍几个<code>nest-cli</code>提供的几个有用的命令：</p>
+<pre><code>//语法
+nest g [文件类型] [文件名] [文件目录]
+</code></pre>
+<p><strong>注意创建顺序</strong>： 先创建<code>Module</code>, 再创建<code>Controller</code>和<code>Service</code>, 这样创建出来的文件在<code>Module</code>中自动注册，反之，后创建 Module, <code>Controller</code>和<code>Service</code>, 会被注册到外层的<code>app.module.ts</code></p>
+<h3>nest-cli 创建模块</h3>
+<p>nest g mo posts
+创建一个 posts 模块，文件目录不写，默认创建和文件名一样的<code>posts</code>目录，在<code>posts</code>目录下创建一个<code>posts.module.ts</code></p>
+<pre><code>// src/posts/posts.module.ts
+import { Module } from '@nestjs/common';
+
+@Module({})
+export class PostsModule {}
+</code></pre>
+<p>执行完命令后，我们还可以发现同时</p>
+<ul>
+<li>在根模块<code>app.module.ts</code>中引入<code>PostsModule</code>这个模块</li>
+<li>也在<code>@Model</code>装饰器的<code>inports</code>中引入了<code>PostsModule</code></li>
+</ul>
+<pre><code>import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { PostsModule } from './posts/posts.module';
+
+@Module({
+  controllers: [AppController],
+  providers: [AppService],
+  imports: [PostsModule],
+})
+export class AppModule {}
+</code></pre>
+<h3>nest-cli 创建控制器</h3>
+<blockquote>
+<p>nest g co posts</p>
+</blockquote>
+<p>此时创建了一个 posts 控制器，命名为<code>posts.controller.ts</code>以及一个该控制器的单元测试文件.</p>
+<pre><code>// src/posts/posts.controller.ts
+import { Controller } from '@nestjs/common';
+
+@Controller('posts')
+export class PostsController {}
+</code></pre>
+<p>执行完命令， 文件<code>posts.module.ts</code>中会自动引入<code>PostsController</code>, 并且在<code>@Module</code>装饰器的<code>controllers</code>中注入。</p>
+<h3>nest-cli 创建服务类</h3>
+<blockquote>
+<p>nest g service posts</p>
+</blockquote>
+<pre><code>// src/posts/posts.service.ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class PostsService {}
+</code></pre>
+<p>创建<code>app.service.ts</code>文件，并且在<code>app.module.ts</code>文件下，<code>@Module</code>装饰器的<code>providers</code>中注入注入。</p>
+<h2>Nest 数据库</h2>
+<h3>TypeORM 连接数据库</h3>
+<h4>前置知识</h4>
+<p>什么是 ORM?
+ORM 技术（<code>Object-Relational Mapping</code>）, 把关系数据库的变结构映射到对象上。</p>
+<p>官方提供了两种连接数据库的方法， 这里分别介绍一下：</p>
+<p><strong>方法 1</strong></p>
+<p>首先在项目根目录下创建两个文件<code>.env</code>和<code>.env.prod</code>，分别存的是开发环境和线上环境不同的环境变量：
+<code>.env.prod</code>中的是上线要用的数据库信息，如果你的项目要上传到线上管理，为了安全性考虑，建议这个文件添加到<code>.gitignore</code>中。</p>
+<p>接着在根目录下创建一个文件夹<code>config</code>(与<code>src</code>同级)，然后再创建一个<code>env.ts</code>用于根据不同环境读取相应的配置文件。</p>
+<pre><code>import * as fs from 'fs';
+import * as path from 'path';
+const isProd = process.env.NODE_ENV === 'production';
+
+function parseEnv() {
+  const localEnv = path.resolve('.env');
+  const prodEnv = path.resolve('.env.prod');
+
+  if (!fs.existsSync(localEnv) &amp;&amp; !fs.existsSync(prodEnv)) {
+    throw new Error('缺少环境配置文件');
+  }
+
+  const filePath = isProd &amp;&amp; fs.existsSync(prodEnv) ? prodEnv : localEnv;
+  return { path:filePath };
+}
+export default parseEnv();
+</code></pre>
+<p>然后在<code>app.module.ts</code>中连接数据库：
+<code>@nestjs/config</code>依赖于 dotenv，可以通过 key=value 形式配置环境变量，项目会默认加载根目录下的. env 文件，我们只需在 app.module.ts 中引入 ConfigModule，使用 ConfigModule.forRoot() 方法即可，然后<code>ConfigService</code>读取相关的配置变量。</p>
+<p><code>TypeORM</code>提供了多种连接方式，这里再介绍一下使用<code>ormconfig.json</code>方式</p>
+<p><strong>方法 2  ormconfig.json</strong></p>
+<p>在根目录下创建一个<code>ormconfig.json</code>文件 (与<code>src</code>同级), 而不是将配置对象传递给<code>forRoot()</code>的方式。</p>
+<pre><code>{ 
+    &quot;type&quot;: &quot;mysql&quot;,
+    &quot;host&quot;: &quot;localhost&quot;, 
+    &quot;port&quot;: 3306, 
+    &quot;username&quot;: &quot;root&quot;, 
+    &quot;password&quot;: &quot;root&quot;, 
+    &quot;database&quot;: &quot;blog&quot;, 
+    &quot;entities&quot;: [&quot;dist/**/*.entity{.ts,.js}&quot;], 
+    &quot;synchronize&quot;: true  // 自动载入的模型将同步
+}
+</code></pre>
+<p>然后在<code>app.module.ts</code>中不带任何选项的调用<code>forRoot()</code>, 这样就可以了，想了解更多连接数据库的方式可以去有 <a href="https://link.juejin.cn?target=https%3A%2F%2Ftypeorm.bootcss.com%2Fconnection" title="https://typeorm.bootcss.com/connection">TypeORM 官网</a>查看</p>
+<pre><code>import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+@Module({ 
+    imports: [TypeOrmModule.forRoot()],
+})
+export class AppModule {}
+</code></pre>
+<h3>数据库 创建实体</h3>
+<p>好了，接下来就进行数据操作，
+我们通过代码来建表， 先建立一个文章实体<code>PostsEntity</code>, 在<code>posts</code>目录下创建<code>posts.entity.ts</code></p>
+<pre><code>//    posts/posts.entity.ts
+import { Column, Entity, PrimaryGeneratedColumn } from &quot;typeorm&quot;;
+
+@Entity(&quot;posts&quot;)
+export class PostsEntity {
+    @PrimaryGeneratedColumn()
+    id:number; // 标记为主列，值自动生成
+
+    @Column({ length:50 })
+    title: string;
+
+    @Column({ length: 20})
+    author: string;
+
+    @Column(&quot;text&quot;)
+    content:string;
+
+    @Column({default:''})
+    thumb_url: string;
+
+    @Column('tinyint')
+    type:number
+
+    @Column({type: 'timestamp', default: () =&gt; &quot;CURRENT_TIMESTAMP&quot;})
+    create_time: Date
+
+    @Column({type: 'timestamp', default: () =&gt; &quot;CURRENT_TIMESTAMP&quot;})
+    update_time: Date
+}
+</code></pre>
+<h3>数据库CRUD</h3>
+<p>接下来在<code>posts.service.ts</code>文件中实现<code>CRUD</code>操作的业务逻辑，这里的表并不是最终的文章表，只是为了先实现一下简单的增删改查接口， 后面还会实现复杂的多表关联。</p>
+<pre><code>import { HttpException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { getRepository, Repository } from 'typeorm';
+import { PostsEntity } from './posts.entity';
+
+export interface PostsRo {
+  list: PostsEntity[];
+  count: number;
+}
+@Injectable()
+export class PostsService {
+  constructor(
+    @InjectRepository(PostsEntity)
+    private readonly postsRepository: Repository&lt;PostsEntity&gt;,
+  ) {}
+
+  // 创建文章
+  async create(post: Partial&lt;PostsEntity&gt;): Promise&lt;PostsEntity&gt; {
+    const { title } = post;
+    if (!title) {
+      throw new HttpException('缺少文章标题', 401);
+    }
+    const doc = await this.postsRepository.findOne({ where: { title } });
+    if (doc) {
+      throw new HttpException('文章已存在', 401);
+    }
+    return await this.postsRepository.save(post);
+  }
+  
+  // 获取文章列表
+  async findAll(query): Promise&lt;PostsRo&gt; {
+    const qb = await getRepository(PostsEntity).createQueryBuilder('post');
+    qb.where('1 = 1');
+    qb.orderBy('post.create_time', 'DESC');
+
+    const count = await qb.getCount();
+    const { pageNum = 1, pageSize = 10, ...params } = query;
+    qb.limit(pageSize);
+    qb.offset(pageSize * (pageNum - 1));
+
+    const posts = await qb.getMany();
+    return { list: posts, count: count };
+  }
+
+  // 获取指定文章
+  async findById(id): Promise&lt;PostsEntity&gt; {
+    return await this.postsRepository.findOne(id);
+  }
+
+  // 更新文章
+  async updateById(id, post): Promise&lt;PostsEntity&gt; {
+    const existPost = await this.postsRepository.findOne(id);
+    if (!existPost) {
+      throw new HttpException(`id为${id}的文章不存在`, 401);
+    }
+    const updatePost = this.postsRepository.merge(existPost, post);
+    return this.postsRepository.save(updatePost);
+  }
+
+  // 刪除文章
+  async remove(id) {
+    const existPost = await this.postsRepository.findOne(id);
+    if (!existPost) {
+      throw new HttpException(`id为${id}的文章不存在`, 401);
+    }
+    return await this.postsRepository.remove(existPost);
+  }
+}
+</code></pre>
+<hr>
+<p>保存文件， 报错信息提示<code>PostsEntity</code>没有导入：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/1adad989226937df3ab01706de834c20_MD5.webp" /></p>
+<p>此时在<code>posts.module.ts</code>中将<code>PostsEntity</code>导入：</p>
+<pre><code>import { TypeOrmModule } from '@nestjs/typeorm';
+@Module({
+  imports: [TypeOrmModule.forFeature([PostsEntity])],
+  ...
+})
+</code></pre>
+<p>如果你是按照文章进行，使用第一种方式连接数据库，这里还有一个小坑<code>找不到PostsEntity实体</code>：</p>
+<p>我们还需要在<code>app.module.ts</code>添加一下：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/6f88eb8a7b11862b8f4c46d81e70f14e_MD5.webp" /></p>
+<h3>数据库REST 风格实现</h3>
+<p>采用 REST 风格来实现接口，
+在<code>posts.controller.ts</code>中设置路由了，处理接口请求，调用相应的服务完成业务逻辑：</p>
+<pre><code>import { PostsService, PostsRo } from './posts.service';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+
+@Controller('post')
+export class PostsController {
+    constructor(private readonly postsService:PostsService){}
+
+    /**
+     * 创建文章
+     * @param post
+     */
+    @Post()
+    async create(@Body() post){
+        return await this.postsService.create(post)
+    }
+
+    /**
+     * 获取所有文章
+     */
+    @Get()
+    async findAll(@Query() query):Promise&lt;PostsRo&gt;{
+        return await this.postsService.findAll(query)
+    }
+
+    /**
+     * 获取指定文章
+     * @param id 
+     */
+    @Get(':id')
+    async findById(@Param('id') id) {
+        return await this.postsService.findById(id)
+    }
+
+    /**
+     * 更新文章
+     * @param id 
+     * @param post 
+     */
+    @Put(&quot;:id&quot;)
+    async update(@Param(&quot;id&quot;) id, @Body() post){
+        return await this.postsService.updateById(id, post)
+    }
+
+    /**
+     * 删除
+     * @param id 
+     */
+    @Delete(&quot;id&quot;)
+    async remove(@Param(&quot;id&quot;) id){
+        return await this.postsService.remove(id)
+    }
+}
+</code></pre>
+<h3>操作数据库踩过的坑</h3>
+<ol>
+<li>实体的强替换，莫名其妙的删表，清空数据 以我们上面设置的实体为例：</li>
+</ol>
+<pre><code>export class PostsEntity {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    title: string;
+}
+</code></pre>
+<p>最开初我设计表中<code>title</code>字段时，字段类型直接设置成<code>string</code>, 也就对应数据库类型是<code>varchar(255)</code>, 后来觉得不合适，对长度进行了限制, 更改为<code>varchar(50)</code>, 也就是这样修改一下代码：</p>
+<pre><code>@Column({length: 50})
+    title: string;
+</code></pre>
+<p>保存代码后，结果！ 我数据库中所以的<code>title</code>都被清空了，这个坑真是谁踩谁知道~</p>
+<h3><code>entities</code>的三种设置方式</h3>
+<p>各种方式的坑点：</p>
+<h3>entities<strong>方式 1： 单独定义</strong></h3>
+<pre><code>TypeOrmModule.forRoot({
+  //...
+  entities: [PostsEntity, UserEntity],
+}),]
+</code></pre>
+<p>就是用到哪些实体， 就逐一的在连接数据库时去导入，缺点就是麻烦，很容易忘记~</p>
+<h3><strong>方式 2：自动加载</strong></h3>
+<pre><code>TypeOrmModule.forRoot({
+  //...
+  autoLoadEntities: true,
+}),]
+</code></pre>
+<p>自动加载我们的实体, 每个通过<code>forFeature()</code>注册的实体都会自动添加到配置对象的<code>entities</code>数组中, <code>forFeature()</code>就是在某个<code>service</code>中的<code>imports</code>里面引入的, 这个是我个人比较推荐的，实际开发我用的也是这种方式。</p>
+<h3>方式 3: 配置路径自动引入</h3>
+<pre><code>TypeOrmModule.forRoot({
+      //...
+      entities: ['dist/**/*.entity{.ts,.js}'],
+    }),]
+</code></pre>
+<p>通过配置的路径， 自动去导入实体。</p>
+<p>这种方式就是前面介绍连接数据库第二种方式中使用的， But~ 超级不推荐。给你呈现一下我当时踩得坑：</p>
+<ol>
+<li>当时写了一个<code>Category</code>实体， 然后想增加一个<code>Tag</code>实体</li>
+<li>复制了<code>category.entity.ts</code>, 放到<code>tag</code>文件夹下，并且更名为<code>tag.entiry.ts</code></li>
+<li>修改了内部的属性（删的删，改的改）， 变成了一个<code>Tag</code>实体，开心的保存了</li>
+<li>但是，我忘记了修改类名， 所以我的<code>category</code>表被清空了， 里面数据都没了~</li>
+</ol>
+<p>就上面这两个坑，如果你是空数据库， 你随便折腾， 但是你数据库中有数据的童鞋， 建议一定要谨慎点， 连接数据库时， 上来先把<code>synchronize:false</code>设置上， 保命要紧</p>
+<h2>接口格式统一</h2>
+<blockquote>
+<p>一般开发中是不会根据<code>HTTP</code>状态码来判断接口成功与失败的， 而是会根据请求返回的数据，里面加上<code>code</code>字段</p>
+</blockquote>
+<p>首先定义返回的 json 格式：</p>
+<pre><code>{
+    &quot;code&quot;: 0,
+    &quot;message&quot;: &quot;OK&quot;,
+    &quot;data&quot;: {
+    }
+}
+</code></pre>
+<p>请求失败时返回：</p>
+<pre><code>{
+    &quot;code&quot;: -1,
+    &quot;message&quot;: &quot;error reason&quot;,
+    &quot;data&quot;: {}
+}
+</code></pre>
+<h3>拦截错误请求</h3>
+<p>目标对请求错误就可以统一的返回了，返回请求错误只需要抛出异常即可, 比如之前的：</p>
+<pre><code>throw new HttpException('文章已存在', 401);
+</code></pre>
+<p>可以用过滤器来解决。</p>
+<hr>
+<p>使用命令创建一个过滤器：</p>
+<pre><code>nest g filter core/filter/http-exception
+</code></pre>
+<p>过滤器代码实现：</p>
+<pre><code class="language-js">import {ArgumentsHost,Catch, ExceptionFilter, HttpException} from '@nestjs/common';
+
+@Catch(HttpException)
+export class HttpExceptionFilter implements ExceptionFilter {
+  catch(exception: HttpException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp(); // 获取请求上下文
+    const response = ctx.getResponse(); // 获取请求上下文中的 response对象
+    const status = exception.getStatus(); // 获取异常状态码
+
+    // 设置错误信息
+    const message = exception.message
+      ? exception.message
+      : `${status &gt;= 500 ? 'Service Error' : 'Client Error'}`;
+    const errorResponse = {
+      data: {},
+      message: message,
+      code: -1,
+    };
+
+    // 设置返回的状态码， 请求头，发送错误信息
+    response.status(status);
+    response.header('Content-Type', 'application/json; charset=utf-8');
+    response.send(errorResponse);
+  }
+}
+</code></pre>
+<p>最后需要在<code>main.ts</code>中全局注册</p>
+<pre><code>...
+import { TransformInterceptor } from './core/interceptor/transform.interceptor';
+
+async function bootstrap() {
+  const app = await NestFactory.create&lt;NestExpressApplication&gt;(AppModule);
+  ...
+   // 注册全局错误的过滤器
+  app.useGlobalInterceptors(new TransformInterceptor());
+  await app.listen(9080);
+}
+bootstrap();
+</code></pre>
+<h3>拦截成功的返回数据</h3>
+<p>对请求成功返回的格式进行统一的处理，可以用<code>Nest.js</code>的拦截器来实现。</p>
+<p>首先使用命令创建一个拦截器：</p>
+<pre><code>nest g interceptor core/interceptor/transform
+</code></pre>
+<p>拦截器代码实现：</p>
+<pre><code>import {CallHandler, ExecutionContext, Injectable,NestInterceptor,} from '@nestjs/common';
+import { map, Observable } from 'rxjs';
+
+@Injectable()
+export class TransformInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable&lt;any&gt; {
+    return next.handle().pipe(
+      map((data) =&gt; {
+        return {
+          data,
+          code: 0,
+          msg: '请求成功',
+        };
+      }),
+    );
+  }
+}
+</code></pre>
+<p>最后和过滤器一样，在<code>main.ts</code>中全局注册：</p>
+<pre><code>...
+import { TransformInterceptor } from './core/interceptor/transform.interceptor';
+
+async function bootstrap() {
+  const app = await NestFactory.create&lt;NestExpressApplication&gt;(AppModule);
+  ...
+  // 全局注册拦截器
+ app.useGlobalInterceptors(new TransformInterceptor())
+  await app.listen(9080);
+}
+bootstrap();
+</code></pre>
+<p>过滤器和拦截器实现都是三部曲：<code>创建 &gt; 实现 &gt; 注册</code>，还是很简单的。
+现在我们再试试接口，看看返回的数据格式是不是规范了?</p>
+<h2>配置接口文档 Swagger</h2>
+<p>这里用<code>swagger</code>，写接口文档<code>Nest.js</code>提供了专用的模块来使用它</p>
+<p>安装后在<code>main.ts</code>中设置<code>Swagger</code>文档信息：</p>
+<pre><code class="language-js">...
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
+async function bootstrap() {
+  const app = await NestFactory.create&lt;NestExpressApplication&gt;(AppModule);
+  ...
+  // 设置swagger文档
+  const config = new DocumentBuilder()
+    .setTitle('管理后台')   
+    .setDescription('管理后台接口文档')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
+  await app.listen(9080);
+}
+bootstrap();
+</code></pre>
+<p>配置完成，我们就可以访问：<code>http://localhost:9080/docs</code>, 此时就能看到<code>Swagger</code>生成的文档：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/4add4a76c67d702c758a6637de1a465a_MD5.webp" /></p>
+<h3>接口标签</h3>
+<p>我们可以根据<code>Controller</code>来分类， 只要添加<code>@ApiTags</code>就可以</p>
+<pre><code>...
+import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+
+@ApiTags(&quot;文章&quot;)
+@Controller('post')
+export class PostsController {...}
+</code></pre>
+<p>对<code>posts.controller.ts</code>和<code>app.controller.ts</code> 都分别加上分类标签，刷新<code>Swagger</code>文档，看到的效果是这样的：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/129f4dedb23abd5b4f00bf86be5124f6_MD5.webp" /></p>
+<h3>接口说明</h3>
+<p>进一步优化文档， 给每一个接口添加说明文字
+同样在<code>Controller</code>中， 在每一个路由的前面使用<code>@ApiOperation</code>装饰器：</p>
+<pre><code>//  posts.controller.ts
+...
+import { ApiTags,ApiOperation } from '@nestjs/swagger';
+export class PostsController {
+
+  @ApiOperation({ summary: '创建文章' })
+  @Post()
+  async create(@Body() post) {....}
+  
+  @ApiOperation({ summary: '获取文章列表' })
+  @Get()
+  async findAll(@Query() query): Promise&lt;PostsRo&gt; {...}
+  ....
+}
+</code></pre>
+<p>现在我们对每一个接口都写上了说明，再来看看接口文档展现： <img src="file://Mac/Home/myGitHubMac/simple-read/_resources/41fc78331409bdf3bf08f80bcaba09a7_MD5.webp" /></p>
+<h3>接口传参</h3>
+<p>最后我们要处理的就是接口参数说明，
+<code>Swagger</code>的优势之一就是，只要注解到位，可以精确展示每个字段的意义</p>
+<hr>
+<p>这里需要先插入一段关于<code>DTO</code>的解释, 因为后面参数说明会用到：</p>
+<blockquote>
+<p>数据传输对象（DTO)(Data Transfer Object)，是一种设计模式之间传输数据的软件应用系统。数据传输目标往往是数据访问对象从数据库中检索数据。数据传输对象与数据交互对象或数据访问对象之间的差异是一个以不具有任何行为除了存储和检索的数据（访问和存取器）。</p>
+</blockquote>
+<p>这一段是官方解释， 看不懂没关系，可以理解成，<code>DTO 本身更像是一个指南</code>,
+在使用 API 时，方便我们了解<code>请求期望的数据类型</code>以及<code>返回的数据对象</code>。先使用一下，可能更方便理解。</p>
+<hr>
+<p>在<code>posts</code>目录下创建一个<code>dto</code>文件夹，再创建一个<code>create-post.dot.ts</code>文件：</p>
+<pre><code>// dto/create-post.dot.ts
+export class CreatePostDto {
+  readonly title: string;
+  readonly author: string;
+  readonly content: string;
+  readonly cover_url: string;
+  readonly type: number;
+}
+</code></pre>
+<p>然后在<code>Controller</code>中对创建文章是传入的参数进行类型说明：</p>
+<pre><code>//  posts.controller.ts
+...
+import { CreatePostDto } from './dto/create-post.dto';
+
+@ApiOperation({ summary: '创建文章' })
+@Post()
+async create(@Body() post:CreatePostDto) {...}
+</code></pre>
+<p>这里提出两个问题：</p>
+<ol>
+<li>为什么不使用 <code>interface</code> 而要使用 <code>class</code> 来声明 <code>CreatePostDto</code></li>
+<li>为什么不直接用之前定义的实体类型<code>PostsEntiry</code>，而是又定义一个 <code>CreatePostDto</code></li>
+</ol>
+<h3>为什么不使用 <code>interface</code> 而要使用 <code>class</code> 来声明 <code>CreatePostDto</code></h3>
+<p>对于第一个问题，我们都知道<code>Typescript</code>接口在编译过程中是被删除的，其次后面我们要给参数加说明, 使用<code>Swagger</code>的装饰器，<code>interface</code>也是无法实现的，比如：</p>
+<pre><code>import { ApiProperty } from '@nestjs/swagger';
+
+export class CreatePostDto {
+  @ApiProperty({ description: '文章标题' })
+  readonly title: string;
+
+  @ApiProperty({ description: '作者' })
+  readonly author: string;
+
+  @ApiPropertyOptional({ description: '内容' })
+  readonly content: string;
+
+  @ApiPropertyOptional({ description: '文章封面' })
+  readonly cover_url: string;
+
+  @ApiProperty({ description: '文章类型' })
+  readonly type: number;
+}
+</code></pre>
+<p><code>@ApiPropertyOptional</code>装饰可选参数，继续看开一下 API 文档的 UI：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/1818494ce5b47994a1209a032bb08432_MD5.webp" /></p>
+<h3>为什么不直接使用实体类型<code>PostsEntiry</code>，而是又定义一个 <code>CreatePostDto</code></h3>
+<p>为什么不直接使用实体类型<code>PostsEntiry</code>，而是又定义一个 <code>CreatePostDto</code>，因为 HTTP 请求传参和返回的内容可以采用和数据库中保存的内容不同的格式，所以将它们分开可以随着时间的推移及业务变更带来更大的灵活性，这里涉及到单一设计的原则，因为每一个类应该处理一件事，最好只处理一件事。</p>
+<p>现在就可以从 API 文档上直观的看到每个传参的含义、类型以及是否必传。到这一步并没有完， 虽然以及告诉别人怎么传， 但是一不小心传错了呢， 比如上面作者字段没传，会发生什么呢？</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/1ceda566625ad2568094b6952c318ef7_MD5.webp" /></p>
+<p>接口直接报 500 了， 因为我们实体定义的<code>author</code>字段不能为空的，所有在写入数据时报错了。这样体验非常不好， 很可能前端就怀疑我们接口写错了，所有我们应该对异常进行一定的处理。</p>
+<h2>数据验证</h2>
+<p>怎么实现呢？首先想到的是在业务中去写一堆的<code>if-elese</code>判断用户的传参，一想到一堆的判断， 这绝对不是明智之举，</p>
+<p>所有我去查了<code>Nest.js</code>中数据验证，发现<code>Nest.js</code>中的<strong>管道</strong>就是专门用来做数据转换的，我们看一下它的定义：</p>
+<h3>管道</h3>
+<blockquote>
+<p>管道是具有 <code>@Injectable()</code> 装饰器的类。管道应实现 <code>PipeTransform</code> 接口。</p>
+<p>管道有两个类型:</p>
+<ul>
+<li><strong>转换</strong>：管道将输入数据转换为所需的数据输出</li>
+<li><strong>验证</strong>：对输入数据进行验证，如果验证成功继续传递; 验证失败则抛出异常;</li>
+</ul>
+</blockquote>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/8f025618d32de1121c9c95e16fe86de5_MD5.webp" /></p>
+<h3>管道异常处理</h3>
+<p>管道在异常区域内运行。这意味着当抛出异常时，它们由核心异常处理程序和应用于当前上下文的 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdocs.nestjs.cn%2F8%2Fexceptionfilters" title="https://docs.nestjs.cn/8/exceptionfilters">异常过滤器</a> 处理。当在 Pipe 中发生异常，controller 不会继续执行任何方法。</p>
+<p>什么意思呢， 通俗来讲就是，对请求接口的入参进行验证和转换的前置操作，验证好了我才会将内容给到路由对应的方法中去，失败了就进入异常过滤器中。</p>
+<h3>Nest自带管道</h3>
+<p><code>Nest.js</code>自带了三个开箱即用的管道：<code>ValidationPipe</code>、<code>ParseIntPipe</code>和<code>ParseUUIDPipe</code>, 其中<code>ValidationPipe</code> 配合<code>class-validator</code>就可以完美的实现我们想要的效果（对参数类型进行验证，验证失败抛出异常）。</p>
+<h3>管道验证操作实例</h3>
+<p>管道验证操作通常用在<code>dto</code>这种传输层的文件中, 用作验证操作。
+首先我们安装两个需要的依赖包：<code>class-transformer</code>和<code>class-validator</code>
+然后在<code>create-post.dto.ts</code>文件中添加验证, 完善错误信息提示：</p>
+<pre><code>import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+
+export class CreatePostDto {
+  @ApiProperty({ description: '文章标题' })
+  @IsNotEmpty({ message: '文章标题必填' })
+  readonly title: string;
+
+  @IsNotEmpty({ message: '缺少作者信息' })
+  @ApiProperty({ description: '作者' })
+  readonly author: string;
+
+  @ApiPropertyOptional({ description: '内容' })
+  readonly content: string;
+
+  @ApiPropertyOptional({ description: '文章封面' })
+  readonly cover_url: string;
+
+  @IsNumber()
+  @ApiProperty({ description: '文章类型' })
+  readonly type: number;
+}
+</code></pre>
+<p><code>class-validator</code>还提供了很多的验证方法， 大家感兴趣可以自己看<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Ftypestack%2Fclass-validator%23validation-messages" title="https://github.com/typestack/class-validator#validation-messages">官方文档</a>.
+最后我们还有一个重要的步骤， 就是在<code>main.ts</code>中全局注册一下管道<code>ValidationPipe</code>：</p>
+<pre><code>app.useGlobalPipes(new ValidationPipe());
+</code></pre>
+<p>此时我们在发送一个创建文章请求，不带<code>author</code>参数， 返回数据有很清晰了：
+<img src="file://Mac/Home/myGitHubMac/simple-read/_resources/596f2e64050c59200ca5cc8b9fb2e003_MD5.webp" /></p>
+<p>通过上边的学习，可以知道<code>DTO</code>本身是不存在任何验证功能， 但是我们可以借助<code>class-validator</code>来让<code>DTO</code>可以验证数据</p>
+
+<h1>阅读理解与记忆系统</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://zhuanlan.zhihu.com/p/653174197">zhuanlan.zhihu.com</a></p>
+</blockquote>
+<blockquote>
+<p><a href="https://zhuanlan.zhihu.com/p/653018968">跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具</a>——译者评论</p>
+</blockquote>
+<p>对于大段大段的文本，人们一开始就没搞清楚它们到底表达了什么意思。</p>
+<p>读者的目光就像打水漂的石子一样掠过书页。</p>
+<ul>
+<li>他们对文本的处理最多只到视觉解码层面，文中的概念甚至从未进入工作记忆。</li>
+<li>诚然，我们可以将之归咎于「阅读技能很差」，但我怀疑许多高薪的知识工作者也经常会像这样，在最简单的阅读理解上出错。</li>
+</ul>
+<p>在大多数课程中，讲师的提问会让我意识到，我其实并没有理解某个重要段落的文本所表达的内容 —— 而且我自己都没有注意到。</p>
+<h2><strong>领会主旨</strong></h2>
+<p>察觉自己是否理解的意识（comprehension awareness），是否只源于有较高的「语言理解和表达能力」（SAT verbal，verbal ability）？</p>
+<ul>
+<li>并不是如此高理解的同学在答错的时候，并不会更可能意识到自己错了</li>
+</ul>
+<hr>
+<p>他们做了另一个实验，和上文介绍的实验类似，也是要求一组学生阅读每篇文章并回答问题。不同的是，</p>
+<ul>
+<li>这一次，为了可以自信地回答问题，只要学生觉得有必要，可以不限阅读次数。对照组则是只能读一次文章。
+结果，「高确定度」的实验组虽然在每篇文章上花了更多的时间，且拥有更多的自信，但再理解上并没有显著地表现得更好。</li>
+</ul>
+<h2><strong>从「它说了什么」到「它意味着什么？为什么？」</strong></h2>
+<p>Dwarkesh 对我学习这本书的方法非常惊讶。我阅读一页要用大约 15 分钟，而他只用几分钟或者更少。</p>
+<p>更重要的是，我不断地向文本和自己提出问题。例如：</p>
+<ul>
+<li>这句话是什么意思？我能用自己的话解释它吗？-explain by u word</li>
+<li>在此处，哪些想法和概念尤为重要-imp word？</li>
+<li>作者显然默认我应该明白这个声明为什么正确ーー那么为什么它是正确的呢？  - pre condition</li>
+<li>作者在强调这个细节ーー那么，它为什么重要？  -</li>
+<li>在此处，作者似乎进行了对比ーー那么，对比点到底是什么？</li>
+<li>这个细节和我已有的物理知识有什么联系？</li>
+<li>如果我遮住这个例子只剩它的开头，那么我能够自行推导出剩下的内容吗？</li>
+<li>我刚才弄错了ーー我理解了犯错的原因吗? 我能解释我的误解吗？</li>
+<li>当然还有：我能简单回忆一下上一页说了什么吗？</li>
+</ul>
+<hr>
+<p>做学术研究的读者会对这些问题比较熟悉。在《<a href="http://andymatuschak.org/files/papers/Adler,%20van%20Doren%20-%201972%20-%20How%20to%20Read%20a%20Book.pdf">如何阅读一本书</a>》中，Adler 和 van Doren 认为，为理解而阅读的本质是向书本提出问题，并尝试回答这些问题。</p>
+<ul>
+<li>要求不高的读者「不提任何问题——也得不到任何答案」。我是在以相当普通的方式严格要求。</li>
+</ul>
+<p>Adler 和 van Doren 给了我们一个过度简化的对比：
+「为了获取信息而阅读」和「为了理解而阅读」，
+即能够说出作者在说<strong>什么</strong>（信息），与能够说出他的<strong>意思</strong>以及他<strong>为什么</strong>这么说（理解）之间的区别（* 译者注：这两者都能回答「What」，但前者至少不能回答「另外一个场景下我怎么用」）</p>
+<hr>
+<p>在前文中，我们主要关注的是在理解作者在说<strong>什么</strong>时面临的问题。我们看到学生被要求陈述文本的主旨，而不是进行复杂的推理。相比之下，Dwarkesh 错过了关于意义和暗示的细节。</p>
+<p>这些更深层次的内容要求读者超越印在字面的东西，因而更难获得。如果无法理解你专注阅读的句子，其文字就会让你困惑。
+另一方面，如果你理解一个句子的字面意思，但领会的不是作者定义的那个意思，字面上的文字不一定会引起困惑。
+只有当你头脑中的某种声音持续不断地提出「这部分如何融入整体？」这样的问题时，你才会注意到。这样问题不会印在页面上，答案通常也不在 —— 至少不是明显地呈现在页面上。</p>
+<h2><strong>阅读理解与记忆系统之间的相互作用</strong></h2>
+<p>如果目标是帮助人们可靠地内化困难的文本 —— 不仅知道它们在说什么，还理解它们的含义和「why」——那么直接关注记忆可能是本末倒置了。</p>
+<hr>
+<p>我曾试图为 Alex 提供一个记忆系统</p>
+<ul>
+<li>但他在复习环节中常感到痛苦和折磨：许多卡片，他觉得答案令人困惑，或是不明白它的重要性，或是觉得自己在机械复述而非真正理解。</li>
+<li>无论是复习花费的时间、难度还是收益，都比我预期的来得坏。理所当然地，Alex 逐渐反感记忆练习。
+我越来越倾向于认为这些问题的根源在于阅读理解。</li>
+<li>当 Alex 发现卡片的答案令人困惑时，我认为他阅读原文中的相关解释后依然会困惑。</li>
+<li>因此，这些问题很可能不是由遗忘引起的，除非 Alex 在阅读时由于对前提概念的记忆较差导致认知负荷过高。</li>
+<li>也就是说，如果你没记清电场的基本细节，你就会难以理解下一章关于高斯定律的解释。</li>
+</ul>
+<hr>
+<p>但是他对第一章的卡片也有困难，所以这并不能完全解释目前发生的事情。
+首先，请你理解材料；然后，我们会确保你记住它。
+这是两个互相独立的问题。但记忆系统的卡片与理解过程之间可能存在更复杂的关系</p>
+<h3><strong>问题嵌入文内，促进理解</strong></h3>
+<p>我们将提取练习直接穿插进文本中，因此每阅读几分钟后，你就会停下来回答关于刚刚阅读内容的问题。
+遇到嵌入问题可能会向你「揭露」你没有理解材料的大事实，从而「促使」你去理解材料（例如更仔细地重读）。这些效应展现了一个比线性的「理解 -&gt; 记忆」的过程更为复杂的模型。</p>
+<p>抛开具体的执行策略不谈，阅读理解在很大程度上与自我调节有关。
+你应该以多快的速度阅读？你应该关注什么？你应该对文本提出什么样的问题？你当前的行为在多大程度上产生了你想要的结果？
+嵌入练习在一定程度上外包了这些问答。
+嵌入的卡片建模了（一种特定类型的）「成功」阅读行为模式，它提供了反馈，并创造出思考和整合信息的自然停顿。</p>
+<hr>
+<p>关于文本中的「附加问题」的四个明显的效应：</p>
+<ol>
+<li>specific backward effects：你被问过后，你会倒回去留意以前没注意的，也会更留意以后相关的）</li>
+<li>general backward effects：问题会引发对周边环绕文本和相关概念的脑内回顾，并进行深度加工；表现不佳可能会促使你重新阅读文本</li>
+<li>specific forward effects：在后续文本里，你会更加关注问题所涉及的内容；你对相关的后续材料会有更好的回忆 [5]</li>
+<li>一般后溯效应（general forward effects）：再后续阅读时，你会更加专注，包括对于无关材料的专注；如果发现自己表现不佳，你可能会阅读得更慢、更仔细</li>
+</ol>
+<h3><strong>复习环节促进理解</strong></h3>
+<p>让我们讨论你首次阅读之后最初的复习阶段，在几天和几周内。</p>
+<p>如果在这个阶段，你发现自己完全不能理解某张卡片，那么进行回忆练习可能对你的理解帮助不大，除非这促使你重新阅读原文。</p>
+<p>但这种撞上「不理解」的方式，是令人不快的。
+你不在书桌前；很难找到原文本；你要么打断复习过程去重读（很麻烦），要么标记该概念以供之后学习（不靠谱）。</p>
+<p>我和 Alex 做实验时，还不像助记媒介那样将问题嵌入到他的阅读中，所以他的感觉是，常常「几天后才发现理解问题」。</p>
+<p>但对于并非完全不能理解的例子来说，复习环节为更深入的理解提供了一个很好的机会。</p>
+<p>当你在几天或几周后再次回答时，你可能会以稍微不同的角度看待它。
+也许你已经阅读了更多依赖于这个概念的材料，或者你已经用它来解决过问题，或者你曾在谈话中提到过它。</p>
+<h3><strong>提取促使增进理解的行动发生</strong></h3>
+<p>在线性的「先理解后记忆」模型中，你已经完成了第一部分。</p>
+<p>但是，当你尝试在一道简单的练习题中使用高斯定律时，感到很费劲。</p>
+<ul>
+<li>你不断地翻回去查看定义和示例。如果你能解决这个问题，你会更深入地理解高斯定律。</li>
+<li>例如，你会直观地理解公式表面积分里点乘的结果。</li>
+<li>但是对材料的记忆不牢固，导致你很难解答这个习题。如果你在几天内复习了相关的卡片，你就能将这些细节合并为更高层次的组块，并建立相关连接，这些连接会帮你在解决问题时以正确的时机提取到正确的知识细节。</li>
+</ul>
+<p>在这个故事中，我们翻转了「先理解后记忆」的模式：反而是记忆帮助了你创造某种理解。</p>
+<h3><strong>制卡促进理解</strong></h3>
+<p>这个路线要求很苛刻。要写出好的助记卡片，你必须不断地思考：这</p>
+<ul>
+<li>段文本的哪些部分很重要，哪些不重要？</li>
+<li>
+<ul>
+<li>我能用自己的话表述这个概念吗？这个概念与我已知的其他内容有什么联系？它与我的兴趣有什么联系？我能找到概念里需要写成卡片的边界条件吗？我能为实际问题生成一些例子吗？我能观察到作者的心智模型或动机的重要之处吗？</li>
+</ul>
+</li>
+</ul>
+<p>这些编写卡片的问题在很大程度上与为理解而阅读的问题相重叠。而且在两种情况下，你都经常会发现，自己因为没有仔细阅读而无法回答这些问题。这给了你一些调节阅读所需的反馈。</p>
+<hr>
+<p>在上一段中提到的问题是你会对文本提出的问题，但是随着你更好地理解编写卡片的媒介的内禀「粒度」，你会注意到你也会对自己的<strong>卡片</strong>提出上述问题。</p>
+<ul>
+<li>你会看着你写的卡片思考：这是否概括了这个观点的核心？你会尝试完善卡片：这些细节中是否有不必要的、可去除的部分？你会想知道：我是否捕捉到（概念节点之间）所有重要的联系？你已经写了一张卡片来陈述 A 是<strong>这个</strong>情况；所以现在你自然地会问：我能否写一张卡片关于 A <strong>为什么</strong>是这个情况的？通过回答这些问题，你对于所读材料的把握会更加明晰。</li>
+</ul>
+<hr>
+<p>所有这些，奇怪之处在于，表面上你创建这些卡片是为了以后记住这些细节。但很多时候，可能是创建卡片的过程本身——而不是后续的复习 —— 对你的学习体验影响更大。</p>
+<p>以至于你感觉可以扔掉这些卡片，只是把它们当作一种结构化的笔记方法。对此，<a href="https://cognitivemedium.com/srs-mathematics">Michael Nielsen 指出</a><a href="#ref_4">[4]</a>，对卡片后续的练习有极大的激励作用。</p>
+<p>抱着记笔记的念头，有时像是做抽象的作业，你知道你可能永远不会再看这些笔记，这会侵蚀你的动力。
+但如果你有过「记忆练习帮助你轻松牢记大量细节」的用户体验，就会对「为有趣想法编写新卡片」自动产生价值感。
+即使其中许多卡片实际上只是「糟粕」，是写后即丢的引火物，这一点依然是对的。你用它们来理解材料，以写出一些你真正关心，愿意复习的卡片。</p>
+<p>当然，这是一个非常费力且困难的过程。这大概就是为什么助记媒介会完全自动化卡片编写过程。一些脚手架式的半自动领域也是值得探索的有趣之处。</p>
+<h3><strong>以理解为中心的文内问题</strong></h3>
+<p>前文，我们讨论了在助记媒介中嵌入的问题，是如何帮助提高阅读理解能力的。但值得注意的是，我们并不全都「试图」这么做。</p>
+<p>这个问题很有意思：如果以增强阅读理解能力为主要目标，你会怎么设计呢？</p>
+<ul>
+<li>比如只是为了在元认知上获得同样的收益，你可能不需要问那么多的问题。</li>
+<li>如果只是为了元认知，更好的做法是在当天提出一两个更高层次的「解释性问题」，而推迟记忆细节到第二天。
+<ul>
+<li>解释性的问题旨在促进对文本的深层加工和反思，我们（图它的过程）而不是答案本身 —— 答案本身可能根本不在文本中</li>
+</ul>
+</li>
+<li>对于回忆类型的卡片，我们在设计上不鼓励回头查看源文本；</li>
+<li>但对于这些理解类的卡片，我们希望界面上的设计不排斥甚至鼓励用户回滚页面、再次阅读</li>
+</ul>
+<h3><strong>讨论题</strong></h3>
+<p>教科书习题列表中的解释性问题？不行，无聊，我不在乎。但是在芝加哥大学的课堂上，讲师问了我一些解释性问题，我发现我愿意回答它们
+我认为区别主要在于社交环境。而社交环境强化了我的参与感。当我处于「仔细加工文本以编写卡片的模式」时，我的理解力相当好。但在不那么极端的情况下，我经常会犯错。我希望有一种阅读增强技术，可以帮助确保我对一篇文本的理解达到我期望的深度——只要这种增强不会带来过于沉重的负担。</p>
+<p>这些讨论确实能够增强我的理解力，尽管进展非常缓慢，且覆盖面有限。而且，我做不到对我所阅读的一切都轻松地组织一场具有良好引导的讨论。</p>
+<hr>
+<p>还有一个可期的替代方案，可能接近于「<a href="http://andymatuschak.org/files/papers/Simpson%20et%20al%20-%201994%20-%20Elaborative%20verbal%20rehearsals%20and%20college%20students'%20cognitive%20performance.pdf">尽言复述</a>」。
+这是一个很简单的练习：在阅读完一段文字后，闭上眼睛用自己的话解释其内容。</p>
+<hr>
+<p><a href="http://andymatuschak.org/files/papers/Simpson%20et%20al%20-%201994%20-%20Elaborative%20verbal%20rehearsals%20and%20college%20students'%20cognitive%20performance.pdf">尽言复述</a>这种方式与问答的相似点是，它们都可以加强基础理解力，
+但两者的情绪感受却非常不同。特别是，它不会让我觉得在回答一个我不关心的无聊问题。</p>
+<ul>
+<li>对了，这里也有一些有趣的增强的余地。例如，目标文本可能有你在解释中没有包含的重要细节，因此可以在实时生成的语音文稿上进行涂画，圈出与它相冲突的部分。</li>
+<li>再比如可以用一些标记打在文本上，反映你理解了文本的含义，但不知道它为什么是重点。</li>
+</ul>
+<p>实用角度上，有一个重要的问题亟待解决：被要求记住从未理解的细节令人非常不快。</p>
+<ul>
+<li>避免这种情况的一种方法是促进理解，正如我们之前讨论的那样；</li>
+<li>另一种方法是避免问及尚未理解的材料。</li>
+<li>也许尽言复述提供了一种实现后者的方式：我们只会要求你记住你的解释中包含的细节。</li>
+</ul>
+<h3><strong>开卷练习</strong></h3>
+<p>这些任务旨在从内部产生理解 —— 即：通过解决某种类型的问题，你会获得某种类型的洞见。</p>
+<p>当前的复习环节的模式存在一个限制，即它与文本是分离的；</p>
+<ul>
+<li>它基本上假设你在第一次阅复习读时就完全「理解」了一切。如果你没有理解，那么就一定视作一种简单的记忆失败。</li>
+<li>而复习环节实际上无法包含可以引导你重新解读文本提问。</li>
+</ul>
+<p>我想象中，可以围绕「开卷考试」设计一种复习界面。想象一下，</p>
+<ul>
+<li>在屏幕的一侧浮动一个卡片，而其余部分则用于显示原始文本。</li>
+<li>结构化、辅助式、有目的的重读可以直接融入到复习体验中。</li>
+</ul>

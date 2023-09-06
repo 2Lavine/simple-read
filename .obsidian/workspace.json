@@ -11,11 +11,9 @@
             "id": "4bdc6d71e5f9ec66",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "GE/常用词.md",
-                "mode": "source",
-                "source": false
+                "file": "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp"
               }
             }
           }
@@ -38,7 +36,7 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "byModifiedTime"
               }
             }
           },
@@ -63,7 +61,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "GE/常用词.md"
+                "file": "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp"
               }
             }
           },
@@ -95,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "GE/常用词.md",
+                "file": "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "GE/常用词.md",
+                "file": "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -155,8 +153,25 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "4bdc6d71e5f9ec66",
   "lastOpenFiles": [
+    "_resources/Pasted image 20230905115129.png",
+    "_resources/fe59fae96e866d4784a0c27c879f7bc9_MD5.webp",
+    "_resources/fe5198ad897a9864e88c1e8b28a611a9_MD5.webp",
+    "md/2023-09-06.md",
+    "md/2023-09-05.md",
+    "achieve/day03_designModel.md",
+    "achieve/「NestJS」 教程了 - 基础知识准备.md",
+    "achieve/Nest.js 的微服务，写起来也太简单了吧！.md",
+    "achieve/2023-09-03.md",
+    "achieve/2023-09-04.md",
+    "md/Java 工厂方法模式讲解和代码示例.md",
+    "_resources/Pasted image 20230905115936.png",
+    "GE/常用词.md",
+    "output/2023-9-5 09-21-13.html",
+    "achieve/阅读理解与记忆系统.md",
+    "achieve/学完这篇 Nest.js 实战，还没入门的来锤我！(长文预警).md",
+    "achieve/初识 node 框架 Nest.js.md",
     "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
     "output/成语和常用词.html",
     "output/2000part1.html",
@@ -170,38 +185,21 @@
     "done/2023-09-03.md",
     "done",
     "achieve/01第一部分  言语理解与表达考点强化 1.md",
-    "_resources/fe59fae96e866d4784a0c27c879f7bc9_MD5.webp",
-    "_resources/fe5198ad897a9864e88c1e8b28a611a9_MD5.webp",
     "_resources/fb07051cb2813eeb781c6a0da11c7479_MD5.jpg",
     "_resources/f3609461558ea6f23f63218dafb28804_MD5.webp",
     "_resources/f27a8d1f1a5c03399a8e9679900eda27_MD5.jpg",
     "_resources/f0d2aed6910fbff2f3e47778942bee5b_MD5.webp",
     "_resources/f04bfbf15577847fcc82248ec2e8e71f_MD5.webp",
     "_resources/ebfefd301fc496268455520e96bb3e23_MD5.webp",
-    "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
-    "md/Java 工厂方法模式讲解和代码示例.md",
     "md/README.md",
-    "_resources/0abe74dbdc886c5ee07de8728a89611a_MD5.webp",
     "node_modules/argparse/CHANGELOG.md",
     "achieve/TailwindCSS 的使用，看这一篇就够了！.md",
-    "python3 leet.md",
-    "GE/new-公考成语.md",
     "output/言语理解与表达考点强化.html",
     "output/2023-9-1 20-32-59.html",
-    "GE/new-常用词.md",
-    "GE/常用词.md",
-    "GE/公考成语.md",
-    "done/01第一部分  言语理解与表达考点强化 1.md",
-    "GE/xingce2000/01第一部分  言语理解与表达考点强化.md",
-    "GE/xingce2000/06第六部分  资料分析考点强化.md",
-    "GE/xingce2000/05第五部分 类比推理考点强化.md",
-    "GE/xingce2000/04第四部分 定义判断考点强化.md",
-    "GE/xingce2000/03第三部分 逻辑判断考点强化.md",
     "GE/vsc_doc/tool.js",
     "GE/vsc_doc/行测2000.txt",
     "GE/xingce2000",
     "GE/vsc_doc",
-    "GE/xingce2000/11第五节 概率问题\r",
     "未命名.canvas"
   ]
 }

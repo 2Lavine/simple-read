@@ -8,7 +8,7 @@
   "refreshNotes": false,
   "notesToRefresh": [],
   "reimportShowConfirmation": true,
-  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6MTE4NTIwOCwibG5pIjowLCJja1BLSUQiOjAsImNrTklEIjowLCJja1QiOjE2OTM4NzU0MjR9",
+  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6MTE4NTIwOCwibG5pIjowLCJja1BLSUQiOjAsImNrTklEIjowLCJja1QiOjE2OTM5NzgzOTB9",
   "dataVersion": 0,
   "notePaths": {
     "H8A6H72": "WuCai/LearnVim_zh_cnch01_starting_vim.md at master · wsdjegLearnVim_zh_cn · GitHub-H8A6H72.md",
@@ -125,6 +125,7 @@
     "obTemplate": "{% block highlights %}\n{% for item in highlights %}\n{{ item | style1({anno:\"> __想法__：\"}) }}\n{% endfor %}\n{% endblock %}\n\n!!!PAGE NOTE!!!\n{% block pagenote %}\n{{pagenote}}\n{% endblock %}\n\n{{tags}} #五彩插件 [原文]({{url}})\n更新时间: {{updateat}}",
     "obTemplateVer": 0,
     "pageMirrorStyle": 1,
+    "truncateTile255": 0,
     "pageMirrorExcludeTag": "",
     "pageMirrorOnlyTag": ""
   }
