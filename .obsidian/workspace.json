@@ -11,9 +11,11 @@
             "id": "4bdc6d71e5f9ec66",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp"
+                "file": "md/装饰器模式.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
@@ -61,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp"
+                "file": "md/装饰器模式.md"
               }
             }
           },
@@ -93,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
+                "file": "md/装饰器模式.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
+                "file": "md/装饰器模式.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -155,17 +157,24 @@
   },
   "active": "4bdc6d71e5f9ec66",
   "lastOpenFiles": [
+    "md/Java 工厂方法模式讲解和代码示例.md",
+    "md/装饰器模式.md",
+    "md/2023-09-06.md",
+    "md/2023-09-05.md",
+    "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
+    "md/装饰设计（装饰者模式 ",
+    "md/组合设计模式.md",
+    "md/桥接设计模式.md",
+    "md/工厂模式和抽象工厂模式的区别.md",
+    "md/命令设计模式.md",
     "_resources/Pasted image 20230905115129.png",
     "_resources/fe59fae96e866d4784a0c27c879f7bc9_MD5.webp",
     "_resources/fe5198ad897a9864e88c1e8b28a611a9_MD5.webp",
-    "md/2023-09-06.md",
-    "md/2023-09-05.md",
     "achieve/day03_designModel.md",
     "achieve/「NestJS」 教程了 - 基础知识准备.md",
     "achieve/Nest.js 的微服务，写起来也太简单了吧！.md",
     "achieve/2023-09-03.md",
     "achieve/2023-09-04.md",
-    "md/Java 工厂方法模式讲解和代码示例.md",
     "_resources/Pasted image 20230905115936.png",
     "GE/常用词.md",
     "output/2023-9-5 09-21-13.html",
@@ -182,24 +191,17 @@
     "done/day03_designModel.md",
     "done/Nest.js 的微服务，写起来也太简单了吧！.md",
     "done/2023-09-04.md",
-    "done/2023-09-03.md",
     "done",
-    "achieve/01第一部分  言语理解与表达考点强化 1.md",
     "_resources/fb07051cb2813eeb781c6a0da11c7479_MD5.jpg",
     "_resources/f3609461558ea6f23f63218dafb28804_MD5.webp",
     "_resources/f27a8d1f1a5c03399a8e9679900eda27_MD5.jpg",
     "_resources/f0d2aed6910fbff2f3e47778942bee5b_MD5.webp",
     "_resources/f04bfbf15577847fcc82248ec2e8e71f_MD5.webp",
-    "_resources/ebfefd301fc496268455520e96bb3e23_MD5.webp",
-    "md/README.md",
-    "node_modules/argparse/CHANGELOG.md",
-    "achieve/TailwindCSS 的使用，看这一篇就够了！.md",
     "output/言语理解与表达考点强化.html",
     "output/2023-9-1 20-32-59.html",
     "GE/vsc_doc/tool.js",
     "GE/vsc_doc/行测2000.txt",
     "GE/xingce2000",
-    "GE/vsc_doc",
     "未命名.canvas"
   ]
 }
