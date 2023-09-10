@@ -1,62 +1,5 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7194410416879960125?searchId=2023091014020494F47DEAC7ED50289C32)
 
-hello 大家好，我是 superZidan，这篇文章想跟大家聊聊 `Next.js 项目最佳实践`，如果大家遇到任何问题，欢迎[联系我](https://juejin.cn/user/1275089217142663/pins "https://juejin.cn/user/1275089217142663/pins") 或者直接微信添加 `superZidan41`
-
-🔥🔥🔥 前方高能，干货满满，建议点赞➕关注➕收藏；后续还有该系列的 **进阶教程** 持续送上
-
-什么是 Next.js
-===========
-
-> _“Next.js 通过提供所有生产环境需要的功能来给你最佳的开发体验：构建时预渲染，服务端渲染，TypeScript 支持，智能打包，路由预加载，零配置等等”_
-
-正如上文的介绍，Next.js 是一个非常全面的现代全栈应用构建方案。它包含了非常优雅的 TypeScript 和 React 支持，同时提供了现代应用常见的需求解决方案，例如：路由，API，PostCSS 工具和代码分割等。
-
-与此同时它也支持静态站点生成（用于可以在任何地方托管的高性能静态 HTML 页面）或者是通过 Vercel / AWS 等部署 Node.js 服务来进行数据按需加载的服务端渲染页面
-
-Next.js 已迅速成为 Web 开发领域最抢手的技能之一。本教程旨在充当 [Next.js 文档](https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fgetting-started "https://nextjs.org/docs/getting-started") 的 “实用” 延伸，并帮助你使用大量最佳实践来开发项目，这将有利于你在今后对项目实施进一步的扩展。
-
-介绍
-==
-
-本教程不是为了替代官方文档，因为官方文档已经写得非常简单易懂了。我强烈推荐你在学习本文之前先大致过一下 [这一章](https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fbasic-features%2Fpages "https://nextjs.org/docs/basic-features/pages") 的内容，这样你对文中的术语和工具会比较熟悉，他们提供的一些组件与普通 HTML 组件相似，但通常是 “更强大” 的版本。
-
-我承认其中许多的是严格的并且带有主观色彩的，如果其中任何一个对你没有吸引力，那么在大多数情况下可以简单地跳过这些部分并且应该仍然能够完成本教程而不会遇到太多麻烦
-
-现在，如果你已经准备好了，那就开始学习吧 ！
-
-项目创建
-====
-
-我们将使用 TypeScript 模版来创建一个默认的 Next.js 应用
-
-```
-npx create-next-app@latest --typescript nextjs-fullstack-app-template-zn
-
-cd nextjs-fullstack-app-template-zn
-
-// ESLInt : YES
-// `src/` directory : YES
-// `app/` directory : NO
-```
-
-首先我们试试这个项目能不能正常运行。我们在这个例子中会使用 yarn ，当然你也可以用 NPM 或其他的工具
-
-```
-yarn dev
-```
-
-你可以打开 [](https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000%2F "http://localhost:3000/")[http://localhost:3000/](https://link.juejin.cn?target=http%3A%2F%2Flocalhost%3A3000%2F "http://localhost:3000/") 看到这个 demo 已经成功运行
-
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/873f28a181dd4ca1aa0a01012d64ba15~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?) 也推荐你运行
-
-```
-yarn build
-```
-
-来确保你的项目能够成功打包。推荐（非必需）关闭开发服务器来运行 Next.js 的构建命令。大多数时候没有问题，但偶尔构建会使你的开发服务器处于需要重新启动的奇怪状态。
-
-构建成功之后你可以在命令行看到这些绿色和白色文字的报告，构建过程是高效的，我们将在开发的过程中尽量保持这样的状态。
-
 引擎锁定
 ====
 
@@ -91,57 +34,6 @@ yarn build
 }
 ```
 
-Git 配置
-======
-
-这将是我们第一次提交到远程仓库的好时机，以确保更改得到备份，并遵循最佳实践将相关更改分组在一个提交中，然后再做新的修改。
-
-默认情况下，你的 Next.js 项目已经初始化了一个 repo。 你可以使用 `git status` 检查你所在的分支。 它应该会显示类似下面的文案
-
-```
-$ git status
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	modified:   package.json
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	.npmrc
-	.vscode/
-
-no changes added to commit (use "git add" and/or "git commit -a")
-```
-
-这告诉我们我们在 main 分支上，我们还没有暂存或做出任何提交
-
-让我们提交目前的变更
-
-```
-git add .
-
-git commit -am "feat: project init"
-```
-
-第一个命令将在项目目录中添加并暂存所有在 `.gitignore` 中未被忽略的文件。 第二个将使用我们在 `-m` 标志之后写的消息来提交当前项目的状态
-
-跳转到你喜欢的 git 托管服务提供商（ 比如 [Github](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2F "https://github.com/")）并且创建一个新的仓库来存放你的项目。
-
-现在你已准备好添加仓库的远程源并进行推送。 Github 会在你创建的时候给你准确的说明。 你的语法可能与我的略有不同，具体取决于使用的是 HTTPS 还是 SSH。
-
-```
-git remote add origin git@github.com:{YOUR_GITHUB_USERNAME}/{YOUR_REPOSITORY_NAME}.git
-
-git push -u origin {YOUR_BRANCH_NAME}
-```
-
-请注意，从这一点开始，我们将使用 [Conventional Commits](https://link.juejin.cn?target=https%3A%2F%2Fwww.conventionalcommits.org%2Fen%2Fv1.0.0%2F%23summary "https://www.conventionalcommits.org/en/v1.0.0/#summary") 标准，特别是 [此处描述](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fangular%2Fangular%2Fblob%2F22b96b9%2FCONTRIBUTING.md%23type "https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type") 的 Angular 约定
-
-原因与该项目中的许多其他功能一样，只是为所有开发人员设置一个**一致**的标准，以便在为项目做出贡献时最大程度地减少培训时间。我个人不太关心选择什么标准，只要每个人都同意遵循它，才是最重要的。
-
-一致性就是一切 ！！！
-
 代码格式化和质量工具
 ==========
 
@@ -152,10 +44,6 @@ git push -u origin {YOUR_BRANCH_NAME}
 
 ESLint
 ------
-
-我们从 ESLint 开始，它非常简单因为在我们创建 Next.js 项目的时候已经自动安装好并且有了默认配置。
-
-我们仅需要添加少部分额外的配置就可以让它比默认配置更加严格。如果你不同意其中的任何一条规则配置，不用担心，我们可以非常简单的手动关闭这些规则。我们将所有的 ESLint 配置都写在 `.eslintrc.json` 文件中，这个文件已经存在于我们项目的根目录。
 
 `.eslintrc.json`
 
@@ -171,9 +59,6 @@ ESLint
 }
 ```
 
-在上面的代码示例中，我们添加了一些额外的默认值，我们声明 `React` 将始终被定义，即使我们没有专门导入它，我还添加了个人自定义规则，它允许你为变量添加前缀（带下划线 _） 如果你已声明它们但未在代码中使用它们
-
-我发现当你正在处理一项功能并想准备一些变量以备后面使用但又尚未达到实现它们的地步时，这种情况经常出现
 
 你可以测试一下你的配置通过运行：
 
@@ -198,73 +83,18 @@ yarn lint
 
 让我们在这时候进行一次提交，带上信息 `build: configure eslint`
 
-Prettier
---------
-
-prettier 会为我们处理文件的自动格式化。让我们将它添加到项目中
-
-它只需要在开发过程中使用，所以需要添加到 `devDependency`
-
-```
-yarn add -D prettier
-```
-
-同时我也推荐你安装 [{ "trailingComma": "es5", "tabWidth": 2, "semi": true, "singleQuote": true }](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-[这些配置完全由你自行决定什么最适合你的团队和项目](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-[`.prettierignore`](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-```
-[.yarn
-.next
-dist
-node_modules](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-```
-
-[在这个文件中我列了一些目录，我不希望 prettier 在这些目录中浪费任何资源去进行格式化。你也可以使用类似 `*.html` 这样的方式去忽略你选择的文件类似](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-[现在我们在 `package.json` 添加新的 script ，然后我们就可以运行 Prettier：](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-[`package.json`](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-```
-[...
-  "scripts: {
-    ...
-    "prettier": "prettier --write ."
-  }](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-```
-
-[你可以运行](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-```
-[yarn prettier](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-```
-
-[自动格式化、修复和保存项目中你未忽略的所有文件。 默认情况下，我的格式化程序更新了大约 5 个文件。 你可以在 VS Code 左侧的源代码管理选项卡中的已更改文件列表中看到它们。](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-[让我们在这时候进行一次提交，带上信息 `build: implement prettier`](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-[Git Hooks](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-======================================================================================================================================================================================================================================================================================================================================================================================
-
-[在我们开始进行组件开发之前，还有一节是关于配置的。 请记住，如果你要长期构建该项目，你将希望该项目尽可能坚如磐石，尤其是与其他开发人员团队合作时。 花时间在一开始就把它做好是值得的。](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=")
-
-[我们将使用一个叫做](https://link.juejin.cn?target=https%3A%2F%2Fmarketplace.visualstudio.com%2Fitems%3FitemName%3Desbenp.prettier-vscode "https://marketplace.visualstudio.com/items?item>Prettier VS Code 插件</a> ，这样你不用依赖命令行工具就可以在 VS Code 中进行文件格式化。在你的项目中安装和配置它意味着 VSCode 将使用你项目的设置，因此仍然有必要在此处添加它。</p><p></p><p>我们将在根目录添加两个文件：</p><p></p><p><code>.prettierrc</code></p><p></p><pre class=") [Husky](https://link.juejin.cn?target=https%3A%2F%2Ftypicode.github.io%2Fhusky%2F%23%2F "https://typicode.github.io/husky/#/") 的工具
-
-Husky 是一个用于在 git 进程的不同阶段运行脚本的工具，例如 add、commit、push 等。我们希望能够设置某些条件，并且只有在我们的代码满足这些条件时才允许提交和推送之类的事情成功，假设这表明我们的项目质量是可以接受的。
+## Husky
+Husky 是一个用于在 git 进程的不同阶段运行脚本的工具，例如 add、commit、push 等。
+我们希望能够设置某些条件，并且只有在我们的代码满足这些条件时才允许提交和推送之类的事情成功，假设这表明我们的项目质量是可以接受的。
 
 安装 Husky
-
 ```
 yarn add -D husky
-
 npx husky install
 ```
 
-第二个命令将在你的项目中创建一个 `.husky` 目录。这就是你的 hooks 存放的地方。确保此目录包含在你的代码仓库中，因为它也适用于其他开发人员，而不仅仅是你自己。
-
+npx husky install命令将在你的项目中创建一个 `.husky` 目录。
+这就是你的 hooks 存放的地方。确保此目录包含在你的代码仓库中，因为它也适用于其他开发人员，而不仅仅是你自己。
 在 `package.json` 文件中添加 script
 
 `package.json`
@@ -279,6 +109,7 @@ npx husky install
 
 这将确保在其他开发人员运行该项目时自动安装 Husky
 
+---
 创建一个 hook
 
 ```
@@ -287,16 +118,18 @@ npx husky add .husky/pre-commit "yarn lint"
 
 上面说为了让我们的提交成功，`yarn lint` 必须首先运行并成功。 在这种情况下，” 成功 ” 意味着没有错误。 它将允许你有告警（请记住，在 ESLint 配置中，设置 1 是警告，设置 2 是错误）
 
-让我们在这时候进行一次提交，带上信息 `ci: implement husky` 。如果所有设置都完成，在你进行提交之前就会运行 lint script
-
 让我们再添加一个
 
 ```
-npx husky add .husky/pre-push "yarn build"
+npx husky add .husky/pre-push "pnpm build"
 ```
 
 以上确保我们只有在代码构建成功的时候才可以将代码推送到远程仓库中。 这似乎是一个相当合理的条件，不是吗？ 通过提交此更改并尝试推送来随意测试它。
 
+让我们在这时候进行一次提交，带上信息 `ci: implement husky` 。
+如果所有设置都完成，在你进行提交之前就会运行 lint script
+commitlint
+---
 最后，我们将再添加一个工具。 到目前为止，我们一直在遵循所有提交消息的标准约定，让我们确保团队中的每个人都遵循它们（包括我们自己！）。 我们可以为我们的提交消息添加一个 linter：
 
 ```
@@ -304,7 +137,6 @@ yarn add -D @commitlint/config-conventional @commitlint/cli
 ```
 
 要配置它，我们将使用一组标准默认值，但我喜欢将该列表显式包含在 commitlint.config.js 文件中，因为我有时会忘记可用的前缀：
-
 `commitlint.config.js`
 
 ```
@@ -387,8 +219,6 @@ npx husky add .husky/commit-msg "npx --no -- commitlint --edit $1"
 
 在项目的根目录中创建一个名为 .vscode 的目录和一个名为 settings.json 的文件。 这将是一个覆盖已安装 VS 代码默认设置的值列表。
 
-我们想要将它们放在项目文件夹中的原因是我们可以设置仅适用于该项目的特定设置，并且我们可以通过将它们包含在代码仓库中来与我们团队的其他成员共享它们。
-
 在 settings.json 中，我们将添加以下值
 
 `.vscode/settings.json`
@@ -405,16 +235,12 @@ npx husky add .husky/commit-msg "npx --no -- commitlint --edit $1"
 ```
 
 以上将告诉 VS Code 使用你的 Prettier 扩展作为默认格式化程序（如果你愿意，可以手动覆盖另一个）并在每次保存时自动格式化你的文件并组织你的导入语句
-
-非常方便的东西，你不再需要考虑的另一件事，因此可以专注于重要的事情，例如解决业务问题
-
 让我们在这时候进行一次提交，带上信息 `build: implement vscode project settings`
 
 调试
 ==
 
 让我们设置一个方便的环境来调试我们的应用程序，以防我们在开发过程中遇到任何问题。
-
 在 `.vscode` 目录下创建 `launch.json` 文件
 
 `launch.json`
@@ -476,24 +302,15 @@ yarn add -D cross-env
 ```
 
 这将允许你在开发模式下工作时在浏览器中记录服务器数据，从而更容易调试问题。
-
 在这个阶段，我将创建一个新的提交 `build: add debugging configuration`
 
-目录结构
-====
+目录结构====
 
-本节现在将介绍在我们的项目中设置文件夹结构。这是许多人都会有非常强烈意见的话题之一，并且有充分的理由！从长远来看，目录结构确实可以在项目失控时成就或破坏项目，尤其是当团队成员不得不花费不必要的时间来猜测将东西放在哪里（或找到东西）时。
 
-我个人喜欢采用相当简单的方法，基本上以类的 model / view 将事物分开。我们将使用三个主要文件夹
+我个人喜欢采用相当简单的方法，基本上以类的 model / view 将事物分开。
 
+我们将使用三个主要文件夹
 > PS: 原文没有 src 目录，我个人喜欢用 src 目录，所以加了 src 根目录
-
-```
-/components
-/lib
-/pages
-```
-
 *   components - 组成应用程序的各个 UI 组件将位于此处
 *   lib - 业务 / 应用程序 / 领域 逻辑将存在于此
 *   pages - 项目的实际 路由 / 页面
@@ -501,12 +318,6 @@ yarn add -D cross-env
 除此之外，我们还会有其他目录来支持该项目，但构成我们的应用程序的几乎所有内容的核心都将位于这三个目录中
 
 在 `components` 中，我们将有子目录，这些子目录将相似类型的组件组合在一起。你可以使用你喜欢的任何方法来执行此操作。 我过去经常使用 MUI 库，所以我倾向于遵循他们在[文档](https://link.juejin.cn?target=https%3A%2F%2Fmui.com%2Fmaterial-ui%2Fgetting-started%2Finstallation%2F "https://mui.com/material-ui/getting-started/installation/")中用于组件的相同组织
-
-例如输入框、导航、工具方法、布局等。
-
-你不需要提前创建这些目录并将它们留空。我会在构建组件时随手创建它们
-
-本节旨在解释我将如何设置这个项目，你可以选择许多其他方式来组织你的项目，我鼓励你选择最适合你和团队的方式。
 
 这里我再使用 `feat: create directory structure` 创建一个提交
 
@@ -520,16 +331,18 @@ Storybook 为我们提供了一个环境来展示和测试我们在我们正在�
 请注意，Storybook 是一种可视化测试工具，稍后我们将引入其他工具来进行功能单元测试和端到端测试
 
 学习如何使用 Storybook 的最佳方式是安装并试用它！
-
 ```
 npx sb init --builder webpack5
 ```
 
 我们将使用 webpack5 版本来与最新版本的 webpack 保持同步（我不确定为什么它仍然不是默认版本。也许在你使用本教程时已经是了）。
 
+
+----
 当 Storybook 安装时，它会自动检测有关项目的很多信息，比如它是一个 React 应用程序，以及正在使用的其他工具。 它应该兼容好所有配置本身。
 
-如果你收到有关 eslintPlugin 的提示，你可以选择 “是”。 不过，我们将手动配置它，所以如果你收到一条消息说它没有自动配置，请不要担心。
+如果你收到有关 eslintPlugin 的提示，你可以选择 “是”。 
+- 不过，我们将手动配置它，所以如果你收到一条消息说它没有自动配置，请不要担心。
 
 打开 `eslintrc.json` 文件并更新它
 
@@ -562,6 +375,7 @@ npx sb init --builder webpack5
 
 我添加了 `// 新加入` 来标记 Storybook 特定的两个新部分和行。
 
+---
 我们注意到，Storybook 也已将 /stories 目录添加到项目中，其中包含许多示例。如果你是 Storybook 的新手，我强烈建议你通读它们并将它们留在那里，直到你能够脱离模板自如地创建自己的示例。
 
 在我们运行它之前，我们需要确保我们使用的是 webpack5。 将以下内容添加到 `package.json` 文件中：
@@ -675,7 +489,6 @@ yarn storybook
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c77a98509a3a4ecca17f2fda390f53ed~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
 
 如果你以前从未使用过这些示例，我希望你尝试并熟悉这些示例。
-
 在这个阶段，我再创建一个提交 `build: implement storybook`
 
 创建一个组件模版
@@ -1434,20 +1247,3 @@ yarn dev
 *   如何使用 Next.js 和 Nx 在 monorepo 中管理多个应用程序
 
 请继续关注，请不要犹豫，提出任何问题，如果可以的话，我很乐意回答！
-
-其他
-==
-
-*   [代码仓库地址](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FzidanDirk%2Fnextjs-fullstack-app-template-zn "https://github.com/zidanDirk/nextjs-fullstack-app-template-zn")
-    
-*   [原文地址](https://link.juejin.cn?target=https%3A%2F%2Fdev.to%2Falexeagleson%2Fhow-to-build-scalable-architecture-for-your-nextjs-project-2pb7 "https://dev.to/alexeagleson/how-to-build-scalable-architecture-for-your-nextjs-project-2pb7")
-    
-*   [页面地址](https://link.juejin.cn?target=https%3A%2F%2Fmain--serene-cobbler-6d3ef4.netlify.app%2F "https://main--serene-cobbler-6d3ef4.netlify.app/")
-    
-
-感谢观看，码字不易，欢迎一键三连 ～～～ 🌹🌹🌹
-
-联系作者
-====
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/83c11826d493460cb55c651193c338ce~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)

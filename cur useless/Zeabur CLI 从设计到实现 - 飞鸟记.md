@@ -1,25 +1,9 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [blog.aflybird.cn](https://blog.aflybird.cn/2023/09/zeabur-cli/#cli-%E6%96%87%E7%AB%A0%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90)
 
-> What is Zeabur? Why We use Zeabur? 也许你像我一样，热爱编程。用技术改变世界是多么酷的事情！ 但是，我们又不得不花大把时间在服务部署上，无论是配置基础设施，还是频繁
-
-也许你像我一样，热爱编程。用技术改变世界是多么酷的事情！
-
-但是，我们又不得不花大把时间在服务部署上，无论是配置基础设施，还是频繁发布等等。
-
-所以，Zeabur 诞生了！ 你只负责代码，剩下的全部交给 Zeabur！
-
-What is DevOps？ Who care！ I just write my code！
-
-![](https://blog.aflybird.cn/2023/09/zeabur-cli/zeabur-architecture.png)
 
 #### Zeabur Architecture
 
 你只要将代码托管到 GitHub，Zeabur 会监测代码变更，自动分析项目语言 / 框架，并自动构建与部署！
-
-Zeabur 几乎能部署任何服务，无论你使用什么编程语言或开发框架，无论是前端还是后端，无论是数据库还是其他基础设施，甚至是 Serverless Function！
-
-![](https://blog.aflybird.cn/2023/09/zeabur-cli/zeabur-dash.png)
-
 #### Zeabur Dashboard
 
 Zeabur 有这样几个概念：
@@ -28,40 +12,14 @@ Zeabur 有这样几个概念：
 *   Project：多个 Service 的集合；
 *   Environment：一键创建新环境，用于隔离生产 / 测试 / 开发环境。
 
-彩蛋
-
-Zeabur Dashboard 就运行在 Zeabur 上 😎
-
-背景介绍完毕，正餐来袭~
-
-先睹为快，下面是 Zeabur CLI 演示：
-
-![](https://blog.aflybird.cn/2023/09/zeabur-cli/zeabur-cli-demo.gif)
-
-#### Zeabur CLI Demo
-
-使用命令行是一种非常极客的行为，我们能通过 CLI 极大地装逼（开个玩笑 LOL）。
-
-目前 Zeabur 可以用过 Dashboard(Web UI) 轻松管理 Zeabur 资源，但还是有许多用户有终端的需求。
-
-比如，有用户曾说，「如果 Zeabur 有 CLI，我就用 Zeabur」。
-
-当然更重要的，Zeabur CLI 能够让 Zeabur 成为更加开放的平台，甚至成为软件开发的基础设施，例如与 CI/CD 工具集成。
 
 Zeabur CLI 应该具备：
-
 *   用户模块：包含登录、登出等；
 *   Zeabur 资源管理：包含 Service、Project、Environment 的创建、查询等等；
 *   优秀的用户体验：友好的提示、现代化的 CLI UI、操作符合用户直觉等等；
 *   多模式兼容：既能在交互式命令行中使用，也能在 CI/CD 中等非交互式环境中使用。
 *   文档：包含使用文档、开发文档等等。
-
-目前我们已经完成了部分内核功能，欢迎共建！本博客主要介绍 Zeabur CLI 的设计与实现。
-
 在交互式模式下，用户直接输入 `zeabur auth login`，我们将会自动打开浏览器，通过 Zeabur OAuth2 登录。
-
-![](https://blog.aflybird.cn/2023/09/zeabur-cli/zeabur-oauth2.png)
-
 #### Zeabur CLI Login
 
 原理如下，CLI 在后台启动一个 HTTP 服务，监听一个随机端口，充当 OAuth2 Client，然后打开浏览器，通过 Zeabur OAuth Server 完成登录。我们还内置了 Refresh Token 机制，默认在每次命令结束后，视情况刷新 Token。
@@ -161,7 +119,8 @@ Zeabur 使用 [GoReleaser](https://goreleaser.com/) 进行自动发版，通过 
 
 > Homebrew 与 Scoop 由社区贡献，感谢 [@Abdfn](https://github.com/abdfnx)
 
-Zeabur 遵循「依赖抽象而不是依赖于实现」的原则，将所有的功能抽象成接口，全部放到 `cmdutil.Factory` 中，通过在项目初始化时，将对应的实现注入到 `Factory` 中，而不是直接在代码中调用相应的实现。
+Zeabur 遵循「依赖抽象而不是依赖于实现」的原则，将所有的功能抽象成接口，全部放到 `cmdutil.Factory` 中，
+通过在项目初始化时，将对应的实现注入到 `Factory` 中，而不是直接在代码中调用相应的实现。
 
 这是 Factory 的定义，可以看到，无论是日志，还是对 API 的调用，又或是交互式，都定义成了接口。
 
@@ -189,7 +148,6 @@ Zeabur 遵循「依赖抽象而不是依赖于实现」的原则，将所有的�
 ```
 
 这样的好处非常大：
-
 1.  代码解耦，轻易替换 / 扩展实现（例如将 `ApiClent` 的默认 `GraphQL` 实现替换成 `RESTful`）
 2.  便于测试，可以轻易 mock 掉对应的实现
 3.  便于外部项目引入

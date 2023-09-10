@@ -1,0 +1,1454 @@
+<h1>2023-09-05</h1><h2>Design patterns</h2>
+<p>Momento</p>
+<ul>
+<li>Memento stores internal state and allows access only by Originator</li>
+<li>Originator creates and restores from Memento</li>
+<li>Caretaker never accesses the content of Memento and call originator to access memento</li>
+</ul>
+<p>caretaker: usually control OBJ
+originator: a man who inits something(memento manager)</p>
+<hr>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20230905115129.png" />
+sequence 图中 执行方法的被指向的通常是指向的对象
+setState: 发生在 Observer，但是 concreteSubject 来调用这个方法</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20230905115936.png" /></p>
+
+<h1>2023-09-06</h1><h2>控制反转</h2>
+<p>控制反转（Inversion of Control, IoC）是一个设计原则，它强调将控制流从应用程序的主体转移到外部容器或框架。简而言之，应用程序不再控制对象的创建、配置和生命周期，而是交给外部实体。</p>
+<p>使用框架是实现IoC的常见方式。想想大多数web开发框架，比如Django、Spring、Express等。在这些框架中，你通常只定义如何响应某些事件或请求，而不是主动控制整个应用的流程。框架会负责大部分的控制流，并在合适的时候调用你的代码。</p>
+<p>控制反转的主要好处： 模块的解耦，可测试性</p>
+<h3>控制反转例子</h3>
+<ol>
+<li><strong>没有使用IoC</strong></li>
+</ol>
+<pre><code class="language-python">def main():
+    data = input(&quot;请输入数据: &quot;)
+    print(f&quot;你输入了: {data}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>在这个示例中，<code>main</code>函数控制程序的执行流程。</p>
+<ol start="2">
+<li><strong>使用IoC</strong></li>
+</ol>
+<p>现在，我们有一个模拟的框架<code>Framework</code></p>
+<pre><code class="language-python">class Framework:
+    def __init__(self, user_function):
+        self.user_function = user_function
+
+    def run(self):
+        data = input(&quot;请输入数据: &quot;)
+        self.user_function(data)
+
+def my_callback(data):
+    print(f&quot;你输入了: {data}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    framework_instance = Framework(my_callback)
+    framework_instance.run()
+</code></pre>
+<p>在这个IoC版本中，我们不再直接控制整个程序的流程。
+<code>Framework</code>类接管了控制流，而我们只是提供一个回调函数（<code>my_callback</code>）来处理数据。当框架在其执行中到达适当的时机时，它将调用我们提供的函数。</p>
+<h2>依赖注入</h2>
+<p>依赖注入是实现控制反转的一种技术。简单来说，依赖注入就是当一个对象需要另一个对象的功能时，不是自己创建那个对象，而是从外部（通常是框架、容器或其他组件）获取该对象。这种将依赖关系从内部转移到外部的操作，使得对象之间的耦合度降低，增加了代码的灵活性。</p>
+<h3>依赖注入 例子</h3>
+<p>例如，假设我们有一个类<code>Car</code>，它需要一个<code>Engine</code>对象来工作。在传统的设计中，我们可能会在<code>Car</code>的构造函数中直接实例化一个<code>Engine</code>对象。
+但在依赖注入中，我们会将<code>Engine</code>对象作为参数传递给<code>Car</code>的构造函数或通过某种方法将其设置到<code>Car</code>中。
+这样，我们可以轻松地为<code>Car</code>提供不同的<code>Engine</code>实现，而无需修改<code>Car</code>类的代码。这就是依赖注入的力量。</p>
+<p>依赖注入的好处：解耦，可配置性，灵活</p>
+
+<h1>2023-09-10</h1><p>在上面的例子中，如果我要扩充hero的技能，而且我们不管这个hero到底是BlinMonk还是别的什么英雄，我们都想扩充他的技能。如果此时采用继承，那么我们必须为每一个英雄都派生一个子类，比如我要扩充盲僧的技能，那我就要从盲僧那里扩充一个类，要扩充提莫的技能，我又的从提莫那里扩充一个类（上面没有写提莫，如果要写的话，照着盲僧差不多写一个就行了），非常的不灵活。但是如果我们使用装饰模式，则只需要从他们的顶层类hero派生一个装饰类，并且这个装饰类的构造函数接受一个hero类型的对象作为传入参数。因为这个传入参数可以是任何hero的子类，所以他可以传入任何的英雄，无论是盲僧、刀妹还是提莫，并且因为这些子类都能够实现多态，因此实现了对所传入的子类对象的装饰。传入什么东西，不是由装饰器的编写者决定的，而是由装饰器的使用者决定的，所以对于库类的编写者来说，装饰器装饰什么东西（即传入什么参数）是它的代码已经交付之后发生的事了，所以我们说这是运行时决定的（动态库类代码可能确实已经在系统运行了）。</p>
+<p>同时，为了扩充装饰类本身，实现多样化装饰，我们可以先派生一个顶层的抽象装饰类，再从这个抽象的装饰类派生一些具体的装饰类。注意，这些派生出来的具体的装饰类具体增加什么新功能，和他们要装饰哪个类是无关的，因为他们要求能够装饰所有的hero而不是某一个hero，而是和他们要增加什么具体功能有关，比如增加R技能还是Q技能。</p>
+<p>另外，上面的例子还展示了装饰器类一个强大的功能，就是装饰器对象在构造的时候，可以传入另一个装饰器对象（因为它的顶层父类就是一个hero），从而能够使用另一个装饰类的方法，非常强大。但这里隐含了一个需要注意的地方，那就是装饰器必须实现被装饰类（此处为hero）的所有方法，并在这些方法中一般还要求调用被装饰类的对应方法，一次实现对被修饰类对象数据的操作（对象的数据一般都只能通过它自己的方法接口进行操作）。</p>
+<p>因此可以看出，装饰器模式其实是充分地利用了继承多态的优势，让“扩充哪个类”这个决定也交给了运行时多态去确认，可谓灵活至极啊。</p>
+
+<h1>RESETful API 设计规范</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903625030909960?searchId=20230908140926AF9EE05097DF80CD2A24">juejin.cn</a></p>
+</blockquote>
+<h2>关于「能愿动词」的使用</h2>
+<p>为了避免歧义，文档大量使用了「能愿动词」，对应的解释如下：</p>
+<ul>
+<li><code>必须 (MUST)</code>：绝对，严格遵循，请照做，无条件遵守；</li>
+<li><code>一定不可 (MUST NOT)</code>：禁令，严令禁止；</li>
+<li><code>应该 (SHOULD)</code> ：强烈建议这样做，但是不强求；</li>
+<li><code>不该 (SHOULD NOT)</code>：强烈不建议这样做，但是不强求；</li>
+<li><code>可以 (MAY)</code> 和 <code>可选 (OPTIONAL)</code> ：选择性高一点，在这个文档内，此词语使用较少；</li>
+</ul>
+<blockquote>
+<p>参见：<a href="https://link.juejin.cn?target=http%3A%2F%2Fwww.ietf.org%2Frfc%2Frfc2119.txt" title="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a></p>
+</blockquote>
+<h2>API Root URL</h2>
+<p><code>API</code> 的根入口点应尽可能保持足够简单，这里有两个常见的 <code>URL</code> 根例子：</p>
+<ul>
+<li>api.example.com/*</li>
+<li>example.com/api/*</li>
+</ul>
+<blockquote>
+<p>如果你的应用很庞大或者你预计它将会变的很庞大，那 <code>应该</code> 将 <code>API</code> 放到子域下。这种做法可以保持某些规模化上的灵活性。</p>
+</blockquote>
+<h2>Versioning</h2>
+<p>所有的 <code>API</code> 必须保持向后兼容，你 <code>必须</code> 在引入新版本 <code>API</code> 的同时确保旧版本 <code>API</code> 仍然可用。所以 <code>应该</code> 为其提供版本支持。</p>
+<p>目前比较常见的两种版本号形式：</p>
+<ul>
+<li>在 URL 中嵌入版本编号</li>
+<li>通过媒体类型来指定版本信息</li>
+</ul>
+<h3>在 URL 中嵌入版本编号</h3>
+<pre><code>api.example.com/v1/*
+</code></pre>
+<p>这种做法是版本号直观、易于调试；另一种做法是，将版本号放在 <code>HTTP Header</code> 头中：</p>
+<h3>通过媒体类型来指定版本信息</h3>
+<pre><code>Accept: application/vnd.example.com.v1+json
+</code></pre>
+<p>其中 <code>vnd</code> 表示 <code>Standards Tree</code> 标准树类型，有三个不同的树: <code>x</code>，<code>prs</code> 和 <code>vnd</code>。你使用的标准树需要取决于你开发的项目</p>
+<ul>
+<li>未注册的树（<code>x</code>）主要表示本地和私有环境</li>
+<li>私有树（<code>prs</code>）主要表示没有商业发布的项目</li>
+<li>供应商树（<code>vnd</code>）主要表示公开发布的项目</li>
+</ul>
+<blockquote>
+<p>后面几个参数依次为应用名称（一般为应用域名）、版本号、期望的返回格式。</p>
+</blockquote>
+<p>至于具体把版本号放在什么地方，这个问题一直存在很大的争议，但由于我们大多数时间都在使用 <code>Laravel</code> 开发，<code>应该</code> 使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fdingo%2Fapi" title="https://github.com/dingo/api">dingo/api</a> 来快速构建应用，它采用第二种方式来管理 <code>API</code> 版本，并且已集成了标准的 <code>HTTP Response</code>。</p>
+<h2>Endpoints</h2>
+<p>端点就是指向特定资源或资源集合的 <code>URL</code>。在端点的设计中，你 <code>必须</code> 遵守下列约定：</p>
+<ul>
+<li>URL 的命名 <code>必须</code> 全部小写</li>
+<li>URL 中资源（<code>resource</code>）的命名 <code>必须</code> 是名词，并且 <code>必须</code> 是复数形式</li>
+<li><code>必须</code> 优先使用 <code>Restful</code> 类型的 URL</li>
+<li>URL 中不能出现 <code>-</code>，<code>必须</code> 用下划线 <code>_</code> 代替</li>
+<li>URL <code>必须</code> 是易读的</li>
+<li>URL <code>一定不可</code> 暴露服务器架构</li>
+</ul>
+<p>来看一个反例</p>
+<ul>
+<li>https://api.example.com/getUserInfo?userid=1</li>
+<li>https://api.example.com/getusers</li>
+<li>https://api.example.com/sv/u</li>
+<li>https://api.example.com/cgi-bin/users/get_user.php?userid=1</li>
+</ul>
+<p>再来看一个正列</p>
+<ul>
+<li>https://api.example.com/zoos</li>
+<li>https://api.example.com/animals</li>
+<li>https://api.example.com/zoos/{zoo}/animals</li>
+<li>https://api.example.com/animal_types</li>
+<li>https://api.example.com/employees</li>
+</ul>
+<h2>HTTP 动词</h2>
+<p>对于资源的具体操作类型，由 <code>HTTP</code> 动词表示。常用的 <code>HTTP</code> 动词有下面五个（括号里是对应的 <code>SQL</code> 命令）。</p>
+<ul>
+<li>GET（SELECT）：从服务器取出资源（一项或多项）。</li>
+<li>POST（CREATE）：在服务器新建一个资源。</li>
+<li>PUT（UPDATE）：在服务器更新资源（客户端提供改变后的完整资源）。</li>
+<li>PATCH（UPDATE）：在服务器更新资源（客户端提供改变的属性）。</li>
+<li>DELETE（DELETE）：从服务器删除资源。</li>
+</ul>
+<p>其中
+1 删除资源 <code>必须</code> 用 <code>DELETE</code> 方法
+2 创建新的资源 <code>必须</code> 使用 <code>POST</code> 方法
+3 更新资源 <code>应该</code> 使用 <code>PUT</code> 方法
+4 获取资源信息 <code>必须</code> 使用 <code>GET</code> 方法
+针对每一个端点来说，下面列出所有可行的 <code>HTTP</code> 动词和端点的组合</p>
+<h2>Filtering</h2>
+<blockquote>
+<p>如果记录数量很多，服务器不可能都将它们返回给用户。API <code>应该</code> 提供参数，过滤返回结果。下面是一些常见的参数。</p>
+</blockquote>
+<ul>
+<li>?limit=10：指定返回记录的数量</li>
+<li>?offset=10：指定返回记录的开始位置。</li>
+<li>?page=2&amp;per_page=100：指定第几页，以及每页的记录数。</li>
+<li>?sortby=name&amp;order=asc：指定返回结果按照哪个属性排序，以及排序顺序。</li>
+<li>?animal_type_id=1：指定筛选条件</li>
+</ul>
+<p>所有 <code>URL</code> 参数 <code>必须</code> 是全小写，<code>必须</code> 使用下划线类型的参数形式。
+经常使用的、复杂的查询 <code>应该</code> 标签化，降低维护成本。如</p>
+<pre><code>GET /trades?status=closed&amp;sort=sortby=name&amp;order=asc
+# 可为其定制快捷方式
+GET /trades/recently_closed
+</code></pre>
+<h2>Authentication</h2>
+<p><code>应该</code> 使用 <code>OAuth2.0</code> 的方式为 API 调用者提供登录认证。<code>必须</code> 先通过登录接口获取 <code>Access Token</code> 后再通过该 <code>token</code> 调用需要身份认证的 <code>API</code>。</p>
+<p>Oauth 的端点设计示列</p>
+<ul>
+<li>RFC 6749 /token</li>
+<li>Twitter /oauth2/token</li>
+<li>Fackbook /oauth/access_token</li>
+<li>Google /o/oauth2/token</li>
+<li>Github /login/oauth/access_token</li>
+<li>Instagram /oauth/authorize</li>
+</ul>
+<p>客户端在获得 <code>access token</code> 的同时 <code>必须</code> 在响应中包含一个名为 <code>expires_in</code> 的数据，它表示当前获得的 <code>token</code> 会在多少 <code>秒</code> 后失效。</p>
+<pre><code>{
+    &quot;access_token&quot;: &quot;token....&quot;,
+    &quot;token_type&quot;: &quot;Bearer&quot;,
+    &quot;expires_in&quot;: 3600
+}
+</code></pre>
+<p>客户端在请求需要认证的 <code>API</code> 时，<code>必须</code> 在请求头 <code>Authorization</code> 中带上 <code>access_token</code>。</p>
+<pre><code>Authorization: Bearer token...
+</code></pre>
+<p>当超过指定的秒数后，<code>access token</code> 就会过期，再次用过期 / 或无效的 <code>token</code> 访问时，服务端 <code>应该</code> 返回 <code>invalid_token</code> 的错误或 <code>401</code> 错误码。</p>
+<pre><code>HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+    &quot;error&quot;: &quot;invalid_token&quot;
+}
+</code></pre>
+<blockquote>
+<p>Laravel 开发中，<code>应该</code> 使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Ftymondesigns%2Fjwt-auth" title="https://github.com/tymondesigns/jwt-auth">JWT</a> 来为管理你的 Token，并且 <code>一定不可</code> 在 <code>api</code> 中间件中开启请求 <code>session</code>。</p>
+</blockquote>
+<h2>Response</h2>
+<p>所有的 <code>API</code> 响应，<code>必须</code> 遵守 <code>HTTP</code> 设计规范，<code>必须</code> 选择合适的 <code>HTTP</code> 状态码。</p>
+<p><code>一定不可</code> 所有接口都返回状态码为 <code>200</code> 的 <code>HTTP</code> 响应，如：</p>
+<pre><code>HTTP/1.1 200 ok
+Content-Type: application/json
+Server: example.com
+
+{
+    &quot;code&quot;: 0,
+    &quot;msg&quot;: &quot;success&quot;,
+    &quot;data&quot;: {
+        &quot;username&quot;: &quot;username&quot;
+    }
+}
+</code></pre>
+<p>或</p>
+<pre><code>HTTP/1.1 200 ok
+Content-Type: application/json
+Server: example.com
+
+{
+    &quot;code&quot;: -1,
+    &quot;msg&quot;: &quot;该活动不存在&quot;,
+}
+</code></pre>
+<hr>
+<p>下表列举了常见的 <code>HTTP</code> 状态码</p>
+<table><thead><tr><th>状态码</th><th>描述</th></tr></thead><tbody><tr><td>1xx</td><td>代表请求已被接受，需要继续处理</td></tr><tr><td>2xx</td><td>请求已成功，请求所希望的响应头或数据体将随此响应返回</td></tr><tr><td>3xx</td><td>重定向</td></tr><tr><td>4xx</td><td>客户端原因引起的错误</td></tr><tr><td>5xx</td><td>服务端原因引起的错误</td></tr></tbody></table>
+<blockquote>
+<p>只有来自客户端的请求被正确的处理后才能返回 <code>2xx</code> 的响应，所以当 API 返回 <code>2xx</code> 类型的状态码时，前端 <code>必须</code> 认定该请求已处理成功。</p>
+</blockquote>
+<p>必须强调的是，所有 <code>API</code> <code>一定不可</code> 返回 <code>1xx</code> 类型的状态码。当 <code>API</code> 发生错误时，<code>必须</code> 返回出错时的详细信息。</p>
+<h2>目前常见返回错误信息的方法有两种：</h2>
+<p>1、将错误详细放入 <code>HTTP</code> 响应首部；</p>
+<pre><code>X-MYNAME-ERROR-CODE: 4001
+X-MYNAME-ERROR-MESSAGE: Bad authentication token
+X-MYNAME-ERROR-INFO: http://docs.example.com/api/v1/authentication
+</code></pre>
+<p>2、直接放入响应实体中；</p>
+<pre><code>HTTP/1.1 401 Unauthorized
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 10:02:59 GMT
+Connection: keep-alive
+
+{&quot;error_code&quot;:40100,&quot;message&quot;:&quot;Unauthorized&quot;}
+</code></pre>
+<hr>
+<p>考虑到易读性和客户端的易处理性，我们 <code>必须</code> 把错误信息直接放到响应实体中，并且错误格式 <code>应该</code> 满足如下格式：</p>
+<pre><code>{
+    &quot;message&quot;: &quot;您查找的资源不存在&quot;,
+    &quot;error_code&quot;: 404001
+}
+</code></pre>
+<p>其中错误码（<code>error_code</code>）<code>必须</code> 和 <code>HTTP</code> 状态码对应，也方便错误码归类，如：</p>
+<pre><code>HTTP/1.1 429 Too Many Requests
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 10:15:52 GMT
+Connection: keep-alive
+
+{&quot;error_code&quot;:429001,&quot;message&quot;:&quot;你操作太频繁了&quot;}
+</code></pre>
+<pre><code>HTTP/1.1 403 Forbidden
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 10:19:27 GMT
+Connection: keep-alive
+
+{&quot;error_code&quot;:403002,&quot;message&quot;:&quot;用户已禁用&quot;}
+</code></pre>
+<p><code>应该</code> 在返回的错误信息中，同时包含面向开发者和面向用户的提示信息，前者可方便开发人员调试，后者可直接展示给终端用户查看如：</p>
+<pre><code>{
+    &quot;message&quot;: &quot;直接展示给终端用户的错误信息&quot;,
+    &quot;error_code&quot;: &quot;业务错误码&quot;,
+    &quot;error&quot;: &quot;供开发者查看的错误信息&quot;,
+    &quot;debug&quot;: [
+        &quot;错误堆栈，必须开启 debug 才存在&quot;
+    ]
+}
+</code></pre>
+<p>下面详细列举了各种情况 API 的返回说明。</p>
+<h3>200 ok</h3>
+<p><code>200</code> 状态码是最常见的 <code>HTTP</code> 状态码，在所有 <strong>成功</strong> 的 <code>GET</code> 请求中，<code>必须</code> 返回此状态码。<code>HTTP</code> 响应实体部分 <code>必须</code> 直接就是数据，不要做多余的包装。</p>
+<p>错误示例：</p>
+<pre><code>HTTP/1.1 200 ok
+Content-Type: application/json
+Server: example.com
+
+{
+    &quot;user&quot;: {
+        &quot;id&quot;:1,
+        &quot;nickname&quot;:&quot;fwest&quot;,
+        &quot;username&quot;: &quot;example&quot;
+    }
+}
+</code></pre>
+<p>正确示例：</p>
+<p>1、获取单个资源详情</p>
+<pre><code>{
+    &quot;id&quot;: 1,
+    &quot;username&quot;: &quot;godruoyi&quot;,
+    &quot;age&quot;: 88,
+}
+</code></pre>
+<p>2、获取资源集合</p>
+<pre><code>[
+    {
+        &quot;id&quot;: 1,
+        &quot;username&quot;: &quot;godruoyi&quot;,
+        &quot;age&quot;: 88,
+    },
+    {
+        &quot;id&quot;: 2,
+        &quot;username&quot;: &quot;foo&quot;,
+        &quot;age&quot;: 88,
+    }
+]
+</code></pre>
+<p>3、额外的媒体信息</p>
+<pre><code>{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;avatar&quot;: &quot;https://lorempixel.com/640/480/?32556&quot;,
+            &quot;nickname&quot;: &quot;fwest&quot;,
+            &quot;last_logined_time&quot;: &quot;2018-05-29 04:56:43&quot;,
+            &quot;has_registed&quot;: true
+        },
+        {
+            &quot;id&quot;: 2,
+            &quot;avatar&quot;: &quot;https://lorempixel.com/640/480/?86144&quot;,
+            &quot;nickname&quot;: &quot;zschowalter&quot;,
+            &quot;last_logined_time&quot;: &quot;2018-06-16 15:18:34&quot;,
+            &quot;has_registed&quot;: true
+        }
+    ],
+    &quot;meta&quot;: {
+        &quot;pagination&quot;: {
+            &quot;total&quot;: 101,
+            &quot;count&quot;: 2,
+            &quot;per_page&quot;: 2,
+            &quot;current_page&quot;: 1,
+            &quot;total_pages&quot;: 51,
+            &quot;links&quot;: {
+                &quot;next&quot;: &quot;http://api.example.com?page=2&quot;
+            }
+        }
+    }
+}
+</code></pre>
+<blockquote>
+<p>其中，分页和其他额外的媒体信息，必须放到 <code>meta</code> 字段中。</p>
+</blockquote>
+<h3>201 Created</h3>
+<p>当服务器创建数据成功时，<code>应该</code> 返回此状态码。常见的应用场景是使用 <code>POST</code> 提交用户信息，如：</p>
+<ul>
+<li>添加了新用户</li>
+<li>上传了图片</li>
+<li>创建了新活动</li>
+</ul>
+<p>等，都可以返回 <code>201</code> 状态码。需要注意的是，你可以选择在用户创建成功后返回新用户的数据</p>
+<pre><code>HTTP/1.1 201 Created
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 24 Jun 2018 09:13:40 GMT
+Connection: keep-alive
+
+{
+    &quot;id&quot;: 1,
+    &quot;avatar&quot;: &quot;https:\/\/lorempixel.com\/640\/480\/?32556&quot;,
+    &quot;nickname&quot;: &quot;fwest&quot;,
+    &quot;last_logined_time&quot;: &quot;2018-05-29 04:56:43&quot;,
+    &quot;created_at&quot;: &quot;2018-06-16 17:55:55&quot;,
+    &quot;updated_at&quot;: &quot;2018-06-16 17:55:55&quot;
+}
+</code></pre>
+<p>也可以返回一个响应实体为空的 <code>HTTP Response</code> 如：</p>
+<pre><code>HTTP/1.1 201 Created
+Server: nginx/1.11.9
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sun, 24 Jun 2018 09:12:20 GMT
+Connection: keep-alive
+</code></pre>
+<blockquote>
+<p>这里我们 <code>应该</code> 采用第二种方式，因为大多数情况下，客户端只需要知道该请求操作成功与否，并不需要返回新资源的信息。</p>
+</blockquote>
+<h3>202 Accepted</h3>
+<p>该状态码表示服务器已经接受到了来自客户端的请求，但还未开始处理。常用短信发送、邮件通知、模板消息推送等这类很耗时需要队列支持的场景中；</p>
+<blockquote>
+<p>返回该状态码时，响应实体 <code>必须</code> 为空。</p>
+</blockquote>
+<pre><code>HTTP/1.1 202 Accepted
+Server: nginx/1.11.9
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sun, 24 Jun 2018 09:25:15 GMT
+Connection: keep-alive
+</code></pre>
+<h3>204 No Content</h3>
+<p>该状态码表示响应实体不包含任何数据，其中：</p>
+<ul>
+<li>在使用 <code>DELETE</code> 方法删除资源 <strong>成功</strong> 时，<code>必须</code> 返回该状态码</li>
+<li>使用 <code>PUT</code>、<code>PATCH</code> 方法更新数据 <strong>成功</strong> 时，也 <code>应该</code> 返回此状态码</li>
+</ul>
+<pre><code>HTTP/1.1 204 No Content
+Server: nginx/1.11.9
+Date: Sun, 24 Jun 2018 09:29:12 GMT
+Connection: keep-alive
+</code></pre>
+<h3>3xx 重定向</h3>
+<p>所有 <code>API</code> <code>一定不可</code> 返回 <code>3xx</code> 类型的状态码。因为 <code>3xx</code> 类型的响应格式一般为下列格式：</p>
+<pre><code>HTTP/1.1 302 Found
+Server: nginx/1.11.9
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 09:41:50 GMT
+Location: https://example.com
+Connection: keep-alive
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;UTF-8&quot; /&gt;
+        &lt;meta http-equiv=&quot;refresh&quot; content=&quot;0;url=https://example.com&quot; /&gt;
+
+        &lt;title&gt;Redirecting to https://example.com&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        Redirecting to &lt;a href=&quot;https://example.com&quot;&gt;https://example.com&lt;/a&gt;.
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><code>API</code> <code>一定不可</code> 返回纯 <code>HTML</code> 结构的响应；若一定要使用重定向功能，<code>应该</code> 返回一个响应实体为空的 <code>3xx</code> 响应，并在响应头中加上 <code>Location</code> 字段:</p>
+<pre><code>HTTP/1.1 302 Found
+Server: nginx/1.11.9
+Content-Type: text/html; charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sun, 24 Jun 2018 09:52:50 GMT
+Location: https://godruoyi.com
+Connection: keep-alive
+</code></pre>
+<h3>400 Bad Request</h3>
+<p>由于明显的客户端错误（例如，请求语法格式错误、无效的请求、无效的签名等），服务器 <code>应该</code> 放弃该请求。</p>
+<blockquote>
+<p>当服务器无法从其他 4xx 类型的状态码中找出合适的来表示错误类型时，都 <code>必须</code> 返回该状态码。</p>
+</blockquote>
+<pre><code>HTTP/1.1 400 Bad Request
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 13:22:36 GMT
+Connection: keep-alive
+
+{&quot;error_code&quot;:40000,&quot;message&quot;:&quot;无效的签名&quot;}
+</code></pre>
+<h3>401 Unauthorized</h3>
+<p>该状态码表示当前请求需要身份认证，以下情况都 <code>必须</code> 返回该状态码。</p>
+<ul>
+<li>未认证用户访问需要认证的 API</li>
+<li>access_token 无效 / 过期</li>
+</ul>
+<blockquote>
+<p>客户端在收到 <code>401</code> 响应后，都 <code>应该</code> 提示用户进行下一步的登录操作。</p>
+</blockquote>
+<pre><code>HTTP/1.1 401 Unauthorized
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+WWW-Authenticate: JWTAuth
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 13:17:02 GMT
+Connection: keep-alive
+
+&quot;message&quot;:&quot;Token Signature could not be verified.&quot;,&quot;error_code&quot;: &quot;40100&quot;}
+</code></pre>
+<h3>403 Forbidden</h3>
+<p>该状态码可以简单的理解为没有权限访问该请求，服务器收到请求但拒绝提供服务。</p>
+<p>如当普通用户请求操作管理员用户时，<code>必须</code> 返回该状态码。</p>
+<pre><code>HTTP/1.1 403 Forbidden
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 13:05:34 GMT
+Connection: keep-alive
+
+{&quot;error_code&quot;:40301,&quot;message&quot;:&quot;权限不足&quot;}
+</code></pre>
+<h3>404 Not Found</h3>
+<p>该状态码表示用户请求的资源不存在，如</p>
+<ul>
+<li>获取不存在的用户信息 （get /users/9999999）</li>
+<li>访问不存在的端点</li>
+</ul>
+<p>都 <code>必须</code> 返回该状态码，若该资源已永久不存在，则 <code>应该</code> 返回 <code>410</code> 响应。</p>
+<h3>405 Method Not Allowd</h3>
+<p>当客户端使用的 <code>HTTP</code> 请求方法不被服务器允许时，<code>必须</code> 返回该状态码。</p>
+<blockquote>
+<p>如客户端调用了 <code>POST</code> 方法来访问只支持 GET 方法的 API</p>
+</blockquote>
+<p>该响应 <code>必须</code> 返回一个 <code>Allow</code> 头信息用以表示出当前资源能够接受的请求方法的列表。</p>
+<pre><code>HTTP/1.1 405 Method Not Allowed
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Allow: GET, HEAD
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 12:30:57 GMT
+Connection: keep-alive
+
+{&quot;message&quot;:&quot;405 Method Not Allowed&quot;,&quot;error_code&quot;: 40500}
+</code></pre>
+<h3>406 Not Acceptable</h3>
+<p><code>API</code> 在不支持客户端指定的数据格式时，应该返回此状态码。如支持 <code>JSON</code> 和 <code>XML</code> 输出的 <code>API</code> 被指定返回 <code>YAML</code> 格式的数据时。</p>
+<blockquote>
+<p>Http 协议一般通过请求首部的 Accept 来指定数据格式</p>
+</blockquote>
+<h3>408 Request Timeout</h3>
+<p>客户端请求超时时 <code>必须</code> 返回该状态码，需要注意的时，该状态码表示 <strong>客户端请求超时</strong>，在涉及第三方 <code>API</code> 调用超时时，<code>一定不可</code> 返回该状态码。</p>
+<h3>409 Gonfilct</h3>
+<p>该状态码表示因为请求存在冲突无法处理。如通过手机号码提供注册功能的 <code>API</code>，当用户提交的手机号已存在时，<code>必须</code> 返回此状态码。</p>
+<pre><code>HTTP/1.1 409 Conflict
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 12:19:04 GMT
+Connection: keep-alive
+
+{&quot;error_code&quot;:40900,&quot;message&quot;:&quot;手机号已存在&quot;}
+</code></pre>
+<h3>410 Gone</h3>
+<p>和 <code>404</code> 类似，该状态码也表示请求的资源不存在，只是 <code>410</code> 状态码进一步表示所请求的资源已不存在，并且未来也不会存在。在收到 <code>410</code> 状态码后，客户端 <code>应该</code> 停止再次请求该资源。</p>
+<h3>413 Request Entity Too Large</h3>
+<p>该状态码表示服务器拒绝处理当前请求，因为该请求提交的实体数据大小超过了服务器愿意或者能够处理的范围。</p>
+<blockquote>
+<p>此种情况下，服务器可以关闭连接以免客户端继续发送此请求。</p>
+</blockquote>
+<p>如果这个状况是临时的，服务器 <code>应该</code> 返回一个 <code>Retry-After</code> 的响应头，以告知客户端可以在多少时间以后重新尝试。</p>
+<h3>414 Request-URI Too Long</h3>
+<p>该状态码表示请求的 <code>URI</code> 长度超过了服务器能够解释的长度，因此服务器拒绝对该请求提供服务。</p>
+<h3>415 Unsupported Media Type</h3>
+<p>通常表示服务器不支持客户端请求首部 <code>Content-Type</code> 指定的数据格式。如在只接受 <code>JSON</code> 格式的 <code>API</code> 中放入 <code>XML</code> 类型的数据并向服务器发送，都 <code>应该</code> 返回该状态码。</p>
+<p>该状态码也可用于如：只允许上传图片格式的文件，但是客户端提交媒体文件非法或不是图片类型，这时 <code>应该</code> 返回该状态码：</p>
+<pre><code>HTTP/1.1 415 Unsupported Media Type
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 12:09:40 GMT
+Connection: keep-alive
+
+{&quot;error_code&quot;:41500,&quot;message&quot;:&quot;不允许上传的图片格式&quot;}
+</code></pre>
+<h3>429 Too Many Request</h3>
+<p>该状态码表示用户请求次数超过允许范围。如 <code>API</code> 设定为 <code>60次/分钟</code>，当用户在一分钟内请求次数超过 60 次后，都 <code>应该</code> 返回该状态码。并且也 <code>应该</code> 在响应首部中加上下列头部：</p>
+<pre><code>X-RateLimit-Limit: 10 请求速率（由应用设定，其单位一般为小时/分钟等，这里是 10次/5分钟）
+X-RateLimit-Remaining: 0 当前剩余的请求数量
+X-RateLimit-Reset: 1529839462 重置时间
+Retry-After: 120 下一次访问应该等待的时间（秒）
+</code></pre>
+<p>列子</p>
+<pre><code>HTTP/1.1 429 Too Many Requests
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+X-RateLimit-Limit: 10
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1529839462
+Retry-After: 290
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 11:19:32 GMT
+Connection: keep-alive
+
+{&quot;message&quot;:&quot;You have exceeded your rate limit.&quot;,&quot;error_code&quot;:42900}
+</code></pre>
+<p><code>必须</code> 为所有的 API 设置 Rate Limit 支持。</p>
+<h3>500 Internal Server Error</h3>
+<p>该状态码 <code>必须</code> 在服务器出错时抛出，对于所有的 <code>500</code> 错误，都 <code>应该</code> 提供完整的错误信息支持，也方便跟踪调试。</p>
+<h3>503 Service Unavailable</h3>
+<p>该状态码表示服务器暂时处理不可用状态，当服务器需要维护或第三方 <code>API</code> 请求超时 / 不可达时，都 <code>应该</code> 返回该状态码，其中若是主动关闭 API 服务，<code>应该</code>在返回的响应首部加上 <code>Retry-After</code> 头部，表示多少秒后可以再次访问。</p>
+<pre><code>HTTP/1.1 503 Service Unavailable
+Server: nginx/1.11.9
+Content-Type: application/json
+Transfer-Encoding: chunked
+Cache-Control: no-cache, private
+Date: Sun, 24 Jun 2018 10:56:20 GMT
+Retry-After: 60
+Connection: keep-alive
+
+{&quot;error_code&quot;:50300,&quot;message&quot;:&quot;服务维护中&quot;}
+</code></pre>
+
+<h1>RESTful、共用接口接口约定的实践</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903505312890894?searchId=20230908140926AF9EE05097DF80CD2A24">juejin.cn</a></p>
+</blockquote>
+<h2>之前接口是这样子的：</h2>
+<table><thead><tr><th>接口地址</th><th>含义</th><th>请求方式</th></tr></thead><tbody><tr><td>…/A 项目 / 模块 1/getProducts</td><td>获得产品</td><td>GET</td></tr><tr><td>…/A 项目 / 模块 1/addProduct</td><td>添加产品</td><td>POST</td></tr><tr><td>…/A 项目 / 模块 1/getProductDetail</td><td>获得产品详情</td><td>GET</td></tr><tr><td>…/A 项目 / 模块 1/editProduct</td><td>修改产品</td><td>POST</td></tr></tbody></table>
+<h2>之前客户端请求是这样的：</h2>
+<ul>
+<li>…/A 项目 / 模块 1/getProducts?id=1&amp;a=2&amp;b=3&amp;c=4&amp;d=5…………</li>
+<li>A 页面 =====》B 页面（携带 n 个变量）====》C 页面（携带 m 个变量，包含 i 个 A 页面的变量） ------- 经常 n&gt;4</li>
+<li>大部分请求是 POST，至于 put、patch、delete 是什么鬼，关我屁事。</li>
+<li>关于接口入参使用 json，那完全是看开发心情。</li>
+</ul>
+<h2>之前出参是这样的：</h2>
+<p>{&quot;message&quot;:&quot;success&quot;,&quot;code&quot;:0,&quot;data&quot;: 具体内容}<br>
+其中 data 里包含数组可能是<br>
+[{&quot;a&quot;:&quot;1&quot;,&quot;b&quot;:&quot;1&quot;},{&quot;a&quot;:&quot;1&quot;,&quot;b&quot;:&quot;1&quot;},{&quot;a&quot;:&quot;1&quot;,&quot;b&quot;:&quot;1&quot;},{&quot;a&quot;:&quot;1&quot;,&quot;b&quot;:&quot;1&quot;}]<br>
+即使下一个页面用到也不会使用 id，而是把所有字段都传进去。</p>
+<ul>
+<li>A 接口中，返回产品用 product；</li>
+<li>B 接口中使用 good，多个接口很可能不统一。</li>
+</ul>
+<h2>之前后端是这样的</h2>
+<p>…/A 项目 / 模块 1/getProducts ---- 接口<br>
+…/A 项目 / 模块 1/Products.html ---- 页面<br>
+…/A 项目 / 模块 1/Products.js ---- 静态资源</p>
+<p>接口和静态资源缠在一块，毕竟很多页面可能是一位开发人员同时开发前端、后端，这里的弊端是，只需要自己清楚逻辑，很多做法临时应付，方案并不优雅，别人也很难看懂。一旦这位同事离职，很多说不清的逻辑就留给后人采坑了。</p>
+<h2>resultfull 接口约定</h2>
+<h3>post 方法</h3>
+<p>新增一条 XXX<br>
+比如 ……/products 则代表新增一条产品<br>
+入参 json 如下：</p>
+<pre><code>{
+    &quot;name&quot;:&quot;我是一款新产品&quot;,
+    &quot;price&quot;:100,
+    &quot;kind&quot;:&quot;我的分类&quot;,
+    &quot;pic&quot;:[一组图片],
+    等等还有很多
+
+}
+</code></pre>
+<h3>put 方法</h3>
+<p>新增某条 XXX 记录<br>
+比如 ……/products/1111111111<br>
+入参 json 如下：</p>
+<pre><code>{
+    &quot;name&quot;:&quot;我是一款新产品&quot;,
+    &quot;price&quot;:100,
+    &quot;kind&quot;:&quot;我的分类&quot;,
+    &quot;pic&quot;:[一组图片],
+    等等还有很多
+
+}
+</code></pre>
+<h3>get 方法</h3>
+<p>获得所有 XXX<br>
+……/products 则代表获取所有产品<br>
+因为有分页，所以我们后面加了? page=1&amp;pageSize=50
+我们约定了所有名词复数，都会返回 list，且 list 每个对象都有字段为 id 的唯一 id。<br>
+比如</p>
+<pre><code>{
+    &quot;data&quot;:{&quot;list&quot;:[{&quot;id&quot;:&quot;唯一id&quot;,&quot;其他很多字段&quot;:&quot;&quot;},{&quot;id&quot;:&quot;唯一id&quot;,&quot;其他很多字段&quot;:&quot;&quot;}],&quot;page&quot;:1,其他字段},
+    &quot;code&quot;:0,
+    &quot;message&quot;:&quot;成功&quot;
+}
+</code></pre>
+<p>……/products/{id} 获取某个具体产品（一定比列表更详细）</p>
+<p>比如某个具体产品里还包含一个 list，如该产品推荐列表，则：<br>
+……/products/{id}/recommendations</p>
+<p>假设它包含的不是一个 list，而是对象，比如产品佣金信息，则：<br>
+……/products/{id}/Commission</p>
+<p>这里我们以是否名词复数来判断是对象还是 list.</p>
+<h3>patch 方法</h3>
+<p>更新局部 XXX 产品 YYY 信息<br>
+入参是 post 方法时入参的子集，所有支持更新的参数会说明，并不是支持所有变量<br>
+……/products/{id}</p>
+<pre><code>{
+    &quot;name&quot;:&quot;我是一款新产品&quot;,
+    &quot;price&quot;:100,
+    部分变量
+}
+</code></pre>
+<h3>delete 方法</h3>
+<p>删除 XXX 记录<br>
+……/products/11111</p>
+<h3>其他说明</h3>
+<p>我们尽可能少的使用动词，但有一些行为需要使用动词，比如登录等。<br>
+关于版本号，我们打算在模块后增加<code>/v1/</code>等标识。</p>
+<h2>权限约定</h2>
+<p>服务端要对用户角色进行判断，是否有权限执行某个逻辑。</p>
+
+<h1>为什么少有人使用 RESTful API？</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7051801217705443341?searchId=20230908140926AF9EE05097DF80CD2A24">juejin.cn</a></p>
+</blockquote>
+<h2>前言</h2>
+<h2>掘友们都倾向于_只要是后端可以正确收到请求，那都是 200。异常都交给业务处理。
+而且不仅是错误信息返回规范，API 设计都很少遵循 RESTful 风格，大多数都是类 JSON RPC。这是为什么呢？
+想要回答这个问题，首先得知道 RESTful 风格的 API 是什么样的。
+RESTful API</h2>
+<p>接下来看看一个完整的 RESTful API 是怎么形成的。</p>
+<h3>Richardson Maturity Model</h3>
+<p>Leonard Richardson 提出了一种以他命名的模型 <strong>Richardson Maturity Model</strong>，循序渐进的介绍了迈向 RESTful 的不同等级。 <img src="file://Mac/Home/myGitHubMac/simple-read/_resources/3a8312f507e7e73ba968c609337b25a6_MD5.webp" /></p>
+<p>但需要强调的是，RMM 虽然是思考 RSET 的一个好方法，但它不是 REST 的定义。
+RMM 有用的地方只是在于它提供了一个很好的 step by step 的方法来理解 REST 思想背后的基本理念。</p>
+<h4><strong>Level 0</strong>**---Richardson Maturity Model**</h4>
+<p>这是最基本的等级，在这等级中只是简单的使用 HTTP 作为远程交互的传输隧道，而不是当成传输协议来使用，不涉及任何 web 的机制。</p>
+<h4>level0举个例子：</h4>
+<p>我今天约了小伙伴打羽毛球，于是发起一个请求向体育馆询问哪个时间段可以预定羽毛球场。</p>
+<pre><code>POST /stadiumReception HTTP/1.1
+[various other headers]
+{
+    &quot;date&quot;: &quot;2022-01-05&quot;,
+    &quot;sport&quot;: &quot;badminton&quot;
+}
+</code></pre>
+<p>前台返回今天羽毛球场可以预定的时间段</p>
+<pre><code>HTTP/1.1 200 OK
+[various headers]
+
+{
+    &quot;times&quot;: [
+        {
+            &quot;start&quot;: &quot;1400&quot;,
+            &quot;end&quot;: &quot;1600&quot;
+        },
+        {
+            &quot;start&quot;: &quot;1700&quot;,
+            &quot;end&quot;: &quot;1830&quot;
+        }
+    ]
+}
+</code></pre>
+<p>得到时间段信息，再约一下时间，决定预定 17 点到 18 点半，打完吃饭。</p>
+<pre><code>POST /stadiumReception HTTP/1.1
+[various other headers]
+
+{
+    &quot;date&quot;: &quot;2022-01-05&quot;,
+    &quot;sport&quot;: &quot;badminton&quot;,
+    &quot;start&quot;: &quot;1700&quot;,
+    &quot;end&quot;: &quot;1830&quot;
+}
+</code></pre>
+<p>预定成功!</p>
+<pre><code>HTTP/1.1 200 OK
+[various headers]
+
+{
+    &quot;orderId&quot;: &quot;123456789&quot;
+}
+</code></pre>
+<p>可以看到这是非常典型的 JSON RPC 格式，当然在实际开发中 API 设计要比这好很多。</p>
+<h4><strong>Level1：面向资源</strong></h4>
+<p>在 RMM 模型（Richardson Maturity Model）中迈向 REST 顶点的第一步就是面向资源，把独立资源替代单一的接口节点。</p>
+<p>因此，可能会将不同运动，比如羽毛球等抽象为独立的资源。所以请求修改为如下：</p>
+<pre><code>POST /sports/badminton HTTP/1.1
+[various other headers]
+{
+    &quot;date&quot;: &quot;2022-01-05&quot;
+}
+</code></pre>
+<p>询问某个日期，羽毛球场的可预定时间。</p>
+<pre><code>HTTP/1.1 200 OK
+[various headers]
+
+{
+    &quot;times&quot;: [
+        {
+            &quot;start&quot;: &quot;1400&quot;,
+            &quot;end&quot;: &quot;1600&quot;,
+            &quot;id&quot;: &quot;123456789&quot;
+        },
+        {
+            &quot;start&quot;: &quot;1700&quot;,
+            &quot;end&quot;: &quot;1830&quot;,
+            &quot;id&quot;: &quot;987654321&quot;
+        }
+    ]
+}
+</code></pre>
+<p>返回比原有基础上增加了单独的 id，可以表示羽毛球场的特定空闲时间段。
+这时就能选定某个时间段，将其 id 向预约接口预定。</p>
+<pre><code>POST /reservations/987654321 HTTP/1.1
+[various other headers]
+</code></pre>
+<p>预定成功!</p>
+<pre><code>HTTP/1.1 200 OK
+[various headers]
+
+{
+    &quot;orderId&quot;: &quot;abcd987654321&quot;
+}
+</code></pre>
+<p>可以看到与 level0 最大的不同就是对单一的节点做操作，变成了对不同的资源做操作。</p>
+<h4><strong>Level2：HTTP 动词</strong></h4>
+<p>Level2，真正将 HTTP 作为了一种传输协议，最直观的一点就是 Level2 使用了 <strong>HTTP 动词</strong>，GET/PUT/POST/DELETE/PATCH 等，这些都是 HTTP 的规范，规范的作用自然是重大的，
+用户看到一个 POST 请求，就知道它不是<strong>幂等</strong>的，使用时要小心。
+而看到 GET，就知道它是幂等的，调用多几次都不会造成问题，
+当然，这些的前提都是 API 的设计者和开发者也遵循这一套规范。</p>
+<h4><strong>Level2：HTTP 动词</strong>例子</h4>
+<p>所以对于询问某个日期，羽毛球场的可预定时间，可改为</p>
+<pre><code>GET /sports/badminton/20220105?status=idle HTTP/1.1
+[various other headers]
+</code></pre>
+<p>HTTP 将 GET 定义为安全操作，而且 web 还会缓存 GET 请求与结果，这是 Web 架构工作良好的关键因素。
+返回结果一样的，接着我们预定一个时间段。</p>
+<pre><code>POST /reservations/987654321 HTTP/1.1
+[various other headers]
+</code></pre>
+<p>请求不变，但返回却改变了。如果一切顺利，服务将返回一个 201 响应码，表示有一个新资源产生了。</p>
+<pre><code>HTTP/1.1 201 Created
+Location: orders/abcd987654321
+[various headers]
+
+{
+    &quot;orderId&quot;: &quot;abcd987654321&quot;
+}
+</code></pre>
+<p>201 响应还包括了 Location 属性，指明客户端可以使用该属性的 URL 来获取该订单资源的最新状态。
+如果出现错误，例如其他人预订了该时段，则：</p>
+<pre><code>HTTP/1.1 409 Conflict
+[various headers]
+
+{
+    &quot;error&quot;: &quot;该时间段已被预定&quot;
+}
+</code></pre>
+<p>此响应的重要部分是使用正确的 HTTP 响应码来表示出错的地方。
+在该场景中，409 是一个很好的选择，表明其他人已经以互斥的方式更新了资源。
+在 Level 2，我们明确使用某种类型的错误响应，而不是使用返回码 200 但包含错误响应。</p>
+<h4><strong>Level3：HATEOAS</strong></h4>
+<p>HATEOAS（Hypertext As The Engine Of Application State），中文翻译为 “将超媒体当作应用状态引擎”，这个描述的核心是超媒体概念，换句话说：是链接的思想。</p>
+<h4><strong>Level3：HATEOAS</strong>例子</h4>
+<p>从 Level2 的请求开始：</p>
+<pre><code>GET /sports/badminton/20220105?status=idle HTTP/1.1
+[various other headers]
+</code></pre>
+<p>返回的信息是与 Level2 不同的</p>
+<pre><code>HTTP/1.1 200 OK
+[various headers]
+
+{
+    &quot;times&quot;: [
+        {
+            &quot;start&quot;: &quot;1400&quot;,
+            &quot;end&quot;: &quot;1600&quot;,
+            &quot;id&quot;: &quot;123456789&quot;,
+            &quot;link&quot;: &quot;/reservations/123456789&quot;
+        },
+        {
+            &quot;start&quot;: &quot;1700&quot;,
+            &quot;end&quot;: &quot;1830&quot;,
+            &quot;id&quot;: &quot;987654321&quot;,
+            &quot;link&quot;: &quot;/reservations/987654321&quot;
+        }
+    ]
+}
+</code></pre>
+<p>每个时间段现在都有一个 link 元素，其中包含一个 URI，告诉我们如何预约。
+超媒体控制的要点是，告诉我们下一步可以做什么，以及我们需要操作的资源 URI。
+我们不必知道预约的请求发到哪里去，响应中的超媒体控制会告诉我们怎么去做。</p>
+<p>预约请求仍用回 level2 的</p>
+<pre><code>POST /reservations/987654321 HTTP/1.1
+[various other headers]
+</code></pre>
+<p>回复中包含了许多超媒体控制，用于下一步要做的不同事情。</p>
+<pre><code>HTTP/1.1 201 Created
+Location: orders/abcd987654321
+[various headers]
+
+{
+    &quot;orderId&quot;: &quot;abcd987654321&quot;,
+    &quot;link&quot;: {
+        &quot;rel&quot;: &quot;delete&quot;,
+        &quot;uri&quot;: &quot;/orders/abcd987654321&quot;
+    }
+}
+</code></pre>
+<p>返回提供了如何取消该订单。
+Level3 的 Restful API，给使用者带来了很大的便利，使用者只需要知道如何获取资源的入口，之后的每个 URI 都可以通过请求获得，无法获得就说明无法执行那个请求。</p>
+<h3>RESTful 的缺点</h3>
+<p>需要强调的一点是，<strong>RESTful 不是一种规范，而是一种风格</strong>，它是不具有强制性的。</p>
+<p>1、RESTful 是面向资源的，所以接口都是一些名词，尤指复数名词。简单的 CRUD 还是很合适的，但很多业务逻辑都很难将其抽象为资源。
+比如说登录 / 登出，怎么看也不是一个资源，如果硬是抽象为创建一个 session / 删除一个 session。这不仅反直觉，还违背了 RESTful 的思想。</p>
+<hr>
+<p>2、RESTful 只提供了基本的增删改查，对于复杂的逻辑是一点办法没有，比如批量下载、批量删除等。对于复杂的查询，更是无从下手。而且开发时会面临诸多选择，修改资源用 PUT 还是 PETCH？采用查询参数还是用 body？</p>
+<hr>
+<p>3、关于错误码的问题更是复杂的一批，RESTful 建议使用 status code 作为错误码，以便统一。在实际开发中，业务逻辑的含义数不胜数，很难统一。比如 400 状态码到底是表示传参有问题，还是该资源已被占用了。404 是表示接口不存在，还是资源不存在。</p>
+<p>发展到最后，开发人员的时间精力都不是用于怎么实现这个逻辑，而是变成了纠结这逻辑到底是个什么资源？把时间都给浪费掉，最后还给出了一个不伦不类的 “RESTful”API。</p>
+<hr>
+<p><strong>最重要一点是 RESTful 与 RPC 没有高低之分</strong>，所有的代码规范、接口设计以及各种规定，其实都是为了在团队内部形成共识、防止个人习惯差异引起的混乱。相比之下形成 JSON-RPC 规范相对容易以及更方便使用。
+就算团队里面规定必须用动作表示 URL，所有请求都要使用 POST，这也是没问题的。
+所以无论是 RESTful 还是 RPC，归根到底还是为了开发人员和产品应用服务的，如果它能带来便利、减少混乱，就值得用；反之，如果带来的麻烦比要解决的还多，那就 duck 不必了。</p>
+
+<h1>你好，Next.js 13</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7160084572942630926?searchId=2023091014020494F47DEAC7ED50289C32">juejin.cn</a></p>
+</blockquote>
+<h3>Turbopack 特点</h3>
+<ul>
+<li>开箱即用 TypeScript, JSX, CSS, CSS Modules, WebAssembly 等</li>
+<li>增量计算： Turbopack 是建立在 Turbo 之上的，Turbo 是基于 Rust 的开源、增量记忆化框架，除了可以缓存代码，还可以缓存函数运行结果。</li>
+<li>懒编译：例如，如果访问 localhost:3000，它将仅打包 <code>pages/index.jsx</code>，以及导入的模块。</li>
+</ul>
+<h3>为什么不选择 Vite 和 Esbuild？</h3>
+<p>Vite 依赖于浏览器的原生 ES Modules 系统，不需要打包代码，这种方法只需要转换单个 JS 文件，响应更新很快，但是如果文件过多，这种方式会导致浏览器大量级联网络请求，会导致启动时间相对较慢。</p>
+<ul>
+<li>所以作者选择同 webpack 一样方式，打包，但是使用了 Turbo 构建引擎，一个增量记忆化框架，永远不会重复相同的工作。</li>
+</ul>
+<p>Esbuild 是一个非常快速的打包工具，但它并没有做太多的缓存，也没有 HMR（热更新），所以在开发环境下不适用。</p>
+<h2>为什么要改基于文件的路由系统</h2>
+<p>Next 13 另一个比较大的改动是基于文件的路由系统，增加了一个 <code>app</code> 目录，每一层路由必须建一个文件夹，在该文件夹中建立 <code>page.tsx</code> 作为该路由主页面</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/abc42465f98b9637c1a0f7a46600fb91_MD5.webp" /></p>
+<p>而在 Next.js 12（以及以下）对应的路由系统，是所有路由文件都写在 <code>pages</code> 目录下，每个文件都会生成一个路由，很明显是这种方式更加简洁。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/d819655a70402873a0e88ccb5f3c0571_MD5.webp" /></p>
+<hr>
+<p>那么，Next.js 为什么要改基于文件的路由系统呢？</p>
+<p>主要有以下 3 点原因:</p>
+<ol>
+<li>实现嵌套路由和持久化缓存</li>
+<li>支持 React 18 中的 React server Component，实现 Streaming（流渲染）</li>
+<li>实现代码目录分组，将当前路由下的测试文件、组件、样式文件友好地放在一起，避免全局查找</li>
+</ol>
+<h2>Next.js 12 中 Layout 实现方式</h2>
+<p>Tailwindcss 的作者 Adam Wathan 早在 2019 年就写过一篇博客，关于 <a href="https://link.juejin.cn?target=https%3A%2F%2Fadamwathan.me%2F2019%2F10%2F17%2Fpersistent-layout-patterns-in-nextjs%2F" title="https://adamwathan.me/2019/10/17/persistent-layout-patterns-in-nextjs/">Next.js 如何实现持久化缓存</a>
+其中有个 <a href="https://link.juejin.cn?target=https%3A%2F%2Fcodesandbox.io%2Fs%2F0-no-persistent-layout-elements-o13dt%3Ffrom-embed" title="https://codesandbox.io/s/0-no-persistent-layout-elements-o13dt?from-embed">demo</a> 能够很好的说明 next.js 不能实现持久化缓存，大家可以在 codesandbox 中体验。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/b2ea9a1d2f7edc6ff1c4396ab5e68ef2_MD5.webp" /></p>
+<p>实现方式是每个 page 页面直接引用 components 文件下的导航组件，当点击横向滚动条后面的导航页面，会导致整个页面都刷新，从而没有记录滚条的位置。</p>
+<p>他解决办法是，需要通过往 Page 页面函数上添加静态方法<code>getLayout</code>来实现，详情代码可以看这个<a href="https://link.juejin.cn?target=https%3A%2F%2Fcodesandbox.io%2Fs%2F5-getlayout-function-on-page-and-layout-components-7e1bg%3Ffrom-embed" title="https://codesandbox.io/s/5-getlayout-function-on-page-and-layout-components-7e1bg?from-embed">例子</a>。</p>
+<pre><code>// /pages/account-settings/basic-information.js
+import SiteLayout from '../../components/SiteLayout'
+import { getLayout } from '../../components/AccountSettingsLayout'
+
+const AccountSettingsBasicInformation = () =&gt; &lt;div&gt;{/* ... */}&lt;/div&gt;
+
+AccountSettingsBasicInformation.getLayout = getLayout
+
+export default AccountSettingsBasicInformation
+</code></pre>
+<p>比如上面例子中的<code>账户设置—-&gt;基本信息</code>页面代码，是在 Page 页面中绑定 <code>getLayout</code> 静态方法，<code>getLayout</code> 返回页面的公共导航组件。</p>
+<p>在 <code>_app.tsx</code> 中调用 <code>getLayout</code> 方法，从而区别各个页面的 <code>layout</code> 布局不同。</p>
+<pre><code>import React from 'react'
+import App from 'next/app'
+
+class MyApp extends App {
+  render() {
+    const { Component, pageProps, router } = this.props
+    const getLayout = Component.getLayout || (page =&gt; page)
+
+    return getLayout(&lt;Component {...pageProps}&gt;&lt;/Component&gt;)
+  }
+}
+
+export default MyApp
+</code></pre>
+<p>如果你也有之前的 Next 项目，也需要实现持久化缓存，可以参考这个例子。</p>
+<h2>app 文件夹下的约定式路由</h2>
+<p>Next13 新增了 <code>app 文件夹</code> 来实现<strong>约定式路由</strong>，完美地实现了持久化缓存，以下是官方 <code>with-turbopack</code> 项目下部分页面结构</p>
+<pre><code>./app
+├── GlobalNav.tsx
+├── layout.tsx
+├── page.tsx
+├── layouts
+│   ├── CategoryNav.tsx
+│   ├── [categorySlug]
+│   │   ├── SubCategoryNav.tsx
+│   │   ├── [subCategorySlug]
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── template.tsx
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── template.tsx
+</code></pre>
+<p>对应的页面效果如下图</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/f1258bbb5da8214b268be8f2e48ea069_MD5.webp" /></p>
+<hr>
+<p>我们看到每个文件下都有 3 个文件 <code>layout.tsx</code>、<code>page.tsx</code> 、<code>template.tsx</code>、</p>
+<ul>
+<li><code>layout.tsx</code> 该路由下的公共导航，切换路由时，不会刷新，我们可以看箭头处的 Count 组件，并没有刷新</li>
+<li><code>template.tsx</code> 该路由下的公共部分，切换路由时，会刷新</li>
+<li><code>page.tsx</code> 该路由的主页面</li>
+</ul>
+<p>当我们点击导航时候，页面上刷新部分边框会高亮闪烁，我们可以很好地理解代码目录结构组织与页面呈现的路由和渲染。</p>
+<hr>
+<p>在 app 目录下每个文件夹下，还可以有 <code>loading.tsx</code>、<code>error.tsx</code></p>
+<ul>
+<li><code>loading.tsx</code> 该路由的主页面在异步渲染中，会显示的 loading 组件的内容；例如我们可以用它来写骨架屏（Skeleton）</li>
+<li><code>error.tsx</code> 该路由的页面渲染出错，会显示该页面，也就是封装了 React 的 ErrorBoundary。</li>
+</ul>
+<hr>
+<p>以上除了 <code>page.tsx</code> 其他文件都是可选的，除了这些约定名称的文件外，我们可以建立任意文件，比如 <code>components.tsx</code>、 <code>test.tsx</code> 等自定义文件。app 目录可以很好地将页面、组件、测试文件放在一起，管理代码目录，避免开发时全局查找。</p>
+<h3>路由分组</h3>
+<p>app 同层级目录下还支持多个 <code>layout</code>， 使用 <code>（文件夹）</code>区分，<code>（文件夹）</code>不会体现在路由上，只是单纯用来做代码分组。</p>
+<pre><code>./app
+├── (checkout)
+│   ├── checkout
+│   │   └── page.tsx
+│   ├── layout.tsx
+│   └── template.tsx
+├── (main)
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── template.tsx
+</code></pre>
+<p>比如官方 playground 中关于电子商务的例子，<code>main</code> 和 <code>checkout</code> 的 layout 是不同的，可以根据实现功能自定义分组代码目录。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/7f31385969759481a54dc718991a6890_MD5.webp" /></p>
+<h2>React Server Components</h2>
+<p><strong>在 app 目录下的组件默认都是 React Server Components</strong></p>
+<ul>
+<li>CSR: 所有前端打包到前端，通常会引起浏览器加载 JavaScript 过大，从而导致首屏白屏时间过长</li>
+<li>SSR：数据在服务端请求，通过 <code>renderToString</code> 方法将字符串 DOM 结构输出给浏览器，此时浏览器还不能交互，React 不能管理已经存在的 DOM，需要重新执行一遍，这个过程叫 “注水”（Hydrate）。Next12 <code>getServerSideProps</code> 的渲染方式也就是 SSR。</li>
+</ul>
+<hr>
+<p>SSR 解决了白屏时间过长的问题和 SEO 的问题，但也并不是完美的，过多的请求会导致服务端响应时间变长，“注水”（Hydrate）的过程也会导致客户端代码量的增加。</p>
+<p>比如一个传统的博客页面采用 Next12 的方式使用<code>getServerSideProps</code> 的方式渲染，那么就需要等 3 个接口（列表，正文，评论）全部返回才可以看到页面。</p>
+<pre><code>// 每次请求执行
+export async function getServerSideProps() {
+  const list = await getBlogList()
+  const detail = await getBlogDetail()
+  const comments = await getComments()
+
+  // Pass data to the page via props
+  return { props: { list,detail,comments } }
+}
+</code></pre>
+<hr>
+<p>React Server Components ( <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Freactwg%2Freact-18%2Fdiscussions%2F37" title="https://github.com/reactwg/react-18/discussions/37">RFC</a> ) 与传统的 SSR 不同，优点是拥有<strong>流式 HTML 和选择性注水</strong>
+React <code>Suspense</code> API 解锁了 React 18 中的两个主要 SSR 功能：</p>
+<ul>
+<li>在服务器上流式传输 HTML。
+要实现这个功能，需要从原来的方法切换<code>renderToString</code>切换到新<code>renderToPipeableStream</code>方法。</li>
+<li>客户端的选择性注水作用。
+使用 <code>hydrateRoot</code> 代替 <code>createRoot</code> 方法。</li>
+</ul>
+<p>比如上面的博客实例，评论接口查询速度较慢，就可以使用 <code>Suspense</code> 实现流渲染。</p>
+<pre><code>import { lazy } from 'react';
+const Comments = lazy(() =&gt; import('./Comments.js'));
+//...
+return  (
+  &lt;Layout&gt;
+    &lt;NavBar /&gt;
+    &lt;Sidebar /&gt;
+    &lt;RightPane&gt;
+      &lt;Post /&gt;
+      &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+        &lt;Comments /&gt;
+      &lt;/Suspense&gt;
+    &lt;/RightPane&gt;
+  &lt;/Layout&gt;
+)
+</code></pre>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/10dcfdf3822f8bc468935036b05cd814_MD5.webp" /></p>
+<p>如图所示</p>
+<ul>
+<li>灰色部分代表 HTML 字符串返回</li>
+<li>loading 状态表示当前部分还在请求</li>
+<li>绿色部分代表注水成功，页面可以交互</li>
+</ul>
+<hr>
+<p>所谓的流就是通过 script 动态返回最小 html，并且插入到正确的位置，页面中如果有多个 Suspense，是没有先后顺序的，React Server Components 是并行的。</p>
+<p>以上内容在<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Freactwg%2Freact-18%2Fdiscussions%2F37" title="https://github.com/reactwg/react-18/discussions/37">《New Suspense SSR Architecture in React 18》</a> 中可以找到，而要搭建 react 流渲染的架构相对比较复杂，大家可以看 gaearon dan 的 <a href="https://link.juejin.cn?target=https%3A%2F%2Fcodesandbox.io%2Fs%2Fkind-sammet-j56ro%3Ffile%3D%2Fsrc%2FApp.js" title="https://codesandbox.io/s/kind-sammet-j56ro?file=/src/App.js">demo</a>，而 Next.js 13 只需要在 app 目录下，按照约定的文件名称写，就可以自动实现 React Server Components。</p>
+<h2>服务端组件和客户端组件</h2>
+<p>Next.js 最大的优势就是我们只需要一个工程，就可以搞定前端工程和后端工程，哪些是前端代码和哪些是后端代码，Next.js 在打包的时候就会帮我们自动区分，</p>
+<ul>
+<li>这需要开发者清楚地理解，自己写的代码哪些是在服务端执行，哪些是在客户端执行。</li>
+</ul>
+<h3>Next12 区分</h3>
+<p>我们知道 Page 函数都是在服务端执行的，</p>
+<ul>
+<li>包括 <code>getServerSideProps</code>、<code>getStaticPaths</code>、<code>getStaticProps</code></li>
+</ul>
+<p>如果需要在客户端执行有以下 2 种方式；</p>
+<ul>
+<li>在 <code>useEffect</code>、 <code>onChange</code> 等回调函数中使用，比如下面例子，动态加载了 <code>fuse.js</code>，实现模糊搜索。</li>
+</ul>
+<pre><code>import { useState } from 'react'
+const names = ['Tim', 'Joe', 'Bel', 'Lee']
+export default function Page() {
+  const [results, setResults] = useState()
+  return (
+    &lt;div&gt;
+      &lt;input
+        type=&quot;text&quot;
+        placeholder=&quot;Search&quot;
+        onChange={async (e) =&gt; {
+          const { value } = e.currentTarget
+          // Dynamically load fuse.js
+          const Fuse = (await import('fuse.js')).default
+          const fuse = new Fuse(names)
+
+          setResults(fuse.search(value))
+        }}
+      /&gt;
+      &lt;pre&gt;Results: {JSON.stringify(results, null, 2)}&lt;/pre&gt;
+    &lt;/div&gt;
+  )
+}
+</code></pre>
+<ul>
+<li>如果依赖了外部组件，或者 window 对象，可以使用 <code>next/dynamic</code> 并且设置 <code>ssr</code> 为 <code>false</code></li>
+</ul>
+<pre><code>import dynamic from 'next/dynamic'
+
+const DynamicHeader = dynamic(() =&gt; import('../components/header'), {
+  ssr: false,
+})
+</code></pre>
+<h3>Next13 区分</h3>
+<p>在 Next13 中 ， 在 app 目录下，如要使用 <code>useState</code> 等状态管理的 hook，那么该组件只在客户端执行，需要在首行加入 <code>'use client'</code> 指令。</p>
+<pre><code>'use client';
+
+import { useState } from 'react';
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;You clicked {count} times&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;Click me&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<hr>
+<p><strong>该区分服务端组件和客户端组件</strong>，下表列出了常用使用场景</p>
+<table><thead><tr><th>使用场景</th><th>服务端组件</th><th>客户端组件</th></tr></thead><tbody><tr><td>fetch 请求数据。</td><td>✅</td><td>[⚠️]</td></tr><tr><td>访问后端资源（直接）</td><td>✅</td><td>❌</td></tr><tr><td>在服务器上保留敏感信息（访问令牌、API 密钥等）</td><td>✅</td><td>❌</td></tr><tr><td>保持对服务器的大量依赖 / 减少客户端 JavaScript</td><td>✅</td><td>❌</td></tr><tr><td>添加交互和事件侦听器（<code>onClick()</code>,<code>onChange()</code>等）</td><td>❌</td><td>✅</td></tr><tr><td>使用状态和生命周期效果（<code>useState()</code>,&nbsp;<code>useReducer()</code>,&nbsp;<code>useEffect()</code>, 等）</td><td>❌</td><td>✅</td></tr><tr><td>使用仅限浏览器的 API(window)</td><td>❌</td><td>✅</td></tr><tr><td>使用依赖于状态、效果或仅浏览器 API 的自定义 hooks</td><td>❌</td><td>✅</td></tr><tr><td>使用<code>React 类组件</code></td><td>❌</td><td>✅</td></tr></tbody></table>
+<h2>数据请求</h2>
+<p>使用 react 的 use 函数加 fetch API 来实现：静态站点生成（SSG）、服务器端渲染（SSR）和增量静态再生（ISR）</p>
+<p>在 Page 页面使用 fetch：</p>
+<pre><code>import { use } from 'react';
+
+async function getData() {
+  const res = await fetch('...');
+  const name: string = await res.json();
+  return name;
+}
+
+export default function Page() {
+  // 支持的全类型的数据格式
+  // 可以返回不用序列化的格式数据
+  // 因此可以返回 Date, Map, Set, 等.
+  const name = use(getData());
+
+  return '...';
+}
+</code></pre>
+<p>fetch 的缓存策略</p>
+<pre><code>// 请求被缓存
+// 相当于 `getStaticProps`.
+// `force-cache` 是默认值，可以省略
+fetch(URL, { cache: 'force-cache' });
+
+// 每次刷新都会重新请求.
+// 相当于 `getServerSideProps`.
+fetch(URL, { cache: 'no-store' });
+
+// 请求被缓存10s，10s 重新生成
+// 相当于 `getStaticProps` 加上 `revalidate` 参数.
+fetch(URL, { next: { revalidate: 10 } });
+</code></pre>
+<p>使用这种方式的优点是，当请求数据的增加，打包后前端 JavaScript 的大小不会增加。</p>
+<h2>新的 next/image</h2>
+<p>我们知道在 Next.js 12 之前，使用 <code>&lt;img&gt;</code>标签，eslint 会有一个警告，提示我们必须使用 <code>next/image</code> 组件， 因为 <code>next/image</code> 帮我们做了几点优化</p>
+<ul>
+<li>自动优化图片格式</li>
+<li>自动缩放图片大小</li>
+<li>使用<code>Intersection Observer API</code> 实现懒加载</li>
+</ul>
+<p>所以 image 必须加上 <code>width</code> 和 <code>height</code> 参数</p>
+<hr>
+<p>新的 Next/image 使用了浏览器的 <a href="https://link.juejin.cn?target=https%3A%2F%2Fweb.dev%2Fbrowser-level-image-lazy-loading%2F" title="https://web.dev/browser-level-image-lazy-loading/">lazy-loading</a> 代替了 <code>Intersection Observer API</code></p>
+<ul>
+<li>默认情况下需要 alt 标记
+因此减少了客户端 JavaScript 代码，当然这个属性对浏览器要求较高，要求 chrome 77+。</li>
+</ul>
+<pre><code>import Image from 'next/image';
+import avatar from './lee.png';
+
+function Home() {
+  // 为了提高可访问性 &quot;alt&quot; 属性是必须的
+  // 图片可以使用放在 `app/`  目录下
+  return &lt;Image alt=&quot;leeerob&quot; src={avatar} placeholder=&quot;blur&quot; /&gt;;
+}
+</code></pre>
+<h2>@next/font</h2>
+<p>加入了一个新的包，可以在构建时直接引用 google 字体和本地字体，实现字体的托管和预加载，这点对英文网站很有用，中文网站一般不加载字体，图标建议使用 svg。</p>
+<p>加载谷歌字体</p>
+<pre><code>import { Inter } from '@next/font/google';
+const inter = Inter();
+&lt;html className={inter.className}&gt;
+</code></pre>
+<p>加载本地字体</p>
+<pre><code>import localFont from '@next/font/local';
+const myFont = localFont({ src: './my-font.woff2' });
+&lt;html className={myFont.className}&gt;
+</code></pre>
+<h2>next/link</h2>
+<p>自动加上 <code>&lt;a&gt;</code>标签。</p>
+<p>Next.js 12: 需要<code>&lt;a&gt;</code> 包裹</p>
+<pre><code>import Link from 'next/link'
+&lt;Link href=&quot;/about&quot;&gt;
+  &lt;a&gt;About&lt;/a&gt;
+&lt;/Link&gt;
+</code></pre>
+<p>Next.js 13: <code>&lt;Link&gt;</code> 不需要 <code>&lt;a&gt;</code></p>
+<pre><code>&lt;Link href=&quot;/about&quot;&gt;
+  About
+&lt;/Link&gt;
+</code></pre>
+
+<h1>建造者设计模式（生成器模式）</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/builder">refactoringguru.cn</a></p>
+</blockquote>
+<h1>生成器模式</h1>
+<h2><strong>生成器模式</strong>允许你使用相同的创建代码生成不同类型和形式的对象。
+问题</h2>
+<p>例思考如何创建一个 <code>房屋</code>House 对象。 建造一栋简单的房屋， 首先你需要建造四面墙和地板， 安装房门和一套窗户， 然后再建造一个屋顶。 但是如果你还要有暖气、 排水和供电设备， 那又该怎么办呢？</p>
+<p>最简单的方法是扩展 <code>房屋</code>基类</p>
+<ul>
+<li>然后创建一系列涵盖所有参数组合的子类。 但最终你将面对相当数量的子类。</li>
+</ul>
+<p>另一种方法则无需生成子类。</p>
+<ul>
+<li><code>房屋</code>基类中创建一个包括所有可能参数的超级构造函数， 并用它来控制房屋对象。</li>
+<li>拥有大量输入参数的构造函数也有缺陷：通常情况下， 绝大部分的参数都没有使用，</li>
+</ul>
+<h2>解决方案</h2>
+<p>生成器模式建议将对象构造代码从产品类中抽取出来， 将对象构造过程划分为一组步骤</p>
+<ul>
+<li>重点在于你无需调用所有步骤， 而只需调用创建特定对象配置所需的那些步骤即可。</li>
+</ul>
+<h4>主管</h4>
+<p>你可以进一步将用于创建产品的一系列生成器步骤调用抽取成为单独的主管类。</p>
+<p>主管类可定义创建步骤的执行顺序， 而生成器则提供这些步骤的实现。
+主管知道需要哪些创建步骤才能获得可正常使用的产品。</p>
+<hr>
+<p>严格来说， 你的程序中并不一定需要主管类。 客户端代码可直接以特定顺序调用创建步骤。</p>
+<p>不过， 主管类中非常适合放入各种例行构造流程， 以便在程序中反复使用。
+主管类完全隐藏了产品构造细节。 客户端只需要将一个生成器与主管类关联， 然后使用主管类来构造产品， 就能从生成器处获得构造结果了。</p>
+<h2>生成器模式结构</h2>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/builder/structure-indexed.png" alt=""></p>
+<ol start="2">
+<li><strong>具体生成器</strong> （Concrete Builders） 提供构造过程的不同实现。 具体生成器也可以构造不遵循通用接口的产品。</li>
+<li><strong>产品</strong> （Products） 是最终生成的对象。 由不同生成器构造的产品无需属于同一类层次结构或接口。</li>
+<li><strong>主管</strong> （Director） 类定义调用构造步骤的顺序， 这样你就可以创建和复用特定的产品配置。</li>
+<li><strong>客户端</strong> （Client） 必须将某个生成器对象与主管类关联。 一般情况下， 你只需通过主管类构造函数的参数进行一次性关联即可。 此后主管类就能使用生成器对象完成后续所有的构造任务。 但在客户端将生成器对象传递给主管类制造方法时还有另一种方式。 在这种情况下， 你在使用主管类生产产品时每次都可以使用不同的生成器。</li>
+</ol>
+<h2>伪代码</h2>
+<p>分步骤制造汽车并制作对应型号用户使用手册的示例</p>
+<p>汽车是一个复杂对象， 有数百种不同的制造方法。</p>
+<ul>
+<li>我们没有在 <code>汽车</code>类中塞入一个巨型构造函数， 而是将汽车组装代码抽取到单独的汽车生成器类中。</li>
+<li>该类中有一组方法可用来配置汽车的各种部件。</li>
+</ul>
+<pre><code>class Director is
+    // 主管可同由客户端代码传递给自身的任何生成器实例进行交互。客户端可通
+    // 过这种方式改变最新组装完毕的产品的最终类型。主管可使用同样的生成步
+    // 骤创建多个产品变体。
+    method constructSportsCar(builder: Builder) is
+        builder.reset()
+        builder.setSeats(2)
+        builder.setEngine(new SportEngine())
+        builder.setTripComputer(true)
+        builder.setGPS(true)
+    method constructSUV(builder: Builder) is
+        // ……
+class Application is
+    method makeCar() is
+        director = new Director()
+        CarBuilder builder = new CarBuilder()
+        director.constructSportsCar(builder)
+        Car car = builder.getProduct()
+        CarManualBuilder builder = new CarManualBuilder()
+        director.constructSportsCar(builder)
+        // 最终产品通常需要从生成器对象中获取，因为主管不知晓具体生成器和
+        // 产品的存在，也不会对其产生依赖。
+        Manual manual = builder.getProduct()
+</code></pre>
+<h2>生成器模式适合应用场景</h2>
+<p>使用生成器模式可避免 “重叠构造函数 （telescoping constructor）” 的出现。</p>
+<p>假设你的构造函数中有十个可选参数， 那么调用该函数会非常不方便；
+因此， 你需要重载这个构造函数， 新建几个只有较少参数的简化版。
+只有在 C# 或 Java 等支持方法重载的编程语言中才能写出如此复杂的构造函数。
+但这些构造函数仍需调用主构造函数， 传递一些默认数值来替代省略掉的参数。</p>
+<pre><code>class Pizza {
+    Pizza(int size) { …… }
+    Pizza(int size, boolean cheese) { …… }
+    Pizza(int size, boolean cheese, boolean pepperoni) { …… }
+    // ……
+</code></pre>
+<p>生成器模式让你可以分步骤生成对象， 而且允许你仅使用必须的步骤。 应用该模式后， 你再也不需要将几十个参数塞进构造函数里了。</p>
+<hr>
+<p>当你希望使用代码创建不同形式的产品 （例如石头或木头房屋） 时， 可使用生成器模式。
+如果你需要创建的各种形式的产品， 它们的制造过程相似且仅有细节上的差异， 此时可使用生成器模式。</p>
+<p>基本生成器接口中定义了所有可能的制造步骤， 具体生成器将实现这些步骤来制造特定形式的产品。
+同时， 主管类将负责管理制造步骤的顺序。</p>
+<hr>
+<p>使用生成器构造<a href="/design-patterns/composite">组合</a>树或其他复杂对象。
+生成器模式让你能分步骤构造产品。 你可以延迟执行某些步骤而不会影响最终产品。 你甚至可以递归调用这些步骤， 这在创建对象树时非常方便。
+生成器在执行制造步骤时， 不能对外发布未完成的产品。 这可以避免客户端代码获取到不完整结果对象的情况。</p>
+<h2>实现方法</h2>
+<ol>
+<li>在基本生成器接口中声明通用步骤。</li>
+<li>为每个形式的产品创建具体生成器类， 并实现其构造步骤。
+<ol>
+<li>不要忘记实现获取构造结果对象的方法。 你不能在生成器接口中声明该方法， 因为不同生成器构造的产品可能没有公共接口， 因此你就不知道该方法返回的对象类型。</li>
+<li>但是， 如果所有产品都位于单一类层次中， 你就可以安全地在基本接口中添加获取生成对象的方法。</li>
+</ol>
+</li>
+<li>客户端代码会同时创建生成器和主管对象。 构造开始前，
+<ol>
+<li>客户端必须将生成器对象传递给主管对象。  主管类使用生成器对象完成后续所有制造任务。</li>
+<li>还有另一种方式， 那就是客户端可以将生成器对象直接传递给主管类的制造方法。</li>
+</ol>
+</li>
+<li>只有在所有产品都遵循相同接口的情况下， 构造结果可以直接通过主管类获取。 否则， 客户端应当通过生成器获取构造结果。</li>
+</ol>
+<h2>生成器模式优缺点</h2>
+<ul>
+<li>你可以分步创建对象， 暂缓创建步骤或递归运行创建步骤。</li>
+<li>生成不同形式的产品时， 你可以复用相同的制造代码。</li>
+<li><em>单一职责原则</em>。 你可以将复杂构造代码从产品的业务逻辑中分离出来。</li>
+<li></li>
+<li>由于该模式需要新增多个类， 因此代码整体复杂程度会有所增加。</li>
+</ul>
+<h2>与其他模式的关系</h2>
+<ul>
+<li>你可以在创建复杂<a href="/design-patterns/composite">组合模式</a>树时使用<a href="/design-patterns/builder">生成器</a>， 因为这可使其构造步骤以递归的方式运行。</li>
+<li>你可以结合使用<a href="/design-patterns/builder">生成器</a>和<a href="/design-patterns/bridge">桥接模式</a>： 主管类负责抽象工作， 各种不同的生成器负责实现工作。</li>
+</ul>
+
+<h1>抽象工厂设计模式</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/abstract-factory">refactoringguru.cn</a></p>
+</blockquote>
+<h2>抽象工厂意图</h2>
+<p><strong>抽象工厂模式</strong>是一种创建型设计模式， 它能创建一系列相关的对象， 而无需指定其具体类。</p>
+<h2>问题</h2>
+<p>假设你正在开发一款家具商店模拟器</p>
+<ul>
+<li>一系列产品及其不同变体，</li>
+<li>你不希望在添加新产品或新风格时修改已有代码。</li>
+</ul>
+<h2>解决方案</h2>
+<p>以不同的产品类型与产品变体为维度绘制矩阵。</p>
+<p>首先， 抽象工厂模式建议为系列中的每件产品明确声明接口</p>
+<ul>
+<li>所有风格的椅子都实现 <code>椅子</code>接口； 所有风格的咖啡桌都实现 <code>咖啡桌</code>接口， 以此类推。</li>
+<li>实际上就是同一对象的所有变体都必须放置在同一个类层次结构之中。</li>
+</ul>
+<p>接下来， 我们需要声明抽象工厂——包含系列中所有产品构造方法的接口。</p>
+<ul>
+<li>例如 <code>create­Chair</code>创建椅子 、 ​ <code>create­Sofa</code>创建沙发</li>
+<li>这些方法必须返回<strong>抽象</strong>产品类型， 即我们之前抽取的那些接口</li>
+</ul>
+<p>最后，每个具体工厂类都对应一个特定的产品变体。</p>
+<ul>
+<li>对于系列产品的每个变体， 我们都将基于 <code>抽象工厂</code>接口创建不同的工厂类。 每个工厂类都只能返回特定类别的产品，</li>
+<li>例如， ​ <code>现代家具工厂</code>Modern­Furniture­Factory 只能创建 <code>现代椅子</code>Modern­Chair</li>
+</ul>
+<hr>
+<p>客户端代码可以通过相应的抽象接口调用工厂和产品类。</p>
+<ul>
+<li>你无需修改实际客户端代码， 就能更改传递给客户端的工厂类， 也能更改客户端代码接收的产品变体。</li>
+<li>客户端无需了解其所调用工厂的具体类信息。</li>
+</ul>
+<p>最后一点说明： 如果客户端仅接触抽象接口， 那么谁来创建实际的工厂对象呢？ 一般情况下，
+初始化代码根据应用程序配置或当前环境， 对特定具体工厂类进行初始化。
+然后将该工厂对象传递给所有需要创建产品的类。
+找出代码中所有对产品构造函数的直接调用， 将其替换为对工厂对象中相应构建方法的调用。</p>
+<h2>抽象工厂模式结构</h2>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/abstract-factory/structure-indexed.png" alt=""></p>
+<p>尽管具体工厂会对具体产品进行初始化， 其构建方法签名必须返回相应的抽象产品。</p>
+<ul>
+<li>这样， 使用工厂类的客户端代码就不会与工厂创建的特定产品变体耦合。</li>
+<li><strong>客户端</strong> （Client） 只需通过抽象接口调用工厂和产品对象， 就能与任何具体工厂 / 产品变体交互。</li>
+</ul>
+<h2>伪代码</h2>
+<p>下面例子通过应用<strong>抽象工厂</strong>模式， 使得客户端代码无需与具体 UI 类耦合， 就能创建跨平台的 UI 元素， 同时确保所创建的元素与指定的操作系统匹配。</p>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/abstract-factory/example.png" alt=""></p>
+<pre><code class="language-java">// 客户端代码仅通过抽象类型（GUIFactory、Button 和 Checkbox）使用工厂
+// 和产品。这让你无需修改任何工厂或产品子类就能将其传递给客户端代码。
+class Application is
+    private field factory: GUIFactory
+    private field button: Button
+    constructor Application(factory: GUIFactory) is
+        this.factory = factory
+    method createUI() is
+        this.button = factory.createButton()
+    method paint() is
+        button.paint()
+
+// 程序会根据当前配置或环境设定选择工厂类型，并在运行时创建工厂（通常在初
+// 始化阶段）。
+class ApplicationConfigurator is
+    method main() is
+        config = readApplicationConfigFile()
+        if (config.OS == &quot;Windows&quot;) then
+            factory = new WinFactory()
+        else if (config.OS == &quot;Mac&quot;) then
+            factory = new MacFactory()
+        else
+            throw new Exception(&quot;错误！未知的操作系统。&quot;)
+
+        Application app = new Application(factory)
+</code></pre>
+<h2>抽象工厂模式适合应用场景</h2>
+<p>如果代码需要与多个不同系列的相关产品交互， 但是由于无法提前获取相关信息， 或者出于对未来扩展性的考虑， 你不希望代码基于产品的具体类进行构建， 在这种情况下， 你可以使用抽象工厂。</p>
+<p>每个类仅负责一件事。 如果一个类与多种类型产品交互， 就可以考虑将工厂方法抽取到独立的工厂类或具备完整功能的抽象工厂类中。</p>
+<h2>抽象工厂模式优缺点</h2>
+<ul>
+<li>
+<p>你可以确保同一工厂生成的产品相互匹配。</p>
+</li>
+<li>
+<p>你可以避免客户端和具体产品代码的耦合。</p>
+</li>
+<li>
+<p><em>单一职责原则</em>。 你可以将产品生成代码抽取到同一位置， 使得代码易于维护。</p>
+</li>
+<li>
+<p><em>开闭原则</em>。 向应用程序中引入新产品变体时， 你无需修改客户端代码。</p>
+</li>
+<li>
+<p>由于采用该模式需要向应用中引入众多接口和类， 代码可能会比之前更加复杂。</p>
+</li>
+</ul>
+<h2>与其他模式的关系</h2>
+<ul>
+<li>在许多设计工作的初期都会使用<a href="/design-patterns/factory-method">工厂方法模式</a> （较为简单， 而且可以更方便地通过子类进行定制）， 随后演化为使用<a href="/design-patterns/abstract-factory">抽象工厂模式</a>、 <a href="/design-patterns/prototype">原型模式</a>或<a href="/design-patterns/builder">生成器模式</a> （更灵活但更加复杂）。</li>
+</ul>
+<hr>
+<ul>
+<li>
+<p><a href="/design-patterns/builder">生成器</a>重点关注如何分步生成复杂对象。 <a href="/design-patterns/abstract-factory">抽象工厂</a>专门用于生产一系列相关对象。</p>
+</li>
+<li>
+<p>抽象工厂会马上返回产品， 生成器则允许你在获取产品前执行一些额外构造步骤。</p>
+</li>
+<li>
+<p><a href="/design-patterns/abstract-factory">抽象工厂模式</a>通常基于一组<a href="/design-patterns/factory-method">工厂方法</a>， 但你也可以使用<a href="/design-patterns/prototype">原型模式</a>来生成这些类的方法。</p>
+</li>
+<li>
+<p>当只需对客户端代码隐藏子系统创建对象的方式时， 你可以使用<a href="/design-patterns/abstract-factory">抽象工厂</a>来代替<a href="/design-patterns/facade">外观模式</a></p>
+</li>
+</ul>

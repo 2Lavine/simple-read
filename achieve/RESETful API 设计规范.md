@@ -1,8 +1,5 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844903625030909960?searchId=20230908140926AF9EE05097DF80CD2A24) ![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/6/25/1643725cb986aee7~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.png)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844903625030909960?searchId=20230908140926AF9EE05097DF80CD2A24) 
 
-> 本文是为 [大渝网](https://link.juejin.cn?target=http%3A%2F%2Fcq.qq.com "http://cq.qq.com") `API` 开发规范拟定的一个 `beta` 版，文章大量参考了目前比较常见的 `RESETful API` 设计。
-
-为了更好的讨论规范带来的争议及问题，现已把该文档整理并开源到 [github](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fgodruoyi%2Fresetful-api-specification "https://github.com/godruoyi/resetful-api-specification")，关于大家补充及提 [issue](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fgodruoyi%2Fresetful-api-specification%2Fissues%2Fnew "https://github.com/godruoyi/resetful-api-specification/issues/new")。
 
 关于「能愿动词」的使用
 -----------
@@ -17,10 +14,6 @@
 
 > 参见：[RFC 2119](https://link.juejin.cn?target=http%3A%2F%2Fwww.ietf.org%2Frfc%2Frfc2119.txt "http://www.ietf.org/rfc/rfc2119.txt")
 
-协议
---
-
-在通过 `API` 于后端服务通信的过程中，`应该` 使用 `HTTPS` 协议。
 
 API Root URL
 ------------
@@ -38,6 +31,8 @@ Versioning
 所有的 `API` 必须保持向后兼容，你 `必须` 在引入新版本 `API` 的同时确保旧版本 `API` 仍然可用。所以 `应该` 为其提供版本支持。
 
 目前比较常见的两种版本号形式：
+- 在 URL 中嵌入版本编号
+- 通过媒体类型来指定版本信息
 
 ### 在 URL 中嵌入版本编号
 
@@ -102,12 +97,11 @@ HTTP 动词
 *   DELETE（DELETE）：从服务器删除资源。
 
 其中
-
-1 删除资源 `必须` 用 `DELETE` 方法 2 创建新的资源 `必须` 使用 `POST` 方法 3 更新资源 `应该` 使用 `PUT` 方法 4 获取资源信息 `必须` 使用 `GET` 方法
-
+1 删除资源 `必须` 用 `DELETE` 方法 
+2 创建新的资源 `必须` 使用 `POST` 方法 
+3 更新资源 `应该` 使用 `PUT` 方法 
+4 获取资源信息 `必须` 使用 `GET` 方法
 针对每一个端点来说，下面列出所有可行的 `HTTP` 动词和端点的组合
-
-<table><thead><tr><th>请求方法</th><th>URL</th><th>描述</th></tr></thead><tbody><tr><td>GET</td><td>/zoos</td><td>列出所有的动物园 (ID 和名称，不要太详细)</td></tr><tr><td>POST</td><td>/zoos</td><td>新增一个新的动物园</td></tr><tr><td>GET</td><td>/zoos/{zoo}</td><td>获取指定动物园详情</td></tr><tr><td>PUT</td><td>/zoos/{zoo}</td><td>更新指定动物园 (整个对象)</td></tr><tr><td>PATCH</td><td>/zoos/{zoo}</td><td>更新动物园 (部分对象)</td></tr><tr><td>DELETE</td><td>/zoos/{zoo}</td><td>删除指定动物园</td></tr><tr><td>GET</td><td>/zoos/{zoo}/animals</td><td>检索指定动物园下的动物列表 (ID 和名称，不要太详细)</td></tr><tr><td>GET</td><td>/animals</td><td>列出所有动物 (ID 和名称)。</td></tr><tr><td>POST</td><td>/animals</td><td>新增新的动物</td></tr><tr><td>GET</td><td>/animals/{animal}</td><td>获取指定的动物详情</td></tr><tr><td>PUT</td><td>/animals/{animal}</td><td>更新指定的动物 (整个对象)</td></tr><tr><td>PATCH</td><td>/animals/{animal}</td><td>更新指定的动物 (部分对象)</td></tr><tr><td>GET</td><td>/animal_types</td><td>获取所有动物类型 (ID 和名称，不要太详细)</td></tr><tr><td>GET</td><td>/animal_types/{type}</td><td>获取指定的动物类型详情</td></tr><tr><td>GET</td><td>/employees</td><td>检索整个雇员列表</td></tr><tr><td>GET</td><td>/employees/{employee}</td><td>检索指定特定的员工</td></tr><tr><td>GET</td><td>/zoos/{zoo}/employees</td><td>检索在这个动物园工作的雇员的名单 (身份证和姓名)</td></tr><tr><td>POST</td><td>/employees</td><td>新增指定新员工</td></tr><tr><td>POST</td><td>/zoos/{zoo}/employees</td><td>在特定的动物园雇佣一名员工</td></tr><tr><td>DELETE</td><td>/zoos/{zoo}/employees/{employee}</td><td>从某个动物园解雇一名员工</td></tr></tbody></table>
 
 Filtering
 ---------
@@ -121,12 +115,10 @@ Filtering
 *   ?animal_type_id=1：指定筛选条件
 
 所有 `URL` 参数 `必须` 是全小写，`必须` 使用下划线类型的参数形式。
-
 经常使用的、复杂的查询 `应该` 标签化，降低维护成本。如
 
 ```
 GET /trades?status=closed&sort=sortby=name&order=asc
-
 # 可为其定制快捷方式
 GET /trades/recently_closed
 ```
@@ -179,8 +171,9 @@ Pragma: no-cache
 Response
 --------
 
-所有的 `API` 响应，`必须` 遵守 `HTTP` 设计规范，`必须` 选择合适的 `HTTP` 状态码。`一定不可` 所有接口都返回状态码为 `200` 的 `HTTP` 响应，如：
+所有的 `API` 响应，`必须` 遵守 `HTTP` 设计规范，`必须` 选择合适的 `HTTP` 状态码。
 
+`一定不可` 所有接口都返回状态码为 `200` 的 `HTTP` 响应，如：
 ```
 HTTP/1.1 200 ok
 Content-Type: application/json
@@ -194,9 +187,7 @@ Server: example.com
     }
 }
 ```
-
 或
-
 ```
 HTTP/1.1 200 ok
 Content-Type: application/json
@@ -208,14 +199,18 @@ Server: example.com
 }
 ```
 
+---
 下表列举了常见的 `HTTP` 状态码
 
 <table><thead><tr><th>状态码</th><th>描述</th></tr></thead><tbody><tr><td>1xx</td><td>代表请求已被接受，需要继续处理</td></tr><tr><td>2xx</td><td>请求已成功，请求所希望的响应头或数据体将随此响应返回</td></tr><tr><td>3xx</td><td>重定向</td></tr><tr><td>4xx</td><td>客户端原因引起的错误</td></tr><tr><td>5xx</td><td>服务端原因引起的错误</td></tr></tbody></table>
 
 > 只有来自客户端的请求被正确的处理后才能返回 `2xx` 的响应，所以当 API 返回 `2xx` 类型的状态码时，前端 `必须` 认定该请求已处理成功。
 
-必须强调的是，所有 `API` `一定不可` 返回 `1xx` 类型的状态码。当 `API` 发生错误时，`必须` 返回出错时的详细信息。目前常见返回错误信息的方法有两种：
+必须强调的是，所有 `API` `一定不可` 返回 `1xx` 类型的状态码。当 `API` 发生错误时，`必须` 返回出错时的详细信息。
 
+
+目前常见返回错误信息的方法有两种：
+---
 1、将错误详细放入 `HTTP` 响应首部；
 
 ```
@@ -238,6 +233,9 @@ Connection: keep-alive
 {"error_code":40100,"message":"Unauthorized"}
 ```
 
+
+
+---
 考虑到易读性和客户端的易处理性，我们 `必须` 把错误信息直接放到响应实体中，并且错误格式 `应该` 满足如下格式：
 
 ```
@@ -684,22 +682,3 @@ Connection: keep-alive
 {"error_code":50300,"message":"服务维护中"}
 ```
 
-其他 `HTTP` 状态码请参考 [HTTP 状态码 - 维基百科](https://link.juejin.cn?target=https%3A%2F%2Fzh.wikipedia.org%2Fzh-hans%2FHTTP%25E7%258A%25B6%25E6%2580%2581%25E7%25A0%2581 "https://zh.wikipedia.org/zh-hans/HTTP%E7%8A%B6%E6%80%81%E7%A0%81")。
-
-版权声明
-----
-
-> 文章发布于 [二楞徐的闲谈杂鱼](https://link.juejin.cn?target=https%3A%2F%2Fgodruoyi.com%2Fposts%2Fresetful-api-design-specifications "https://godruoyi.com/posts/resetful-api-design-specifications")，自由转载 - 非商用 - 非衍生 - 保持署名（[创意共享 3.0 许可证](https://link.juejin.cn?target=https%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-nd%2F3.0%2Fdeed.zh "https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh")）
-
-建议参考
-----
-
-[restful-api-design-references](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Faisuhua%2Frestful-api-design-references "https://github.com/aisuhua/restful-api-design-references")
-
-[Principles of good RESTful API Design（译）](https://link.juejin.cn?target=http%3A%2F%2Fwww.cnblogs.com%2Fmoonz-wu%2Fp%2F4211626.html "http://www.cnblogs.com/moonz-wu/p/4211626.html")
-
-[理解 RESTful 架构](https://link.juejin.cn?target=http%3A%2F%2Fwww.ruanyifeng.com%2Fblog%2F2011%2F09%2Frestful.html "http://www.ruanyifeng.com/blog/2011/09/restful.html")
-
-[RESTful API 设计指南](https://link.juejin.cn?target=http%3A%2F%2Fwww.ruanyifeng.com%2Fblog%2F2014%2F05%2Frestful_api.html "http://www.ruanyifeng.com/blog/2014/05/restful_api.html")
-
-[HTTP 状态码 - 维基百科](https://link.juejin.cn?target=https%3A%2F%2Fzh.wikipedia.org%2Fzh-hans%2FHTTP%25E7%258A%25B6%25E6%2580%2581%25E7%25A0%2581 "https://zh.wikipedia.org/zh-hans/HTTP%E7%8A%B6%E6%80%81%E7%A0%81")

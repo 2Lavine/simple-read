@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "achieve/一套规范的 Vue3.x 项目工程环境.md",
+                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "achieve/一套规范的 Vue3.x 项目工程环境.md"
+                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "achieve/一套规范的 Vue3.x 项目工程环境.md",
+                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "achieve/一套规范的 Vue3.x 项目工程环境.md",
+                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -157,52 +157,52 @@
   },
   "active": "4bdc6d71e5f9ec66",
   "lastOpenFiles": [
-    "md/README.md",
-    "md/单例设计模式.md",
-    "md/Java 工厂方法模式讲解和代码示例.md",
-    "done/2023-09-05.md",
-    "done/2023-09-06.md",
-    "done",
-    "md/建造者设计模式（生成器模式）.md",
-    "md/工厂方法设计模式.md",
-    "md/装饰器模式.md",
-    "md/抽象工厂设计模式.md",
-    "WuCai/23-09-06-工厂方法设计模式-H8KKFKC.md",
-    "md/装饰设计（装饰者模式 / 装饰器模式）.md",
-    "md/装饰设计（装饰者模式 ",
-    "md/原型设计模式.md",
-    "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
-    "md/组合设计模式.md",
-    "md/桥接设计模式.md",
-    "md/工厂模式和抽象工厂模式的区别.md",
+    "replace.js",
+    "output/2023-9-10 21-38-03.html",
+    "achieve/抽象工厂设计模式.md",
+    "achieve/建造者设计模式（生成器模式）.md",
+    "achieve/你好，Next.js 13.md",
+    "achieve/为什么少有人使用 RESTful API？.md",
+    "achieve/RESTful、共用接口接口约定的实践.md",
+    "achieve/RESETful API 设计规范.md",
+    "achieve/2023-09-10.md",
+    "achieve/2023-09-06.md",
+    "achieve/2023-09-05.md",
     "md/命令设计模式.md",
-    "_resources/Pasted image 20230905115129.png",
-    "_resources/fe59fae96e866d4784a0c27c879f7bc9_MD5.webp",
-    "_resources/fe5198ad897a9864e88c1e8b28a611a9_MD5.webp",
-    "achieve/day03_designModel.md",
-    "achieve/「NestJS」 教程了 - 基础知识准备.md",
-    "achieve/Nest.js 的微服务，写起来也太简单了吧！.md",
-    "achieve/2023-09-03.md",
-    "achieve/2023-09-04.md",
-    "_resources/Pasted image 20230905115936.png",
-    "GE/常用词.md",
+    "md/桥接设计模式.md",
+    "md/Decoding \"Autonomous\" - by Chao Wang - Future Mosaic.md",
+    "md/Next.js 项目最佳实践.md",
+    "done/2023-09-10.md",
+    "md/Java 工厂方法模式讲解和代码示例.md",
+    "md/README.md",
+    "md/装饰器模式.md",
+    "done/你好，Next.js 13.md",
+    "_resources/8972f43da633940515446bae10bb5ea7_MD5.webp",
+    "_resources/08faa2e6ba8786f6a5e68dbf2bb338cd_MD5.webp",
+    "_resources/10dcfdf3822f8bc468935036b05cd814_MD5.webp",
+    "_resources/bd2b2f651da8a0bfbe0a99a3a6465348_MD5.webp",
+    "_resources/f1258bbb5da8214b268be8f2e48ea069_MD5.webp",
+    "_resources/7f31385969759481a54dc718991a6890_MD5.webp",
+    "_resources/b2ea9a1d2f7edc6ff1c4396ab5e68ef2_MD5.webp",
+    "_resources/d819655a70402873a0e88ccb5f3c0571_MD5.webp",
+    "_resources/abc42465f98b9637c1a0f7a46600fb91_MD5.webp",
+    "cur useless/Zeabur CLI 从设计到实现 - 飞鸟记.md",
+    "done/RESETful API 设计规范.md",
+    "done/为什么少有人使用 RESTful API？.md",
+    "_resources/3a8312f507e7e73ba968c609337b25a6_MD5.webp",
+    "done/RESTful、共用接口接口约定的实践.md",
+    "cur useless/使用 next.js 完成从开发到部署.md",
+    "done/抽象工厂设计模式.md",
+    "done/建造者设计模式（生成器模式）.md",
+    "done",
+    "md/装饰设计（装饰者模式 ",
     "output/2023-9-5 09-21-13.html",
-    "achieve/阅读理解与记忆系统.md",
-    "achieve/学完这篇 Nest.js 实战，还没入门的来锤我！(长文预警).md",
-    "achieve/初识 node 框架 Nest.js.md",
-    "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
     "output/成语和常用词.html",
     "output/2000part1.html",
     "done",
-    "_resources/fb07051cb2813eeb781c6a0da11c7479_MD5.jpg",
-    "_resources/f3609461558ea6f23f63218dafb28804_MD5.webp",
-    "_resources/f27a8d1f1a5c03399a8e9679900eda27_MD5.jpg",
-    "_resources/f0d2aed6910fbff2f3e47778942bee5b_MD5.webp",
-    "_resources/f04bfbf15577847fcc82248ec2e8e71f_MD5.webp",
     "output/言语理解与表达考点强化.html",
     "output/2023-9-1 20-32-59.html",
     "GE/vsc_doc/tool.js",
-    "GE/vsc_doc/行测2000.txt",
     "未命名.canvas"
   ]
 }
