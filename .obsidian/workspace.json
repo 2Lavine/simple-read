@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/装饰器模式.md",
+                "file": "achieve/一套规范的 Vue3.x 项目工程环境.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "byModifiedTime"
+                "sortOrder": "byCreatedTime"
               }
             }
           },
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/装饰器模式.md"
+                "file": "achieve/一套规范的 Vue3.x 项目工程环境.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/装饰器模式.md",
+                "file": "achieve/一套规范的 Vue3.x 项目工程环境.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/装饰器模式.md",
+                "file": "achieve/一套规范的 Vue3.x 项目工程环境.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -157,12 +157,21 @@
   },
   "active": "4bdc6d71e5f9ec66",
   "lastOpenFiles": [
+    "md/README.md",
+    "md/单例设计模式.md",
     "md/Java 工厂方法模式讲解和代码示例.md",
+    "done/2023-09-05.md",
+    "done/2023-09-06.md",
+    "done",
+    "md/建造者设计模式（生成器模式）.md",
+    "md/工厂方法设计模式.md",
     "md/装饰器模式.md",
-    "md/2023-09-06.md",
-    "md/2023-09-05.md",
-    "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
+    "md/抽象工厂设计模式.md",
+    "WuCai/23-09-06-工厂方法设计模式-H8KKFKC.md",
+    "md/装饰设计（装饰者模式 / 装饰器模式）.md",
     "md/装饰设计（装饰者模式 ",
+    "md/原型设计模式.md",
+    "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.webp",
     "md/组合设计模式.md",
     "md/桥接设计模式.md",
     "md/工厂模式和抽象工厂模式的区别.md",
@@ -184,13 +193,6 @@
     "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
     "output/成语和常用词.html",
     "output/2000part1.html",
-    "done/阅读理解与记忆系统.md",
-    "done/学完这篇 Nest.js 实战，还没入门的来锤我！(长文预警).md",
-    "done/初识 node 框架 Nest.js.md",
-    "done/「NestJS」 教程了 - 基础知识准备.md",
-    "done/day03_designModel.md",
-    "done/Nest.js 的微服务，写起来也太简单了吧！.md",
-    "done/2023-09-04.md",
     "done",
     "_resources/fb07051cb2813eeb781c6a0da11c7479_MD5.jpg",
     "_resources/f3609461558ea6f23f63218dafb28804_MD5.webp",
@@ -201,7 +203,6 @@
     "output/2023-9-1 20-32-59.html",
     "GE/vsc_doc/tool.js",
     "GE/vsc_doc/行测2000.txt",
-    "GE/xingce2000",
     "未命名.canvas"
   ]
 }
