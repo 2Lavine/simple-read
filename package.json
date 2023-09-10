@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "markdown-it": "^13.0.1",
-    "markdown-it-obsidian-images": "^1.0.1"
+    "markdown-it-obsidian-images": "^1.0.1",
+    "sharp": "^0.32.5"
   }
 }
