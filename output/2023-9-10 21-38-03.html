@@ -706,7 +706,7 @@ Connection: keep-alive
 RESTful API</h2>
 <p>接下来看看一个完整的 RESTful API 是怎么形成的。</p>
 <h3>Richardson Maturity Model</h3>
-<p>Leonard Richardson 提出了一种以他命名的模型 <strong>Richardson Maturity Model</strong>，循序渐进的介绍了迈向 RESTful 的不同等级。 <img src="file://Mac/Home/myGitHubMac/simple-read/_resources/3a8312f507e7e73ba968c609337b25a6_MD5.webp" /></p>
+<p>Leonard Richardson 提出了一种以他命名的模型 <strong>Richardson Maturity Model</strong>，循序渐进的介绍了迈向 RESTful 的不同等级。 <img src="file://Mac/Home/myGitHubMac/simple-read/_resources/3a8312f507e7e73ba968c609337b25a6_MD5.jpg" /></p>
 <p>但需要强调的是，RMM 虽然是思考 RSET 的一个好方法，但它不是 REST 的定义。
 RMM 有用的地方只是在于它提供了一个很好的 step by step 的方法来理解 REST 思想背后的基本理念。</p>
 <h4><strong>Level 0</strong>**---Richardson Maturity Model**</h4>
@@ -911,14 +911,14 @@ Level3 的 Restful API，给使用者带来了很大的便利，使用者只需�
 <h3>为什么不选择 Vite 和 Esbuild？</h3>
 <p>Vite 依赖于浏览器的原生 ES Modules 系统，不需要打包代码，这种方法只需要转换单个 JS 文件，响应更新很快，但是如果文件过多，这种方式会导致浏览器大量级联网络请求，会导致启动时间相对较慢。</p>
 <ul>
-<li>所以作者选择同 webpack 一样方式，打包，但是使用了 Turbo 构建引擎，一个增量记忆化框架，永远不会重复相同的工作。</li>
+<li>所以作者选择同 jpgack 一样方式，打包，但是使用了 Turbo 构建引擎，一个增量记忆化框架，永远不会重复相同的工作。</li>
 </ul>
 <p>Esbuild 是一个非常快速的打包工具，但它并没有做太多的缓存，也没有 HMR（热更新），所以在开发环境下不适用。</p>
 <h2>为什么要改基于文件的路由系统</h2>
 <p>Next 13 另一个比较大的改动是基于文件的路由系统，增加了一个 <code>app</code> 目录，每一层路由必须建一个文件夹，在该文件夹中建立 <code>page.tsx</code> 作为该路由主页面</p>
-<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/abc42465f98b9637c1a0f7a46600fb91_MD5.webp" /></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/abc42465f98b9637c1a0f7a46600fb91_MD5.jpg" /></p>
 <p>而在 Next.js 12（以及以下）对应的路由系统，是所有路由文件都写在 <code>pages</code> 目录下，每个文件都会生成一个路由，很明显是这种方式更加简洁。</p>
-<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/d819655a70402873a0e88ccb5f3c0571_MD5.webp" /></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/d819655a70402873a0e88ccb5f3c0571_MD5.jpg" /></p>
 <hr>
 <p>那么，Next.js 为什么要改基于文件的路由系统呢？</p>
 <p>主要有以下 3 点原因:</p>
@@ -930,7 +930,7 @@ Level3 的 Restful API，给使用者带来了很大的便利，使用者只需�
 <h2>Next.js 12 中 Layout 实现方式</h2>
 <p>Tailwindcss 的作者 Adam Wathan 早在 2019 年就写过一篇博客，关于 <a href="https://link.juejin.cn?target=https%3A%2F%2Fadamwathan.me%2F2019%2F10%2F17%2Fpersistent-layout-patterns-in-nextjs%2F" title="https://adamwathan.me/2019/10/17/persistent-layout-patterns-in-nextjs/">Next.js 如何实现持久化缓存</a>
 其中有个 <a href="https://link.juejin.cn?target=https%3A%2F%2Fcodesandbox.io%2Fs%2F0-no-persistent-layout-elements-o13dt%3Ffrom-embed" title="https://codesandbox.io/s/0-no-persistent-layout-elements-o13dt?from-embed">demo</a> 能够很好的说明 next.js 不能实现持久化缓存，大家可以在 codesandbox 中体验。</p>
-<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/b2ea9a1d2f7edc6ff1c4396ab5e68ef2_MD5.webp" /></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/b2ea9a1d2f7edc6ff1c4396ab5e68ef2_MD5.jpg" /></p>
 <p>实现方式是每个 page 页面直接引用 components 文件下的导航组件，当点击横向滚动条后面的导航页面，会导致整个页面都刷新，从而没有记录滚条的位置。</p>
 <p>他解决办法是，需要通过往 Page 页面函数上添加静态方法<code>getLayout</code>来实现，详情代码可以看这个<a href="https://link.juejin.cn?target=https%3A%2F%2Fcodesandbox.io%2Fs%2F5-getlayout-function-on-page-and-layout-components-7e1bg%3Ffrom-embed" title="https://codesandbox.io/s/5-getlayout-function-on-page-and-layout-components-7e1bg?from-embed">例子</a>。</p>
 <pre><code>// /pages/account-settings/basic-information.js
@@ -980,7 +980,7 @@ export default MyApp
 │   └── template.tsx
 </code></pre>
 <p>对应的页面效果如下图</p>
-<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/f1258bbb5da8214b268be8f2e48ea069_MD5.webp" /></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/f1258bbb5da8214b268be8f2e48ea069_MD5.jpg" /></p>
 <hr>
 <p>我们看到每个文件下都有 3 个文件 <code>layout.tsx</code>、<code>page.tsx</code> 、<code>template.tsx</code>、</p>
 <ul>
@@ -1011,7 +1011,7 @@ export default MyApp
 │   └── template.tsx
 </code></pre>
 <p>比如官方 playground 中关于电子商务的例子，<code>main</code> 和 <code>checkout</code> 的 layout 是不同的，可以根据实现功能自定义分组代码目录。</p>
-<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/7f31385969759481a54dc718991a6890_MD5.webp" /></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/7f31385969759481a54dc718991a6890_MD5.jpg" /></p>
 <h2>React Server Components</h2>
 <p><strong>在 app 目录下的组件默认都是 React Server Components</strong></p>
 <ul>
@@ -1057,7 +1057,7 @@ return  (
   &lt;/Layout&gt;
 )
 </code></pre>
-<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/10dcfdf3822f8bc468935036b05cd814_MD5.webp" /></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/10dcfdf3822f8bc468935036b05cd814_MD5.jpg" /></p>
 <p>如图所示</p>
 <ul>
 <li>灰色部分代表 HTML 字符串返回</li>
