@@ -50,6 +50,7 @@
  
  子类可通过重写工厂方法并使其返回不同类型的产品来间接修改业务逻辑。
  注意， 并不一定每次调用工厂方法都会**创建**新的实例。 工厂方法也可以返回缓存、 对象池或其他来源的已有对象。
+ 
 伪代码
 ---
 ![](https://refactoringguru.cn/images/patterns/diagrams/factory-method/example.png)

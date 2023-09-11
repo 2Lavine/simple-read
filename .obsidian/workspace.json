@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "done/2023-09-11.md",
+                "file": "achieve/Java 工厂方法模式讲解和代码示例.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#setDefaults",
+                "query": "厂方法并使其返回不同类型的产品来间接修改业务",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "done/2023-09-11.md"
+                "file": "achieve/Java 工厂方法模式讲解和代码示例.md"
               }
             }
           },
@@ -75,7 +75,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -95,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/2023-09-11.md",
+                "file": "achieve/Java 工厂方法模式讲解和代码示例.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/2023-09-11.md",
+                "file": "achieve/Java 工厂方法模式讲解和代码示例.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -158,6 +159,13 @@
   "active": "4bdc6d71e5f9ec66",
   "lastOpenFiles": [
     "md/工厂模式和抽象工厂模式的区别.md",
+    "done/2023-09-11.md",
+    "output/2023-9-11 21-18-10.html",
+    "achieve/Java 工厂方法模式讲解和代码示例.md",
+    "achieve/2023-09-11.md",
+    "md/万字长文带你彻底搞懂什么是 DevOps.md",
+    "md/【云计算】历史的选择 - 基础设施即代码 IaC.md",
+    "md/Terraform  | 基础设施即代码测试流程（一）.md",
     "done/Java 工厂方法模式讲解和代码示例.md",
     "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
     "md/原型设计模式.md",
@@ -165,7 +173,6 @@
     "md/Decoding \"Autonomous\" - by Chao Wang - Future Mosaic.md",
     "md/方法论：如何学习 HTTP.md",
     "md/Next.js 项目最佳实践.md",
-    "done/2023-09-11.md",
     "md/命令设计模式.md",
     "done",
     "cur useless/工厂方法设计模式.md",
@@ -190,19 +197,12 @@
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib/libvips-cpp.42.dylib",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib/glib-2.0",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib",
-    "node_modules/sharp/vendor/8.14.4/darwin-x64",
     "node_modules/sharp/README.md",
     "node_modules/semver/README.md",
     "node_modules/node-addon-api/LICENSE.md",
     "node_modules/node-addon-api/README.md",
     "node_modules/ini/README.md",
     "node_modules/readable-stream/GOVERNANCE.md",
-    "node_modules/readable-stream/README.md",
-    "node_modules/prebuild-install/node_modules/tar-fs/README.md",
-    "node_modules/deep-extend/README.md",
-    "node_modules/deep-extend/CHANGELOG.md",
-    "node_modules/readable-stream/CONTRIBUTING.md",
-    "node_modules/node-addon-api/tools/README.md",
     "未命名.canvas"
   ]
 }

@@ -1,0 +1,230 @@
+<h1>2023-09-11</h1><h2>why CI</h2>
+<ul>
+<li>If the goal is a working software and integration proves it works, why not do it all the time?</li>
+<li>With CI, by default your software is in working state.</li>
+</ul>
+<h2>before CI</h2>
+<ul>
+<li>version control</li>
+<li>agreement</li>
+<li>auto build</li>
+</ul>
+<h2>Prerequisites for CI</h2>
+<ul>
+<li>Check In Regularly: easy to revert</li>
+<li>comprehensive test suites</li>
+<li>short build and test</li>
+</ul>
+<h1>CD</h1>
+<p>Continuous delivery (CD) a SE approach ensuring software can be reliably released at any time.</p>
+<ul>
+<li>reduce the cost, time, and risk of delivering changes by allowing for more incremental updates t</li>
+</ul>
+<h2>CD Principles</h2>
+<p>code is compiled and build every time a change commited to source repository
+then tested by different techniques</p>
+<h2>deployment pipeline.</h2>
+<p>CD is enabled through the deployment pipeline.
+The purpose of the deployment pipeline has three components: visibility, feedback, and
+continually deploy.</p>
+<p>CD pipeline will include the following stages:
+build automation and continuous integration, test automation, and deployment automation.</p>
+<h2>how to use in real product</h2>
+<p>Selling CD as a  painkiller(to stakeholder)
+Continuous delivery of continuous delivery
+Visual CD pipeline skeleton
+expert</p>
+<h2>But</h2>
+<p>Organizations cannot and should not rush into adopting Continuous Delivery
+all at once
+The best approach is to focus on improving your biggest delivery bottleneck.
+CD will automatically show you what the next bottleneck is. This puts you on
+a measurable improvement path</p>
+<h2>Devops</h2>
+<p>DevOps是一个文化和实践的集合，旨在通过提高开发（Dev）和运营（Ops）团队之间的协作和通信来加快软件交付的速度。</p>
+<h2>CD vs DevOps</h2>
+<p>CD：更侧重于automate the delivery aspect,。
+DevOps：has a broader scope,包括文化、实践和工具，覆盖软件的整个生命周期。</p>
+<p>DevOps can be a product of continuous delivery,
+and CD flows directly into DevOps</p>
+<ul>
+<li>意味着CD的实践可以轻松整合到更广泛的DevOps实践中</li>
+</ul>
+<p>持续交付是DevOps实践的一个关键组成部分，它直接为DevOps实践铺平了道路，
+同时DevOps实践又进一步拓展了持续交付的概念，将其融入到一个更加协作和高效的文化中。</p>
+<h1>git squash Merge</h1>
+<p>使用<code>git merge --squash feature2</code>命令是一个将<code>feature2</code>分支上的所有更改整合成一个单独的提交的方式，然后将它合并到你当前的分支。这样做的结果是，你会得到一个包含<code>feature2</code>分支所有更改的工作副本，但是还没有正式提交。</p>
+<p>以下是这个命令的具体步骤和效果：</p>
+<ol>
+<li>
+<p>检出到你想合并到的分支，例如：<code>git checkout main</code></p>
+</li>
+<li>
+<p>运行命令：<code>git merge --squash feature2</code>。这将把<code>feature2</code>分支的所有更改作为一个新的更改（或称为“squash提交”）应用到你当前的工作树中。</p>
+</li>
+<li>
+<p>现在你需要创建一个新的提交来包含这个squash合并。运行 <code>git commit</code> 并写一个适合这次合并的提交信息。</p>
+</li>
+</ol>
+<p>这种方式的优点是你可以将一个分支的所有更改合并为一个提交，这样可以保持历史记录更加整洁。但它也有一个缺点，那就是你失去了分支历史中的每个单独提交的信息和上下文。</p>
+
+<h1>Java 工厂方法模式讲解和代码示例</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/factory-method">refactoringguru.cn</a></p>
+</blockquote>
+<p>亦称： 虚拟构造函数、Virtual Constructor、Factory Method</p>
+<h2>意图</h2>
+<p><strong>工厂方法模式</strong>是一种创建型设计模式， 其在父类中提供一个创建对象的方法， 允许子类决定实例化对象的类型。</p>
+<h2>问题</h2>
+<p>最初版本只能处理卡车运输， 因此大部分代码都在位于名为 <code>卡车</code>的类中。
+一段时间后，希望应用能够支持海上物流功能。
+目前， 大部分代码都与 <code>卡车</code>类相关。 在程序中添加 <code>轮船</code>类需要修改全部代码。
+工厂方法模式建议使用特殊的工厂方法代替对于对象构造函数的直接调用</p>
+<ul>
+<li>对象仍将通过 <code>new</code>运算符创建， 只是该运算符改在工厂方法中调用罢了。</li>
+<li>子类可以修改工厂方法返回的对象类型。</li>
+</ul>
+<hr>
+<p>乍看之下， 这种更改可能毫无意义：</p>
+<ul>
+<li>我们只是改变了程序中调用构造函数的位置而已。</li>
+</ul>
+<p>但是， 仔细想一下， 现在你可以在子类中重写工厂方法， 从而改变其创建产品的类型。</p>
+<hr>
+<p>但有一点需要注意: 仅当这些产品具有共同的基类或者接口时，
+子类才能返回不同类型的产品， 同时基类中的工厂方法还应将其返回类型声明为这一共有接口。</p>
+<hr>
+<p>所有产品都必须使用同一接口。
+举例来说， ​ <code>卡车</code>Truck 和 <code>轮船</code>Ship 类都必须实现 <code>运输</code>Transport 接口，</p>
+<ul>
+<li>该接口声明了一个名为 <code>deliver</code>交付的方法。</li>
+</ul>
+<p>每个类都将以不同的方式实现该方法： 卡车走陆路交付货物， 轮船走海路交付货物。
+只要产品类实现一个共同的接口， 你就可以将其对象传递给客户代码， 而无需提供额外数据。</p>
+<p>调用工厂方法的代码 （通常被称为_客户端_代码） 无需了解不同子类返回实际对象之间的差别。 客户端将所有产品视为抽象的 <code>运输</code> 。 客户端知道所有运输对象都提供 <code>交付</code>方法， 但是并不关心其具体实现方式。</p>
+<h2>工厂方法模式结构</h2>
+<ol>
+<li><strong>产品</strong> （Product） 将会对接口进行声明。</li>
+<li><strong>具体产品</strong> （Concrete Products） 是产品接口的不同实现。</li>
+<li><strong>创建者</strong> （Creator） 类声明返回产品对象的工厂方法。 该方法的返回对象类型必须与产品接口相匹配。
+你可以将工厂方法声明为抽象方法， 强制要求每个子类以不同方式实现该方法。 或者， 你也可以在基础工厂方法中返回默认产品类型。
+注意， 尽管它的名字是创建者， 但它最主要的职责并<strong>不是</strong>创建产品。
+一般来说， 创建者类包含一些与产品相关的核心业务逻辑。 工厂方法将这些逻辑处理从具体产品类中分离出来。 打个比方， 大型软件开发公司拥有程序员培训部门。 但是， 这些公司的主要工作还是编写代码， 而非生产程序员。</li>
+</ol>
+<p>请注意，创建者的主要职责并非是创建产品。其中通常会包含一些核心业务逻辑，这些逻辑依赖于由工厂方法返回的产品对象。</p>
+<h2>子类可通过重写工厂方法并使其返回不同类型的产品来间接修改业务逻辑。
+注意， 并不一定每次调用工厂方法都会<strong>创建</strong>新的实例。 工厂方法也可以返回缓存、 对象池或其他来源的已有对象。
+伪代码</h2>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/factory-method/example.png" alt=""></p>
+<pre><code>// 创建者类声明的工厂方法必须返回一个产品类的对象。创建者的子类通常会提供
+// 该方法的实现。
+class Dialog is
+    // 创建者还可提供一些工厂方法的默认实现。
+    abstract method createButton():Button
+    method render() is
+        // 调用工厂方法创建一个产品对象。
+        Button okButton = createButton()
+        // 现在使用产品。
+        okButton.onClick(closeDialog)
+        okButton.render()
+        
+// 具体创建者将重写工厂方法以改变其所返回的产品类型。
+class WindowsDialog extends Dialog is
+    method createButton():Button is
+        return new WindowsButton()
+
+// 产品接口中将声明所有具体产品都必须实现的操作。
+interface Button is
+    method render()
+    method onClick(f)
+
+// 具体产品需提供产品接口的各种实现。
+class WindowsButton implements Button is
+    method render(a, b) is
+    method onClick(f) is
+
+
+class Application is
+    field dialog: Dialog
+
+    // 程序根据当前配置或环境设定选择创建者的类型。
+    method initialize() is
+        config = readApplicationConfigFile()
+        if (config.OS == &quot;Windows&quot;) then
+            dialog = new WindowsDialog()
+        else if (config.OS == &quot;Web&quot;) then
+            dialog = new WebDialog()
+        else
+            throw new Exception(&quot;错误！未知的操作系统。&quot;)
+
+    method main() is
+        this.initialize()
+        dialog.render()
+</code></pre>
+<h2>工厂方法模式适合应用场景</h2>
+<p>工厂方法将创建产品的代码与实际使用产品的代码分离， 从而能在不影响其他代码的情况下扩展产品创建部分代码。
+例如， 如果需要向应用中添加一种新产品， 你只需要开发新的创建者子类， 然后重写其工厂方法即可。</p>
+<hr>
+<p>如果你希望用户能扩展你软件库或框架的内部组件， 可使用工厂方法。
+继承可能是扩展软件库或框架默认行为的最简单方法。
+但是当你使用子类替代标准组件时， 框架如何辨识出该子类？
+解决方案是将各框架中构造组件的代码集中到单个工厂方法中， 并在继承该组件之外允许任何人对该方法进行重写。</p>
+<hr>
+<p>让我们看看具体是如何实现的。 假设你使用开源 UI 框架编写自己的应用。
+你希望在应用中使用圆形按钮， 但是原框架仅支持矩形按钮。 你可以使用 <code>圆形按钮</code>Round­Button 子类来继承标准的 <code>按钮</code>Button 类。 但是， 你需要告诉 <code>UI框架</code>UIFramework 类使用新的子类按钮代替默认按钮。</p>
+<p>为了实现这个功能， 你可以根据基础框架类开发子类 <code>圆形按钮 UI</code>UIWith­Round­Buttons ， 并且重写其 <code>create­Button</code>创建按钮方法。 基类中的该方法返回 <code>按钮</code>对象， 而你开发的子类返回 <code>圆形按钮</code>对象。 现在， 你就可以使用 <code>圆形按钮 UI</code>类代替 <code>UI框架</code>类。 就是这么简单！</p>
+<hr>
+<p>如果你希望复用现有对象来节省系统资源， 而不是每次都重新创建对象， 可使用工厂方法。
+在处理大型资源密集型对象 （比如数据库连接、 文件系统和网络资源） 时， 你会经常碰到这种资源需求。</p>
+<p>让我们思考复用现有对象的方法：</p>
+<ol>
+<li>首先， 你需要创建存储空间来存放所有已经创建的对象。</li>
+<li>当他人请求一个对象时， 程序将在对象池中搜索可用对象。</li>
+<li>… 然后将其返回给客户端代码。</li>
+<li>如果没有可用对象， 程序则创建一个新对象 （并将其添加到对象池中）。
+这些代码可不少！ 而且它们必须位于同一处， 这样才能确保重复代码不会污染程序。
+可能最显而易见， 也是最方便的方式， 就是将这些代码放置在我们试图重用的对象类的构造函数中。 但是从定义上来讲， 构造函数始终返回的是<strong>新对象</strong>， 其无法返回现有实例。</li>
+</ol>
+<p>因此， 你需要有一个既能够创建新对象， 又可以重用现有对象的普通方法。 这听上去和工厂方法非常相像。</p>
+<h2>实现方式</h2>
+<ol>
+<li>让所有产品都遵循同一接口。 该接口必须声明对所有产品都有意义的方法。</li>
+<li>在创建类中添加一个空的工厂方法。 该方法的返回类型必须遵循通用的产品接口。</li>
+<li>在创建者代码中找到对于产品构造函数的所有引用。 将它们依次替换为对于工厂方法的调用， 同时将创建产品的代码移入工厂方法。
+<ul>
+<li>你可能需要在工厂方法中添加临时参数来控制返回的产品类型。</li>
+<li>工厂方法的代码看上去可能非常糟糕。 其中可能会有复杂的 <code>switch</code>分支运算符， 用于选择各种需要实例化的产品类。 但是不要担心， 我们很快就会修复这个问题。</li>
+</ul>
+</li>
+<li>每种产品编写一个创建者子类， 然后在子类中重写工厂方法， 并将基本方法中的相关创建代码移动到工厂方法中。</li>
+<li>如果代码经过上述移动后， 基础工厂方法中已经没有任何代码， 你可以将其转变为抽象类。 如果基础工厂方法中还有其他语句， 你可以将其设置为该方法的默认行为。</li>
+</ol>
+<hr>
+<ol start="5">
+<li>如果应用中的产品类型太多， 那么为每个产品创建子类并无太大必要， 这时你也可以在子类中复用基类中的控制参数。
+例如， 设想你有以下一些层次结构的类。 基类 <code>邮件</code>及其子类 <code>航空邮件</code>和 <code>陆路邮件</code> ； ​ <code>运输</code>及其子类 <code>飞机</code>, <code>卡车</code>和 <code>火车</code> 。 ​ <code>航空邮件</code>仅使用 <code>飞机</code>对象， 而 <code>陆路邮件</code>则会同时使用 <code>卡车</code>和 <code>火车</code>对象。 你可以编写一个新的子类 （例如 <code>火车邮件</code> ） 来处理这两种情况， 但是还有其他可选的方案。 客户端代码可以给 <code>陆路邮件</code>类传递一个参数， 用于控制其希望获得的产品。</li>
+</ol>
+<h2>工厂方法模式优缺点</h2>
+<ul>
+<li>
+<p>你可以避免创建者和具体产品之间的紧密耦合。</p>
+</li>
+<li>
+<p><em>单一职责原则</em>。 你可以将产品创建代码放在程序的单一位置， 从而使得代码更容易维护。</p>
+</li>
+<li>
+<p><em>开闭原则</em>。 无需更改现有客户端代码， 你就可以在程序中引入新的产品类型。</p>
+</li>
+<li>
+<p>应用工厂方法模式需要引入许多新的子类， 代码可能会因此变得更复杂。 最好的情况是将该模式引入创建者类的现有层次结构中。</p>
+</li>
+</ul>
+<h2>与其他模式的关系</h2>
+<ul>
+<li>在许多设计工作的初期都会使用<a href="https://refactoringguru.cn/design-patterns/factory-method">工厂方法模式</a> （较为简单， 而且可以更方便地通过子类进行定制）， 随后演化为使用<a href="https://refactoringguru.cn/design-patterns/abstract-factory">抽象工厂模式</a>、 <a href="https://refactoringguru.cn/design-patterns/prototype">原型模式</a>或<a href="https://refactoringguru.cn/design-patterns/builder">生成器模式</a> （更灵活但更加复杂）。</li>
+<li><a href="https://refactoringguru.cn/design-patterns/abstract-factory">抽象工厂模式</a>通常基于一组<a href="https://refactoringguru.cn/design-patterns/factory-method">工厂方法</a>， 但你也可以使用<a href="https://refactoringguru.cn/design-patterns/prototype">原型模式</a>来生成这些类的方法。</li>
+</ul>
+<hr>
+<ul>
+<li><a href="https://refactoringguru.cn/design-patterns/prototype">原型</a>并不基于继承， 因此没有继承的缺点。 另一方面， _原型_需要对被复制对象进行复杂的初始化。 <a href="https://refactoringguru.cn/design-patterns/factory-method">工厂方法</a>基于继承， 但是它不需要初始化步骤。</li>
+<li><a href="https://refactoringguru.cn/design-patterns/factory-method">工厂方法</a>是<a href="https://refactoringguru.cn/design-patterns/template-method">模板方法模式</a>的一种特殊形式。 同时， _工厂方法_可以作为一个大型_模板方法_中的一个步骤。</li>
+</ul>
