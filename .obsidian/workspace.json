@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+                "file": "done/2023-09-11.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md"
+                "file": "done/2023-09-11.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+                "file": "done/2023-09-11.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+                "file": "done/2023-09-11.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -157,17 +157,30 @@
   },
   "active": "4bdc6d71e5f9ec66",
   "lastOpenFiles": [
+    "md/工厂模式和抽象工厂模式的区别.md",
+    "done/Java 工厂方法模式讲解和代码示例.md",
+    "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+    "md/原型设计模式.md",
+    "md/装饰器模式.md",
+    "md/Decoding \"Autonomous\" - by Chao Wang - Future Mosaic.md",
+    "md/方法论：如何学习 HTTP.md",
+    "md/Next.js 项目最佳实践.md",
+    "done/2023-09-11.md",
+    "md/命令设计模式.md",
+    "done",
+    "cur useless/工厂方法设计模式.md",
+    "cur useless/whisper 字幕.md",
     "_resources/fe59fae96e866d4784a0c27c879f7bc9_MD5.jpg",
     "_resources/fe5198ad897a9864e88c1e8b28a611a9_MD5.jpg",
     "_resources/f3609461558ea6f23f63218dafb28804_MD5.jpg",
-    "_resources/f0d2aed6910fbff2f3e47778942bee5b_MD5.jpg",
     "_resources/f1258bbb5da8214b268be8f2e48ea069_MD5.jpg",
-    "_resources/ebfefd301fc496268455520e96bb3e23_MD5.jpg",
+    "_resources/f0d2aed6910fbff2f3e47778942bee5b_MD5.jpg",
     "_resources/f04bfbf15577847fcc82248ec2e8e71f_MD5.jpg",
-    "_resources/d9fdc84941e9d6d894eee3c74caf4631_MD5.jpg",
+    "_resources/ebfefd301fc496268455520e96bb3e23_MD5.jpg",
     "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.jpg",
-    "_resources/d4f4f53b77872e46b4052942efca1dec_MD5.jpg",
+    "_resources/d9fdc84941e9d6d894eee3c74caf4631_MD5.jpg",
     "_resources/d819655a70402873a0e88ccb5f3c0571_MD5.jpg",
+    "md/Next.js 13 的 app 目录模式功能梳理.md",
     "node_modules/sharp/build/Release/sharp-darwin-x64.node",
     "node_modules/sharp/build/Release",
     "node_modules/sharp/build",
@@ -178,7 +191,6 @@
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib/glib-2.0",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib",
     "node_modules/sharp/vendor/8.14.4/darwin-x64",
-    "node_modules/sharp/vendor/8.14.4",
     "node_modules/sharp/README.md",
     "node_modules/semver/README.md",
     "node_modules/node-addon-api/LICENSE.md",
@@ -191,18 +203,6 @@
     "node_modules/deep-extend/CHANGELOG.md",
     "node_modules/readable-stream/CONTRIBUTING.md",
     "node_modules/node-addon-api/tools/README.md",
-    "node_modules/minimist/README.md",
-    "node_modules/minimist/CHANGELOG.md",
-    "node_modules/prebuild-install/CHANGELOG.md",
-    "node_modules/prebuild-install/README.md",
-    "node_modules/prebuild-install/CONTRIBUTING.md",
-    "node_modules/simple-swizzle/README.md",
-    "node_modules/detect-libc/README.md",
-    "node_modules/tar-stream/README.md",
-    "node_modules/bl/README.md",
-    "node_modules/b4a/README.md",
-    "node_modules/bl/LICENSE.md",
-    "node_modules/prebuild-install/node_modules/tar-stream/README.md",
     "未命名.canvas"
   ]
 }
