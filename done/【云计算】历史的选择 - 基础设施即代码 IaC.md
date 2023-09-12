@@ -1,10 +1,4 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7018737355066441742?searchId=20230911183005AFC76265EC38A235963B)
-
-小知识，大挑战！本文正在参与 “[程序员必备小知识](https://juejin.cn/post/7008476801634680869 "https://juejin.cn/post/7008476801634680869")” 创作活动。  
-本文同时参与 **[「掘力星计划」](https://juejin.cn/post/7012210233804079141 "https://juejin.cn/post/7012210233804079141")** ，赢取创作大礼包，挑战创作激励金。
-
-> 之前几篇讲到了基础设施代码的工具，但并没有讲什么是 IaC，这篇文章简单说一下。
-
 ### 一、历史的选择
 
 随着软件迭代速度快，且复杂度的上升，组织结构和职能发生了变化。
@@ -19,14 +13,7 @@
 **IaC（Infrastructure as Code）即基础设施即代码**，核心思想为通过编写和执行代码来定义、部署、更新和销毁基础设施。
 
 它是一种观念的转变，其将运维的各个工作都视为与软件相关，甚至一些明显针对硬件的工作，即将所有事物都在代码中进行管理，包括
-
-*   服务器
-*   数据库
-*   网络
-*   日志文件
-*   应用程序配置
-*   文档
-*   自动化测试，部署过程
+*   服务器，数据库，  网络
 
 #### 2.1 IaC 解决方案的价值
 
@@ -45,5 +32,5 @@
 *   专项脚本（为每一项任务写一个专项脚本，比如配置 docker 环境，配置 web 服务等。其维护难度相当大，可针对小规模、一次性的任务。）
 *   配置管理工具（Chef、Puppet、Absible、SaltStack 属于此类，目的是在现有服务器上安装和管理软件，优于专项脚本，可用作大规模、分布式、统一管理的场景）
 *   服务器模板工具（Docker、Packer、Vagrant 属于此类，使用容器镜像、虚拟机（VM）的方式拥有一个完全独立的服务器，然后在所有服务器上统一安装）
-*   编排工具（管理服务器模板工具创建虚拟机和容器等，具体实现包括 K8s，Marathon/Mesos、AmazonElastic Container Service（Amazon ECS）、Docker Swarm 和 Nomad 等等）
+*   容器管理工具（管理服务器模板工具创建虚拟机和容器等，具体实现包括 K8s，Marathon/Mesos、AmazonElastic Container Service（Amazon ECS）、Docker Swarm 和 Nomad 等等）
 *   服务开通工具（创建云资源，比如服务器，网络、防火墙设施、路由规则、负载均衡等等，具体实现包括 Terraform、CloudFormation、OpenStack Heat、Pulumi 等等）

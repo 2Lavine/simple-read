@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "achieve/Java 工厂方法模式讲解和代码示例.md",
+                "file": "md/单例设计模式.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "achieve/Java 工厂方法模式讲解和代码示例.md"
+                "file": "md/单例设计模式.md"
               }
             }
           },
@@ -75,8 +75,7 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -96,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "achieve/Java 工厂方法模式讲解和代码示例.md",
+                "file": "md/单例设计模式.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "achieve/Java 工厂方法模式讲解和代码示例.md",
+                "file": "md/单例设计模式.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -137,6 +136,16 @@
               "type": "advanced-tables-toolbar",
               "state": {}
             }
+          },
+          {
+            "id": "3f21e6ee1502aa1c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency"
+              }
+            }
           }
         ]
       }
@@ -158,22 +167,28 @@
   },
   "active": "4bdc6d71e5f9ec66",
   "lastOpenFiles": [
+    "done/原型设计模式.md",
+    "done/装饰器模式.md",
+    "md/2023-09-12.md",
+    "cur useless/Decoding \"Autonomous\" - by Chao Wang - Future Mosaic.md",
+    "done/方法论：如何学习 HTTP.md",
+    "_resources/66bf38626fdcab7b295ea23babefbcde_MD5.webp",
+    "_resources/26c3579d7881400a1033e19cf7c9df01_MD5.webp",
+    "_resources/56b0ee19c978fc3fe4ed49bb2fa49eaf_MD5.webp",
+    "done/命令设计模式.md",
+    "done/【云计算】历史的选择 - 基础设施即代码 IaC.md",
+    "done/Terraform  | 基础设施即代码测试流程（一）.md",
+    "done/万字长文带你彻底搞懂什么是 DevOps.md",
+    "_resources/9aebc44684798eeac84797bf7735a8e8_MD5.webp",
+    "_resources/7d88bd330cba4e2ea59f2bddc90cf448_MD5.webp",
+    "achieve/Java 工厂方法模式讲解和代码示例.md",
     "md/工厂模式和抽象工厂模式的区别.md",
     "done/2023-09-11.md",
     "output/2023-9-11 21-18-10.html",
-    "achieve/Java 工厂方法模式讲解和代码示例.md",
     "achieve/2023-09-11.md",
-    "md/万字长文带你彻底搞懂什么是 DevOps.md",
-    "md/【云计算】历史的选择 - 基础设施即代码 IaC.md",
-    "md/Terraform  | 基础设施即代码测试流程（一）.md",
     "done/Java 工厂方法模式讲解和代码示例.md",
     "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
-    "md/原型设计模式.md",
-    "md/装饰器模式.md",
-    "md/Decoding \"Autonomous\" - by Chao Wang - Future Mosaic.md",
-    "md/方法论：如何学习 HTTP.md",
     "md/Next.js 项目最佳实践.md",
-    "md/命令设计模式.md",
     "done",
     "cur useless/工厂方法设计模式.md",
     "cur useless/whisper 字幕.md",
@@ -182,11 +197,6 @@
     "_resources/f3609461558ea6f23f63218dafb28804_MD5.jpg",
     "_resources/f1258bbb5da8214b268be8f2e48ea069_MD5.jpg",
     "_resources/f0d2aed6910fbff2f3e47778942bee5b_MD5.jpg",
-    "_resources/f04bfbf15577847fcc82248ec2e8e71f_MD5.jpg",
-    "_resources/ebfefd301fc496268455520e96bb3e23_MD5.jpg",
-    "_resources/ea45292db6fbc7633595acf86ed721a3_MD5.jpg",
-    "_resources/d9fdc84941e9d6d894eee3c74caf4631_MD5.jpg",
-    "_resources/d819655a70402873a0e88ccb5f3c0571_MD5.jpg",
     "md/Next.js 13 的 app 目录模式功能梳理.md",
     "node_modules/sharp/build/Release/sharp-darwin-x64.node",
     "node_modules/sharp/build/Release",
@@ -202,7 +212,6 @@
     "node_modules/node-addon-api/LICENSE.md",
     "node_modules/node-addon-api/README.md",
     "node_modules/ini/README.md",
-    "node_modules/readable-stream/GOVERNANCE.md",
     "未命名.canvas"
   ]
 }
