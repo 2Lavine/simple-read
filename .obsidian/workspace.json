@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/单例设计模式.md",
+                "file": "md/Next.js 13 的 app 目录模式功能梳理.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/单例设计模式.md"
+                "file": "md/Next.js 13 的 app 目录模式功能梳理.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/单例设计模式.md",
+                "file": "md/Next.js 13 的 app 目录模式功能梳理.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/单例设计模式.md",
+                "file": "md/Next.js 13 的 app 目录模式功能梳理.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -167,9 +167,18 @@
   },
   "active": "4bdc6d71e5f9ec66",
   "lastOpenFiles": [
+    "md/Next.js 项目最佳实践.md",
+    "md/5 分钟带你快速了解 Docker 和 k8s.md",
+    "done/单例设计模式.md",
+    "done/2023-09-12.md",
+    "md/[手把手系列之]Docker 部署 vue 项目.md",
+    "md/傻逼都能学会的撸 mod 大法 — Greta.md",
+    "md/最详细的 K8S 学习笔记总结（2021 最新版）.md",
+    "md/Maven 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
+    "md/Docker 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
+    "md/Docker 实战 | JavaGuide(Java 面试 + 学习指南).md",
     "done/原型设计模式.md",
     "done/装饰器模式.md",
-    "md/2023-09-12.md",
     "cur useless/Decoding \"Autonomous\" - by Chao Wang - Future Mosaic.md",
     "done/方法论：如何学习 HTTP.md",
     "_resources/66bf38626fdcab7b295ea23babefbcde_MD5.webp",
@@ -188,7 +197,6 @@
     "achieve/2023-09-11.md",
     "done/Java 工厂方法模式讲解和代码示例.md",
     "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
-    "md/Next.js 项目最佳实践.md",
     "done",
     "cur useless/工厂方法设计模式.md",
     "cur useless/whisper 字幕.md",
@@ -197,21 +205,14 @@
     "_resources/f3609461558ea6f23f63218dafb28804_MD5.jpg",
     "_resources/f1258bbb5da8214b268be8f2e48ea069_MD5.jpg",
     "_resources/f0d2aed6910fbff2f3e47778942bee5b_MD5.jpg",
-    "md/Next.js 13 的 app 目录模式功能梳理.md",
     "node_modules/sharp/build/Release/sharp-darwin-x64.node",
     "node_modules/sharp/build/Release",
     "node_modules/sharp/build",
-    "node_modules/sharp/vendor/8.14.4/darwin-x64/THIRD-PARTY-NOTICES.md",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/versions.json",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/platform.json",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib/libvips-cpp.42.dylib",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib/glib-2.0",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib",
-    "node_modules/sharp/README.md",
-    "node_modules/semver/README.md",
-    "node_modules/node-addon-api/LICENSE.md",
-    "node_modules/node-addon-api/README.md",
-    "node_modules/ini/README.md",
     "未命名.canvas"
   ]
 }
