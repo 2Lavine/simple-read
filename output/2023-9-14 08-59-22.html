@@ -1,0 +1,850 @@
+<h1>2023-09-12</h1><p>&quot;splice&quot; 在英文中的意思是将两个或多个东西连接或组合在一起，通常用于织物、绳索或线条的操作。在 JavaScript 中，splice 方法的名字可能是受到了这个意义的启发，因为它用于在数组中添加或删除元素，将不同的元素连接或组合在一起。</p>
+<p>splice的语法是：array.splice(start, deleteCount, item1, item2, ...)，其中：</p>
+<p>slice的语法是：array.slice(start, end) （[start,end)）</p>
+<h1>Terraform</h1>
+<p>以创建一个 AWS EC2 实例作为演示：</p>
+<ol>
+<li><strong>提供商（Provider）和身份验证</strong>：
+<ul>
+<li>选择 AWS 作为提供商，并配置 AWS 信息</li>
+</ul>
+<pre><code class="language-hcl">provider &quot;aws&quot; {
+  region = &quot;us-west-2&quot;
+}
+</code></pre>
+</li>
+<li><strong>定义变量（Variables）</strong>：在配置文件中定义变量，以允许用户配置实例的一些属性<pre><code class="language-hcl">variable &quot;instance_type&quot; {
+  description = &quot;EC2 instance type&quot;
+  default     = &quot;t2.micro&quot;
+}
+</code></pre>
+</li>
+<li><strong>创建资源（Resources）</strong>：
+<ul>
+<li>创建 AWS EC2 实例资源，指定实例类型和其他配置。</li>
+</ul>
+<pre><code class="language-hcl">resource &quot;aws_instance&quot; &quot;example&quot; {
+  ami           = &quot;ami-0c55b159cbfafe1f0&quot;
+  instance_type = var.instance_type
+}
+</code></pre>
+</li>
+<li><strong>计划（Plan）</strong>：
+<ul>
+<li>在命令行中运行 <code>terraform plan</code> 来查看将要进行的变更。</li>
+<li>Terraform 将显示计划中的操作，例如创建一个 EC2 实例。</li>
+</ul>
+</li>
+<li><strong>应用（Apply）</strong>：
+<ul>
+<li>一旦确认计划，运行 <code>terraform apply</code> 来创建实际的 EC2 实例。
+Terraform 将创建 EC2 实例，并在状态文件中跟踪其状态。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<ol>
+<li><strong>状态管理</strong>：
+<ul>
+<li>apply 后，Terraform 会自动创建一个状态文件（<code>terraform.tfstate</code>），用于跟踪 EC2 实例的状态。不要修改或删除此文件。</li>
+</ul>
+</li>
+<li><strong>监控和维护</strong>：
+<ul>
+<li>定期监控 EC2 实例的状态，并使用 Terraform 进行管理。你可以随时更新变量或资源定义，然后再次运行 <code>terraform apply</code> 来应用更改。</li>
+<li>&quot;taint&quot; 是一个命令和功能，常表示你想要强制 Terraform 在下一次执行时销毁并重新创建这些资源，而不考虑它们的实际状态。</li>
+</ul>
+</li>
+<li><strong>销毁（Destroy）</strong>：</li>
+</ol>
+<ul>
+<li>当不再需要 EC2 实例时，可以运行 <code>terraform destroy</code> 来销毁实例。
+Terraform 将销毁实例并从状态文件中删除相关信息。</li>
+</ul>
+<hr>
+<p><strong>创建资源（Resources）</strong>：</p>
+<ul>
+<li>创建 AWS EC2 实例资源，指定实例类型和其他配置。</li>
+</ul>
+<pre><code class="language-hcl">resource &quot;aws_instance&quot; &quot;example&quot; {
+  ami           = &quot;ami-0c55b159cbfafe1f0&quot;
+  instance_type = var.instance_type
+}
+</code></pre>
+<p>你可以使用 template 数据源和相关的 template_file 函数来创建基于模板的配置文件或文本文件。这是有用的，尤其是当你需要根据动态变量生成配置文件时，或者希望将某些文本内容注入到资源定义中。
+你也可以用Provisioners ，它允许你在 Terraform 的生命周期中插入自定义脚本或命令，以满足特定的基础设施需求。</p>
+<h2>agentless</h2>
+<p>“Agentless”这个词通常用于描述不需要在系统中安装代理软件来进行监控或管理的技术或解决方案。在这样的设置中，远程服务器可以直接与系统交互，而无需通过本地代理进行中介。</p>
+<h3>“有代理”和“无代理”的区别：</h3>
+<ol>
+<li>
+<p><strong>有代理（Agent-based）</strong></p>
+<ul>
+<li><strong>安全性</strong>：有代理的解决方案可以提供更深入的安全控制和监控。</li>
+<li><strong>配置</strong>：通常需要在每个客户端系统上安装和配置代理软件。</li>
+<li><strong>维护</strong>：可能需要更多的维护工作，因为每个代理都必须单独更新和监控。</li>
+</ul>
+</li>
+<li>
+<p><strong>无代理（Agentless）</strong></p>
+<ul>
+<li><strong>部署简便</strong>：由于无需在每个端点上安装代理，因此部署通常更快、更简单。</li>
+<li><strong>灵活性</strong>：可以更容易地跨不同的系统和平台进行集成。</li>
+<li><strong>安全性</strong>：可能提供较低级别的安全和控制，因为它不是通过在每个系统上安装代理来实现深入集成的。</li>
+</ul>
+</li>
+</ol>
+<h2>Ansible</h2>
+<p><strong>任务目标：</strong> 在一组远程服务器上部署一个基本的Web服务器（Nginx），并确保它运行正常。</p>
+<p><strong>1. 主机清单 (Inventory):</strong> 创建一个名为 <code>hosts.ini</code> 的主机清单文件，列出您要管理的目标主机的IP地址或主机名：</p>
+<pre><code class="language-ini">[web_servers]
+server1 ansible_host=192.168.1.101
+server2 ansible_host=192.168.1.102
+</code></pre>
+<p><strong>2. 模块 (Modules):</strong> 使用 Ansible 的 <code>yum</code> 模块来安装 Nginx，使用 <code>service</code> 模块来启动 Nginx 服务。</p>
+<p><strong>3. Playbook:</strong> 创建一个名为 <code>deploy_web.yml</code> 的 Playbook 文件：
+4. 执行</p>
+<h2>Ansible任务</h2>
+<pre><code class="language-yaml">- name: Advanced Playbook with Tasks
+  hosts: web_servers
+  become: yes  # 使用sudo权限执行任务
+
+  tasks:
+    - name: Ensure Nginx is installed and the latest version
+      yum: # 用 `yum` 模块来确保 Nginx 已安装并且是最新版本
+        name: nginx
+        state: latest
+
+    - name: Configure Nginx with a Jinja2 template
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: Reload Nginx  # 当配置更改后，通知重新加载Nginx
+    - name: Deploy Web Application with Git
+      git:
+        repo: https://github.com/your/repo.git
+        dest: /var/www/html/myapp
+        version: master
+      notify: Restart Nginx  # 当应用程序更新后，通知重新启动Nginx
+  handlers:
+    - name: Reload Nginx
+      systemd:
+        name: nginx
+        state: reloaded
+
+    - name: Reload Firewalld
+      service:
+        name: firewalld
+        state: reloaded
+</code></pre>
+<p>使用 <code>handlers</code> 部分定义了处理通知的操作。
+当配置文件更改或应用程序更新时，通知会触发相应的处理程序，如重新加载 Nginx 或 Firewalld。</p>
+<hr>
+<p>hypervisor 监管程序
+ROI  return on investment</p>
+<hr>
+<h2>Containers</h2>
+<p>Containers do not bundle a full operating system - only libraries and settings required to
+make the software work are needed</p>
+<h2>Micro Services</h2>
+<p>Microservices are independently deployable services modeled around a business domain</p>
+<h3>MicroService  Advantage</h3>
+<p>Scalability
+Improved Fault Isolation:
+Flexibility</p>
+<ul>
+<li>teams can work on at diff language and deploy individual services independently,
+Agility</li>
+<li>Reduce testing time</li>
+</ul>
+<h2>Docker 的核心概念：</h2>
+<ol>
+<li><strong>容器 (Container)</strong>：
+<ul>
+<li>容器是 Docker 中的基本单元。它是一个独立的、轻量级的可执行包，包含了应用程序及其依赖项，如代码、运行时、系统工具、库和设置。</li>
+<li>容器隔离于其他容器和主机系统，确保应用程序在不同环境中的一致性和可移植性。</li>
+</ul>
+</li>
+<li><strong>镜像 (Image)</strong>：
+<ul>
+<li>镜像是容器的只读模板，定义了容器的内容和配置。镜像用于创建容器。Docker 镜像可以存储在镜像仓库中（如 Docker Hub）并在团队中共享，从而方便分发应用程序。</li>
+</ul>
+</li>
+<li><strong>Dockerfile</strong>：
+<ul>
+<li>Dockerfile 是一个文本文件，包含了用于构建 Docker 镜像的指令。</li>
+<li>通过编写 Dockerfile，您可以定义镜像的基础操作系统、安装依赖项、复制文件、设置环境变量等。Docker 使用 Dockerfile 来构建镜像。</li>
+</ul>
+</li>
+<li><strong>容器注册表 (Container Registry)</strong>：
+<ul>
+<li>容器注册表是用于存储和分享 Docker 镜像的地方。</li>
+<li>Docker Hub 是一个公共的容器注册表，其中包含了大量的公共镜像。此外，您还可以搭建私有的容器注册表，以存储和管理自己的镜像。</li>
+</ul>
+</li>
+</ol>
+<h2>Docker 使用例子</h2>
+<ol>
+<li><strong>编写应用程序代码</strong>：</li>
+<li><strong>编写Dockerfile</strong>：</li>
+<li><strong>构建Docker镜像</strong>：</li>
+<li><strong>运行Docker容器</strong>：</li>
+<li><strong>访问应用程序</strong>：
+打开浏览器并访问<code>http://localhost:3000</code>，您应该能够看到&quot;Hello, Docker!&quot;消息。</li>
+</ol>
+<hr>
+<p><code>Dockerfile</code>的文件，其中包含有关如何构建Docker镜像的指令。</p>
+<pre><code class="language-Dockerfile"># 使用Node.js官方镜像作为基础镜像
+FROM node:14
+
+# 设置工作目录
+WORKDIR /app
+
+# 将应用程序代码复制到容器中
+COPY app.js .
+
+# 安装应用程序依赖项
+RUN npm install
+
+# 暴露容器监听的端口
+EXPOSE 3000
+
+# 定义启动命令
+CMD [&quot;node&quot;, &quot;app.js&quot;]
+</code></pre>
+<hr>
+<ol start="3">
+<li><strong>构建Docker镜像</strong>：
+docker build -t my-node-app:latest.
+使用Dockerfile构建Docker镜像：其中包含Node.js应用程序和所有依赖项</li>
+<li><strong>运行Docker容器</strong>：
+docker run -p 3000:3000 my-node-app
+这会在容器中运行Node.js应用程序，并将容器的端口3000映射到主机的端口3000</li>
+</ol>
+<h2>Software Build Management</h2>
+<p>Build Type: full build, incremental build</p>
+<h2>Test Automation</h2>
+<p>Test Automation is a process to be managed.,Use of software tools to control the execution of tests
+Test Automation is not Testing.</p>
+
+<h1>2023-09-13</h1><h2>SCA software compositon analysis</h2>
+<ul>
+<li>automated process that identifies the open source software in a codebase.</li>
+</ul>
+<h2>SAST Static application security testing</h2>
+<ul>
+<li>used to secure software by reviewing the source code of the software to identify sources of vulnerabilities.</li>
+<li>It’s in this stage of static code analysis that developers can code, test, revise,
+and test again</li>
+</ul>
+<h2>DAST dynamic</h2>
+<ul>
+<li>a black box testing method ,do not have access to the source code</li>
+<li>attempt to detect vulnerabilities in configuration issues,environment issues</li>
+<li>find mistaks at the end of SDLC</li>
+<li></li>
+<li>but time consuming ,slow scans</li>
+<li>normally only web application</li>
+</ul>
+<h2>Vulnerability Assessment 漏洞评估</h2>
+<ul>
+<li>determining the  vulnerability of  assets at risk of being lost, taken, damaged, or  destroyed.</li>
+<li>flow： Definition Identifiton Analysis</li>
+<li>VA 可以包括静态分析、动态测试、漏洞扫描、渗透测试等多种技术和方法。</li>
+</ul>
+
+<h1>Terraform  | 基础设施即代码测试流程（一）</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7024751669409742861/">juejin.cn</a></p>
+</blockquote>
+<h3>一、测试范围</h3>
+<ul>
+<li><strong>集成测试</strong></li>
+<li><strong>单元测试</strong></li>
+<li><strong>合规性测试</strong></li>
+<li><strong>端到端测试</strong></li>
+</ul>
+
+<h1>【云计算】历史的选择 - 基础设施即代码 IaC</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7018737355066441742?searchId=20230911183005AFC76265EC38A235963B">juejin.cn</a></p>
+</blockquote>
+<h3>一、历史的选择</h3>
+<p>随着软件迭代速度快，且复杂度的上升，组织结构和职能发生了变化。</p>
+<ul>
+<li>第一阶段，开发（Dev）和运维（Ops）组织分开，开发负责编写软件，运维负责管理硬件。<strong>→问题:</strong> 跨团队协作，开发和运维环境不一致，运维人员大多数部署通过手动完成，代码冲突、服务故障和停机频繁。</li>
+<li>第二阶段，上云计算平台，运维团队任务从硬件管理转移到编写软件管理，需要编写代码，这样开发和运维都需要编写代码，所以 Dev 和 Ops 合并，演化成<code>DevOps</code>。</li>
+</ul>
+<p><strong>DevOps 自动化</strong>的目标是将软件交付过程自动化。所以落实到管理基础设施方面，也要尽可能多地通过代码来实现，减少点击网页或手动执行 Shell 命令的方式，即采用 IaC（基础设施即代码）。</p>
+<h3>二、走进 IaC</h3>
+<p><strong>IaC（Infrastructure as Code）即基础设施即代码</strong>，核心思想为通过编写和执行代码来定义、部署、更新和销毁基础设施。</p>
+<p>它是一种观念的转变，其将运维的各个工作都视为与软件相关，甚至一些明显针对硬件的工作，即将所有事物都在代码中进行管理，包括</p>
+<ul>
+<li>服务器，数据库，  网络</li>
+</ul>
+<h4>2.1 IaC 解决方案的价值</h4>
+<ul>
+<li>版本控制（可 Review）</li>
+<li>建立 CI/CD 自动化（不依赖于 UI 操作，减少人为错误）</li>
+<li>重复使用（减少时间上的浪费）</li>
+<li>环境切换控制（保持生产、预发、测试环境的一致性，平滑切换）</li>
+<li>团队成长和协作（文档分享）</li>
+</ul>
+<p>总的来说，周而复始的手动管理基础设施，难免枯燥乏味，如此工作，既无创意又无挑战，<strong>使用 Iac 在改进我们工作的同时，让我们关注更有价值的事情</strong>。</p>
+<h4>2.2 IaC 工具分类</h4>
+<p><code>IaC</code>是一种思想，实现这种思想的工具有很多，大致分为五大类。</p>
+<ul>
+<li>专项脚本（为每一项任务写一个专项脚本，比如配置 docker 环境，配置 web 服务等。其维护难度相当大，可针对小规模、一次性的任务。）</li>
+<li>配置管理工具（Chef、Puppet、Absible、SaltStack 属于此类，目的是在现有服务器上安装和管理软件，优于专项脚本，可用作大规模、分布式、统一管理的场景）</li>
+<li>服务器模板工具（Docker、Packer、Vagrant 属于此类，使用容器镜像、虚拟机（VM）的方式拥有一个完全独立的服务器，然后在所有服务器上统一安装）</li>
+<li>容器管理工具（管理服务器模板工具创建虚拟机和容器等，具体实现包括 K8s，Marathon/Mesos、AmazonElastic Container Service（Amazon ECS）、Docker Swarm 和 Nomad 等等）</li>
+<li>服务开通工具（创建云资源，比如服务器，网络、防火墙设施、路由规则、负载均衡等等，具体实现包括 Terraform、CloudFormation、OpenStack Heat、Pulumi 等等）</li>
+</ul>
+
+<h1>万字长文带你彻底搞懂什么是 DevOps</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6965860856311578637?searchId=2023091118255614448DFC4BB9D01D0B3E">juejin.cn</a></p>
+</blockquote>
+<h2>DevOps 定义</h2>
+<pre><code>&gt; DevOps 是一系列整合软件开发和软件运维活动的**软件工程文化和实践（Practices）**。目标是缩短软件开发生命周期并使用持续交付提供高质量的软件。
+&gt; DevOps 与敏捷软件开发是互补关系，DevOps 的许多方面来自于敏捷方法论。
+</code></pre>
+<h2>DevOps 发展背景</h2>
+<p>为什么 DevOps 会如此热门，时常被人所提及，这与其发展背景是分不开的，主要原因可以概括为以下几点：</p>
+<ol>
+<li>敏态需求的增加，即探索性工作的增加；
+要求运维能够具备一天发布多次的能力，需要企业完成由稳态到敏态的转变。</li>
+<li>软件开发活动在企业经营活动中占比的不断增加；</li>
+</ol>
+<h2>DevOps 原则与实践</h2>
+<p>了解了什么是 DevOps 及其发展原因后，又该如何具体的进行 DevOps 实践，我们采用黄金圈法则来思考这一问题。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/_resources/7d88bd330cba4e2ea59f2bddc90cf448_MD5.webp" /></p>
+<p>DevOps 原则是总体指导思想，实践是具体的执行方法，DevOps 是一个动态的过程，在进行相关实践的时候可以看看其应用了哪些原则，当违背原则的时候需要思考实践的合理性。</p>
+<h2>DevOps 原则</h2>
+<p>DevOps 包含以下三大原则：</p>
+<ol>
+<li>流动原则：<strong>加速</strong> 从开发、运维到交付给客户的流程；</li>
+<li>反馈原则：建设 <strong>安全可靠</strong> 的工作体系；</li>
+<li>持续学习与实验原则：采用科学的工作方式，将对组织的 <strong>改进和创新</strong> 作为工作的一部分。</li>
+</ol>
+
+<h1>单例设计模式</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/singleton">refactoringguru.cn</a></p>
+</blockquote>
+<h2>问题</h2>
+<p>单例模式同时解决了两个问题， 所以违反了_单一职责原则_：</p>
+<ol>
+<li><strong>保证一个类只有一个实例</strong>。
+最常见的原因是控制某些共享资源 （例如数据库或文件） 的访问权限。</li>
+<li><strong>为该实例提供一个全局访问节点</strong>。 。
+和全局变量一样， 单例模式也允许在程序的任何地方访问特定对象。 但是它可以保护该实例不被其他代码覆盖。
+如果你需要更加严格地控制全局变量， 可以使用单例模式。</li>
+</ol>
+<h2>解决方案</h2>
+<p>所有单例的实现都包含以下两个相同的步骤：</p>
+<ul>
+<li>将默认构造函数设为私有， 防止其他对象使用单例类的 <code>new</code>运算符。</li>
+<li>新建一个静态构建方法作为构造函数。 该函数会 “偷偷” 调用私有构造函数来创建对象， 并将其保存在一个静态成员变量中。 此后所有对于该函数的调用都将返回这一缓存对象。</li>
+</ul>
+<p>如果你的代码能够访问单例类， 那它就能调用单例类的静态方法。 无论何时调用该方法， 它总是会返回相同的对象。</p>
+<h2>单例模式结构</h2>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/singleton/structure-zh-indexed.png" alt=""></p>
+<ol>
+<li><strong>单例</strong> （Singleton） 类声明了一个名为 <code>get­Instance</code>获取实例的静态方法来返回其所属类的一个相同实例。</li>
+<li>单例的构造函数必须对客户端 （Client） 代码隐藏。 调用 <code>获取实例</code>方法必须是获取单例对象的唯一方式。</li>
+</ol>
+<h2>单例模式优缺点</h2>
+<ul>
+<li>该模式在多线程环境下需要进行特殊处理， 避免多个线程多次创建单例对象。</li>
+<li>单例的客户端代码单元测试可能会比较困难， 因为许多测试框架以基于继承的方式创建模拟对象。 由于单例类的构造函数是私有的， 而且绝大部分语言无法重写静态方法， 所以你需要想出仔细考虑模拟单例的方法。 要么干脆不编写测试代码， 或者不使用单例模式。</li>
+</ul>
+<h2>与其他模式的关系</h2>
+<ul>
+<li>如果你能将对象的所有共享状态简化为一个享元对象， 那么<a href="/design-patterns/flyweight">享元模式</a>就和<a href="/design-patterns/singleton">单例</a>类似了。</li>
+<li>但这两个模式有两个根本性的不同。
+<ol>
+<li>单例实体只会有一个， 但是享元类可以有多个实体， 各实体的内在状态也可以不同。</li>
+<li>_单例_对象可以是可变的。 享元对象是不可变的。</li>
+</ol>
+</li>
+</ul>
+
+<h1>原型设计模式</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/prototype">refactoringguru.cn</a></p>
+</blockquote>
+<p>亦称： 克隆、Clone、Prototype
+<strong>原型模式</strong>使你能够复制已有对象， 而又无需使代码依赖它们所属的类。</p>
+<h2>问题</h2>
+<p>如果你有一个对象， 并希望生成与其完全相同的一个复制品， 你该如何实现呢？ 首先， 你必须新建一个属于相同类的对象。 然后， 你必须遍历原始对象的所有成员变量， 并将成员变量值复制到新对象中。</p>
+<p>不错！ 但有个小问题。 并非所有对象都能通过这种方式进行复制， 因为有些对象可能拥有私有成员变量， 它们在对象本身以外是不可见的。</p>
+<p>你必须知道对象所属的类才能创建复制品， 所以代码必须依赖该类。
+有时你只知道对象所实现的接口， 而不知道其所属的具体类， 比如可向方法的某个参数传入实现了某个接口的任何对象。</p>
+<h2>解决方案</h2>
+<p>原型模式将克隆过程委派给被克隆的实际对象。
+模式为所有支持克隆的对象声明了一个通用接口， 该接口让你能够克隆对象， 同时又无需将代码和对象所属类耦合。
+通常情况下， 这样的接口中仅包含一个 <code>克隆</code>方法。</p>
+<p>所有的类对 <code>克隆</code>方法的实现都非常相似。</p>
+<ul>
+<li>该方法会创建一个当前类的对象， 然后将原始对象所有的成员变量值复制到新建的类中。</li>
+<li>你甚至可以复制私有成员变量， 因为绝大部分编程语言都允许对象访问其同类对象的私有成员变量。</li>
+</ul>
+<hr>
+<p>支持克隆的对象即为_原型_。
+当你的对象有几十个成员变量和几百种类型时， 对其进行克隆甚至可以代替子类的构造。
+预生成原型可以代替子类的构造。</p>
+<p>其运作方式如下： 创建一系列不同类型的对象并不同的方式对其进行配置。
+如果所需对象与预先配置的对象相同， 那么你只需克隆原型即可， 无需新建一个对象。</p>
+<h4>原型注册表实现</h4>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/prototype/structure-prototype-cache-indexed.png" alt=""></p>
+<ol>
+<li><strong>原型注册表</strong> （Prototype Registry） 提供了一种访问常用原型的简单方法， 其中存储了一系列可供随时复制的预生成对象。 最简单的注册表原型是一个 <code>名称 → 原型</code>的哈希表。 但如果需要使用名称以外的条件进行搜索， 你可以创建更加完善的注册表版本。</li>
+</ol>
+<h2>伪代码</h2>
+<p>所有形状类都遵循同一个提供克隆方法的接口。 在复制自身成员变量值到结果对象前， 子类可调用其父类的克隆方法。</p>
+<pre><code>// 基础原型。
+abstract class Shape is
+
+    // 常规构造函数。
+    constructor Shape() is
+        // ……
+
+    // 原型构造函数。使用已有对象的数值来初始化一个新对象。
+    constructor Shape(source: Shape) is
+        this()// 调用子类的构造方法
+        this.X = source.X
+        this.Y = source.Y
+        this.color = source.color
+
+    // clone（克隆）操作会返回一个形状子类。
+    abstract method clone():Shape
+
+
+// 具体原型。克隆方法会创建一个新对象并将其传递给构造函数。
+class Rectangle extends Shape is
+    field width: int
+    field height: int
+
+    constructor Rectangle(source: Rectangle) is
+        // 需要调用父构造函数来复制父类中定义的私有成员变量。
+        super(source)
+        this.width = source.width
+        this.height = source.height
+
+    method clone():Shape is
+        return new Rectangle(this)
+
+</code></pre>
+
+<h1>命令设计模式</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/command">refactoringguru.cn</a></p>
+</blockquote>
+<h1>命令模式</h1>
+<p><strong>命令模式</strong>是一种行为设计模式， 它可将请求转换为一个包含与请求相关的所有信息的独立对象。 该转换让你能根据不同的请求将方法参数化、 延迟请求执行或将其放入队列中， 且能实现可撤销操作。
+亦称： 动作、事务、Action、Transaction、Command</p>
+<h2>问题</h2>
+<p>假如你正在开发一款新的文字编辑器，
+你创建了一个非常简洁的 <code>按钮</code>类， 它不仅可用于生成工具栏上的按钮， 还可用于生成各种对话框的通用按钮。
+应用中的所有按钮都可以继承相同的类
+尽管所有按钮看上去都很相似， 但它们可以完成不同的操作 （打开、 保存、 打印和应用等）。 你会在哪里放置这些按钮的点击处理代码呢？ 最简单的解决方案是在使用按钮的每个地方都创建大量的子类。 这些子类中包含按钮点击后必须执行的代码。</p>
+<p>你很快就意识到这种方式有严重缺陷。
+首先， 你创建了大量的子类， 当每次修改基类 <code>按钮</code>时， 你都有可能需要修改所有子类的代码。</p>
+<hr>
+<p>还有一个部分最难办。 复制 / 粘贴文字等操作可能会在多个地方被调用。
+例如用户可以点击工具栏上小小的 “复制” 按钮， 或者通过上下文菜单复制一些内容， 又或者直接使用键盘上的 <code>Ctrl+C</code> 。
+我们的程序最初只有工具栏， 因此可以使用按钮子类来实现各种不同操作。
+在实现了上下文菜单、 快捷方式和其他功能后， 你要么需要将操作代码复制进许多个类中， 要么需要让菜单依赖于按钮， 而后者是更糟糕的选择。</p>
+<h2>解决方案</h2>
+<p>优秀的软件设计通常会将关注点进行分离， 而这往往会导致软件的分层。
+最常见的例子： 一层负责用户图像界面； 另一层负责业务逻辑。</p>
+<p>当需要完成一些重要内容时 （比如计算月球轨道或撰写年度报告）， GUI 层则会将工作委派给业务逻辑底层。</p>
+<p>这在代码中看上去就像这样：一个 GUI 对象传递一些参数来调用一个业务逻辑对象。
+这个过程通常被描述为一个对象发送_请求_给另一个对象。</p>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/command/solution1-zh.png" alt=""></p>
+<hr>
+<p>之前GUI 层可以直接访问业务逻辑层。
+命令模式建议 GUI 对象不直接提交这些请求。
+你应该将请求的所有细节 （例如调用的对象、 方法名称和参数列表） 抽取出来组成_命令_类， 该类中仅包含一个用于触发请求的方法。</p>
+<p>命令对象负责连接不同的 GUI 和业务逻辑对象。
+此后，  GUI 对象触发命令即可， 命令对象会自行处理所有细节工作。</p>
+<p>通过命令访问业务逻辑层。</p>
+<hr>
+<p>下一步是让所有命令实现相同的接口。 该接口通常只有一个没有任何参数的执行方法， 让你能在不和具体命令类耦合的情况下使用同一请求发送者执行不同命令。 此外还有额外的好处， 现在你能在运行时切换连接至发送者的命令对象， 以此改变发送者的行为。</p>
+<p>你可能会注意到遗漏的一块拼图——请求的参数。 GUI 对象可以给业务层对象提供一些参数。 但执行命令方法没有任何参数， 所以我们如何将请求的详情发送给接收者呢？ 答案是： 使用数据对命令进行预先配置， 或者让其能够自行获取数据。</p>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/command/solution3-zh.png" alt=""></p>
+<hr>
+<p>GUI 对象将命令委派给命令对象。
+让我们回到文本编辑器。
+应用命令模式后， 我们不再需要任何按钮子类来实现点击行为。 我们只需在 <code>按钮</code>Button 基类中添加一个成员变量来存储对于命令对象的引用， 并在点击后执行该命令即可。</p>
+<p>你需要为每个可能的操作实现一系列命令类， 并且根据按钮所需行为将命令和按钮连接起来。</p>
+<p>其他菜单、 快捷方式或整个对话框等 GUI 元素都可以通过相同方式来实现。 当用户与 GUI 元素交互时， 与其连接的命令将会被执行。 现在你很可能已经猜到了， 与相同操作相关的元素将会被连接到相同的命令， 从而避免了重复代码。</p>
+<p>最后， 命令成为了减少 GUI 和业务逻辑层之间耦合的中间层。 而这仅仅是命令模式所提供的一小部分好处！</p>
+<h2>真实世界类比</h2>
+<p>在餐厅里点餐。
+在市中心逛了很久的街后， 你找到了一家不错的餐厅， 坐在了临窗的座位上。 一名友善的服务员走近你， 迅速记下你点的食物， 写在一张纸上。 服务员来到厨房， 把订单贴在墙上。 过了一段时间， 厨师拿到了订单， 他根据订单来准备食物。 厨师将做好的食物和订单一起放在托盘上。 服务员看到托盘后对订单进行检查， 确保所有食物都是你要的， 然后将食物放到了你的桌上。</p>
+<p>那张纸就是一个命令， 它在厨师开始烹饪前一直位于队列中。 命令中包含与烹饪这些食物相关的所有信息。 厨师能够根据它马上开始烹饪， 而无需跑来直接和你确认订单详情。</p>
+<h2>命令模式结构</h2>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/command/structure-indexed.png" alt=""></p>
+<ol>
+<li><strong>发送者</strong> （Sender）——亦称 “触发者 （Invoker）”——
+<ol>
+<li>负责对请求进行初始化， 必须包含一个成员变量来存储对于命令对象的引用。</li>
+<li>发送者触发命令， 而不向接收者直接发送请求。</li>
+<li>注意， 发送者并不负责创建命令对象： 它通常会通过构造函数从客户端处获得预先生成的命令。</li>
+</ol>
+</li>
+<li><strong>具体命令</strong> （Concrete Commands） 会实现各种类型的请求。
+<ol>
+<li>具体命令自身并不完成工作， 而是会将调用委派给一个业务逻辑对象。 但为了简化代码， 这些类可以进行合并。
+接收对象执行方法所需的参数可以声明为具体命令的成员变量。 你可以将命令对象设为不可变， 仅允许通过构造函数对这些成员变量进行初始化。</li>
+</ol>
+</li>
+<li><strong>接收者</strong> （Receiver） 类包含部分业务逻辑。 几乎任何对象都可以作为接收者。
+<ol>
+<li>绝大部分命令只处理如何将请求传递到接收者的细节，</li>
+<li>接收者完成实际的工作。</li>
+</ol>
+</li>
+<li><strong>客户端</strong> （Client） 会创建并配置具体命令对象。 客户端必须将包括接收者实体在内的所有请求参数传递给命令的构造函数。 此后， 生成的命令就可以与一个或多个发送者相关联了。</li>
+</ol>
+<h2>伪代码</h2>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/command/example.png" alt=""></p>
+<p>客户端代码 （GUI 元素和命令历史等） 没有和具体命令类相耦合， 因为它通过命令接口来使用命令。 这使得你能在无需修改已有代码的情况下在程序中增加新的命令。</p>
+<pre><code>// 命令基类会为所有具体命令定义通用接口。
+abstract class Command is
+    protected field app: Application
+    protected field editor: Editor
+    protected field backup: text
+
+    constructor Command(app: Application, editor: Editor) is
+        this.app = app
+        this.editor = editor
+    method saveBackup() is
+        backup = editor.text
+    method undo() is
+        editor.text = backup
+    // 执行方法被声明为抽象以强制所有具体命令提供自己的实现。该方法必须根
+    // 据命令是否更改编辑器的状态返回 true 或 false。
+    abstract method execute()
+
+class CutCommand extends Command is
+    // 返回 true，它就会被保存。
+    method execute() is
+        saveBackup()
+        app.clipboard = editor.getSelection()
+        editor.deleteSelection()
+        return true
+
+
+// 编辑器类包含实际的文本编辑操作。它会担任接收者的角色：最后所有命令都会
+// 将执行工作委派给编辑器的方法。
+class Editor is
+    field text: string
+
+    method getSelection() is
+    method deleteSelection() is
+    method replaceSelection(text) is
+
+// 应用程序类会设置对象之间的关系。它会担任发送者的角色：当需要完成某些工
+// 作时，它会创建并执行一个命令对象。
+class Application is
+    field clipboard: string
+    field editors: array of Editors
+    field activeEditor: Editor
+    field history: CommandHistory
+
+    // 将命令分派给 UI 对象的代码可能会是这样的。
+    method createUI() is
+        // ……
+        copy = function() { 
+	        executeCommand(new CopyCommand(this, activeEditor)) }
+        copyButton.setCommand(copy)
+        shortcuts.onKeyPress(&quot;Ctrl+C&quot;, copy)
+
+    // 执行一个命令并检查它是否需要被添加到历史记录中。
+    method executeCommand(command) is
+        if (command.execute())
+            history.push(command)
+
+</code></pre>
+<h2>命令模式适合应用场景</h2>
+<p>如果你需要通过操作来参数化对象， 可使用命令模式。
+命令模式可将特定的方法调用转化为独立对象。 这一改变也带来了许多有趣的应用： 你可以将命令作为方法的参数进行传递、 将命令保存在其他对象中， 或者在运行时切换已连接的命令等。</p>
+<p>举个例子： 你正在开发一个 GUI 组件 （例如上下文菜单）， 你希望用户能够配置菜单项， 并在点击菜单项时触发操作。</p>
+<hr>
+<p>如果你想要将操作放入队列中、 操作的执行或者远程执行操作， 可使用命令模式。
+同其他对象一样， 命令也可以实现序列化 （序列化的意思是转化为字符串）， 从而能方便地写入文件或数据库中。
+一段时间后， 该字符串可被恢复成为最初的命令对象。
+因此， 你可以延迟或计划命令的执行。</p>
+<hr>
+<p>如果你想要实现操作回滚功能， 可使用命令模式。
+命令历史记录是一种包含所有已执行命令对象及其相关程序状态备份的栈结构。
+这种方法有两个缺点。 首先， 程序状态的保存功能并不容易实现， 因为部分状态可能是私有的。 你可以使用<a href="/design-patterns/memento">备忘录</a>模式来在一定程度上解决这个问题。
+其次， 备份状态可能会占用大量内存。
+因此， 有时你需要借助另一种实现方式： 命令无需恢复原始状态， 而是执行反向操作。
+反向操作也有代价： 它可能会很难甚至是无法实现。</p>
+<h2>实现方式</h2>
+<ol>
+<li>声明仅有一个执行方法的命令接口。</li>
+<li>抽取请求并使之成为实现命令接口的具体命令类。
+<ol>
+<li>每个类都必须有一组成员变量来保存请求参数和对于实际接收者对象的引用。</li>
+<li>所有这些变量的数值都必须通过命令构造函数进行初始化。</li>
+</ol>
+</li>
+<li>找到担任_发送者_职责的类。
+<ol>
+<li>在这些类中添加保存命令的成员变量。</li>
+<li>发送者只能通过命令接口与其命令进行交互。</li>
+<li>发送者自身通常并不创建命令对象， 而是通过客户端代码获取</li>
+</ol>
+</li>
+<li>修改发送者使其执行命令， 而非直接将请求发送给接收者。</li>
+<li>客户端必须按照以下顺序来初始化对象：
+<ul>
+<li>创建接收者。</li>
+<li>创建命令， 如有需要可将其关联至接收者。</li>
+<li>创建发送者并将其与特定命令关联。</li>
+</ul>
+</li>
+</ol>
+<h2>命令模式优缺点</h2>
+<ul>
+<li>
+<p><em>单一职责原则</em>。 你可以解耦触发和执行操作的类。</p>
+</li>
+<li>
+<p><em>开闭原则</em>。 你可以在不修改已有客户端代码的情况下在程序中创建新的命令。</p>
+</li>
+<li>
+<p>你可以实现撤销和恢复功能。</p>
+</li>
+<li>
+<p>你可以实现操作的延迟执行。</p>
+</li>
+<li>
+<p>你可以将一组简单命令组合成一个复杂命令。</p>
+</li>
+<li>
+<p>代码可能会变得更加复杂， 因为你在发送者和接收者之间增加了一个全新的层次。</p>
+</li>
+</ul>
+<h2>与其他模式的关系</h2>
+<ul>
+<li><a href="/design-patterns/chain-of-responsibility">责任链模式</a>、 <a href="/design-patterns/command">命令模式</a>、 <a href="/design-patterns/mediator">中介者模式</a>和<a href="/design-patterns/observer">观察者模式</a>用于处理请求发送者和接收者之间的不同连接方式：
+<ul>
+<li>责任链_按照顺序将请求动态传递给一系列的潜在接收者， 直至其中一名接收者对请求进行处理。</li>
+<li>命令_在发送者和请求者之间建立单向连接。</li>
+<li>中介者_清除了发送者和请求者之间的直接连接， 强制它们通过一个中介对象进行间接沟通。</li>
+<li>_观察者_允许接收者动态地订阅或取消接收请求。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><a href="/design-patterns/chain-of-responsibility">责任链</a>的管理者可使用<a href="/design-patterns/command">命令模式</a>实现。 在这种情况下， 你可以对由请求代表的同一个上下文对象执行许多不同的操作。
+还有另外一种实现方式， 那就是请求自身就是一个_命令_对象。 在这种情况下， 你可以对由一系列不同上下文连接而成的链执行相同的操作。</li>
+</ul>
+<hr>
+<ul>
+<li>
+<p><a href="/design-patterns/command">命令</a>和<a href="/design-patterns/strategy">策略模式</a>看上去很像， 因为两者都能通过某些行为来参数化对象。 但是， 它们的意图有非常大的不同。</p>
+<ul>
+<li>你可以使用_命令_来将任何操作转换为对象。 操作的参数将成为对象的成员变量。 你可以通过转换来延迟操作的执行、 将操作放入队列、 保存历史命令或者向远程服务发送命令等。</li>
+<li>另一方面， _策略_通常可用于描述完成某件事的不同方式， 让你能够在同一个上下文类中切换算法。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li>你可以将<a href="/design-patterns/visitor">访问者模式</a>视为<a href="/design-patterns/command">命令模式</a>的加强版本， 其对象可对不同类的多种对象执行操作。</li>
+</ul>
+
+<h1>方法论：如何学习 HTTP</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7046195769681903630">juejin.cn</a></p>
+</blockquote>
+<h2><strong>WHAT-HOW-WHY</strong>结合流程学习</h2>
+<p>当面对一个新的知识点，如果上来直接讲原理，大概多数人都会懵逼</p>
+<ul>
+<li>What - 东西是什么，关键概念</li>
+<li>How - 使用的流程？</li>
+<li>Why - 原理和为什么这样实现。</li>
+</ul>
+<h3>REST 架构风格</h3>
+<p>REST 全称：<strong>Representtational State Transfer</strong>，翻译成中文就是表述性状态转移。</p>
+<p>首先从表述和状态转移这两个关键词去理解 REST</p>
+<ul>
+<li>表述 RESTful 架构是基于资源的架构，资源的含义是广泛：任何可以命名的信息都可以是资源。比如文档、图像、时间服务等，资源是到一组实体的概念映射。</li>
+</ul>
+<hr>
+<p>可以看到无论是 tickets 还是 orders 都是用<strong>复数</strong>的形式去标识资源，这是合适的。尽管语文老师可能反对用复数表示单个资源，但为了保持简单并且保持 URI 格式一致，统一使用复数好处多多，也不必再为了选择 person 还是 people 而烦恼。</p>
+<h4>REST 的约束条件</h4>
+<p>REST 的约束条件有：</p>
+<ul>
+<li>客户端 - 服务器</li>
+<li>无状态</li>
+<li>缓存</li>
+<li>统一接口</li>
+<li>分层系统</li>
+<li>按需代码（可选）</li>
+</ul>
+<hr>
+<p>（2）无状态<br>
+通信本质上必须是无状态的，也就是说指两次请求之间不存在依赖关系，这样从客户端到服务器必须包含请求的所需的所有信息，并且不能在服务器上存储任何上下文。
+这种约束导致了可见性、可靠性和可伸缩性得到了改善。</p>
+<p>缺点就是在一系列请求中发送重复的请求头信息。
+<em>HTTP 用 cookie 机制解决了识别用户，持久会话的场景</em></p>
+<hr>
+<p>（3）缓存<br>
+缓存约束条件主要是用于改善网络的效率。缓存约束条件要求一个请求的响应中的数据被隐式地或显式地标记为可缓存的或不可缓存的。如果响应是可缓存的，那么客户端缓存就可以为以后的相同请求重用这个响应的数据，减少了网络交互，提高了效率、可伸缩性和用户感知的性能。</p>
+<p><em>HTTP 缓存分为共享缓存与私有缓存</em></p>
+<hr>
+<p>可能大家一开始看 HTTP 报文格式的时候，不会注意<strong>每一行都有明确的分段：crlf</strong>
+<img src="file://Mac/Home/myGitHubMac/simple-read/_resources/_resources/66bf38626fdcab7b295ea23babefbcde_MD5.webp" />
+这是为了适应 TCP 而设计的。
+TCP 是基于字节流，当大报文传进 TCP 时，根据握手双方而制定的报文段大小（称为 MSS），会将报文分为很多段。
+TCP 只负责传输报文段，而不会做边界处理，这就需要 HTTP 来划分边界。
+除实体之外的 HTTP 报文要以 crlf 分段处理。</p>
+<p>报文的实体主体（包体）一样需要边界处理。</p>
+<hr>
+<p>HTTP 包体传输有两种方式：</p>
+<ul>
+<li>定长包体，使用 Content-Length 表示。当 Content-Length 小于实际包体字节数，浏览器就会抛弃后续的字节。如果大于，则会报错。</li>
+<li>不定长包体，使用 Transfer-Encoding 指明使用 chunk 传输。将包体分为一个个 chunk 传输，最后一个 chunk 使用 last-chunk 表明，最后携带包体总长度。</li>
+</ul>
+
+<h1>装饰器模式</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/decorator">refactoringguru.cn</a></p>
+</blockquote>
+<h2>问题</h2>
+<p>假设你正在开发一个提供通知功能的库， 其他程序可使用它向用户发送关于重要事件的通知。</p>
+<p>库的最初版本基于 <code>通知器</code>Notifier 类， 其中只有很少的几个成员变量， 一个构造函数和一个 <code>send</code>发送方法。</p>
+<ul>
+<li>该方法可以接收来自客户端的消息参数， 并将该消息发送给一系列的邮箱，</li>
+<li>邮箱列表通过构造函数传递给通知器的。</li>
+<li>作为客户端的第三方程序仅会创建和配置通知器对象一次， 然后在有重要事件发生时对其进行调用。</li>
+</ul>
+<hr>
+<p>许多用户会希望接收关于紧急事件的手机短信， 还有些用户希望在微信上接收消息， 而公司用户则希望在 QQ 上接收消息。每种通知类型都将作为通知器的一个子类得以实现。
+你可以尝试创建一个特殊子类来将多种通知方法组合在一起以解决该问题。 但这种方式会使得代码量迅速膨胀， 不仅仅是程序库代码， 客户端代码也会如此。</p>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/decorator/problem3-zh.png" alt=""></p>
+<p>子类组合数量爆炸。</p>
+<p>你必须找到其他方法来规划通知类的结构， 否则它们的数量会在不经意之间打破吉尼斯纪录。</p>
+<h2>解决方案</h2>
+<p>当你需要更改一个对象的行为时， 第一个跳入脑海的想法就是扩展它所属的类。 但是， 你不</p>
+<p>其中一种方法是用_聚合_或_组合_ 
+<strong>聚合</strong>： 对象 A 包含对象 B； B 可以独立于 A 存在。<br>
+<strong>组合</strong>： 对象 A 由对象 B 构成； A 负责管理 B 的生命周期。 B 无法独立于 A 存在。</p>
+<p>一个对象可以使用多个类的行为， 包含多个指向其他对象的引用， 并将各种工作委派给引用对象。 聚合 （或组合） 组合是许多设计模式背后的关键原则 （包括装饰在内）</p>
+<p>继承和他们的区别。</p>
+<ul>
+<li>两者的工作方式几乎一模一样： 一个对象_包含_指向另一个对象的引用， 并将部分工作委派给引用对象；</li>
+<li>继承中的对象则继承了父类的行为， 它们自己_能够_完成这些工作。</li>
+</ul>
+<hr>
+<p>什么时候一个简单的封装器可以被称为是真正的装饰呢？
+正如之前提到的， 封装器实现了与其封装对象相同的接口。
+因此从客户端的角度来看， 这些对象是完全一样的。</p>
+<hr>
+<p>比如在消息通知示例中，
+我们可以将简单邮件通知行为放在基类 <code>通知器</code>中， 但将所有其他通知方法放入装饰中。
+由于所有的装饰都实现了与通知基类相同的接口， 客户端的其他代码并不在意自己到底是与 “纯粹” 的通知器对象， 还是与装饰后的通知器对象进行交互。</p>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/decorator/solution2-zh.png" alt=""></p>
+<p>将客户端代码必须将基础通知器放入一系列自己所需的装饰中。
+因此最后的对象将形成一个栈结构。</p>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/decorator/solution3-zh.png" alt=""></p>
+<h2>装饰模式结构</h2>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/decorator/structure-indexed.png" alt=""></p>
+<ol>
+<li><strong>部件</strong> （Component） 声明封装器和被封装对象的公用接口。</li>
+<li><strong>具体部件</strong> （Concrete Component） 类是被封装对象所属的类。
+<ol>
+<li>它定义了基础行为， 但装饰类可以改变这些行为。</li>
+</ol>
+</li>
+<li><strong>基础装饰</strong> （Base Decorator） 类拥有一个指向被封装对象的引用成员变量。 该变量的类型应当被声明为通用部件接口， 这样它就可以引用具体的部件和装饰。 装饰基类会将所有操作委派给被封装的对象。</li>
+<li><strong>具体装饰类</strong> （Concrete Decorators） 定义了可动态添加到部件的额外行为。 具体装饰类会重写装饰基类的方法， 并在调用父类方法之前或之后进行额外的行为。</li>
+</ol>
+<h2>伪代码</h2>
+<pre><code>interface DataSource is
+    method writeData(data)
+    method readData():data
+
+class FileDataSource implements DataSource is
+    constructor FileDataSource(filename) { …… }
+    method writeData(data) is
+    method readData():data is
+
+默认实现代码中会包含一个保存被封装组件的成员变量，并且负责对其进行初始化。
+class DataSourceDecorator implements DataSource is
+    protected field wrappee: DataSource
+    constructor DataSourceDecorator(source: DataSource) is
+        wrappee = source
+    method writeData(data) is
+        wrappee.writeData(data)
+    method readData():data is
+        return wrappee.readData()
+
+
+class EncryptionDecorator extends DataSourceDecorator is
+    method writeData(data) is
+        // 1. 对传递数据进行加密。
+        // 2. 将加密后数据传递给被封装对象 writeData（写入数据）方法。
+        data = xxx
+        super.wtireData(data)
+
+    method readData():data is
+
+// 选项 1：装饰组件的简单示例
+class Application is
+    method dumbUsageExample() is
+        source = new FileDataSource(&quot;somefile.dat&quot;)
+        source.writeData(salaryRecords)
+        // 已将明码数据写入目标文件。
+
+        source = new CompressionDecorator(source)
+        source.writeData(salaryRecords)
+        // 已将压缩数据写入目标文件。
+
+ 
+</code></pre>
+<h2>装饰模式适合应用场景</h2>
+<p>许多编程语言使用 <code>final</code>最终关键字来限制对某个类的进一步扩展。
+复用最终类已有行为的唯一方法是使用装饰模式： 用封装器对其进行封装。</p>
+<h2>装饰模式优缺点</h2>
+<ul>
+<li>
+<p>你无需创建新子类即可扩展对象的行为。</p>
+</li>
+<li>
+<p>你可以在运行时添加或删除对象的功能。</p>
+</li>
+<li>
+<p>你可以用多个装饰封装对象来组合几种行为。</p>
+</li>
+<li>
+<p><em>单一职责原则</em>。 你可以将实现了许多不同行为的一个大类拆分为多个较小的类。</p>
+</li>
+<li>
+<p>在封装器栈中删除特定封装器比较困难。</p>
+</li>
+<li>
+<p>实现行为不受装饰栈顺序影响的装饰比较困难。</p>
+</li>
+<li>
+<p>各层的初始化配置代码看上去可能会很糟糕。</p>
+</li>
+</ul>
+<h2>与其他模式的关系</h2>
+<ul>
+<li><a href="/design-patterns/chain-of-responsibility">责任链模式</a>和<a href="/design-patterns/decorator">装饰模式</a>的类结构非常相似。 两者都依赖递归组合将需要执行的操作传递给一系列对象。 但是， 两者有几点重要的不同之处。
+<ul>
+<li><a href="/design-patterns/chain-of-responsibility">责任链</a>的管理者可以相互独立地执行一切操作， 还可以随时停止传递请求。</li>
+<li>装饰无法中断请求的传递。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><a href="/design-patterns/decorator">装饰</a>和<a href="/design-patterns/proxy">代理</a>有着相似的结构， 但是其意图却非常不同。 这两个模式的构建都基于组合原则， 也就是说一个对象应该将部分工作委派给另一个对象。
+<ul>
+<li>两者之间的不同之处在于_代理_通常自行管理其服务对象的生命周期， 而_装饰_的生成则总是由客户端进行控制。</li>
+</ul>
+</li>
+</ul>

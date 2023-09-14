@@ -8,14 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "4bdc6d71e5f9ec66",
+            "id": "6d32667255ac56b8",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "release-notes",
               "state": {
-                "file": "md/Next.js 13 的 app 目录模式功能梳理.md",
-                "mode": "source",
-                "source": false
+                "currentVersion": "1.4.12"
               }
             }
           }
@@ -48,7 +46,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "厂方法并使其返回不同类型的产品来间接修改业务",
+                "query": "docker",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -62,9 +60,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "md/Next.js 13 的 app 目录模式功能梳理.md"
-              }
+              "state": {}
             }
           },
           {
@@ -95,7 +91,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/Next.js 13 的 app 目录模式功能梳理.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +107,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/Next.js 13 的 app 目录模式功能梳理.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -165,41 +159,41 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "4bdc6d71e5f9ec66",
+  "active": "6d32667255ac56b8",
   "lastOpenFiles": [
+    "done/单例设计模式.md",
+    "output/2023-9-14 08-59-22.html",
+    "achieve/装饰器模式.md",
+    "achieve/方法论：如何学习 HTTP.md",
+    "achieve/命令设计模式.md",
+    "achieve/原型设计模式.md",
+    "achieve/单例设计模式.md",
+    "achieve/万字长文带你彻底搞懂什么是 DevOps.md",
+    "achieve/【云计算】历史的选择 - 基础设施即代码 IaC.md",
+    "achieve/Terraform  | 基础设施即代码测试流程（一）.md",
+    "achieve/2023-09-13.md",
+    "achieve/2023-09-12.md",
+    "done/2023-09-13.md",
+    "md/README.md",
+    "done/2023-09-12.md",
+    "md/最详细的 K8S 学习笔记总结（2021 最新版）.md",
+    "node_modules/bl/README.md",
+    "node_modules/readable-stream/README.md",
+    "node_modules/semver/README.md",
+    "node_modules/simple-get/README.md",
+    "node_modules/streamx/README.md",
+    "md/Next.js 13 的 app 目录模式功能梳理.md",
     "md/Next.js 项目最佳实践.md",
     "md/5 分钟带你快速了解 Docker 和 k8s.md",
-    "done/单例设计模式.md",
-    "done/2023-09-12.md",
     "md/[手把手系列之]Docker 部署 vue 项目.md",
     "md/傻逼都能学会的撸 mod 大法 — Greta.md",
-    "md/最详细的 K8S 学习笔记总结（2021 最新版）.md",
-    "md/Maven 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
-    "md/Docker 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
-    "md/Docker 实战 | JavaGuide(Java 面试 + 学习指南).md",
-    "done/原型设计模式.md",
-    "done/装饰器模式.md",
-    "cur useless/Decoding \"Autonomous\" - by Chao Wang - Future Mosaic.md",
-    "done/方法论：如何学习 HTTP.md",
     "_resources/66bf38626fdcab7b295ea23babefbcde_MD5.webp",
     "_resources/26c3579d7881400a1033e19cf7c9df01_MD5.webp",
     "_resources/56b0ee19c978fc3fe4ed49bb2fa49eaf_MD5.webp",
-    "done/命令设计模式.md",
-    "done/【云计算】历史的选择 - 基础设施即代码 IaC.md",
-    "done/Terraform  | 基础设施即代码测试流程（一）.md",
-    "done/万字长文带你彻底搞懂什么是 DevOps.md",
     "_resources/9aebc44684798eeac84797bf7735a8e8_MD5.webp",
     "_resources/7d88bd330cba4e2ea59f2bddc90cf448_MD5.webp",
-    "achieve/Java 工厂方法模式讲解和代码示例.md",
-    "md/工厂模式和抽象工厂模式的区别.md",
-    "done/2023-09-11.md",
     "output/2023-9-11 21-18-10.html",
-    "achieve/2023-09-11.md",
-    "done/Java 工厂方法模式讲解和代码示例.md",
-    "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
     "done",
-    "cur useless/工厂方法设计模式.md",
-    "cur useless/whisper 字幕.md",
     "_resources/fe59fae96e866d4784a0c27c879f7bc9_MD5.jpg",
     "_resources/fe5198ad897a9864e88c1e8b28a611a9_MD5.jpg",
     "_resources/f3609461558ea6f23f63218dafb28804_MD5.jpg",
@@ -212,7 +206,6 @@
     "node_modules/sharp/vendor/8.14.4/darwin-x64/platform.json",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib/libvips-cpp.42.dylib",
     "node_modules/sharp/vendor/8.14.4/darwin-x64/lib/glib-2.0",
-    "node_modules/sharp/vendor/8.14.4/darwin-x64/lib",
     "未命名.canvas"
   ]
 }
