@@ -1,0 +1,1056 @@
+<h1>2023-09-14</h1><p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20230914140323.png" /></p>
+<h2>DevOps Deployment Strategies</h2>
+<p>Recreate: Version A terminated then version B is rolled out
+Ramped: Version B is slowly rolled out and replacing version A</p>
+<h3>Deployment Strategies</h3>
+<p>Blue/Green</p>
+<ul>
+<li>Version B is released alongside version A</li>
+<li>Version B is deployed at the same time as version A, then the traffic is switched to version B
+A/B Testing</li>
+<li>Version B is released to a subset of users under specific condition</li>
+</ul>
+<h3>Strategies  Deploy</h3>
+<p>Shadow</p>
+<ul>
+<li>Version V receives real world traffic alongside version A and doesn’t impact the response</li>
+<li>Helps evaluate the performance and stability of new versions without actually switching users to the new version.
+Canary</li>
+<li>Version B is released to a subset of users（normally inner staff）, then proceed to a full rollout</li>
+</ul>
+<p>Ramped（逐步）
+rollout 首次展示，退出</p>
+<hr>
+<p>Docker Machine 是一个独立的命令行工具，用于在远程云提供商或本地虚拟化环境中创建、管理和操作 Docker 主机。虽然 Docker Machine 可以帮助你管理 Docker 主机，但它本身不是 Docker。</p>
+<p>Docker 是一个开源的容器化平台，用于创建、部署和运行容器化应用程序。Docker 主机是安装了 Docker 引擎的计算机或虚拟机，用于运行 Docker 容器。Docker 引擎负责管理容器的生命周期、资源隔离和容器之间的通信等任务。</p>
+<p>Docker Machine 的主要作用是简化了在不同环境中创建和配置 Docker 主机的过程，它可以帮助你在云提供商（如AWS、DigitalOcean等）或本地虚拟化平台（如VirtualBox、VMware等）上创建 Docker 主机，并将 Docker 客户端连接到这些主机。这样，你可以在不同的环境中轻松管理和部署 Docker 容器，但 Docker Machine 本身并不是 Docker 引擎。</p>
+
+<h1>2023-09-15</h1><p>GQM（Goal-Question-Metric）
+KPI（Key Performance Indicator）
+Scope Variance Percentage = [(EV - PV) / PV] x 100%</p>
+<hr>
+<p>detractor 诋毁者；贬低者</p>
+<h2>成熟度模型</h2>
+<p>&quot;成熟度模型&quot;（Maturity Model）
+这些模型通常以阶段或级别的形式表示，每个阶段代表了一定的成熟度水平
+成熟度模型的目的是帮助组织了解其在特定领域的现状，识别改进的机会，并提供一种逐步改进的路径。它们通常包括一组最佳实践、指南和标准，</p>
+<hr>
+<p><code>MessageChannel</code> 是一个 Web API，</p>
+<ul>
+<li>它允许我们创建一个新的消息通道，并通过其两个 <code>MessagePort</code> 属性发送数据。</li>
+<li>使用 <code>MessageChannel</code> 可以实现双向通信，</li>
+<li>具体来说，当调用 <code>MessageChannel</code> 构造函数时，
+<ul>
+<li>会创建一个新的消息通道，</li>
+<li>并返回两个新的 <code>MessagePort</code> 对象。
+这些对象可以通过 <code>MessageChannel.port1</code> 和 <code>MessageChannel.port2</code> 属性进行访问。</li>
+</ul>
+</li>
+</ul>
+<p>当需要在两个消费者之间建立消息通道时，可以使用 <code>MessageChannel</code> API。
+下面是一个使用 <code>MessageChannel</code> 的示例代码：</p>
+<pre><code class="language-javascript">// 你可以把这个函数理解为 requestIdleCallback，都实现了空闲时期执行代码 
+function requestHostCallback(callback) {
+  // 将 callback 函数存为全局变量，传入的是 flushWork 这个函数 
+  scheduledHostCallback = callback;
+  if (!isMessageLoopRunning) {
+    isMessageLoopRunning = true;
+    schedulePerformWorkUntilDeadline();
+  }
+}
+
+const channel = new MessageChannel();
+const port = channel.port2;
+
+channel.port1.onmessage = performWorkUntilDeadline;
+
+// 借助 Message Channel，让出线程，告诉浏览器登空闲了再执行任务队列 
+function schedulePerformWorkUntilDeadline() { 
+  port.postMessage(null); 
+};
+</code></pre>
+<p>我们创建了一个新的 <code>MessageChannel</code> 对象，并将其赋值给变量 <code>channel</code>。
+然后我们从 <code>channel</code> 中获取了 <code>port2</code> 对象，并将其赋值给变量 <code>port</code>。
+接下来，我们注册了一个回调函数 <code>performWorkUntilDeadline</code>，并将其赋值给了 <code>channel.port1.onmessage</code> 属性。
+最后，我们定义了一个名为 <code>schedulePerformWorkUntilDeadline</code> 的函数，并在其中向 <code>port2</code> 发送了一条消息。这样就可以让出线程，告诉浏览器空闲了再执行任务队列。</p>
+<hr>
+
+<h1>5 分钟带你快速了解 Docker 和 k8s</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6913568633813729294?searchId=202309121411033BA3E28C284DBAA99D28">juejin.cn</a></p>
+</blockquote>
+<h2>容器化时代来了</h2>
+<p>虚拟化技术已经走过了三个时代，没有容器化技术的演进就不会有 Docker 技术的诞生。
+（1）物理机时代：多个应用程序可能会跑在一台机器上。
+（2）虚拟机时代：一台物理机器安装多个虚拟机（VM），一个虚拟机跑多个程序。
+（3）容器化时代：一台物理机安装多个容器实例（container），一个容器跑多个程序。</p>
+<hr>
+<p>容器化解决了软件开发过程中一个令人非常头疼的问题，用一段对话描述：</p>
+<blockquote>
+<p>测试人员：你这个功能有问题。
+开发人员：我本地是好的啊。</p>
+</blockquote>
+<p>开发人员编写代码，在自己本地环境测试完成后，将代码部署到测试或生产环境中，经常会遇到各种各样的问题。明明本地完美运行的代码为什么部署后出现很多 bug，原因有很多：不同的操作系统、不同的依赖库等，总结一句话就是因为本地环境和远程环境不一致。</p>
+<h2>容器化技术的特点</h2>
+<ul>
+<li><strong>可移植性</strong>：不依赖具体的操作系统或云平台，比如在阿里云或腾讯云直接随意迁移。</li>
+<li><strong>占地小</strong>：容器只需要其应用程序以及它需要运行的所有容器和库的依赖清单，不需要将所有的依赖库都打包在一起</li>
+<li><strong>共享 bin 和 lib</strong>：不同的容器可以共享 bin 和 lib，进一步节省了空间。</li>
+</ul>
+<h2>Docker 怎么用？</h2>
+<ul>
+<li>在运行容器前需要编写 Docker File，</li>
+<li>通过 dockerFile 生成镜像，</li>
+<li>然后才能运行 Docker 容器。
+Docker File 定义了运行镜像（image）所需的所有内容，包括操作系统和软件安装位置。
+一般情况下都不需要从头开始编写 Docker File，在 Docker Hub 中有来自世界各地的工程师编写好的镜像，你可以基于此修改。</li>
+</ul>
+<h2>编排系统的需求催生 k8s</h2>
+<p>尽管 Docker 为容器化的应用程序提供了开放标准，但随着容器越来越多出现了一系列新问题：</p>
+<ul>
+<li>如何协调和调度这些容器？</li>
+<li>如何在升级应用程序时不会中断服务？</li>
+<li>如何监视应用程序的运行状况？</li>
+<li>如何批量重新启动容器里的程序？</li>
+</ul>
+<p>解决这些问题需要容器编排技术，可以将众多机器抽象，对外呈现出一台超大机器。
+现在业界比较流行的有：k8s、Mesos、Docker Swarm。</p>
+<hr>
+<p>一个成熟的容器编排系统需要具备以下能力：</p>
+<ul>
+<li>处理大量的容器和用户</li>
+<li>负载均衡</li>
+<li>鉴权和安全性</li>
+<li>管理服务通信</li>
+<li>多平台部署</li>
+</ul>
+<h2>k8s 与 Docker Swarm 江湖恩怨</h2>
+<p>Docker Swarm 是 Docker 自家针对集群化部署管理的解决方案，优点很明显，可以更紧密集成到 Docker 生态系统中。
+虽说 Swarm 是 Docker 亲儿子，但依旧没有 k8s 流行，不流行很大程度是因为商业、生态的原因，不多解释。</p>
+<h2>K8s 架构和组件</h2>
+<p>k8s 由众多组件组成，组件间通过 API 互相通信，归纳起来主要分为三个部分：</p>
+<ul>
+<li><strong>Controller Manager</strong>，即控制平面，用于调度程序以及节点状态检测。</li>
+<li><strong>Nodes</strong>，构成了 Kubernetes 集群的集体计算能力，实际部署容器运行的地方。</li>
+<li><strong>Pods</strong>，Kubernetes 集群中资源的最小单位。
+<img src="file://Mac/Home/myGitHubMac/simple-read/_resources/317bc494b6a2222db8a1536ff17c6897_MD5.jpg" /></li>
+</ul>
+
+<h1>Docker 核心概念总结 | JavaGuide(Java 面试 + 学习指南)</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://javaguide.cn/tools/docker/docker-intro.html#%E5%8D%81-%E5%8F%82%E8%80%83">javaguide.cn</a></p>
+</blockquote>
+<h3><a href="#_1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%B9%E5%99%A8">#</a> 1.1 什么是容器?</h3>
+<p>容器就是将软件打包成标准化单元，以用于开发、交付和部署。
+容器镜像是轻量的、可执行的独立软件包 ，包含软件运行所需的所有内容：代码、运行时环境、系统工具、系统库和设置。</p>
+<h3><a href="#_2-2-docker-%E6%80%9D%E6%83%B3">#</a> 2.2 Docker 思想</h3>
+<ul>
+<li><strong>集装箱</strong></li>
+<li><strong>标准化：</strong> ① 运输方式 ② 存储方式 ③ API 接口</li>
+<li><strong>隔离</strong></li>
+</ul>
+<h2><a href="#%E4%B8%89-%E5%AE%B9%E5%99%A8-vs-%E8%99%9A%E6%8B%9F%E6%9C%BA">#</a> 三 容器 VS 虚拟机</h2>
+<p>容器虚拟化的是操作系统而不是硬件，容器之间是共享同一套操作系统资源的。
+虚拟机技术是虚拟出一套硬件后，在其上运行一个完整操作系统。
+因此容器的隔离级别会稍低一些。</p>
+<h3><a href="#_3-1-%E4%B8%A4%E8%80%85%E5%AF%B9%E6%AF%94%E5%9B%BE">#</a> 3.1 两者对比</h3>
+<p><strong>容器是一个应用层抽象，用于将代码和依赖资源打包在一起。</strong> <strong>多个容器可以在同一台机器上运行，共享操作系统内核，但各自作为独立的进程在用户空间中运行</strong> 。与虚拟机相比， <strong>容器占用的空间较少</strong>（容器镜像大小通常只有几十兆），<strong>瞬间就能完成启动</strong> 。</p>
+<p>虚拟机 (VM) 是一个物理硬件层抽象，用于将一台服务器变成多台服务器。** 管理程序允许多个 VM 在一台机器上运行。每个 VM 都包含一整套操作系统、一个或多个应用、必要的二进制文件和库资源，因此 <strong>占用大量空间</strong> 。而且 VM <strong>启动也十分缓慢</strong> 。</p>
+<h2><a href="#%E5%9B%9B-docker-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">#</a> 四 Docker 基本概念</h2>
+<p>**Docker 中有非常重要的三个基本概念，</p>
+<ul>
+<li><strong>镜像（Image）</strong></li>
+<li><strong>容器（Container）</strong></li>
+<li><strong>仓库（Repository）</strong></li>
+</ul>
+<p>理解了这三个概念，就理解了 Docker 的整个生命周期</p>
+<p><img src="https://oss.javaguide.cn/github/javaguide/tools/docker/docker%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.jpeg" alt="">Docker 基本概念</p>
+<h3><a href="#_4-1-%E9%95%9C%E5%83%8F-image-%E4%B8%80%E4%B8%AA%E7%89%B9%E6%AE%8A%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F">#</a> 4.1 镜像 (Image): 一个特殊的文件系统</h3>
+<p><strong>操作系统分为内核和用户空间</strong>。对于 Linux 而言，内核启动后，会挂载 root 文件系统为其提供用户空间支持。</p>
+<p>而 Docker 镜像（Image），就相当于是一个 root 文件系统。
+<strong>Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。</strong>
+镜像不包含任何动态数据，其内容在构建之后也不会被改变。</p>
+<hr>
+<p>Docker 设计时，就充分利用 <strong>Union FS</strong> 的技术，将其设计为<strong>分层存储的架构</strong> 。镜像实际是由多层文件系统联合组成。</p>
+<p><strong>镜像构建时，会一层层构建，前一层是后一层的基础。
+每一层构建完就不会再发生改变，后一层上的任何改变只发生在自己这一层。</strong></p>
+<ul>
+<li>比如，删除前一层文件的操作，实际不是真的删除前一层的文件，而是仅在当前层标记为该文件已删除。</li>
+<li>在最终容器运行的时候，虽然不会看到这个文件，但是实际上该文件会一直跟随镜像。</li>
+<li>因此，在构建镜像的时候，需要额外小心，每一层尽量只包含该层需要添加的东西，任何额外的东西应该在该层构建结束前清理掉。</li>
+</ul>
+<p>分层存储的特征还使得镜像的复用、定制变的更为容易。甚至可以用之前构建好的镜像作为基础层，然后进一步添加新的层，以定制自己所需的内容，构建新的镜像。</p>
+<h3><a href="#_4-2-%E5%AE%B9%E5%99%A8-container-%E9%95%9C%E5%83%8F%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9A%84%E5%AE%9E%E4%BD%93">#</a> 4.2 容器 (Container): 镜像运行时的实体</h3>
+<p>镜像（Image）和容器（Container）的关系，就像是面向对象程序设计中的 类 和 实例 一样，</p>
+<ul>
+<li>镜像是静态的定义，**容器是镜像运行时的实体。</li>
+<li>容器可以被创建、启动、停止、删除、暂停等**</li>
+</ul>
+<p><strong>容器的实质是进程，但与直接在宿主执行的进程不同，容器进程运行于属于自己的独立的 命名空间。前面讲过镜像使用的是分层存储，容器也是如此。</strong></p>
+<p><strong>容器存储层的生存周期和容器一样，容器消亡时，容器存储层也随之消亡。因此，任何保存于容器存储层的信息都会随容器删除而丢失。</strong></p>
+<hr>
+<p>按照 Docker 最佳实践的要求，<strong>容器不应该向其存储层内写入任何数据</strong> ，容器存储层要保持无状态化。
+<strong>所有的文件写入操作，都应该使用数据卷（Volume）、或者绑定宿主目录</strong>，在这些位置的读写会跳过容器存储层，直接对宿主 (或网络存储) 发生读写，其性能和稳定性更高。
+数据卷的生存周期独立于容器，容器消亡，数据卷不会消亡。
+因此， <strong>使用数据卷后，容器可以随意删除、重新 run ，数据却不会丢失。</strong></p>
+<h3><a href="#_4-3-%E4%BB%93%E5%BA%93-repository-%E9%9B%86%E4%B8%AD%E5%AD%98%E6%94%BE%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6%E7%9A%84%E5%9C%B0%E6%96%B9">#</a> 4.3 仓库 (Repository): 集中存放镜像文件的地方</h3>
+<p>镜像构建完成后，可以很容易的在当前宿主上运行，但是， <strong>如果需要在其它服务器上使用这个镜像，我们就需要一个集中的存储、分发镜像的服务，Docker Registry 就是这样的服务。</strong></p>
+<p>一个 Docker Registry 中可以包含多个仓库（Repository）；
+每个仓库可以包含多个标签（Tag）；
+每个标签对应一个镜像。
+所以说：<strong>镜像仓库是 Docker 用来集中存放镜像文件的地方类似于我们之前常用的代码仓库。</strong></p>
+<p>通常，<strong>一个仓库会包含同一个软件不同版本的镜像</strong>，而<strong>标签就常用于对应该软件的各个版本</strong> 我们可以通过<code>&lt;仓库名&gt;:&lt;标签&gt;</code>的格式来指定具体是这个软件哪个版本的镜像。
+如果不给出标签，将以 latest 作为默认标签.。</p>
+<hr>
+<p><strong>这里补充一下 Docker Registry 公开服务和私有 Docker Registry 的概念：</strong>
+<strong>Docker Registry 公开服务</strong> 是开放给用户使用、允许用户管理镜像的 Registry 服务。一般这类公开服务允许用户免费上传、下载公开的镜像，并可能提供收费服务供用户管理私有镜像。</p>
+<p>最常使用的 Registry 公开服务是官方的 <strong>Docker Hub</strong> ，这也是默认的 Registry，并拥有大量的高质量的官方镜像，
+除了使用公开服务外，用户还可以在 <strong>本地搭建私有 Docker Registry</strong> 。Docker 官方提供了 Docker Registry 镜像，可以直接使用做为私有 Registry 服务。开源的 Docker Registry 镜像只提供了 Docker Registry API 的服务端实现，足以支持 docker 命令，不影响使用。但不包含图形界面，以及镜像维护、用户管理、访问控制等高级功能。</p>
+<hr>
+<p>在 Docker Hub 的搜索结果中，有几项关键的信息有助于我们选择合适的镜像：</p>
+<ul>
+<li><strong>OFFICIAL Image</strong>：代表镜像为 Docker 官方提供和维护，相对来说稳定性和安全性较高。</li>
+<li><strong>Stars</strong>：和点赞差不多的意思，类似 GitHub 的 Star。</li>
+<li><strong>Downloads</strong>：代表镜像被拉取的次数，基本上能够表示镜像被使用的频度。</li>
+</ul>
+<hr>
+<p>当然，除了直接通过 Docker Hub 网站搜索镜像这种方式外，我们还可以通过 <code>docker search</code> 这个命令搜索 Docker Hub 中的镜像，搜索的结果是一致的。</p>
+<pre><code>➜  ~ docker search mysql
+NAME                              DESCRIPTION                                     STARS               OFFICIAL            AUTOMATED
+mysql                             MySQL is a widely used, open-source relation…   8763                [OK]
+mariadb                           MariaDB is a community-developed fork of MyS…   3073                [OK]
+mysql/mysql-server                Optimized MySQL Server Docker images. Create…   650                                     [OK]
+</code></pre>
+<h2><a href="#%E4%BA%94-%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4">#</a> 五 常见命令</h2>
+<h3><a href="#_5-1-%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4">#</a> 5.1 基本命令</h3>
+<pre><code>docker version # 查看docker版本
+docker images # 查看所有已下载镜像，等价于：docker image ls 命令
+docker container ls # 查看所有容器
+docker ps #查看正在运行的容器
+docker image prune # 清理临时的、没有被使用的镜像文件。-a, --all: 删除所有没有用的镜像，而不仅仅是临时文件；
+</code></pre>
+<h3><a href="#_5-2-%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F">#</a> 5.2 拉取镜像</h3>
+<pre><code>docker search mysql # 查看mysql相关镜像
+docker pull mysql:5.7 # 拉取mysql镜像
+docker image ls # 查看所有已下载镜像
+</code></pre>
+<h3><a href="#_5-3-%E5%88%A0%E9%99%A4%E9%95%9C%E5%83%8F">#</a> 5.3 删除镜像</h3>
+<p>比如我们要删除我们下载的 mysql 镜像。</p>
+<p>通过 <code>docker rmi [image]</code> （等价于<code>docker image rm [image]</code>）删除镜像之前首先要确保这个镜像没有被容器引用（可以通过标签名称或者镜像 ID 删除）。通过我们前面讲的<code>docker ps</code>命令即可查看。</p>
+<pre><code>➜  ~ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                               NAMES
+c4cd691d9f80        mysql:5.7           &quot;docker-entrypoint.s…&quot;   7 weeks ago         Up 12 days          0.0.0.0:3306-&gt;3306/tcp, 33060/tcp   mysql
+</code></pre>
+<p>可以看到 mysql 正在被 id 为 c4cd691d9f80 的容器引用，我们需要首先通过 <code>docker stop c4cd691d9f80</code> 或者 <code>docker stop mysql</code>暂停这个容器。</p>
+<p>然后查看 mysql 镜像的 id</p>
+<pre><code>➜  ~ docker images
+REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
+mysql                   5.7                 f6509bac4980        3 months ago        373MB
+</code></pre>
+<p>通过 IMAGE ID 或者 REPOSITORY 名字即可删除</p>
+<h2><a href="#%E5%85%AD-build-ship-and-run">#</a> 六 Build Ship and Run</h2>
+<p><strong>Docker 的概念以及常见命令基本上已经讲完，我们再来谈谈：Build, Ship, and Run。</strong></p>
+<ul>
+<li><strong>Build（构建镜像）</strong>：镜像就像是集装箱包括文件以及运行环境等等资源。</li>
+</ul>
+<ul>
+<li><strong>Ship（运输镜像）</strong>：主机和仓库间运输，这里的仓库就像是超级码头一样。</li>
+<li><strong>Run （运行镜像）</strong>：运行的镜像就是一个容器，容器就是运行程序的地方。</li>
+</ul>
+<p><strong>Docker 运行过程也就是去仓库把镜像拉到本地，然后用一条命令把镜像运行起来变成容器。所以，我们也常常将 Docker 称为码头工人或码头装卸工，这和 Docker 的中文翻译搬运工人如出一辙。</strong></p>
+<h2><a href="#%E4%B8%83-%E7%AE%80%E5%8D%95%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-docker-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86">#</a> 七 简单了解一下 Docker 底层原理</h2>
+<h3><a href="#_7-1-%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF">#</a> 7.1 虚拟化技术</h3>
+<p>Docker <strong>容器虚拟化</strong>技术为基础的软件，那么什么是虚拟化技术呢？</p>
+<hr>
+<p>简单点来说，虚拟化技术可以这样定义：</p>
+<p>虚拟化技术是一种资源管理技术，是将计算机的各种 [实体资源](https://zh.wikipedia.org/wiki / 資源_(計算機科學 &quot;实体资源&quot;))（<a href="https://zh.wikipedia.org/wiki/CPU" title="CPU">CPUopen in new window</a>、<a href="https://zh.wikipedia.org/wiki/%E5%86%85%E5%AD%98" title="内存">内存 open in new window</a>、<a href="https://zh.wikipedia.org/wiki/%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4" title="磁盘空间">磁盘空间 open in new window</a>、<a href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF%E9%81%A9%E9%85%8D%E5%99%A8" title="网络适配器">网络适配器 open in new window</a> 等），予以抽象、转换后呈现出来并可供分割、组合为一个或多个电脑配置环境。由此，打破实体结构间的不可切割的障碍，使用户可以比原本的配置更好的方式来应用这些电脑硬件资源。这些资源的新虚拟部分是不受现有资源的架设方式，地域或物理配置所限制。一般所指的虚拟化资源包括计算能力和数据存储。</p>
+<h3><a href="#_7-2-docker-%E5%9F%BA%E4%BA%8E-lxc-%E8%99%9A%E6%8B%9F%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF">#</a> 7.2 Docker 基于 LXC 虚拟容器技术</h3>
+<p>Docker 技术是基于 LXC（Linux container- Linux 容器）虚拟容器技术的。</p>
+<p>LXC，其名称来自 Linux 软件容器（Linux Containers）的缩写，一种操作系统层虚拟化（Operating system–level virtualization）技术，为 Linux 内核容器功能的一个用户空间接口。
+它将应用软件系统打包成一个软件容器（Container），内含应用软件本身的代码，以及所需要的操作系统核心和库。
+通过统一的名字空间和共用 API 来分配不同软件容器的可用硬件资源，创造出应用程序的独立沙箱运行环境，使得 Linux 用户可以容易的创建和管理系统或应用容器。</p>
+<hr>
+<p>LXC 技术主要是借助 Linux 内核中提供的 CGroup 功能和 namespace 来实现的，通过 LXC 可以为软件提供一个独立的操作系统运行环境。</p>
+<h4>namespace</h4>
+<p><strong>namespace 是 Linux 内核用来隔离内核资源的方式。</strong>
+通过 namespace 可以让一些进程只能看到与自己相关的一部分资源，而另外一些进程也只能看到与它们自己相关的资源，这两拨进程根本就感觉不到对方的存在。
+具体的实现方式是把一个或多个进程的相关资源指定在同一个 namespace 中。
+Linux namespaces 是对全局系统资源的一种封装隔离，使得处于不同 namespace 的进程拥有独立的全局系统资源，改变一个 namespace 中的系统资源只会影响当前 namespace 里的进程，对其他 namespace 中的进程没有影响。</p>
+<h4>CGroup</h4>
+<p>CGroup 是 Control Groups 的缩写，</p>
+<ul>
+<li>是 Linux 内核提供的一种可以限制、记录、隔离进程组 (process groups) 所使用的物力资源 (如 cpu memory i/o 等等) 的机制。**</li>
+</ul>
+<p><strong>cgroup 和 namespace 两者对比：</strong></p>
+<p>两者都是将进程进行分组，但是两者的作用还是有本质区别。namespace 是为了隔离进程组之间的资源，而 cgroup 是为了对一组进程进行统一的资源监控和限制。</p>
+
+<h1>Maven 核心概念总结 | JavaGuide(Java 面试 + 学习指南)</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://javaguide.cn/tools/maven/maven-core-concepts.html#%E5%8F%82%E8%80%83">javaguide.cn</a></p>
+</blockquote>
+<h2><a href="#maven-%E4%BB%8B%E7%BB%8D">#</a> Maven 介绍</h2>
+<p>Apache Maven 的本质是一个软件项目管理和理解工具。
+基于项目对象模型 (Project Object Model，POM) 的概念，Maven 可以从一条中心信息管理项目的构建、报告和文档。</p>
+<h3><strong>什么是 POM？</strong></h3>
+<p>每一个 Maven 工程都有一个 <code>pom.xml</code> 文件，位于根目录中，包含项目构建生命周期的详细信息。通过 <code>pom.xml</code> 文件，我们可以定义项目的坐标、项目依赖、项目信息、插件信息等等配置。</p>
+<h3>Maven作用</h3>
+<p>对于开发者来说，Maven 的主要作用主要有 3 个：</p>
+<ol>
+<li><strong>项目构建</strong>：提供标准的、跨平台的自动化项目构建方式。</li>
+<li><strong>依赖管理</strong>：方便快捷的管理项目依赖的资源（jar 包），避免资源间的版本冲突问题。</li>
+<li><strong>统一开发结构</strong>：提供标准的、统一的项目结构。</li>
+</ol>
+<h2><a href="#maven-%E5%9D%90%E6%A0%87">#</a> Maven 坐标</h2>
+<p>项目中依赖的第三方库以及插件可统称为构件。
+在 Maven 世界中，任何一个依赖、插件或者项目构建的输出，都可以称为 <strong>构件</strong> 。</p>
+<hr>
+<p>每一个构件都可以使用 Maven 坐标唯一标识，坐标元素包括：</p>
+<ul>
+<li><strong>groupId</strong>(必须): 定义了当前 Maven 项目隶属的组织或公司。</li>
+<li><strong>artifactId</strong>(必须)：定义了当前 Maven 项目的名称，项目的唯一的标识符，对应项目根目录的名称。</li>
+<li><strong>version</strong>(必须)：定义了 Maven 项目当前所处版本。</li>
+<li><strong>packaging</strong>（可选）：定义了 Maven 项目的打包方式（比如 jar，war...），默认使用 jar。</li>
+<li><strong>classifier</strong>(可选)：常用于区分从同一 POM 构建的具有不同内容的构件，可以是任意的字符串，附加在版本号之后。</li>
+</ul>
+<p>只要你提供正确的坐标，就能从 Maven 仓库中找到相应的构件供我们使用。
+举个例子（引入阿里巴巴开源的 EasyExcel）：</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+    &lt;artifactId&gt;easyexcel&lt;/artifactId&gt;
+    &lt;version&gt;3.1.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<hr>
+<p>groupId 一般分为多段，通常情况下，第一段为域，第二段为公司名称。域又分为 org、com、cn 等，其中 org 为非营利组织，com 为商业组织，cn 表示中国。以 apache 开源社区的 tomcat 项目为例，这个项目的 groupId 是 org.apache，它的域是 org（因为 tomcat 是非营利项目），公司名称是 apache，artifactId 是 tomcat。</p>
+<hr>
+<p>你可以在 <a href="https://mvnrepository.com/">https://mvnrepository.com/open in new window</a> 这个网站上找到几乎所有可用的构件，如果你的项目使用的是 Maven 作为构建工具，那这个网站你一定会经常接触。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/a85de4e7bb629e943d029451e4e6c6cf_MD5.png" />Maven 仓库</p>
+<h2><a href="#maven-%E4%BE%9D%E8%B5%96">#</a> Maven 依赖</h2>
+<p>如果使用 Maven 构建产生的构件（例如 Jar 文件）被其他的项目引用，
+那么该构件就是其他项目的依赖。</p>
+<h3><a href="#%E4%BE%9D%E8%B5%96%E9%85%8D%E7%BD%AE">#</a> 依赖配置</h3>
+<p><strong>配置信息示例</strong>：</p>
+<pre><code>&lt;project&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;&lt;/groupId&gt;
+            &lt;artifactId&gt;&lt;/artifactId&gt;
+            &lt;version&gt;&lt;/version&gt;
+            &lt;type&gt;...&lt;/type&gt;
+            &lt;scope&gt;...&lt;/scope&gt;
+            &lt;optional&gt;...&lt;/optional&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                  &lt;groupId&gt;...&lt;/groupId&gt;
+                  &lt;artifactId&gt;...&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+          &lt;/exclusions&gt;
+        &lt;/dependency&gt;
+      &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre>
+<p><strong>配置说明</strong>：</p>
+<ul>
+<li>dependencies：一个 pom.xml 文件中只能存在一个这样的标签，是用来管理依赖的总标签。</li>
+<li>dependency：包含在 dependencies 标签中，可以有多个，每一个表示项目的一个依赖。</li>
+<li>groupId,artifactId,version(必要)：依赖的基本坐标，对于任何一个依赖来说，基本坐标是最重要的，Maven 根据坐标才能找到需要的依赖。我们在上面解释过这些元素的具体意思，这里就不重复提了。</li>
+<li>type(可选)：依赖的类型，对应于项目坐标定义的 packaging。大部分情况下，该元素不必声明，其默认值是 jar。</li>
+<li>scope(可选)：依赖的范围，默认值是 compile。</li>
+<li>optional(可选)：标记依赖是否可选</li>
+<li>exclusions(可选)：用来排除传递性依赖, 例如 jar 包冲突</li>
+</ul>
+<h3><a href="#%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4">#</a> 依赖范围</h3>
+<p><strong>classpath</strong> 用于指定 <code>.class</code> 文件存放的位置，类加载器会从该路径中加载所需的 <code>.class</code> 文件到内存中。</p>
+<p>Maven 在编译、执行测试、实际运行有着三套不同的 classpath：</p>
+<ul>
+<li><strong>编译 classpath</strong>：编译主代码有效</li>
+<li><strong>测试 classpath</strong>：编译、运行测试代码有效</li>
+<li><strong>运行 classpath</strong>：项目运行时有效</li>
+</ul>
+<hr>
+<p>Maven 的依赖范围如下：</p>
+<ul>
+<li><strong>compile</strong>：编译依赖范围（默认），使用此依赖范围对于编译、测试、运行三种都有效，即在编译、测试和运行的时候都要使用该依赖 Jar 包。</li>
+<li><strong>test</strong>：测试依赖范围，从字面意思就可以知道此依赖范围只能用于测试，而在编译和运行项目时无法使用此类依赖，典型的是 JUnit，它只用于编译测试代码和运行测试代码的时候才需要。</li>
+<li><strong>provided</strong>：此依赖范围，对于编译和测试有效，而对运行时无效。比如 <code>servlet-api.jar</code> 在 Tomcat 中已经提供了，我们只需要的是编译期提供而已。</li>
+<li><strong>runtime</strong>：运行时依赖范围，对于测试和运行有效，但是在编译主代码时无效，典型的就是 JDBC 驱动实现。</li>
+<li><strong>system</strong>：系统依赖范围，使用 system 范围的依赖时必须通过 systemPath 元素显示地指定依赖文件的路径，不依赖 Maven 仓库解析，所以可能会造成建构的不可移植。</li>
+</ul>
+<h3><a href="#%E4%BC%A0%E9%80%92%E4%BE%9D%E8%B5%96%E6%80%A7">#</a> 传递依赖性</h3>
+<h3><a href="#%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81">#</a> 依赖冲突</h3>
+<p><strong>1、对于 Maven 而言，同一个 groupId 同一个 artifactId 下，只能使用一个 version。</strong></p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;in.hocg.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.48&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!-- 只会使用 1.0.49 这个版本的依赖 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;in.hocg.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-plus-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.49&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>若相同类型但版本不同的依赖存在于同一个 pom 文件，只会引入后一个声明的依赖。</p>
+<hr>
+<p><strong>2、项目的两个依赖同时引入了某个依赖。</strong></p>
+<p>举个例子，项目存在下面这样的依赖关系：</p>
+<pre><code>依赖链路一：A -&gt; B -&gt; C -&gt; X(1.0)
+依赖链路二：A -&gt; D -&gt; X(2.0)
+</code></pre>
+<p>这两条依赖路径上有两个版本的 X，为了避免依赖重复，Maven 只会选择其中的一个进行解析。</p>
+<p><strong>哪个版本的 X 会被 Maven 解析使用呢?</strong>
+Maven 在遇到这种问题的时候，会遵循 <strong>路径最短优先</strong> 和 <strong>声明顺序优先</strong> 两大原则。
+解决这个问题的过程也被称为 <strong>Maven 依赖调解</strong> 。</p>
+<hr>
+<p><strong>路径最短优先</strong></p>
+<pre><code>依赖链路一：A -&gt; B -&gt; C -&gt; X(1.0) // dist = 3
+依赖链路二：A -&gt; D -&gt; X(2.0) // dist = 2
+</code></pre>
+<p>依赖链路二的路径最短，因此，X(2.0) 会被解析使用。</p>
+<hr>
+<p>不过，你也可以发现。路径最短优先原则并不是通用的，像下面这种路径长度相等的情况就不能单单通过其解决了：</p>
+<pre><code>依赖链路一：A -&gt; B -&gt; X(1.0) // dist = 2
+依赖链路二：A -&gt; D -&gt; X(2.0) // dist = 2
+</code></pre>
+<p>因此，Maven 又定义了声明顺序优先原则。</p>
+<hr>
+<p><strong>声明顺序优先</strong></p>
+<p>在依赖路径长度相等的前提下，在 <code>pom.xml</code> 中依赖声明的顺序决定了谁会被解析使用，顺序最前的那个依赖优胜。该例中，如果 B 的依赖声明在 D 之前，那么 X (1.0) 就会被解析使用。</p>
+<pre><code>&lt;!-- A pom.xml --&gt;
+&lt;dependencies&gt;
+    ...
+    dependency B
+    ...
+    dependency D
+&lt;/dependencies&gt;
+</code></pre>
+<h3><a href="#%E6%8E%92%E9%99%A4%E4%BE%9D%E8%B5%96">#</a> 排除依赖</h3>
+<p>单纯依赖 Maven 来进行依赖调解，在很多情况下是不适用的，需要我们手动排除依赖。</p>
+<p>举个例子，当前项目存在下面这样的依赖关系：</p>
+<pre><code>依赖链路一：A -&gt; B -&gt; C -&gt; X(1.5) // dist = 3
+依赖链路二：A -&gt; D -&gt; X(1.0) // dist = 2
+</code></pre>
+<p>根据路径最短优先原则，X(1.0) 会被解析使用，也就是说实际用的是 1.0 版本的 X。
+但是：如果 D 依赖用到了 1.5 版本的 X 中才有的一个类，运行项目就会报<code>NoClassDefFoundError</code>错误。如果 D 依赖用到了 1.5 版本的 X 中才有的一个方法，运行项目就会报<code>NoSuchMethodError</code>错误。</p>
+<p><strong>如何解决呢？</strong> 我们可以通过<code>exclusion</code>标签手动将 X(1.0) 给排除。</p>
+<pre><code>&lt;dependency&gt;
+    ......
+    &lt;exclusions&gt;
+      &lt;exclusion&gt;
+        &lt;artifactId&gt;x&lt;/artifactId&gt;
+        &lt;groupId&gt;org.apache.x&lt;/groupId&gt;
+      &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>一般我们在解决依赖冲突的时候，都会优先保留版本较高的。
+这是因为大部分 jar 在升级的时候都会做到向下兼容。</p>
+<h2><a href="#maven-%E4%BB%93%E5%BA%93">#</a> Maven 仓库</h2>
+<p>Maven 仓库分为：</p>
+<ul>
+<li><strong>本地仓库</strong>：运行 Maven 的计算机上的一个目录，它缓存远程下载的构件并包含尚未发布的临时构件。<code>settings.xml</code> 文件中可以看到 Maven 的本地仓库路径配置，默认本地仓库路径是在 <code>${user.home}/.m2/repository</code>。</li>
+<li><strong>远程仓库</strong>：官方或者其他组织维护的 Maven 仓库。</li>
+</ul>
+<hr>
+<p>Maven 远程仓库可以分为：</p>
+<ul>
+<li><strong>中央仓库</strong>：这个仓库是由 Maven 社区来维护的，里面存放了绝大多数开源软件的包，并且是作为 Maven 的默认配置，不需要开发者额外配置。另外为了方便查询，还提供了一个<a href="https://search.maven.org/">查询地址 open in new window</a>，开发者可以通过这个地址更快的搜索需要构件的坐标。</li>
+<li><strong>私服</strong>：私服是一种特殊的远程 Maven 仓库，它是架设在局域网内的仓库服务，私服一般被配置为互联网远程仓库的镜像，供局域网内的 Maven 用户使用。</li>
+<li><strong>其他的公共仓库</strong>：有一些公共仓库是为了加速访问（比如阿里云 Maven 镜像仓库）或者部分构件不存在于中央仓库中。</li>
+</ul>
+<hr>
+<p>Maven 依赖包寻找顺序：</p>
+<ol>
+<li>先去本地仓库找寻，有的话，直接使用。</li>
+<li>本地仓库没有找到的话，会去远程仓库找寻，下载包到本地仓库。</li>
+<li>远程仓库没有找到的话，会报错。</li>
+</ol>
+<h2><a href="#maven-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">#</a> Maven 生命周期</h2>
+<p>Maven 的生命周期就是为了对所有的构建过程进行抽象和统一，包含了项目的清理、初始化、编译、测试、打包、集成测试、验证、部署和站点生成等几乎所有构建步骤。</p>
+<hr>
+<p>Maven 定义了 3 个生命周期<code>META-INF/plexus/components.xml</code>：</p>
+<ul>
+<li><code>default</code> 生命周期</li>
+<li><code>clean</code>生命周期</li>
+<li><code>site</code>生命周期</li>
+</ul>
+<p>这些生命周期是相互独立的，每个生命周期包含多个阶段 (phase)。
+这些阶段是有序的，也就是说，后面的阶段依赖于前面的阶段。当执行某个阶段的时候，会先执行它前面的阶段。</p>
+<h3><a href="#default-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">#</a> default 生命周期</h3>
+<p><code>default</code>生命周期是在没有任何关联插件的情况下定义的，是 Maven 的主要生命周期，用于构建应用程序，共包含 23 个阶段。</p>
+<pre><code>mvn 阶段 [阶段2] ...[阶段n]
+</code></pre>
+<p>根据前面提到的阶段间依赖关系理论，当我们执行 <code>mvn test</code>命令的时候，会执行从 validate 到 test 的所有阶段，这也就解释了为什么执行测试的时候，项目的代码能够自动编译。</p>
+<h3><a href="#clean-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">#</a> clean 生命周期</h3>
+<p>clean 生命周期的目的是清理项目，共包含 3 个阶段：</p>
+<ol>
+<li>pre-clean</li>
+<li>clean</li>
+<li>post-clean</li>
+</ol>
+<p>根据前面提到的阶段间依赖关系理论，当我们执行 <code>mvn clean</code> 的时候，会执行 clean 生命周期中的 pre-clean 和 clean 阶段。</p>
+<h3><a href="#site-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">#</a> site 生命周期</h3>
+<p>site 生命周期的目的是建立和发布项目站点，共包含 4 个阶段：</p>
+<ol>
+<li>pre-site</li>
+<li>site</li>
+<li>post-site</li>
+<li>site-deploy</li>
+</ol>
+<pre><code>&lt;phases&gt;
+  &lt;!--  执行一些需要在clean之前完成的工作 --&gt;
+  &lt;phase&gt;pre-clean&lt;/phase&gt;
+  &lt;!--  移除所有上一次构建生成的文件 --&gt;
+  &lt;phase&gt;clean&lt;/phase&gt;
+  &lt;!--  执行一些需要在clean之后立刻完成的工作 --&gt;
+  &lt;phase&gt;post-clean&lt;/phase&gt;
+&lt;/phases&gt;
+&lt;default-phases&gt;
+  &lt;clean&gt;
+    org.apache.maven.plugins:maven-clean-plugin:2.5:clean
+  &lt;/clean&gt;
+&lt;/default-phases&gt;
+</code></pre>
+<p>Maven 能够基于 <code>pom.xml</code> 所包含的信息，自动生成一个友好的站点，方便团队交流和发布项目信息。</p>
+<h2><a href="#maven-%E6%8F%92%E4%BB%B6">#</a> Maven 插件</h2>
+<p>Maven 本质上是一个插件执行框架，所有的执行过程，都是由一个一个插件独立完成的
+像咱们日常使用到的 install、clean、deploy 等命令，其实底层都是一个一个的 Maven 插件。</p>
+<p>本地默认插件路径: <code>${user.home}/.m2/repository/org/apache/maven/plugins</code>
+除了 Maven 自带的插件之外，还有一些三方提供的插件比如单测覆盖率插件 jacoco-maven-plugin、帮助开发检测代码中不合规范的地方的插件 maven-checkstyle-plugin、分析代码质量的 sonar-maven-plugin。</p>
+<hr>
+<p>我们还可以自定义插件来满足自己的需求。
+jacoco-maven-plugin 使用示例：</p>
+<pre><code>&lt;phases&gt;
+  &lt;!--  执行一些需要在生成站点文档之前完成的工作 --&gt;
+  &lt;phase&gt;pre-site&lt;/phase&gt;
+  &lt;!--  生成项目的站点文档作 --&gt;
+  &lt;phase&gt;site&lt;/phase&gt;
+  &lt;!--  执行一些需要在生成站点文档之后完成的工作，并且为部署做准备 --&gt;
+  &lt;phase&gt;post-site&lt;/phase&gt;
+  &lt;!--  将生成的站点文档部署到特定的服务器上 --&gt;
+  &lt;phase&gt;site-deploy&lt;/phase&gt;
+&lt;/phases&gt;
+&lt;default-phases&gt;
+  &lt;site&gt;
+    org.apache.maven.plugins:maven-site-plugin:3.3:site
+  &lt;/site&gt;
+  &lt;site-deploy&gt;
+    org.apache.maven.plugins:maven-site-plugin:3.3:deploy
+  &lt;/site-deploy&gt;
+&lt;/default-phases&gt;
+</code></pre>
+<p>你可以将 Maven 插件理解为一组任务的集合，用户可以通过命令行直接运行指定插件的任务，也可以将插件任务挂载到构建生命周期，随着生命周期运行。</p>
+<hr>
+<p>Maven 插件被分为下面两种类型：</p>
+<ul>
+<li><strong>Build plugins</strong>：在构建时执行。</li>
+<li><strong>Reporting plugins</strong>：在网站生成过程中执行。</li>
+</ul>
+<h2><a href="#maven-%E5%A4%9A%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86">#</a> Maven 多模块管理</h2>
+<p>多模块管理简单地来说就是将一个项目分为多个模块，每个模块只负责单一的功能实现。
+直观的表现就是一个 Maven 项目中不止有一个 <code>pom.xml</code> 文件，会在不同的目录中有多个 <code>pom.xml</code> 文件，进而实现多模块管理。</p>
+<hr>
+<p>多模块管理除了可以更加便于项目开发和管理，还有如下好处：</p>
+<ol>
+<li>降低代码之间的耦合性（从类级别的耦合提升到 jar 包级别的耦合）；</li>
+<li>减少重复，提升复用性；</li>
+<li>每个模块都可以是自解释的（通过模块名或者模块文档）；</li>
+<li>模块还规范了代码边界的划分，开发者很容易通过模块确定自己所负责的内容。</li>
+</ol>
+<hr>
+<p>多模块管理下，会有一个父模块，其他的都是子模块。父模块通常只有一个 <code>pom.xml</code>，没有其他内容。父模块的 <code>pom.xml</code> 一般只定义了各个依赖的版本号、包含哪些子模块以及插件有哪些。不过，要注意的是，如果依赖只在某个子项目中使用，则可以在子项目的 pom.xml 中直接引入，防止父 pom 的过于臃肿。</p>
+<p>如下图所示，Dubbo 项目就被分成了多个子模块比如 dubbo-common（公共逻辑模块）、dubbo-remoting（远程通讯模块）、dubbo-rpc（远程调用模块）。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/82dd3de8910deddd6c66811e6cea4c1f_MD5.png" /></p>
+
+<h1>Next.js 13 的 app 目录模式功能梳理</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7221162775074734135?searchId=20230910171525B89B6BC2330D9E475D5C">juejin.cn</a></p>
+</blockquote>
+<h2>Next.js app 目录模式的功能梳理</h2>
+<p>在梳理 Next.js 13 新目录模式之前，先来简单梳理一下旧的目录模式几个痛点：</p>
+<ol>
+<li>pages 目录的 js 文件全都会当成页面文件，导致组件不能写在 pages 目录下，使用起来不符合大部分人的代码组织习惯</li>
+<li>几个入门级的 api ，比如 getInitialProps/getServerSideProps/getStaticProps 等等方法的使用并不是那么简单，不去深入了解渲染模式，对于 Next.js 初学者来说，不容易理解。</li>
+<li>服务端渲染和客户端渲染的代码有时候耦合会太深，有时候不好分清楚代码是在服务端渲染时执行的还是在客户端渲染时执行的，也容易出现一些错误，导致页面首次渲染时出现 hydrate 异常</li>
+</ol>
+<p>Next.js app 目录模式相对于<a href="https://juejin.cn/post/7206261082452639802/#heading-1" title="https://juejin.cn/post/7206261082452639802/#heading-1">旧模式的功能列表</a>说明：
+3.  智能文件路由系统：app 目录模式完全解决了痛点 1 描述的问题，组件不能写在 pages 目录下。且极大的增强了代码的组织能力。
+4.  多种渲染模式来保证页面性能体验：使用更加简单的方式让开发者来进行数据请求，且提供了数据缓存方式，以便于更方便的实现多种渲染模式，解决痛点 2 和 3 描述的问题，且带来了更好的客户端性能（尽量减少客户端需要加载的 JS 资源）。</p>
+<h2>智能文件路由系统</h2>
+<p>app 模式主要从以下三个方面来扩展和调整文件路由系统：</p>
+<ul>
+<li>约定页面相关内容</li>
+<li>平行路由和插槽功能</li>
+<li>约定 web api 路由实现</li>
+<li><code>拦截路由</code> 的功能路由定义方式，
+<ul>
+<li>经过测试感觉这个暂时还有一些问题，本篇文章暂不涉及。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>当前默认还是 pages 模式，可在配置中开启 app 模式：</p>
+<pre><code>// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    appDir: true
+  }
+}
+
+module.exports = nextConfig
+</code></pre>
+<h3>约定页面相关内容</h3>
+<p>指约定一个页面需要有一个单独的目录，目录下约定以下文件：</p>
+<p>重要</p>
+<ul>
+<li><code>page.js</code>
+<ul>
+<li>有 page.js 才能表明该约定文件路由是一个页面</li>
+<li>页面组件（<code>app/page.js</code>代表路由为 <code>/</code> 的页面，其实就类似于取代 <code>index.js</code>）</li>
+</ul>
+</li>
+<li><code>layout.js</code> - 布局组件，切换路由时保留状态，不重新渲染。</li>
+<li><code>template.js</code> - 模版组件，和 <code>layout</code> 类似，但切换路由时会重新渲染，不保留状态。</li>
+</ul>
+<p>辅助</p>
+<ul>
+<li><code>loading.js</code> - 加载组件，就是使用 <code>Suspense</code> 组件包裹 <code>Page</code> 组件，在 <code>Page</code> 组件渲染返回内容之前显示加载组件。</li>
+<li><code>error.js</code> - 错误文件，页面渲染异常的时候显示的组件。</li>
+<li><code>not-found.js</code> - 页面 404 组件，只在 <code>app</code> 目录下第一级目录生效，存在时只有根 layout 生效。</li>
+</ul>
+<p>除了 <code>not-found.js</code> ，其他的约定组件则对 app 下所有目录生效。</p>
+<p>这些将在合适的时机按照一定顺序组合显示到页面上，比如下面这样一个目录结构：</p>
+<pre><code>app
+├── features
+│   ├── metadata
+│   │   └── page.tsx
+│   ├── layout.tsx
+│   ├── template.tsx
+│   ├── loading.tsx
+│   └── error.tsx
+├── page.tsx
+├── layout.tsx
+├── template.tsx
+├── loading.tsx
+├── error.tsx
+└── not-found.tsx
+</code></pre>
+<p>路由为 <code>/features/metadata</code> 页面的代码结构：</p>
+<pre><code>&lt;Layout&gt;
+    &lt;Template&gt;
+        &lt;ErrorBoundary fallback={&lt;Error /&gt;}&gt;
+            &lt;Suspense fallback={&lt;Loading /&gt;}&gt;
+                &lt;Layout&gt;
+                    &lt;Template&gt;
+                        &lt;ErrorBoundary fallback={&lt;Error /&gt;}&gt;
+                            &lt;Suspense fallback={&lt;Loading /&gt;}&gt;
+                                &lt;Page /&gt;
+                            &lt;/Suspense&gt;
+                        &lt;/ErrorBoundary&gt;
+                    &lt;/Template&gt;
+                &lt;/Layout&gt;
+            &lt;/Suspense&gt;
+        &lt;/ErrorBoundary&gt;
+    &lt;/Template&gt;
+&lt;/Layout&gt;
+</code></pre>
+<hr>
+<p>路由为 <code>/</code> 页面会组合成这样的代码结构：</p>
+<pre><code>&lt;Layout&gt;
+    &lt;Template&gt;
+        &lt;ErrorBoundary fallback={&lt;Error /&gt;}&gt;
+            &lt;Suspense fallback={&lt;Loading /&gt;}&gt;
+                &lt;Page /&gt;
+            &lt;/Suspense&gt;
+        &lt;/ErrorBoundary&gt;
+    &lt;/Template&gt;
+&lt;/Layout&gt;
+</code></pre>
+<hr>
+<p>如果访问不存在的路由，则代码结构为：</p>
+<pre><code>&lt;Layout&gt;
+    &lt;NotFound /&gt;
+&lt;/Layout&gt;
+</code></pre>
+<h3>平行路由和插槽功能</h3>
+<p>多个平行的路由可以在同一个页面当成组件来显示，提升代码的组织能力。
+使用方式为：使用 <code>@</code> 开头的目录名下面的文件，将会自动注入到 <code>Layout</code> 组件的 props 中。
+（@userInfo =&gt; 注入为  props 中的unserInfo参数）
+<code>children</code> 也是一个插槽，<code>/dashboard/page.tsx</code> 代指的就是 props里面的 <code>children</code></p>
+<p>其实也就是把路由当成组件来组织，如果你喜欢这种模式，那么可以这样使用，
+如果不喜欢，也可以自己单独写成组件，这样算是新增了一种规范，且省略了不少 <code>import</code> 代码。
+注意点，插槽里面不能有自己的 layout 组件或者其他组件，但插槽内部的页面是可以有的。</p>
+<hr>
+<p>比如有一个数据面板页面，页面分为了两个模块：用户数据模块、性能数据模块
+（注意，插槽里面不能有自己的 layout 组件或者其他组件，但插槽内部的页面可以有）</p>
+<pre><code>app
+├── dashboard
+│   ├── @userInfo  // 用户行为数据模块
+│   │   ├── devices  // 用户设备信息
+│   │   │   └── page.tsx
+│   │   ├── locations  // 用户地理位置分布
+│   │   │   └── page.tsx
+│   │   ├── default.tsx
+│   │   └── page.tsx
+│   ├── @performance  // 性能数据模块
+│   │   ├── app  // app 性能数据
+│   │   │   └── page.tsx
+│   │   ├── web  // web性能数据
+│   │   │   └── page.tsx
+│   │   ├── default.tsx
+│   │   ├── page.tsx
+│   │   └── default.tsx
+│   └── layout.tsx
+├── page.tsx
+└── layout.tsx
+</code></pre>
+<p><code>app/dashboard/layout.tsx</code> 代码：</p>
+<pre><code>import Link from &quot;next/link&quot;;
+
+export default function Layout({ children, userInfo, performance }: any) {
+  return (
+    &lt;&gt;
+      {children}
+      &lt;h2&gt;用户行为数据&lt;/h2&gt;
+      {/* 导航 */}
+      &lt;div&gt;
+        &lt;Link href={&quot;/dashboard/devices&quot;}&gt;设备信息 &lt;/Link&gt;
+        &lt;Link href={&quot;/dashboard/locations&quot;}&gt;地理位置&lt;/Link&gt;
+      &lt;/div&gt;
+      &lt;div class&gt;{userInfo}&lt;/div&gt;
+      &lt;br /&gt;
+      &lt;h2&gt;性能数据&lt;/h2&gt;
+      {/* 导航 */}
+      &lt;div&gt;
+        &lt;Link href={&quot;/dashboard/app&quot;}&gt;app 性能数据&lt;/Link&gt;
+        &lt;Link href={&quot;/dashboard/web&quot;}&gt;web 性能数据&lt;/Link&gt;
+      &lt;/div&gt;
+      &lt;div class&gt;{performance}&lt;/div&gt;
+    &lt;/&gt;
+  );
+}
+</code></pre>
+<hr>
+<p>从上面的代码可以看出来，路由是忽略插槽的，
+也就是 <code>app/dashboard/@performance/app</code> 路由为：<code>/dashboard/app</code>。</p>
+<p>因此两个插槽内部的目录名需要不一样，否则切换同一个路由的时候另外一个也会变化，但如果想同步切换的话，特意写成一样也算是一种运用方式。</p>
+<hr>
+<p>但这种插槽方式有一些问题，</p>
+<p>都是使用路由进行定位显示的组件，并行多个插槽会导致切换到某个插槽路由的后，如果刷新页面，那么只会定位到一个插槽的位置，其他路由的插槽会定位不到而导致整个页面显示 404。</p>
+<p>比如在页面先后点击了 <code>设备信息</code> 和 <code>app 性能数据</code> ，
+页面会同时显示 <code>/dashboard/page.tsx</code> 、 <code>/dashboard/@performance/devices/page.tsx</code> 和 <code>/dashboard/@userInfo/app/page.tsx</code> 的内容。</p>
+<p>但刷新后，因为这时路由是 <code>/dashboard/app</code> ，因此只会显示 <code>/dashboard/@userInfo/app/page.tsx</code> 的内容，这时就是 <code>default.tsx</code> 发挥作用的时候了</p>
+<hr>
+<h3>约定 web api 路由实现</h3>
+<p>约定 <code>route.js</code> 为 api 文件，和 <code>page</code> 类似，
+即 <code>app/test/api/user/route.js</code> 代表的 web 接口为 <code>/test/api/user</code>，</p>
+<ul>
+<li>可以定义 GET 、POST、PUT、PATCH、DELETE、HEAD 和 OPTIONS 请求方式。</li>
+<li>如果调用了未定义的请求方式，则返回 405，表示不支持该请求方式。</li>
+</ul>
+<hr>
+<p><code>route.js</code>写法如下：</p>
+<pre><code>import { NextResponse, type NextRequest } from 'next/server';
+
+export async function GET(req: NextRequest, { params }: { params: Record&lt;string, string | string | undefined[]&gt; }) {
+  const res = await fetch('https://data.mongodb-api.com/...', {
+    headers: {
+      'Content-Type': 'application/json',
+      'API-Key': process.env.DATA_API_KEY,
+    },
+  });
+  const data = await res.json();
+
+  return NextResponse.json({ data })
+}
+
+export async function POST(req: NextRequest, { params }: { params: Record&lt;string, string | string | undefined[]&gt; }) {
+  // ...
+  return NextResponse.json({
+      // ...
+  })
+}
+</code></pre>
+<hr>
+<p><code>route.js</code> 和 <code>page.js</code> 冲突，当有 <code>page.js</code> 时，<code>route.js</code> 就不会生效。
+注意这里的 <code>web api</code> 路由和之前的 <code>pages/api</code> 是不一样的定义，虽然有些相似，但差别还是挺大的，如果使用了 <code>web api</code> 路由，则尽量不用再使用 <code>pages/api</code>，不过当前 <code>pages/api</code> 路由还没有支持 <code>revalidate</code> 下发指令的功能，后续也许会支持。</p>
+<p>还有其他疑问可以去官方查看文档： <a href="https://link.juejin.cn?target=https%3A%2F%2Fbeta.nextjs.org%2Fdocs%2Frouting%2Froute-handlers" title="https://beta.nextjs.org/docs/routing/route-handlers">Route Handlers</a></p>
+<h2>多种渲染模式来保证页面性能体验</h2>
+<p>app 模式来处理渲染模式会比 pages 目录模式简单很多，主要是因为新的模式对 js 代码的管理方式进行了变更：</p>
+<blockquote>
+<p>默认的 js 文件都只会运行在服务端，不会出现在客户端，如果需要在客户端进行交互的组件，那么需要在 <code>js</code> 文件最顶部添加 <code>&quot;use client&quot;</code> 来标识，表明代码需要在客户端运行，这时候这部分代码才会出现在客户端。</p>
+</blockquote>
+<p>也就是代码默认只在服务端</p>
+<hr>
+<ul>
+<li>
+<p>SSG：页面默认就是 SSG</p>
+</li>
+<li>
+<p>CSR：在使用 <code>&quot;use client&quot;</code> 的客户端组件中进行请求数据，也是基于 SSG，然后在客户端 hydrate 后进行请求数据更新页面内容。</p>
+</li>
+<li>
+<p>SSR：服务端组件声明为异步组件，也就是 async 函数组件，且数据请求关闭缓存，</p>
+<ul>
+<li>也就是 fetch 请求时第二个参数中的 cache 字段设置为 <code>no-store</code> 、 <code>no-cache</code> 或者 设置<code>revalidate</code> 为 <code>0</code> 的时候，才会是动态服务端渲染。</li>
+</ul>
+</li>
+<li>
+<p>ISR：在请求中设置 <code>revalidate</code> ，或者在 <code>page.js</code> 中设置 <code>revalidate</code> :<code>export revalidate = 60</code> 60 秒进行增量静态化，</p>
+<ul>
+<li>也可以继续使用 <code>pages/api/revalidate</code> 的指令方式，需要注意还是需要写在 <code>pages</code> 目录。</li>
+</ul>
+</li>
+</ul>
+<p>其实 app 模式中不再需要根据一些默认导出函数来决定函数的渲染方式，但也需要注意页面到底使用的是哪种渲染模式，才能对整个应用的页面的性能有一定的把控。</p>
+
+<h1>[手把手系列之]Docker 部署 vue 项目</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903837774397447?searchId=202309121410453BA3E28C284DBAA99323">juejin.cn</a></p>
+</blockquote>
+<h2>Docker 部署 vue 项目具体步骤</h2>
+<blockquote>
+<ol>
+<li>用 vue cli 创建一个 vue 项目，</li>
+<li>基于 nginx docker 镜像构建成一个前端工程镜像，</li>
+<li>基于前端工程镜像，启动一个容器 vuenginxcontainer。</li>
+<li>启动基于 node 镜像的容器 nodewebserver，提供后端接口。</li>
+<li>修改 vuenginxcontainer 的 nginx 配置，使前端页面的接口请求转发到 nodewebserver 上。</li>
+</ol>
+</blockquote>
+<hr>
+<p>docker 镜像名称由 REPOSITORY 和 TAG 组成 <code>[REPOSITORY[:TAG]]</code>，TAG 默认为 latest</p>
+<hr>
+<p>Docker 容器 Container： 镜像运行时的实体。镜像（Image）和容器（Container）的关系，就像是面向对象程序设计中的类和实例一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等 。</p>
+<h4>构建 vue 项目</h4>
+<p>build完之后工程根目录下多出一个<code>dist</code>文件夹。
+如果将该 dist 目录整个传到服务器上，部署成静态资源站点就能直接访问到该项目。
+接下来就来构建一个这样的静态资源站点。</p>
+<h3>4 构建 vue 应用镜像</h3>
+<p>我们选用 nginx 镜像作为基础来构建我们的 vue 应用镜像。
+获取 nginx 镜像docker pull nginx
+在项目根目录下创建<code>nginx</code>文件夹，新建文件<code>default.conf</code>
+该配置文件定义了首页的指向为 <code>/usr/share/nginx/html/index.html</code>, 所以我们可以一会把构建出来的 index.html 文件和相关的静态资源放到<code>/usr/share/nginx/html</code>目录下。
+接着准备 Docker 创建</p>
+<h4>4.1创建 Dockerfile 文件</h4>
+<pre><code>FROM nginx
+COPY dist/ /usr/share/nginx/html/
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+</code></pre>
+<blockquote>
+<ul>
+<li><code>FROM nginx</code> 命令的意思该镜像是基于 nginx:latest 镜像而构建的。</li>
+<li><code>COPY dist/ /usr/share/nginx/html/</code> 命令的意思是将项目根目录下 dist 文件夹下的所有文件复制到镜像中 /usr/share/nginx/html/ 目录下。</li>
+<li><code>COPY nginx/default.conf /etc/nginx/conf.d/default.conf</code> 命令的意思是将 nginx 目录下的 default.conf 复制到 etc/nginx/conf.d/default.conf，用本地的 default.conf 配置来替换 nginx 镜像里的默认配置。</li>
+</ul>
+</blockquote>
+<h4>4.4 基于该 Dockerfile 构建 vue 应用镜像</h4>
+<p>运行命令（注意不要少了最后的 “.” ）
+docker build -t vuenginxcontainer .</p>
+<ul>
+<li><code>-t</code> 是给镜像命名</li>
+<li><code>.</code> 是基于当前目录的 Dockerfile 来构建镜像
+此时我们的<code>vue</code>应用镜像 vuenginxcontainer 已经成功创建。</li>
+</ul>
+<h4>4.5 基于镜像启动 vue app 容器</h4>
+<p>基于 vuenginxcontainer 镜像启动容器，运行命令：</p>
+<pre><code>docker run \
+-p 3000:80 \
+-d --name vueApp \
+vuenginxcontainer
+</code></pre>
+<blockquote>
+<ul>
+<li><code>docker run</code> 基于镜像启动一个容器</li>
+<li><code>-p 3000:80</code> 端口映射，将宿主的 3000 端口映射到容器的 80 端口</li>
+<li><code>-d</code> 后台方式运行</li>
+<li><code>--name</code> 容器名 查看 docker 进程</li>
+</ul>
+</blockquote>
+<h3>5 接口服务</h3>
+<blockquote>
+<p>再部署一个 node 的容器来提供接口服务</p>
+</blockquote>
+<h4>5.1 express 服务</h4>
+<p>用 node web 框架 <code>express</code> 来写一个服务，注册一个返回 json 数据格式的路由 server.js:
+运行该 <code>express</code> 应用需要 <code>node</code> 环境，我们基于 <code>node</code> 镜像来构建一个新镜像</p>
+<ul>
+<li>首先获取 <code>node</code> 镜像    docker pull node</li>
+<li>然后编写 Dockerfile 将 <code>express</code> 应用 <code>docker</code> 化</li>
+<li>然后构建 nodewebserver 镜像</li>
+<li>最后启动对应的容器</li>
+</ul>
+<h3>编写 Dockerfile 将 <code>express</code> 应用 <code>docker</code> 化</h3>
+<pre><code>FROM node
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 8080
+CMD [ &quot;npm&quot;, &quot;start&quot; ]
+</code></pre>
+<p>（最后把本机的 5000 映射到这里的 8080 -p 5000:8080）
+构建镜像的时候 node_modules 的依赖直接通过 <code>RUN npm install</code> 来安装，项目中创建一个 <code>.dockerignore</code>文件来忽略一些直接跳过的文件：</p>
+<pre><code>node_modules
+npm-debug.log
+</code></pre>
+<h3>6. 跨域转发</h3>
+<p>想要将 vueApp 容器 上的请求转发到 nodeserver 容器上。</p>
+<ul>
+<li>Nginx 配置 location 指向 node 服务 default.conf</li>
+<li>添加一条重写规则，将 /api/{path} 转到目标服务的 /{path} 接口上。 在前面的 nginx/default.conf 文件中加入：</li>
+</ul>
+<pre><code>location /api/ {
+  rewrite  /api/(.*)  /$1  break;
+  proxy_pass http://172.17.0.2:8080;
+}
+</code></pre>
+<p>修改完了之后意识到一个问题：vueApp 容器是基于 vuenginxcontainer 这个镜像运行的，而在一开始构建镜像的时候是将 nginx 配置 default.conf 直接构建进去了。
+因此如果需要修改 default.conf 还得再重新构建一个新的镜像，再基于新镜像来运行新的容器。</p>
+<h3>7. 改进</h3>
+<p>能不能每次修改配置文件后直接重启容器就能让新配置生效，答案当然是有。
+在构建镜像的时候不把 Nginx 配置复制到镜像中，而是直接挂载到宿主机上，每次修改配置后，直接重启容器即可。</p>
+<ul>
+<li>把 vueclidemo 项目下的 Dockerfile 修改一下</li>
+</ul>
+<pre><code>FROM nginx
+COPY dist/  /usr/share/nginx/html/
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+</code></pre>
+<p>将<code>COPY nginx/default.conf /etc/nginx/conf.d/default.conf</code>命令删除，nginx 配置都通过挂载命令挂载在宿主机上。
+<code>COPY dist/ /usr/share/nginx/html/</code> 命令也可以删除，可以使用挂载的方式来启动容器。</p>
+<p>之后直接基于 nginx 镜像来启动容器 vuenginxnew ，运行命令：</p>
+<pre><code>docker run \
+-p 3000:80 \
+-d --name vuenginxnew \
+--mount type=bind,source=$HOME/SelfWork/docker/vueclidemo/nginx,target=/etc/nginx/conf.d \
+--mount type=bind,source=$HOME/SelfWork/docker/vueclidemo/dist,target=/usr/share/nginx/html \
+nginx
+</code></pre>
+<blockquote>
+<ul>
+<li><code>--mount type=bind,source={sourceDir},target={targetDir}</code> 将宿主机的 sourceDir 挂载到容器的 targetDir 目录上。</li>
+<li>此处运行的命令较长，如果每次重新输入难免麻烦，我们可以将完整的命令保存到一个<code>shell</code>文件 <code>vueapp.sh</code> 中，然后直接执行 <code>sh vueapp.sh</code>。</li>
+</ul>
+</blockquote>
+<h4>7.3 配置负载均衡</h4>
+<p>后端服务一般都是双机或者多机以确保服务的稳定性。
+我们可以再启动一个后端服务容器，并修改<code>nginx</code>的配置 来优化资源利用率，最大化吞吐量，减少延迟，确保容错配置。</p>
+<p>新启动一个容器，查看到 新容器的 IP (172.17.0.3)
+修改一下 <code>nginx/default.conf</code>（新增 upstream ，修改 location /api/ 中的 proxy_pass）:</p>
+<pre><code>upstream backend {
+      server 172.17.0.2:8080;
+      server 172.17.0.3:8080;
+  }
+
+  ……
+
+  location /api/ {
+      rewrite  /api/(.*)  /$1  break;
+      proxy_pass backend;
+  }
+</code></pre>
+
+<h1>组合设计模式</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/composite?_gl=1*6nnpyq*_ga*MTI1NjIzNzY1Ni4xNjkzODA5NTY2*_ga_SR8Y3GYQYC*MTY5Mzg5NjQ1Mi40LjEuMTY5Mzg5Njk2Ny42MC4wLjA.">refactoringguru.cn</a></p>
+</blockquote>
+<h2>问题</h2>
+<p>例如， 你有两类对象： ​ <code>产品</code>和 <code>盒子</code> 。 一个盒子中可以包含多个 <code>产品</code>或者几个较小的 <code>盒子</code> 。 这些小 <code>盒子</code>中同样可以包含一些 <code>产品</code>或更小的 <code>盒子</code> ， 以此类推。</p>
+<p>假设你希望在这些类的基础上开发一个定购系统。 订单中可以包含无包装的简单产品， 也可以包含装满产品的盒子…… 以及其他盒子。 此时你会如何计算每张订单的总价格呢？</p>
+<h2>解决方案</h2>
+<p>组合模式建议使用一个通用接口来与 <code>产品</code>和 <code>盒子</code>进行交互， 并且在该接口中声明一个计算总价的方法。</p>
+<p>那么方法该如何设计呢？</p>
+<ul>
+<li>对于一个产品， 该方法直接返回其价格；</li>
+<li>对于一个盒子， 该方法遍历盒子中的所有项目， 询问每个项目的价格， 然后返回该盒子的总价格。
+如果其中某个项目是小一号的盒子， 那么当前盒子也会遍历其中的所有项目， 以此类推</li>
+</ul>
+<p><img src="https://refactoringguru.cn/images/patterns/content/composite/composite-comic-1-zh.png?id=845971cd0cc64fb0f3e303f393a9102c" alt=""></p>
+<hr>
+<p>组合模式以递归方式处理对象树中的所有项目
+该方式的最大优点在于你无需了解构成树状结构的对象的具体类。 你也无需了解对象是简单的产品还是复杂的盒子。 你只需调用通用接口以相同的方式对其进行处理即可。 当你调用该方法后， 对象会将请求沿着树结构传递下去。</p>
+<h2>组合模式结构</h2>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/composite/structure-zh-indexed.png?id=0fc4960b564ebffa57284eade9141f1a" alt=""></p>
+<ol>
+<li><strong>组件</strong> （Component） 接口描述了树中简单项目和复杂项目所共有的操作。</li>
+<li><strong>叶节点</strong> （Leaf） 是树的基本结构， 它不包含子项目。
+一般情况下， 叶节点最终会完成大部分的实际工作， 因为它们无法将工作指派给其他部分。</li>
+<li><strong>容器</strong> （Container）——又名 “组合 （Composite）”——是包含叶节点或其他容器等子项目的单位。
+<ul>
+<li>容器不知道其子项目所属的具体类， 它只通过通用的组件接口与其子项目交互。</li>
+<li>容器接收到请求后会将工作分配给自己的子项目， 处理中间结果， 然后将最终结果返回给客户端。</li>
+<li>在该类中， 创建一个数组成员变量来存储对于其子元素的引用。 该数组必须能够同时保存叶节点和容器， 因此请确保将其声明为组合接口类型。</li>
+</ul>
+</li>
+</ol>
+<h2>伪代码</h2>
+<pre><code>// 组件接口会声明组合中简单和复杂对象的通用操作。
+interface Graphic is
+    method move(x, y)
+    method draw()
+
+class Dot implements Graphic is
+    field x, y
+    constructor Dot(x, y) { …… }
+    method move(x, y) is
+    method draw() is
+        // 在坐标位置(X,Y)处绘制一个点。
+
+class CompoundGraphic implements Graphic is
+    field children: array of Graphic
+    // 组合会以特定的方式执行其主要逻辑。它会递归遍历所有子项目，并收集和
+    // 汇总其结果。由于组合的子项目也会将调用传递给自己的子项目，以此类推，
+    // 最后组合将会完成整个对象树的遍历工作。
+    method draw() is
+        // 1. 对于每个子部件：
+        //     - 绘制该部件。
+        //     - 更新边框坐标。
+        // 2. 根据边框坐标绘制一个虚线长方形。
+
+
+// 客户端代码会通过基础接口与所有组件进行交互。这样一来，客户端代码便可同
+// 时支持简单叶节点组件和复杂组件。
+class ImageEditor is
+    field all: CompoundGraphic
+    method groupSelected(components: array of Graphic) is
+        group = new CompoundGraphic()
+        foreach (component in components) do
+            group.add(component)
+            all.remove(component)
+        all.add(group)
+        // 所有组件都将被绘制。
+        all.draw()
+</code></pre>
+<h2>组合模式适合应用场景</h2>
+<p>如果你需要实现树状对象结构， 可以使用组合模式。</p>
+<p>组合模式为你提供了两种共享公共接口的基本元素类型： 简单叶节点和复杂容器。 容器中可以包含叶节点和其他容器。 这使得你可以构建树状嵌套递归对象结构。</p>
+<p>如果你希望客户端代码以相同方式处理简单和复杂元素， 可以使用该模式。
+组合模式中定义的所有元素共用同一个接口。 在这一接口的帮助下， 客户端不必在意其所使用的对象的具体类。</p>
+<h2>实现方式</h2>
+<p>在容器中定义添加和删除子元素的方法。</p>
+<ul>
+<li>记住， 这些操作可在组件接口中声明。 这将会违反_接口隔离原则_， 因为叶节点类中的这些方法为空。 但是， 这可以让客户端无差别地访问所有元素， 即使是组成树状结构的元素。</li>
+</ul>
+<h2>组合模式优缺点</h2>
+<ul>
+<li>
+<p>你可以利用多态和递归机制更方便地使用复杂树结构。</p>
+</li>
+<li>
+<p><em>开闭原则</em>。 无需更改现有代码， 你就可以在应用中添加新元素， 使其成为对象树的一部分。</p>
+</li>
+<li>
+<p>对于功能差异较大的类， 提供公共接口或许会有困难。 在特定情况下， 你需要过度一般化组件接口， 使其变得令人难以理解。</p>
+</li>
+</ul>
+<h2>与其他模式的关系</h2>
+<ul>
+<li><a href="/design-patterns/bridge">桥接模式</a>、 <a href="/design-patterns/state">状态模式</a>和<a href="/design-patterns/strategy">策略模式</a> （在某种程度上包括<a href="/design-patterns/adapter">适配器模式</a>） 模式的接口非常相似。 实际上， 它们都基于<a href="/design-patterns/composite">组合模式</a>——即将工作委派给其他对象， 不过也各自解决了不同的问题。 模式并不只是以特定方式组织代码的配方， 你还可以使用它们来和其他开发者讨论模式所解决的问题。</li>
+</ul>
+<hr>
+<ul>
+<li>你可以在创建复杂<a href="/design-patterns/composite">组合</a>树时使用<a href="/design-patterns/builder">生成器模式</a>， 因为这可使其构造步骤以递归的方式运行。</li>
+<li><a href="/design-patterns/chain-of-responsibility">责任链模式</a>通常和<a href="/design-patterns/composite">组合模式</a>结合使用。 在这种情况下， 叶组件接收到请求后， 可以将请求沿包含全体父组件的链一直传递至对象树的底部。</li>
+</ul>

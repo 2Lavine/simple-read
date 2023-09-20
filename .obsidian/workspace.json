@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "4a60aee044d0c217",
+        "id": "7fa128f45eb39f7b",
         "type": "tabs",
         "children": [
           {
-            "id": "6d32667255ac56b8",
+            "id": "bf26adbbe4778309",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "md/工厂模式和抽象工厂模式的区别.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -38,7 +34,7 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "byCreatedTime"
+                "sortOrder": "byCreatedTimeReverse"
               }
             }
           },
@@ -62,9 +58,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "md/工厂模式和抽象工厂模式的区别.md"
-              }
+              "state": {}
             }
           },
           {
@@ -95,7 +89,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/工厂模式和抽象工厂模式的区别.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +105,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/工厂模式和抽象工厂模式的区别.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -165,54 +157,54 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "bf26adbbe4778309",
   "lastOpenFiles": [
-    "GE/xingce2000/06第六部分  资料分析考点强化.md",
-    "GE/xingce2000/07第七部分 数量关系.md",
-    "GE/xingce2000/10第四节 排列组合.md",
-    "GE/xingce2000/04第四部分 定义判断考点强化.md",
-    "GE/xingce2000/01第一部分  言语理解与表达考点强化.md",
-    "GE/xingce2000/02第二部分  图形推理考点强化.md",
-    "GE/xingce2000/03第三部分 逻辑判断考点强化.md",
-    "done/组合设计模式.md",
-    "md/工厂模式和抽象工厂模式的区别.md",
-    "md/桥接设计模式.md",
-    "done/Next.js 13 的 app 目录模式功能梳理.md",
+    "md/Next.js 性能优化之 ISR 渲染入门和原理探索.md",
+    "md/Next.js 了解篇｜一文带你梳理清楚 Next.js 的功能.md",
+    "md/Nginx 从入门到实践，万字详解！.md",
+    "md/2023-09-19.md",
     "md/Next.js 项目最佳实践.md",
     "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
-    "done/5 分钟带你快速了解 Docker 和 k8s.md",
-    "_resources/317bc494b6a2222db8a1536ff17c6897_MD5.webp",
-    "cur useless/Docker 实战 | JavaGuide(Java 面试 + 学习指南).md",
-    "done/Docker 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
-    "done/Maven 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
-    "_resources/82dd3de8910deddd6c66811e6cea4c1f_MD5.png",
-    "_resources/a85de4e7bb629e943d029451e4e6c6cf_MD5.png",
+    "md/工厂模式和抽象工厂模式的区别.md",
+    "_resources/7d88bd330cba4e2ea59f2bddc90cf448_MD5.jpg",
+    "_resources/9aebc44684798eeac84797bf7735a8e8_MD5.jpg",
+    "_resources/317bc494b6a2222db8a1536ff17c6897_MD5.jpg",
+    "_resources/66bf38626fdcab7b295ea23babefbcde_MD5.jpg",
+    "_resources/56b0ee19c978fc3fe4ed49bb2fa49eaf_MD5.jpg",
+    "_resources/26c3579d7881400a1033e19cf7c9df01_MD5.jpg",
+    "output/2023-9-17 22-51-25.html",
+    "achieve/组合设计模式.md",
+    "achieve/[手把手系列之]Docker 部署 vue 项目.md",
+    "achieve/Next.js 13 的 app 目录模式功能梳理.md",
+    "achieve/Maven 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
+    "achieve/Docker 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
+    "achieve/5 分钟带你快速了解 Docker 和 k8s.md",
+    "achieve/2023-09-15.md",
+    "achieve/2023-09-14.md",
+    "done/组合设计模式.md",
     "done/[手把手系列之]Docker 部署 vue 项目.md",
-    "cur useless/傻逼都能学会的撸 mod 大法 — Greta.md",
-    "cur useless/最详细的 K8S 学习笔记总结（2021 最新版）.md",
-    "cur useless/低能量自救指南：浅谈心力、脑力、体力的作用机制.md",
+    "done/Next.js 13 的 app 目录模式功能梳理.md",
+    "done/Maven 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
+    "done/Docker 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
+    "done/5 分钟带你快速了解 Docker 和 k8s.md",
     "done/2023-09-15.md",
-    "achieve/2023-09-13.md",
     "done/2023-09-14.md",
-    "done",
-    "md/README.md",
-    "_resources/Pasted image 20230914140323.png",
-    "output/2023-9-14 08-59-22.html",
-    "achieve/装饰器模式.md",
-    "_resources/66bf38626fdcab7b295ea23babefbcde_MD5.webp",
-    "_resources/26c3579d7881400a1033e19cf7c9df01_MD5.webp",
-    "_resources/56b0ee19c978fc3fe4ed49bb2fa49eaf_MD5.webp",
     "_resources/9aebc44684798eeac84797bf7735a8e8_MD5.webp",
     "_resources/7d88bd330cba4e2ea59f2bddc90cf448_MD5.webp",
-    "output/2023-9-11 21-18-10.html",
+    "_resources/66bf38626fdcab7b295ea23babefbcde_MD5.webp",
+    "_resources/56b0ee19c978fc3fe4ed49bb2fa49eaf_MD5.webp",
+    "output/2023-9-17 22-46-11.html",
+    "output/2023-9-17 22-38-55.html",
+    "output/2023-9-17 22-38-43.html",
+    "output/2023-9-17 22-38-35.html",
+    "output/2023-9-17 22-37-17.html",
+    "output/2023-9-17 22-34-48.html",
+    "output/2023-9-17 22-25-19.html",
+    "md/理解前端基础渲染模式｜CSR、SSR、同构、静态化.md",
+    "md/前端想要了解的 Nginx.md",
+    "md/作为一名前端，该如何理解 Nginx？.md",
     "done",
-    "_resources/fe59fae96e866d4784a0c27c879f7bc9_MD5.jpg",
-    "node_modules/sharp/build/Release/sharp-darwin-x64.node",
-    "node_modules/sharp/build/Release",
-    "node_modules/sharp/build",
-    "node_modules/sharp/vendor/8.14.4/darwin-x64/versions.json",
-    "node_modules/sharp/vendor/8.14.4/darwin-x64/platform.json",
-    "node_modules/sharp/vendor/8.14.4/darwin-x64/lib/libvips-cpp.42.dylib",
+    "output/2023-9-14 08-59-22.html",
     "未命名.canvas"
   ]
 }
