@@ -5,7 +5,9 @@
   "main": "merge-achieve.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "merge": "node merge-achieve.js"
+    "merge": "node merge-achieve.js ",
+    "convert": "node webp2jpg.js",
+    "all": "node merge-achieve.js && node webp2jpg.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const sharp = require("sharp");
 const options = {
   // \\Mac\Home\Downloads
   baseURL: "file://Mac/Home/myGitHubMac/simple-read/_resources/",
@@ -9,6 +10,7 @@ const obsidianImages = require("markdown-it-obsidian-images")(options);
 const md = require("markdown-it")({ html: true }).use(obsidianImages);
 const directoryPath = "./done"; // 替换为目标目录的路径
 const acheievePath = "./achieve";
+const resourcesPath = "./_resources"; // 替换为目标目录的路径
 const now = new Date()
   .toLocaleString("zh-CN", {
     year: "numeric",
@@ -52,7 +54,15 @@ function readDirectory(readPath) {
       // 如果是最外层的目录，则将所有 main-content 元素内容写入输出文件中
       output.sort((a, b) => (a.filePath < b.filePath ? -1 : 1));
       const result = output.map((item) => item.content);
-      fs.writeFileSync(outputFilePath, result.join("\n"));
+      // fs.writeFileSync(outputFilePath, result.join("\n"));
+      const fileContent = result.join("\n");
+      // replace _resources/_resources/ to _resources/
+      // replace .webp to .jpg
+
+      const newFileContent = fileContent
+        .replace(/_resources\/_resources\//g, "_resources/")
+        .replace(/.webp/g, ".jpg");
+      fs.writeFileSync(outputFilePath, newFileContent);
     }
   });
 }
