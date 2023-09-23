@@ -1,6 +1,5 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7270907826557009974?searchId=202309192239579E013D75689F6D3568F9)
 
-> 通过 Prisma、Postgresql 和 NextAuth 的全栈创建博客应用程序，了解如何使用 Next.js 13 和应用程序目录结构。
 
 [Next.js](https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2F "https://nextjs.org/") 是一个强大而灵活的框架，可用于构建各种各样的 Web 应用程序，从小型个人项目到大型企业应用程序。
 

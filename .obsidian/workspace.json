@@ -11,8 +11,12 @@
             "id": "bf26adbbe4778309",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "md/Spring Cloud Security：Oauth2 使用入门.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -44,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "static",
+                "query": "Authorisatio",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -58,7 +62,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "md/Spring Cloud Security：Oauth2 使用入门.md"
+              }
             }
           },
           {
@@ -89,6 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "md/Spring Cloud Security：Oauth2 使用入门.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,6 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "md/Spring Cloud Security：Oauth2 使用入门.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -139,7 +147,8 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -159,28 +168,27 @@
   },
   "active": "bf26adbbe4778309",
   "lastOpenFiles": [
-    "md/Next.js 性能优化之 ISR 渲染入门和原理探索.md",
-    "md/Next.js 了解篇｜一文带你梳理清楚 Next.js 的功能.md",
-    "md/Nginx 从入门到实践，万字详解！.md",
-    "md/2023-09-19.md",
-    "md/Next.js 项目最佳实践.md",
-    "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
-    "md/工厂模式和抽象工厂模式的区别.md",
-    "_resources/7d88bd330cba4e2ea59f2bddc90cf448_MD5.jpg",
-    "_resources/9aebc44684798eeac84797bf7735a8e8_MD5.jpg",
-    "_resources/317bc494b6a2222db8a1536ff17c6897_MD5.jpg",
-    "_resources/66bf38626fdcab7b295ea23babefbcde_MD5.jpg",
-    "_resources/56b0ee19c978fc3fe4ed49bb2fa49eaf_MD5.jpg",
-    "_resources/26c3579d7881400a1033e19cf7c9df01_MD5.jpg",
-    "output/2023-9-17 22-51-25.html",
-    "achieve/组合设计模式.md",
-    "achieve/[手把手系列之]Docker 部署 vue 项目.md",
-    "achieve/Next.js 13 的 app 目录模式功能梳理.md",
-    "achieve/Maven 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
-    "achieve/Docker 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
-    "achieve/5 分钟带你快速了解 Docker 和 k8s.md",
-    "achieve/2023-09-15.md",
-    "achieve/2023-09-14.md",
+    "md/从 Next-Auth 到 Prisma，用最新潮的技术栈做登录.md",
+    "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
+    "done/傻傻分不清之 Cookie、Session、Token、JWT.md",
+    "_resources/69847f3e3385d9ba54cf13f20cada2ff_MD5.webp",
+    "_resources/154bc3e8831a1d8207abbf0cdb826dfc_MD5.webp",
+    "_resources/01a013ef78f676342db3ce6f3a9691bf_MD5.webp",
+    "_resources/17736ff7070d2fef06ea445f3d22efd3_MD5.webp",
+    "cur useless/不要用 JWT 替代 session 管理（上）：全面了解 Token,JWT,OAuth,SAML,SSO.md",
+    "done/浅谈 SAML, OAuth, OpenID 和 SSO, JWT 和 Session.md",
+    "done/看完这篇 Session、Cookie、Token，和面试官扯皮就没问题了.md",
+    "done/前端鉴权的兄弟们：cookie、session、token、jwt、单点登录.md",
+    "_resources/ae2f41b7a513bc4171b2023776cf9a2d_MD5.webp",
+    "_resources/604764803f7a8270fe245c9f55f1fee6_MD5.webp",
+    "_resources/d82f3cb65b8f12593689a3bc0283a543_MD5.webp",
+    "_resources/743f5b869fb0e88d2c51ec15574f1b8c_MD5.webp",
+    "_resources/b58d04f6674cc1dd3c5be737c6758979_MD5.webp",
+    "_resources/29dd099936829f99cc71d9a0f526a0bc_MD5.webp",
+    "done/2023-09-19.md",
+    "done/桥接设计模式.md",
+    "done",
+    "md/Spring Cloud Security：Oauth2 使用入门.md",
     "done/组合设计模式.md",
     "done/[手把手系列之]Docker 部署 vue 项目.md",
     "done/Next.js 13 的 app 目录模式功能梳理.md",
@@ -189,10 +197,14 @@
     "done/5 分钟带你快速了解 Docker 和 k8s.md",
     "done/2023-09-15.md",
     "done/2023-09-14.md",
-    "_resources/9aebc44684798eeac84797bf7735a8e8_MD5.webp",
-    "_resources/7d88bd330cba4e2ea59f2bddc90cf448_MD5.webp",
-    "_resources/66bf38626fdcab7b295ea23babefbcde_MD5.webp",
-    "_resources/56b0ee19c978fc3fe4ed49bb2fa49eaf_MD5.webp",
+    "md/Next.js 性能优化之 ISR 渲染入门和原理探索.md",
+    "md/Next.js 了解篇｜一文带你梳理清楚 Next.js 的功能.md",
+    "md/Nginx 从入门到实践，万字详解！.md",
+    "md/Next.js 项目最佳实践.md",
+    "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+    "md/工厂模式和抽象工厂模式的区别.md",
+    "output/2023-9-17 22-51-25.html",
+    "achieve/组合设计模式.md",
     "output/2023-9-17 22-46-11.html",
     "output/2023-9-17 22-38-55.html",
     "output/2023-9-17 22-38-43.html",
@@ -200,11 +212,7 @@
     "output/2023-9-17 22-37-17.html",
     "output/2023-9-17 22-34-48.html",
     "output/2023-9-17 22-25-19.html",
-    "md/理解前端基础渲染模式｜CSR、SSR、同构、静态化.md",
-    "md/前端想要了解的 Nginx.md",
-    "md/作为一名前端，该如何理解 Nginx？.md",
     "done",
-    "output/2023-9-14 08-59-22.html",
     "未命名.canvas"
   ]
 }
