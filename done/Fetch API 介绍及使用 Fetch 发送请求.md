@@ -10,7 +10,9 @@ Fetch API
 
 Fetch 规范与 jQuery.ajax() 主要有三种方式的不同：
 
-*   当接收到一个代表错误的 HTTP 状态码， 即使响应的 HTTP 状态码是 404 或 500。从 `fetch()` 返回的 Promise ** 不会被标记为 reject，** 相反，会标记为 resolve （但是会把 resolve 的返回值的 `ok` 属性设置为 false ），**仅当网络故障时或请求被阻止时，才会标记为 reject**。
+*   当接收到一个代表错误的 HTTP 状态码， 即使响应的 HTTP 状态码是 404 或 500。从 `fetch()` 返回的 Promise 不会被标记为 reject，
+* 相反，会标记为 resolve （但是会把 resolve 的返回值的 `ok` 属性设置为 false ），**仅当网络故障时或请求被阻止时，才会标记为 reject**。
+
 *   `fetch()` 可以接收跨域 cookies；也可以使用 `fetch()` 建立起跨域会话。
 *   `fetch` 不会发送 cookies。除非你使用了 _credentials_ 的[初始化选项](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FWindowOrWorkerGlobalScope%2Ffetch%23Parameters "https://developer.mozilla.org/zh-CN/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters")
 
@@ -53,7 +55,9 @@ fetch('https://www.easy-mock.com/mock/5f507e38a758c95f67d6eb42/fetch/postmsg',{
 Fetch()
 =======
 
-用于发起获取资源的请求。它返回一个 promise，这个 promise 会在请求响应后被 resolve，并传回 Response 对象。当遇到网络错误时，[`fetch()`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FWorkerOrGlobalScope%2Ffetch "https://developer.mozilla.org/zh-CN/docs/Web/API/WorkerOrGlobalScope/fetch") 返回的 promise 会被 reject，并传回 [`TypeError`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FJavaScript%2FReference%2FGlobal_Objects%2FTypeError "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypeError")。成功的 fetch() 检查不仅要包括 promise 被 resolve，还要包括 [`Response.ok`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FResponse%2Fok "https://developer.mozilla.org/zh-CN/docs/Web/API/Response/ok") 属性为 true。HTTP 404 状态并不被认为是网络错误。
+用于发起获取资源的请求。它返回一个 promise，这个 promise 会在请求响应后被 resolve，并传回 Response 对象。当遇到网络错误时，[`fetch()`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FWorkerOrGlobalScope%2Ffetch "https://developer.mozilla.org/zh-CN/docs/Web/API/WorkerOrGlobalScope/fetch") 返回的 promise 会被 reject，并传回 [`TypeError`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FJavaScript%2FReference%2FGlobal_Objects%2FTypeError "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypeError")。
+
+成功的 fetch() 检查不仅要包括 promise 被 resolve，还要包括 [`Response.ok`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FResponse%2Fok "https://developer.mozilla.org/zh-CN/docs/Web/API/Response/ok") 属性为 true。HTTP 404 状态并不被认为是网络错误。
 
 语法
 --
@@ -62,46 +66,11 @@ Fetch()
 fetch(input,{init});
 ```
 
-参数
---
-
 `input`——定义要获取的资源，可以是：
-
 *   一个 [`USVString`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FUSVString "https://developer.mozilla.org/zh-CN/docs/Web/API/USVString") 字符串，包含要获取资源的 URL。
 *   一个 [`Request`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FRequest "https://developer.mozilla.org/zh-CN/docs/Web/API/Request") 对象。
 
-`init`—— 可选 | 一个配置项对象，包括所有对请求的设置。可选的参数有：
-
-```
-var myInit={
-    //请求的 body 信息 //如：Blob、BufferSource、FormData、URLSearchParams 或者 USVString 对象
-    body: JSON.stringify(data), //这里必须匹配 'Content-Type' //注意 GET 或 HEAD 方法的请求不能包含 body 信息。 
-   
-    //请求的 cache 模式。//如：default, no-cache, reload, force-cache, only-if-cached
-    cache: 'no-cache', 	 
-    
-    //请求的 credentials。//包括：omit、same-origin，include
-    credentials: 'same-origin',  
-      
-    //请求的头信息
-    headers: {	
-      'user-agent': 'Mozilla/4.0 MDN Example',
-      'content-type': 'application/json'
-    },
-      
-    //请求使用的方法  //如：GET, POST, PUT, DELETE等
-    method: 'POST', 
-    
-    //请求的模式	 //如 cors、 no-cors 或者 same-origin。
-    mode: 'cors', 
-      
-    //重定向模式 //如 follow|自动重定向, error|如果产生重定向将自动终止并且抛出一个错误, manual|手动处理重定向
-    redirect: 'follow', 
-    
-    //USVString  //如 no-referrer、client或一个 URL。默认是 client
-    referrer: 'no-referrer',
-}
-```
+`init`—— 可选 | 一个配置项对象，包括所有对请求的设置。可选的参数有：body,method,headers,cache
 
 发送带凭据的请求
 --------
@@ -224,7 +193,6 @@ fetch(myRequest).then(function(response) {
 > 与 xml 不同的是，Fetch 可以很容易地被其他技术使用，例如 [`Service Workers`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FServiceWorker_API "https://developer.mozilla.org/zh-CN/docs/Web/API/ServiceWorker_API")。它还提供了专门的逻辑空间来定义其他与 HTTP 相关的概念，例如 CORS 和 HTTP 的扩展。Fetch 提供了对 [`Request`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FRequest "https://developer.mozilla.org/zh-CN/docs/Web/API/Request") 和 [`Response`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FResponse "https://developer.mozilla.org/zh-CN/docs/Web/API/Response") （以及其他与网络请求有关的）对象的通用定义，使之应用于更多场景。
 
 下面是 Fetch API 的三个接口：Headers、Rquest、Response：
-
 1.Headers
 ---------
 
@@ -333,7 +301,6 @@ Body
 **`Body`** [mixin](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FGlossary%2FMixin "https://developer.mozilla.org/zh-CN/docs/Glossary/Mixin") 提供了与 response/request 中的 body 有关的方法，可以定义它的内容形式以及处理方式。
 
 Body 定义了以下方法（这些方法都被 [`Request`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FRequest "https://developer.mozilla.org/zh-CN/docs/Web/API/Request") 和 [`Response`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FResponse "https://developer.mozilla.org/zh-CN/docs/Web/API/Response")所实现）以获取 body 内容。这些方法都会返回一个被解析后的 [`Promise`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FPromise "https://developer.mozilla.org/zh-CN/docs/Web/API/Promise")对象和数据
-
 *   [`arrayBuffer()`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FBody%2FarrayBuffer "https://developer.mozilla.org/zh-CN/docs/Web/API/Body/arrayBuffer")
 *   [`blob()`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FBody%2Fblob "https://developer.mozilla.org/zh-CN/docs/Web/API/Body/blob")
 *   [`json()`](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FBody%2Fjson "https://developer.mozilla.org/zh-CN/docs/Web/API/Body/json")

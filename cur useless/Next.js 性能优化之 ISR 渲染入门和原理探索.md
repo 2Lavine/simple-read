@@ -1,41 +1,23 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7199812069050171452)
 
-> **开启掘金成长之旅！这是我参与「掘金日新计划 · 2 月更文挑战」的第 12 天，[点击查看活动详情](https://juejin.cn/post/7194721470063312933 "https://juejin.cn/post/7194721470063312933")**
-
-前言
---
-
-术语说明：
-
-*   `SSR` —— 服务端渲染
-*   `SSG` —— 静态生成
-*   `ISR` —— 增量静态化
-*   `Date Fetch` 函数 —— 本文特指服务端数据获取的几种函数 `getStaticProps` 、 `getServerSideProps` 、 `getInitialProps` 、 `getStaticPaths` 。
-
-`Next.js` 中最突出的莫过于它的渲染模式，之前写过一篇文章 [《Next.js 之前端渲染模式》](https://juejin.cn/post/7160279477690466335 "https://juejin.cn/post/7160279477690466335") 中分别介绍和对比了几种渲染模式的优劣势，而且其中的 `ISR` 在大部分的业务页面中能起到很关键性的性能优化作用。
-
-最近在使用 `ISR` 功能的时候遇到了一些问题，本篇文章将分享如何更好的去使用 `ISR`，以及在使用的过程中可能会遇到的一些问题和解决方法，其中会涉及到一些原理的探索。
-
 为何要使用 `ISR` ？
 -------------
-
 先分享一下为何要使用 `ISR` ，可能有人还不是很理解这个 `ISR` 是什么。
+Next.JS 项目打包时，使用 `getStaticProps` 或者不使用 `Date Fetch` 函数的页面会默认 [`静态化`](https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fbasic-features%2Fpages%23static-generation "https://nextjs.org/docs/basic-features/pages#static-generation") ，也就是会生成`[pageName].html` 的 html 文件，用户访问就后 Next 服务直接读取此 html 文件，不再去动态渲染内容，也就减少了接口的请求，
 
-Next.JS 项目打包时，使用 `getStaticProps` 或者不使用 `Date Fetch` 函数的页面会默认 [`静态化`](https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fbasic-features%2Fpages%23static-generation "https://nextjs.org/docs/basic-features/pages#static-generation") ，也就是会生成`[pageName].html` 的 html 文件，用户访问就后 Next 服务直接读取此 html 文件，不再去动态渲染内容，也就减少了接口的请求，因此，相比 `SSR` 渲染模式，能极大的减少页面访问时间（大部分页面在正常网速能控制在 1s 内显示）和降低服务器的压力。
+因此，相比 `SSR` 渲染模式，能极大的减少页面访问时间（大部分页面在正常网速能控制在 1s 内显示）和降低服务器的压力。
 
+
+---
 使用 `getStaticProps` 的静态化页面会导致了一个问题，接口内容更新后，用户访问页面获取到的信息并不会更新，因此需要一种可以在服务运行中动态去触发 SSG 生成的 html 的能力，于是就出现了 `ISR`，让 `SSG` 也能拥有增量更新的能力。
 
-使用和功能验证
+增量静态化
 -------
-
 增量静态化一般有两种使用方式：`定时更新` 和 `指令更新`。
-
-写了一个 [demo](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fhutaod%2Ftest-next13 "https://github.com/hutaod/test-next13") 工程，可以去自己 clone 下来尝试，下面会也会详细介绍 demo 实现的主要过程和用里面的 3 个 demo 示例的运行结果来检验一些理论。
 
 ### ISR —— 定时更新
 
 新建页面：
-
 ```
 // src/pages/isr/demo1/index.js
 const Demo1 = ({ times }) => {
@@ -62,33 +44,21 @@ export async function getStaticProps() {
 ```
 
 开发环境 `静态化` 表现和 `ssr` 一样，因此，需要需要打包后运行才能看出效果，运行 build 命令：
-
 ```
 # 构建打包
 pnpm build
 ```
 
-构建过程中会打印 `1` 这时候可以看一下构建产物：
+构建过程中会打印 `1` 
+`.next/server/pages/isr` 目录下已经生成了一个 demo1 的 html 文件，注意这时候 `times` 为 `1` 。
+`pnpm start` 启动工程后访问 demo1 页面,vscode 的控制台打印输出为`1`（build 和 start 都会重新初始化 times），这时候会触发构建;
 
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9edaf95ae3994242a9e07368932f22c6~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
+构建完成之后，再次访问会发现跟首次访问一样的，上面显示的刷新次数还是 `1` ，但是 vscode 的控制台印输出为`2` ，这是因为访问的时候是去构建新的页面，仍然返回上一次构建成功的页面内容，并不会返回当前正在构建的内容。
 
-构建产物 `.next/server/pages/isr` 目录下已经生成了一个 demo1 的 html 文件，注意这时候 `times` 为 `1` 。
-
-`pnpm start` 启动工程后访问 [demo1 页面](https://link.juejin.cn?target=%25E9%25A1%25B5%25E9%259D%25A2 "%E9%A1%B5%E9%9D%A2")：
-
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/301aa8b523d8469ba9f7bac6f934c6a4~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
-vscode 的控制台打印输出为`1`（build 和 start 都会重新初始化 times），这时候会触发构建;
-
-构建完成之后，再次访问会发现跟首次访问一样的，上面显示的刷新次数还是 `1` ，但是 vscode 的控制台印输出为`2` ，这是因为访问的时候是去构建新的页面，仍然返回上一次构建成功的页面内容，并不会返回当前正在构建的内容。以后每次访问时，控制台打印的数字都会比正在显示的大。
-
-上面的这种现象也能说明官方文档上阐述的一个结论：
-
-> When a request is made to a page that was pre-rendered at build time, it will initially show the cached page 当发出请求让页面进行构建时，它会先返回缓存页面。
+以后每次访问时，控制台打印的数字都会比正在显示的大。
+上面的这种现象也能说明官方文档上阐述的一个结论：当发出请求让页面进行构建时，它会先返回缓存页面。
 
 ### ISR —— 指令更新
-
-我们新建一个 `demo2` 页面，复制 `demo1` 即可，然后去除 `getStaticProps` 函数返回的 `revalidate` 字段：
 
 ```
 // src/pages/isr/demo2/index.js

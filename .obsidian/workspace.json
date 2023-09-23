@@ -13,13 +13,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/Spring Cloud Security：Oauth2 使用入门.md",
+                "file": "done/Nginx 从入门到实践，万字详解！.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "02cbd6a50aeed5d8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -48,7 +61,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "Authorisatio",
+                "query": "抽象工厂",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -63,7 +76,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/Spring Cloud Security：Oauth2 使用入门.md"
+                "file": "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md"
               }
             }
           },
@@ -95,7 +108,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/Spring Cloud Security：Oauth2 使用入门.md",
+                "file": "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +125,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/Spring Cloud Security：Oauth2 使用入门.md",
+                "file": "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -166,45 +179,46 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "bf26adbbe4778309",
+  "active": "02cbd6a50aeed5d8",
   "lastOpenFiles": [
-    "md/从 Next-Auth 到 Prisma，用最新潮的技术栈做登录.md",
+    "md/深入浅出 Fetch API.md",
+    "md/fetch 简介: 新一代 Ajax API.md",
+    "md/TS 的. d.ts 和 declare 用法.md",
+    "done/2023-09-23.md",
+    "done/Fetch API 介绍及使用 Fetch 发送请求.md",
+    "md/Response.md",
+    "done/从 Next-Auth 到 Prisma，用最新潮的技术栈做登录.md",
+    "done/Spring Cloud Security：Oauth2 使用入门.md",
+    "_resources/007566fb35630e11791d64dcf8ef57ae_MD5.webp",
+    "_resources/74f9325a16683011dbd1e3943b11ff98_MD5.webp",
+    "_resources/e67864b5f07ec9d0e6d225d2b29b1603_MD5.webp",
+    "_resources/bc2ca13fb19768371ea7cdb0f3cda77e_MD5.webp",
+    "_resources/77f9b81aa3eb4856bf177171e4ab06fe_MD5.webp",
+    "_resources/44d37f861a0ffcc5a77f5c5ce4cf96cf_MD5.webp",
+    "_resources/05c7a9114fc12aee3830e0063ac0837d_MD5.webp",
+    "_resources/558718033798315134e2a322621666b7_MD5.webp",
+    "_resources/4c7066b8d24405e1664b71a465ee4f7d_MD5.webp",
+    "cur useless/whisper 字幕.md",
+    "cur useless/Zeabur CLI 从设计到实现 - 飞鸟记.md",
+    "cur useless/使用 next.js 完成从开发到部署.md",
+    "cur useless/Next.js 项目最佳实践.md",
+    "cur useless/工厂方法设计模式.md",
+    "cur useless/低能量自救指南：浅谈心力、脑力、体力的作用机制.md",
+    "cur useless/Docker 实战 | JavaGuide(Java 面试 + 学习指南).md",
+    "cur useless/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
+    "done/工厂模式和抽象工厂模式的区别.md",
+    "achieve/抽象工厂设计模式.md",
+    "done/Nginx 从入门到实践，万字详解！.md",
+    "done/理解前端基础渲染模式｜CSR、SSR、同构、静态化.md",
+    "done/前端想要了解的 Nginx.md",
+    "_resources/d10f79a61dd5e20c3beba2c18bfa6080_MD5.webp",
+    "done/作为一名前端，该如何理解 Nginx？.md",
+    "cur useless/Next.js 性能优化之 ISR 渲染入门和原理探索.md",
+    "cur useless/百万级数据 excel 导出功能如何实现？.md",
+    "done/Next.js 了解篇｜一文带你梳理清楚 Next.js 的功能.md",
     "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
-    "done/傻傻分不清之 Cookie、Session、Token、JWT.md",
-    "_resources/69847f3e3385d9ba54cf13f20cada2ff_MD5.webp",
-    "_resources/154bc3e8831a1d8207abbf0cdb826dfc_MD5.webp",
-    "_resources/01a013ef78f676342db3ce6f3a9691bf_MD5.webp",
-    "_resources/17736ff7070d2fef06ea445f3d22efd3_MD5.webp",
-    "cur useless/不要用 JWT 替代 session 管理（上）：全面了解 Token,JWT,OAuth,SAML,SSO.md",
-    "done/浅谈 SAML, OAuth, OpenID 和 SSO, JWT 和 Session.md",
-    "done/看完这篇 Session、Cookie、Token，和面试官扯皮就没问题了.md",
-    "done/前端鉴权的兄弟们：cookie、session、token、jwt、单点登录.md",
-    "_resources/ae2f41b7a513bc4171b2023776cf9a2d_MD5.webp",
-    "_resources/604764803f7a8270fe245c9f55f1fee6_MD5.webp",
-    "_resources/d82f3cb65b8f12593689a3bc0283a543_MD5.webp",
-    "_resources/743f5b869fb0e88d2c51ec15574f1b8c_MD5.webp",
-    "_resources/b58d04f6674cc1dd3c5be737c6758979_MD5.webp",
-    "_resources/29dd099936829f99cc71d9a0f526a0bc_MD5.webp",
-    "done/2023-09-19.md",
-    "done/桥接设计模式.md",
     "done",
-    "md/Spring Cloud Security：Oauth2 使用入门.md",
-    "done/组合设计模式.md",
-    "done/[手把手系列之]Docker 部署 vue 项目.md",
-    "done/Next.js 13 的 app 目录模式功能梳理.md",
-    "done/Maven 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
-    "done/Docker 核心概念总结 | JavaGuide(Java 面试 + 学习指南).md",
-    "done/5 分钟带你快速了解 Docker 和 k8s.md",
-    "done/2023-09-15.md",
-    "done/2023-09-14.md",
-    "md/Next.js 性能优化之 ISR 渲染入门和原理探索.md",
-    "md/Next.js 了解篇｜一文带你梳理清楚 Next.js 的功能.md",
-    "md/Nginx 从入门到实践，万字详解！.md",
-    "md/Next.js 项目最佳实践.md",
-    "md/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
-    "md/工厂模式和抽象工厂模式的区别.md",
     "output/2023-9-17 22-51-25.html",
-    "achieve/组合设计模式.md",
     "output/2023-9-17 22-46-11.html",
     "output/2023-9-17 22-38-55.html",
     "output/2023-9-17 22-38-43.html",

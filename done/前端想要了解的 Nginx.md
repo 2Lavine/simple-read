@@ -1,18 +1,8 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844903816521842702)
 
-> Nginx 是一个高性能的 HTTP 和反向代理服务器，同时也是一个 IMAP/POP3/SMTP 代理服务器。
-
-常见场景：
-
-*   静态资源服务器
-*   动态匹配
-*   反向代理
-*   Gzip 压缩
-*   负载均衡
-
 #### 先来看下默认的 Nginx 配置，我将以此为基础依次介绍 Nginx 的用法
 
-> Nginx 安装目录下的`nginx.conf`就是 Nginx 全局的配置文件，我们主要修改这里的内容。`nginx.conf.default`作为配置文件的备份。
+Nginx 安装目录下的`nginx.conf`就是 Nginx 全局的配置文件，我们主要修改这里的内容。`nginx.conf.default`作为配置文件的备份。
 
 ```
 # 设置工作进程的数量
@@ -126,7 +116,7 @@ location ~* \.(js|css|png|jpg|gif)$ {
 
 `~* \.(js|css|png|jpg|gif)$` 是匹配以相关文件类型然后单独处理。 `add_header` 是给请求的响应加上一个头信息`Cache-Control no-store`，告知浏览器禁用缓存，每次都从服务器获取 效果如下：
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/8/169fc1a508ab1aba~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
+![[../_resources/858f0c50a23c88eb7188c4035569909a_MD5.webp]]
 
 #### 匹配规则
 
@@ -154,12 +144,12 @@ location ~* \.(gif|jpg|jpeg)$ {
 }
 ```
 
-*   `=` 表示精确匹配。只有请求的 url 路径与后面的字符串完全相等时，才会命中（优先级最高）。
+*   = 表示精确匹配。只有请求的 url 路径与后面的字符串完全相等时，才会命中（优先级最高）。
 *   `^~` 表示如果该符号后面的字符是最佳匹配，采用该规则，不再进行后续的查找。
 *   `~` 表示该规则是使用正则定义的，区分大小写。
 *   `~*` 表示该规则是使用正则定义的，不区分大小写。
 
-#### 当然我们还可以通过状态码来过滤请求就像这样
+#### 通过状态码来过滤请求就像这样
 
 ```
 # 通过状态码，返回指定的错误页面
@@ -201,12 +191,9 @@ location /api {
 配置 Gzip
 -------
 
-> 开发过程中难免用到一些成熟的框架，或者插件，这些外部的依赖，有时候体积比较大，导致页面响应缓慢，我们可以用打包工具 (webpack, rollup)，将代码进行压缩，以缩小代码体积。 开启 Nginx Gzip 压缩功能。需要注意的是 Gzip 压缩功能需要浏览器跟服务器都支持，即服务器压缩，浏览器解析。
+开发过程中难免用到一些成熟的框架，或者插件，这些外部的依赖，有时候体积比较大，导致页面响应缓慢，我们可以用打包工具 (webpack, rollup)，将代码进行压缩，以缩小代码体积。 开启 Nginx Gzip 压缩功能。
 
-*   查看浏览器支持情况，确定 _请求头_ 中的`Accept-Encoding`字段
-
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/11/16a0a18ea2c217b7~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
-
+需要注意的是 Gzip 压缩功能需要浏览器跟服务器都支持，即服务器压缩，浏览器解析。
 *   确定浏览器支持，我们就可以在 Nginx 中配置
 
 ```
@@ -226,8 +213,6 @@ server {
 
 *   查看配置是否生效，查看 _响应头_ 中的`Content-Encoding`字段，值为 `gzip`
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/4/11/16a0a18ea2a3f84b~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
-
 负载均衡
 ----
 
@@ -235,12 +220,13 @@ server {
 
 ```
 Syntax:	upstream name { ... }
-Default: —
 Context: stream
 ```
 
+
 这里举出常用的几种策略
 
+---
 *   轮询（默认），请求过来后，Nginx 随机分配流量到任一服务器
 
 ```
@@ -250,6 +236,7 @@ upstream backend {
 }
 ```
 
+---
 *   `weight=number` 设置服务器的权重，默认为 1，权重大的会被优先分配
 
 ```
@@ -259,6 +246,7 @@ upstream backend {
 }
 ```
 
+---
 *   `backup` 标记为备份服务器。当主服务器不可用时，将传递与备份服务器的连接。
 
 ```
@@ -268,6 +256,8 @@ upstream backend {
 }
 ```
 
+
+---
 *   `ip_hash` 保持会话，保证同一客户端始终访问一台服务器。
 
 ```
@@ -278,6 +268,8 @@ upstream backend {
 }
 ```
 
+
+---
 *   `least_conn` 优先分配最少连接数的服务器，避免服务器超载请求过多。
 
 ```
@@ -288,6 +280,8 @@ upstream backend {
 }
 ```
 
+
+---
 当我们需要代理一个集群时候可以通过下面这种方式实现
 
 ```
@@ -313,13 +307,3 @@ http {
     }
 }
 ```
-
-最后
---
-
-Nginx 的功能还有很多，这里只介绍了几个比较基础、常用的，供大家学习和参考，快速入门，搭建出一套可用的环境。
-
-参考链接
-----
-
-[参考 Nginx 官方文档](https://link.juejin.cn?target=https%3A%2F%2Fnginx.org%2Fen%2Fdocs%2F "https://nginx.org/en/docs/")

@@ -3,11 +3,12 @@
 一、.d.ts 是干嘛用的
 =============
 
-.d.ts 文件是 ts 用来声明变量，模块，type，interface 等等的，那在这种后缀的 ts 文件声明这些东西和在纯 ts 文件声明这些东西又什么区别呢？
-
+.d.ts 文件是 ts 用来声明变量，模块，type，interface 等等的，
 在. d.ts 声明变量或者模块等东西之后，在其他地方可以不用 import 导入这些东西就可以直接用。
 
-但是也不是说创建了. d.ts 文件，里面声明的东西就能生效了，毕竟归根到底也是. ts 文件，需要[预编译](https://link.juejin.cn?target=https%3A%2F%2Fso.csdn.net%2Fso%2Fsearch%3Fq%3D%25E9%25A2%2584%25E7%25BC%2596%25E8%25AF%2591%26spm%3D1001.2101.3001.7020 "https://so.csdn.net/so/search?q=%E9%A2%84%E7%BC%96%E8%AF%91&spm=1001.2101.3001.7020")，所以需要在 tsconfig.json 文件里面的`include`数组里面添加这个文件，比如我们在 vue3+Ts 项目中的 tsconfig.json 中可以做如下配置：
+但是也不是说创建了. d.ts 文件，里面声明的东西就能生效了，毕竟归根到底也是. ts 文件，需要[预编译](https://link.juejin.cn?target=https%3A%2F%2Fso.csdn.net%2Fso%2Fsearch%3Fq%3D%25E9%25A2%2584%25E7%25BC%2596%25E8%25AF%2591%26spm%3D1001.2101.3001.7020 "https://so.csdn.net/so/search?q=%E9%A2%84%E7%BC%96%E8%AF%91&spm=1001.2101.3001.7020")，所以需要在 tsconfig.json 文件里面的`include`数组里面添加这个文件，
+
+比如我们在 vue3+Ts 项目中的 tsconfig.json 中可以做如下配置：
 
 ```
 {
