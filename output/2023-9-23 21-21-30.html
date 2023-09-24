@@ -1,0 +1,1970 @@
+<h1>2023-09-19</h1><p>在 Tailwind CSS 中，<code>flex</code> 类是用于创建 Flexbox 布局的基础类，它提供了许多用于控制元素布局的选项。以下是一些常见的 <code>flex</code> 类的用法：</p>
+<ol>
+<li>
+<p><strong>基本的 Flexbox 容器</strong>：</p>
+<ul>
+<li>使用 <code>.flex</code> 类可以将一个元素设置为 Flexbox 容器，使其内部的子元素能够进行弹性布局。默认情况下，子元素会横向排列。</li>
+</ul>
+<pre><code class="language-html">&lt;div class=&quot;flex&quot;&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+  &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>垂直排列的 Flexbox 容器</strong>：</p>
+<ul>
+<li>使用 <code>.flex-col</code> 类可以将子元素在垂直方向上进行排列，而不是默认的横向排列。</li>
+</ul>
+<pre><code class="language-html">&lt;div class=&quot;flex flex-col&quot;&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+  &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>子元素居中对齐</strong>：</p>
+<ul>
+<li>使用 <code>.items-center</code> 类可以使子元素在交叉轴上居中对齐，从而在垂直方向上居中显示。</li>
+</ul>
+<pre><code class="language-html">&lt;div class=&quot;flex items-center&quot;&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+  &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>水平居中对齐</strong>：</p>
+<ul>
+<li>使用 <code>.justify-center</code> 类可以使子元素在主轴上水平居中对齐，从而在横向方向上居中显示。</li>
+</ul>
+<pre><code class="language-html">&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+  &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>子元素等宽分布</strong>：</p>
+<ul>
+<li>使用 <code>.space-between</code> 类可以使子元素在主轴上等宽分布，填充 Flexbox 容器的可用空间。</li>
+</ul>
+<pre><code class="language-html">&lt;div class=&quot;flex space-between&quot;&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+  &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>子元素自动换行</strong>：</p>
+<ul>
+<li>使用 <code>.flex-wrap</code> 类可以允许子元素在容器宽度不足时自动换行。</li>
+</ul>
+<pre><code class="language-html">&lt;div class=&quot;flex flex-wrap&quot;&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+  &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+</li>
+</ol>
+<p>这些是一些常见的 <code>flex</code> 类的用法示例，Tailwind CSS 提供了丰富的类名，可用于控制 Flexbox 布局的各个方面，使布局设计更加灵活和便捷。你可以根据具体的布局需求选择合适的类名来构建你的界面。</p>
+<p>了解交叉轴和主轴在 Flexbox 布局中的方向非常重要，特别是在确定子元素的排列和对齐方式时。这两个轴的方向是相对于 Flex 容器而言的，因此它们的方向会根据 Flex 容器的方向而改变。</p>
+<p><strong>默认情况下</strong>，在水平方向上，主轴是从左到右，交叉轴是从上到下。这意味着子元素在水平方向上排列，并且在垂直方向上堆叠。</p>
+<p><strong>当你使用 <code>.flex-col</code> 类将 Flex 容器的方向改为垂直方向时</strong>，主轴和交叉轴的方向也会随之改变。此时：</p>
+<ul>
+<li><strong>主轴</strong>变成了从上到下，垂直方向。</li>
+<li><strong>交叉轴</strong>变成了从左到右，水平方向。</li>
+</ul>
+<p>这意味着子元素现在会垂直排列在主轴上，并在水平方向上堆叠。</p>
+<p>总结一下：</p>
+<p><strong>在默认水平方向上</strong>：</p>
+<ul>
+<li>主轴是水平方向，从左到右。</li>
+<li>交叉轴是垂直方向，从上到下。</li>
+</ul>
+<p><strong>在垂直方向上（使用 <code>.flex-col</code> 类）</strong>：</p>
+<ul>
+<li>主轴是垂直方向，从上到下。</li>
+<li>交叉轴是水平方向，从左到右。</li>
+</ul>
+<p>理解主轴和交叉轴的方向对于决定子元素如何排列和对齐非常重要，因为你可以使用不同的 Flexbox 类名来控制它们的行为，以实现所需的布局效果。</p>
+<p>理解和记忆<code>justify-content</code>和<code>align-items</code>的区别确实可以有时候让人感到困惑，因为它们功能非常类似但又有本质的区别。下面这个小口诀或许可以帮到你：</p>
+<pre><code>“横排靠 justify，
+竖排用 align。
+Content 排内容行，
+Items 排单元项。”
+</code></pre>
+<p>这样记，可以帮你更好地理解和记忆：</p>
+<ul>
+<li><code>justify-content</code>: 用于定义沿着主轴（默认是水平轴）的如何对齐项目。在flex容器中，它主要用于控制行与行之间的空间分配。</li>
+<li><code>align-items</code>: 用于定义沿着交叉轴（默认是垂直轴）的如何对齐项目。在flex容器中，它用于控制项目在单行中的对齐方式。</li>
+</ul>
+<p>希望这能帮到你！</p>
+<p>在 Flexbox 布局中，你可以使用 <code>flex</code> 属性来控制子元素的分配比例，以决定它们在主轴上的空间分配。这可以帮助你实现灵活的布局，其中某些元素占据更多的空间，而其他元素则占据较少的空间。以下是一些示例：</p>
+<ol>
+<li>
+<p><strong>相等的分配</strong>：默认情况下，如果不设置 <code>flex</code> 属性，所有子元素将等分可用的空间。</p>
+<pre><code class="language-css">.flex-item {
+  flex: 1; /* 所有子元素平均分配可用空间 */
+}
+</code></pre>
+</li>
+<li>
+<p><strong>不等分配</strong>：你可以使用不同的分数来指定不同子元素的分配比例。例如，一个元素的 <code>flex</code> 值为 <code>2</code>，而另一个元素的 <code>flex</code> 值为 <code>1</code>，前者将占据主轴上的空间的两倍于后者。</p>
+<pre><code class="language-css">.flex-item-1 {
+  flex: 2; /* 占据主轴上的空间的两倍 */
+}
+
+.flex-item-2 {
+  flex: 1; /* 占据主轴上的空间的一倍 */
+}
+</code></pre>
+</li>
+<li>
+<p><strong>固定大小元素</strong>：如果你希望某个元素保持固定的大小，而不受其他元素的影响，可以将其 <code>flex</code> 值设置为 <code>0</code>。</p>
+<pre><code class="language-css">.fixed-size-item {
+  flex: 0; /* 保持固定大小，不参与空间分配 */
+}
+</code></pre>
+</li>
+<li>
+<p><strong>混合分配</strong>：你可以根据需要混合不同的 <code>flex</code> 值，以实现特定的分配比例。</p>
+<pre><code class="language-css">.flex-item-1 {
+  flex: 2; /* 占据主轴上的空间的两倍 */
+}
+
+.flex-item-2 {
+  flex: 1; /* 占据主轴上的空间的一倍 */
+}
+
+.fixed-size-item {
+  flex: 0; /* 保持固定大小，不参与空间分配 */
+}
+</code></pre>
+</li>
+</ol>
+<p>通过设置不同子元素的 <code>flex</code> 属性，你可以精确地控制它们在主轴上的分配比例，以满足特定的布局需求。</p>
+
+<h1>2023-09-23</h1><p>const api = {
+REGISTER: <code>${baseUrl}/login</code>,
+LOGIN: <code>${baseUrl}/api/auth/pwd-login</code>,
+};
+const hello = '123'
+export const { REGISTER, LOGIN } = api;
+export default hello</p>
+<p>第一个运行我们导出一个对象，我们一般可以把所有要导出的座位这个对象的一个属性
+导入时，如果带括号就是默认解析这个对象
+第二个默认导出，导入时不用加括号</p>
+
+<h1>Fetch API 介绍及使用 Fetch 发送请求</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6868138631714848775?searchId=20230922220824D75FAF6A213F99E4750A">juejin.cn</a></p>
+</blockquote>
+<h1>Fetch API</h1>
+<p><code>Fetch API</code>提供了一个 JavaScript 接口，用于访问和操纵 HTTP 的请求和响应等。提供了一个全局 <code>fetch()</code> 方法来跨网络异步获取资源。</p>
+<h1>与 AJAX 的区别</h1>
+<p>Fetch 规范与 jQuery.ajax() 主要有三种方式的不同：</p>
+<ul>
+<li>
+<p>当接收到一个代表错误的 HTTP 状态码， 即使响应的 HTTP 状态码是 404 或 500。从 <code>fetch()</code> 返回的 Promise 不会被标记为 reject，</p>
+</li>
+<li>
+<p>相反，会标记为 resolve （但是会把 resolve 的返回值的 <code>ok</code> 属性设置为 false ），<strong>仅当网络故障时或请求被阻止时，才会标记为 reject</strong>。</p>
+</li>
+<li>
+<p><code>fetch()</code> 可以接收跨域 cookies；也可以使用 <code>fetch()</code> 建立起跨域会话。</p>
+</li>
+<li>
+<p><code>fetch</code> 不会发送 cookies。除非你使用了 <em>credentials</em> 的<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FWindowOrWorkerGlobalScope%2Ffetch%23Parameters" title="https://developer.mozilla.org/zh-CN/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters">初始化选项</a></p>
+</li>
+</ul>
+<h1>Fetch() 示例</h1>
+<p>给<code>fetch()</code> 提供一个参数指明资源路径，会返回一个包含响应结果的 promise。当然它只是一个 HTTP 响应，为了获取 JSON 的内容，我们需要使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FBody%2Fjson" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Body/json"><code>json()</code></a> 方法：</p>
+<p><strong>默认发送 GET 请求</strong></p>
+<pre><code>fetch('http://example.com/movies.json')	
+  .then(response =&gt; response.json())
+  .then(data =&gt; console.log(data));
+</code></pre>
+<p><strong>带参数的 GET 请求：</strong></p>
+<pre><code>var id=1
+fetch(`https://www.easy-mock.com/mock/5f507e38a758c95f67d6eb42/fetch/getmsg?id=${id}`)	
+.then(response =&gt; response.json())
+.then(data =&gt; console.log(data));
+</code></pre>
+<p><strong>发送 POST 请求</strong></p>
+<pre><code>var data={
+    id:'1',
+}
+fetch('https://www.easy-mock.com/mock/5f507e38a758c95f67d6eb42/fetch/postmsg',{
+    method:'POST',
+    body:data
+})	
+.then(response =&gt; response.json())
+.then(data =&gt; console.log(data));
+</code></pre>
+<h1>Fetch()</h1>
+<p>用于发起获取资源的请求。它返回一个 promise，这个 promise 会在请求响应后被 resolve，并传回 Response 对象。当遇到网络错误时，<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FWorkerOrGlobalScope%2Ffetch" title="https://developer.mozilla.org/zh-CN/docs/Web/API/WorkerOrGlobalScope/fetch"><code>fetch()</code></a> 返回的 promise 会被 reject，并传回 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FJavaScript%2FReference%2FGlobal_Objects%2FTypeError" title="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypeError"><code>TypeError</code></a>。</p>
+<p>成功的 fetch() 检查不仅要包括 promise 被 resolve，还要包括 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FResponse%2Fok" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Response/ok"><code>Response.ok</code></a> 属性为 true。HTTP 404 状态并不被认为是网络错误。</p>
+<h2>语法</h2>
+<pre><code>fetch(input,{init});
+</code></pre>
+<p><code>input</code>——定义要获取的资源，可以是：</p>
+<ul>
+<li>一个 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FUSVString" title="https://developer.mozilla.org/zh-CN/docs/Web/API/USVString"><code>USVString</code></a> 字符串，包含要获取资源的 URL。</li>
+<li>一个 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FRequest" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Request"><code>Request</code></a> 对象。</li>
+</ul>
+<p><code>init</code>—— 可选 | 一个配置项对象，包括所有对请求的设置。可选的参数有：body,method,headers,cache</p>
+<h2>发送带凭据的请求</h2>
+<pre><code>//发送包含凭据的请求
+fetch('https://example.com', {
+  credentials: 'include'  
+})
+
+//如果你只想在请求URL与调用脚本位于同一起源处时发送凭据
+fetch('https://example.com', {
+  credentials: 'same-origin'  
+})
+
+//确保浏览器不在请求中包含凭据
+fetch('https://example.com', {
+  credentials: 'omit'  
+})
+</code></pre>
+<h2>上传 json 数据</h2>
+<pre><code>var data = {username: 'example'};
+
+fetch('https://example.com/profile', {
+  method: 'POST', 
+  body: JSON.stringify(data), 
+  headers: new Headers({
+    'Content-Type': 'application/json'
+  })
+}).then(res =&gt; res.json())
+.catch(error =&gt; console.error('Error:', error))
+.then(response =&gt; console.log('Success:', response));
+</code></pre>
+<h2>上传文件</h2>
+<pre><code>var formData = new FormData();
+var fileField = document.querySelector(&quot;input[type='file']&quot;);// 获取&lt;input type=&quot;file&quot; /&gt; 元素
+
+formData.append('username', 'abc123');
+formData.append('avatar', fileField.files[0]);
+
+fetch('https://example.com/profile/avatar', {
+  method: 'PUT',
+  body: formData
+})
+.then(response =&gt; response.json())
+.catch(error =&gt; console.error('Error:', error))
+.then(response =&gt; console.log('Success:', response));
+</code></pre>
+<h2>上传多个文件</h2>
+<pre><code>var formData = new FormData();/
+var photos = document.querySelector(&quot;input[type='file'][multiple]&quot;);
+
+formData.append('title', 'My Vegas Vacation');
+// formData 只接受文件、Blob 或字符串，不能直接传递数组，所以必须循环嵌入
+for (let i = 0; i &lt; photos.files.length; i++) { 
+    formData.append('photo', photos.files[i]); 
+}
+
+fetch('https://example.com/posts', {
+  method: 'POST',
+  body: formData
+})
+.then(response =&gt; response.json())
+.then(response =&gt; console.log('Success:', JSON.stringify(response)))
+.catch(error =&gt; console.error('Error:', error));
+</code></pre>
+<h2>检测请求是否成功</h2>
+<blockquote>
+<p>如果遇到网络故障，<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FGlobalFetch%2Ffetch" title="https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalFetch/fetch"><code>fetch()</code></a> promise 将会 reject，带上一个 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FJavaScript%2FReference%2FGlobal_Objects%2FTypeError" title="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypeError"><code>TypeError</code></a> 对象。虽然这个情况经常是遇到了权限问题或类似问题——比如 404 不是一个网络故障。想要精确的判断 <code>fetch()</code> 是否成功，需要包含 promise resolved 的情况，此时再判断 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FResponse%2Fok" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Response/ok"><code>Response.ok</code></a> 是不是为 true。类似以下代码：</p>
+</blockquote>
+<pre><code>fetch('flowers.jpg').then(function(response) {
+  if(response.ok) {
+    return response.blob();
+  }
+  throw new Error('Network response was not ok.');
+}).then(function(myBlob) { 
+  var objectURL = URL.createObjectURL(myBlob); 
+  myImage.src = objectURL; 
+}).catch(function(error) {
+  console.log('There has been a problem with your fetch operation: ', error.message);
+});
+</code></pre>
+<h2>自定义请求对象</h2>
+<pre><code>var myHeaders = new Headers();
+var myInit = { method: 'GET',
+               headers: myHeaders,
+               mode: 'cors',
+               cache: 'default' };
+var myRequest = new Request('flowers.jpg', myInit);
+fetch(myRequest).then(function(response) {
+  return response.blob();
+}).then(function(myBlob) {
+  var objectURL = URL.createObjectURL(myBlob);
+  myImage.src = objectURL;
+});
+</code></pre>
+<h1>与 xml 的区别</h1>
+<blockquote>
+<p>与 xml 不同的是，Fetch 可以很容易地被其他技术使用，例如 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FServiceWorker_API" title="https://developer.mozilla.org/zh-CN/docs/Web/API/ServiceWorker_API"><code>Service Workers</code></a>。它还提供了专门的逻辑空间来定义其他与 HTTP 相关的概念，例如 CORS 和 HTTP 的扩展。Fetch 提供了对 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FRequest" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Request"><code>Request</code></a> 和 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FResponse" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Response"><code>Response</code></a> （以及其他与网络请求有关的）对象的通用定义，使之应用于更多场景。</p>
+</blockquote>
+<h2>下面是 Fetch API 的三个接口：Headers、Rquest、Response：
+1.Headers</h2>
+<p>Headers 接口允许您对 HTTP 请求和响应头执行各种操作。 包括检索，设置，添加和删除。可以通过 <code>Headers()</code>构造函数来创建一个你自己的 headers 对象</p>
+<p><strong>方法</strong></p>
+<ul>
+<li><code>append()</code>——给现有的 header 添加一个值, 或者添加一个未存在的 header 并赋值.</li>
+<li><code>delete()</code>——从 Headers 对象中删除指定 header.</li>
+<li><code>entries()</code>——以 迭代器 的形式返回 Headers 对象中所有的键值对</li>
+<li><code>get()</code>——以 ByteString 的形式从 Headers 对象中返回指定 header 的全部值</li>
+<li><code>has()</code>——以布尔值的形式从 Headers 对象中返回是否存在指定的 header</li>
+</ul>
+<p><strong>示例</strong></p>
+<pre><code>let myHeaders = new Headers(); 
+myHeaders.append('Content-Type', 'text/xml');
+
+//可以传一个多维数组或者对象字面量来创建：
+myHeaders = new Headers({
+  &quot;Content-Type&quot;: &quot;text/plain&quot;,
+  &quot;X-Custom-Header&quot;: &quot;ProcessThisImmediately&quot;,
+});
+
+//内容可以获取与修改
+console.log(myHeaders.has(&quot;Content-Type&quot;)); // true
+console.log(myHeaders.has(&quot;Set-Cookie&quot;)); // false
+myHeaders.append(&quot;X-Custom-Header&quot;, &quot;AnotherValue&quot;);
+console.log(myHeaders.getAll(&quot;X-Custom-Header&quot;)); // [&quot;ProcessThisImmediately&quot;, &quot;AnotherValue&quot;]
+myHeaders.delete(&quot;X-Custom-Header&quot;);
+console.log(myHeaders.getAll(&quot;X-Custom-Header&quot;)); // [ ]
+</code></pre>
+<h2>2.Request</h2>
+<p>Request 接口用来表示资源请求。可以通过 <code>Request()</code>构造函数来创建一个你自己的 Request 对象</p>
+<p><strong>属性</strong></p>
+<ul>
+<li><code>method</code>——只读 | 包含请求的方法</li>
+<li><code>url</code>——只读 | 包含请求的 url</li>
+<li><code>headers</code>——只读 | 包含请求相关的 Headers 对象</li>
+<li><code>mode</code>——只读 | 包含请求模式</li>
+<li><code>credentials</code>——只读 | 包含请求的证书</li>
+<li><code>cache</code>——只读 | 包含请求的缓存模式</li>
+</ul>
+<p><strong>示例</strong></p>
+<pre><code>//示例1
+const myRequest = new Request('http://localhost/flowers.jpg');//创建一个request对象
+const myURL = myRequest.url; // http://localhost/flowers.jpg
+const myMethod = myRequest.method; // GET
+const myCred = myRequest.credentials; // omit
+
+//示例2
+const myRequest = new Request('http://localhost/api', {method: 'POST', body: '{&quot;foo&quot;:&quot;bar&quot;}'});
+const myURL = myRequest.url; // http://localhost/api
+const myMethod = myRequest.method; // POST
+const myCred = myRequest.credentials; // omit
+</code></pre>
+<pre><code>//可以将Request对象作为参数传递给fetch()
+fetch(myRequest)
+  .then(response =&gt; response.blob())
+  .then(blob =&gt; {
+    myImage.src = URL.createObjectURL(blob);
+});
+</code></pre>
+<h2>3.Response</h2>
+<p>Response 接口呈现了对一次请求的响应数据。Response 实例是在 <code>fetch()</code> 处理完 promise 之后返回的。你也可以通过 <code>Response()</code>构造函数来创建一个你自己的 Response 对象</p>
+<p><strong>属性</strong></p>
+<ul>
+<li><code>headers</code>——只读 | 包含此 Response 所关联的 Headers 对象</li>
+<li><code>ok</code>——只读 | 包含了一个布尔值，标示该 Response 成功（HTTP 状态码的范围在 200-299）</li>
+<li><code>redirected</code>——只读 | 表示该 Response 是否来自一个重定向，如果是的话，它的 URL 列表将会有多个条目</li>
+<li><code>status</code>——只读 | 包含 Response 的状态码 （例如 <code>200</code> 表示成功）</li>
+<li><code>statusText</code>——只读 | 包含了与该 Response 状态码一致的状态信息（例如，OK 对应 <code>200</code>）</li>
+<li><code>type</code>——只读 | 包含 Response 的类型（例如，<code>basic</code>、<code>cors</code>）</li>
+<li><code>url</code>——只读 | 包含 Response 的 URL</li>
+</ul>
+<p><strong>示例</strong></p>
+<blockquote>
+<p>调用了 <code>fetch()</code>获取一张图片并将其显示在 HTML 的 IMG 标签中 , <code>fetch()</code> 函数返回了一个 Promise，它使用 Response 对象进行解析.。你会注意到，由于我们正在请求一张图片，我们需要运行<code>blob</code>为响应提供正确的 MIME 类型</p>
+</blockquote>
+<pre><code>const image = document.querySelector('.my-image');
+fetch('flowers.jpg').then(function(response) {
+  return response.blob();
+}).then(function(blob) {
+  const objectURL = URL.createObjectURL(blob);
+  image.src = objectURL;
+});
+</code></pre>
+<h2>Body</h2>
+<p><strong><code>Body</code></strong> <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FGlossary%2FMixin" title="https://developer.mozilla.org/zh-CN/docs/Glossary/Mixin">mixin</a> 提供了与 response/request 中的 body 有关的方法，可以定义它的内容形式以及处理方式。</p>
+<p>Body 定义了以下方法（这些方法都被 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FRequest" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Request"><code>Request</code></a> 和 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FResponse" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Response"><code>Response</code></a>所实现）以获取 body 内容。这些方法都会返回一个被解析后的 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FPromise" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Promise"><code>Promise</code></a>对象和数据</p>
+<ul>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FBody%2FarrayBuffer" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Body/arrayBuffer"><code>arrayBuffer()</code></a></li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FBody%2Fblob" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Body/blob"><code>blob()</code></a></li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FBody%2Fjson" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Body/json"><code>json()</code></a></li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FBody%2Ftext" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Body/text"><code>text()</code></a></li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FBody%2FformData" title="https://developer.mozilla.org/zh-CN/docs/Web/API/Body/formData"><code>formData()</code></a></li>
+</ul>
+
+<h1>Next.js 了解篇｜一文带你梳理清楚 Next.js 的功能</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7206261082452639802">juejin.cn</a></p>
+</blockquote>
+<p>如果你需要具体的分析 JS 资源的组成，那么可以使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fpackages%2Fnext-bundle-analyzer" title="https://github.com/vercel/next.js/tree/canary/packages/next-bundle-analyzer">@next/bundle-analyzer</a> 来分析，其可具体分析服务端代码、edge 运行时代吗、客户端代码</p>
+<h3>可扩展配置</h3>
+<p>分析一下它的可配置功能。</p>
+<ul>
+<li>配置文件 <code>next.config.js</code> 中暴露了.jpgack 实例，因此你可以完全控制.jpgack</li>
+<li>配置文件 <code>next.config.js</code> 中支持配置自定义配置，你可以把一些公用的不变的配置写在 <code>serverRuntimeConfig</code> 或者 <code>publicRuntimeConfig</code> 中，前者只会出现在服务端，后者会暴露到客户端。</li>
+<li>可 <a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fadvanced-features%2Fcustom-server" title="https://nextjs.org/docs/advanced-features/custom-server">自定义 server</a> ，你可以在启动服务的时候做一些自己想要做的处理，比如 node.js 性能监控等等。</li>
+<li>不自定义 server ，也可以使用它提供的 <a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fadvanced-features%2Fmiddleware" title="https://nextjs.org/docs/advanced-features/middleware">middreware</a> 机制来拦截请求或者校验权限等事项。</li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fadvanced-features%2Fcustom-app" title="https://nextjs.org/docs/advanced-features/custom-app">自定义 APP</a>，也就是 <code>_app.js</code>，它用于处理多个页面公共部分。</li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fadvanced-features%2Fcustom-document" title="https://nextjs.org/docs/advanced-features/custom-document">自定义 Document</a>，也就是<code>_document.js</code>，用于自定义配置 html 生成内容，比如插入 Google 分析脚本。</li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fadvanced-features%2Fcustom-error-page" title="https://nextjs.org/docs/advanced-features/custom-error-page">自定义错误界面</a> 也就是 404 或者 500 错误状态的页面。</li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fapi-reference%2Fnext%2Fhead" title="https://nextjs.org/docs/api-reference/next/head">自定义页面 head 属性</a>，使用 <code>next/head</code> 提供的 Head 组件，用于自定义 html document 头部的 title/meta/base 等标签信息。</li>
+<li>可自定义 <a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fadvanced-features%2Fcustomizing-babel-config" title="https://nextjs.org/docs/advanced-features/customizing-babel-config"><code>babel</code></a> 和 <a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fadvanced-features%2Fcustomizing-postcss-config" title="https://nextjs.org/docs/advanced-features/customizing-postcss-config"><code>postcss</code></a> 等工程化规则配置。</li>
+</ul>
+<p>可以看出基本上各个方面都可以自定义配置，扩展性还是很强的。</p>
+<h3>提供性能数据</h3>
+<p>Next.js 提供了获取应用性能数据的方法 <a href="https://link.juejin.cn?target=https%3A%2F%2Fnextjs.org%2Fdocs%2Fadvanced-features%2Fmeasuring-performance%23sending-results-to-analytics" title="https://nextjs.org/docs/advanced-features/measuring-performance#sending-results-to-analytics">reportWebVitals</a>, 只能在 <code>App</code> 组件中使用。</p>
+<pre><code>// _app.tsx
+export function reportWebVitals(metric: NextWebVitalsMetric) {
+  console.log(metric)
+}
+</code></pre>
+
+<h1>Nginx 从入门到实践，万字详解！</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844904144235413512?searchId=20230915142219A3CD8A18673BC5C81FAC">juejin.cn</a></p>
+</blockquote>
+<h2>Nginx 介绍</h2>
+<p>传统的 Web 服务器，每个客户端连接作为一个单独的进程或线程处理，需在切换任务时将 CPU 切换到新的任务并创建一个新的运行时上下文，消耗额外的内存和 CPU 时间</p>
+<hr>
+<p>Nginx 的最重要的几个使用场景：</p>
+<ol>
+<li>静态资源服务，通过本地文件系统提供服务；</li>
+<li>反向代理服务，延伸出包括缓存、负载均衡等；</li>
+<li>API 服务，OpenResty ；</li>
+</ol>
+<h2>相关概念</h2>
+<h3>2.1 简单请求和非简单请求</h3>
+<p>首先我们来了解一下简单请求和非简单请求，如果同时满足下面两个条件，就属于简单请求：</p>
+<ol>
+<li>请求方法是 <code>HEAD</code>、<code>GET</code>、<code>POST</code> 三种之一；</li>
+<li>HTTP 头信息不超过右边着几个字段：<code>Accept</code>、<code>Accept-Language</code>、<code>Content-Language</code>、<code>Last-Event-ID</code> <code>Content-Type</code> 只限于三个值 <code>application/x-www-form-urlencoded</code>、<code>multipart/form-data</code>、<code>text/plain</code>；</li>
+</ol>
+<p>凡是不同时满足这两个条件的，都属于非简单请求。</p>
+<h3><strong>简单请求</strong></h3>
+<p>对于简单请求，浏览器会在头信息中增加 <code>Origin</code> 字段后直接发出，<code>Origin</code> 字段用来说明，本次请求来自的哪个源（协议 + 域名 + 端口）。</p>
+<p>如果服务器发现 <code>Origin</code> 指定的源不在许可范围内，服务器会返回一个正常的 HTTP 回应，浏览器取到回应之后发现回应的头信息中没有包含 <code>Access-Control-Allow-Origin</code> 字段，就抛出一个错误给 XHR 的 <code>error</code> 事件；</p>
+<p>如果服务器发现 <code>Origin</code> 指定的域名在许可范围内，服务器返回的响应会多出几个 <code>Access-Control-</code> 开头的头信息字段。</p>
+<h3><strong>非简单请求</strong></h3>
+<p>非简单请求是那种对服务器有特殊要求的请求，比如请求方法是 <code>PUT</code> 或 <code>DELETE</code>，或 <code>Content-Type</code> 值为 <code>application/json</code>。浏览器会在正式通信之前，发送一次 HTTP 预检 <code>OPTIONS</code> 请求，先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些 HTTP 请求方法和头信息字段。只有得到肯定答复，浏览器才会发出正式的 <code>XHR</code> 请求，否则报错。</p>
+<h3>2.3 正向代理和反向代理</h3>
+<p><strong>正向代理：</strong> 一般的访问流程是客户端直接向目标服务器发送请求并获取内容，使用正向代理后，客户端改为向代理服务器发送请求，并指定目标服务器（原始服务器），然后由代理服务器和原始服务器通信，转交请求并获得的内容，再返回给客户端。正向代理隐藏了真实的客户端，为客户端收发请求，使真实客户端对服务器不可见；
+举个具体的例子 🌰，你的浏览器无法直接访问谷哥，这时候可以通过一个代理服务器来帮助你访问谷哥，那么这个服务器就叫正向代理。</p>
+<hr>
+<p><strong>反向代理：</strong> 与一般访问流程相比，使用反向代理后，直接收到请求的服务器是代理服务器，然后将请求转发给内部网络上真正进行处理的服务器，得到的结果返回给客户端。反向代理隐藏了真实的服务器，为服务器收发请求，使真实服务器对客户端不可见。一般在处理跨域请求的时候比较常用。现在基本上所有的大型网站都设置了反向代理。</p>
+<hr>
+<p>举个具体的例子 🌰，去饭店吃饭，可以点川菜、粤菜、江浙菜，饭店也分别有三个菜系的厨师 👨‍🍳，但是你作为顾客不用管哪个厨师给你做的菜，只用点菜即可，小二将你菜单中的菜分配给不同的厨师来具体处理，那么这个小二就是反向代理服务器。</p>
+<p>简单的说，一般给客户端做代理的都是正向代理，给服务器做代理的就是反向代理。
+正向代理和反向代理主要的原理区别可以参见下图：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/fdde0a042a13510755dae142f74d6b4d_MD5.jpg" /></p>
+<h3>2.5 动静分离</h3>
+<p>为了加快网站的解析速度，可以把动态页面和静态页面由不同的服务器来解析，加快解析速度，降低原来单个服务器的压力。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/72f7e9547028153e9bca11bfafac5323_MD5.png" /></p>
+<p>一般来说，都需要将动态资源和静态资源分开，由于 Nginx 的高并发和静态资源缓存等特性，经常将静态资源部署在 Nginx 上。如果请求的是静态资源，直接到静态资源目录获取资源，如果是动态资源的请求，则利用反向代理的原理，把请求转发给对应后台应用去处理，从而实现动静分离。</p>
+<p>使用前后端分离后，可以很大程度提升静态资源的访问速度，即使动态服务不可用，静态资源的访问也不会受到影响。</p>
+<h2>Nginx 快速安装</h2>
+<h3>3.3 跑起来康康</h3>
+<p>安装之后开启 Nginx，如果系统开启了防火墙，那么需要设置一下在防火墙中加入需要开放的端口，下面列举几个常用的防火墙操作（没开启的话不用管这个）：</p>
+<pre><code>systemctl start firewalld  # 开启防火墙
+systemctl stop firewalld   # 关闭防火墙
+systemctl status firewalld # 查看防火墙开启状态，显示running则是正在运行
+firewall-cmd --reload      # 重启防火墙，永久打开端口需要reload一下
+
+# 添加开启端口，--permanent表示永久打开，不加是临时打开重启之后失效
+firewall-cmd --permanent --zone=public --add-port=8888/tcp
+
+# 查看防火墙，添加的端口也可以看到
+firewall-cmd --list-all
+</code></pre>
+<p>然后设置 Nginx 的开机启动：</p>
+<pre><code>systemctl enable nginx
+</code></pre>
+<p>启动 Nginx （其他命令后面有详细讲解）：</p>
+<pre><code>systemctl start nginx
+</code></pre>
+<p>然后访问你的 IP，这时候就可以看到 Nginx 的欢迎页面了～ <code>Welcome to nginx！</code> 👏</p>
+<h2>5 Nginx 配置语法</h2>
+<p>就跟前面文件作用讲解的图所示，Nginx 的主配置文件是 <code>/etc/nginx/nginx.conf</code>，你可以使用 <code>cat -n nginx.conf</code> 来查看配置。</p>
+<p><code>nginx.conf</code> 结构图可以这样概括：</p>
+<pre><code>main        # 全局配置，对全局生效
+├── events  # 配置影响 Nginx 服务器或与用户的网络连接
+├── http    # 配置代理，缓存，日志定义等绝大多数功能和第三方模块的配置
+│   ├── upstream # 配置后端服务器具体地址，负载均衡配置不可或缺的部分
+│   ├── server   # 配置虚拟主机的相关参数，一个 http 块中可以有多个 server 块
+│   ├── server
+│   │   ├── location  # server 块可以包含多个 location 块，location 指令用于匹配 uri
+│   │   ├── location
+│   │   └── ...
+│   └── ...
+└── ...
+</code></pre>
+<p>一个 Nginx 配置文件的结构就像 <code>nginx.conf</code> 显示的那样，配置文件的语法规则：</p>
+<ol>
+<li>配置文件由指令与指令块构成；</li>
+<li>每条指令以 <code>;</code> 分号结尾，指令与参数间以空格符号分隔；</li>
+<li>指令块以 <code>{}</code> 大括号将多条指令组织在一起；</li>
+<li><code>include</code> 语句允许组合多个配置文件以提升可维护性；</li>
+<li>使用 <code>$</code> 符号使用变量；</li>
+</ol>
+<h3>5.1 典型配置</h3>
+<p>Nginx 的典型配置：</p>
+<pre><code>user  nginx;                        # 运行用户，默认即是nginx，可以不进行设置
+worker_processes  1;                # Nginx 进程数，一般设置为和 CPU 核数一样
+error_log  /var/log/nginx/error.log warn;   # Nginx 的错误日志存放目录
+pid        /var/run/nginx.pid;      # Nginx 服务启动时的 pid 存放位置
+
+events {
+    use epoll;     
+	# 使用epoll的I/O模型(如果你不知道Nginx该使用哪种轮询方法，会自动选择一个最适合你操作系统的)
+    worker_connections 1024;   # 每个进程允许最大并发数
+}
+
+http {   
+	# 配置使用最频繁的部分，代理、缓存、日志定义等绝大多数功能和第三方模块的配置都在这里设置
+    # 设置日志模式
+    log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
+                      '$status $body_bytes_sent &quot;$http_referer&quot; '
+                      '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
+
+    access_log  /var/log/nginx/access.log  main;   # Nginx访问日志存放位置
+
+    sendfile            on;   # 开启高效传输模式
+    tcp_nopush          on;   # 减少网络报文段的数量
+    tcp_nodelay         on;
+    keepalive_timeout   65;   # 保持连接的时间，也叫超时时间，单位秒
+    types_hash_max_size 2048;
+
+    include             /etc/nginx/mime.types;      # 文件扩展名与类型映射表
+    default_type        application/octet-stream;   # 默认文件类型
+
+    include /etc/nginx/conf.d/*.conf;   # 加载子配置项
+    
+    server {
+    	listen       80;       # 配置监听的端口
+    	server_name  localhost;    # 配置的域名
+    	
+    	location / {
+    		root   /usr/share/nginx/html;  # 网站根目录
+    		index  index.html index.htm;   # 默认首页文件
+    		deny 172.168.22.11;   # 禁止访问的ip地址，可以为all
+    		allow 172.168.33.44； # 允许访问的ip地址，可以为all
+    	}
+    	
+    	error_page 500 502 503 504 /50x.html;  # 默认50x对应的访问页面
+    	error_page 400 404 error.html;   # 同上
+    }
+}
+</code></pre>
+<p>server 块可以包含多个 location 块，location 指令用于匹配 uri，语法：</p>
+<pre><code>location [ = | ~ | ~* | ^~] uri {
+	...
+}
+</code></pre>
+<p>指令后面：</p>
+<ol>
+<li><code>=</code> 精确匹配路径，用于不含正则表达式的 uri 前，如果匹配成功，不再进行后续的查找；</li>
+<li><code>^~</code> 用于不含正则表达式的 uri； 前，表示如果该符号后面的字符是最佳匹配，采用该规则，不再进行后续的查找；</li>
+<li><code>~</code> 表示用该符号后面的正则去匹配路径，区分大小写；</li>
+<li><code>~*</code> 表示用该符号后面的正则去匹配路径，不区分大小写。跟 <code>~</code> 优先级都比较低，如有多个 location 的正则能匹配的话，则使用正则表达式最长的那个；</li>
+</ol>
+<p>如果 uri 包含正则表达式，则必须要有 <code>~</code> 或 <code>~*</code> 标志。</p>
+<h3>5.2 全局变量</h3>
+<p>Nginx 有一些常用的全局变量，你可以在配置的任何位置使用它们，如下表如$host，$http_cookie：</p>
+<h2>6.设置二级域名虚拟主机</h2>
+<p>在某某云 ☁️ 上购买了域名之后，就可以配置虚拟主机了，一般配置的路径在 <code>域名管理 -&gt; 解析 -&gt; 添加记录</code> 中添加二级域名，配置后某某云会把二级域名也解析到我们配置的服务器 IP 上，然后我们在 Nginx 上配置一下虚拟主机的访问监听，就可以拿到从这个二级域名过来的请求了。
+现在我自己的服务器上配置了一个 fe 的二级域名，也就是说在外网访问 <code>fe.sherlocked93.club</code> 的时候，也可以访问到我们的服务器了。</p>
+<p>由于默认配置文件 <code>/etc/nginx/nginx.conf</code> 的 http 模块中有一句 <code>include /etc/nginx/conf.d/*.conf</code> 也就是说 <code>conf.d</code> 文件夹下的所有 <code>*.conf</code> 文件都会作为子配置项被引入配置文件中。为了维护方便，我在 <code>/etc/nginx/conf.d</code> 文件夹中新建一个 <code>fe.sherlocked93.club.conf</code> ：</p>
+<pre><code># /etc/nginx/conf.d/fe.sherlocked93.club.conf
+
+server {
+  listen 80;
+	server_name fe.sherlocked93.club;
+
+	location / {
+		root  /usr/share/nginx/html/fe;
+		index index.html;
+	}
+}
+</code></pre>
+<p>然后在 <code>/usr/share/nginx/html</code> 文件夹下新建 fe 文件夹，新建文件 <code>index.html</code>，内容随便写点，改完 <code>nginx -s reload</code> 重新加载，浏览器中输入 <code>fe.sherlocked93.club</code>，发现从二级域名就可以访问到我们刚刚新建的 fe 文件夹：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/4e80a8960513b5b64fe2c780adb8779e_MD5.jpg" /></p>
+<h2>7.配置反向代理</h2>
+<p>首先进入 Nginx 的主配置文件：</p>
+<pre><code>vim /etc/nginx/nginx.conf
+</code></pre>
+<p>增加一行将默认网址重定向到最大学习网站 Bilibili 的 <code>proxy_pass</code> 配置 🤓 ：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/d0cdb40369a0e9421a03098611e63894_MD5.jpg" /></p>
+<p>改完保存退出，<code>nginx -s reload</code> 重新加载，进入默认网址，那么现在就直接跳转到 B 站了，实现了一个简单的代理。</p>
+<p>实际使用中，可以将请求转发到本机另一个服务器上，也可以根据访问的路径跳转到不同端口的服务中。</p>
+<p>比如我们监听 <code>9001</code> 端口，然后把访问不同路径的请求进行反向代理：</p>
+<ol>
+<li>把访问 <code>http://127.0.0.1:9001/edu</code> 的请求转发到 <code>http://127.0.0.1:8080</code></li>
+<li>把访问 <code>http://127.0.0.1:9001/vod</code> 的请求转发到 <code>http://127.0.0.1:8081</code></li>
+</ol>
+<p>这种要怎么配置呢，首先同样打开主配置文件，然后在 http 模块下增加一个 server 块：</p>
+<pre><code>server {
+  listen 9001;
+  server_name *.sherlocked93.club;
+
+  location ~ /edu/ {
+    proxy_pass http://127.0.0.1:8080;
+  }
+  
+  location ~ /vod/ {
+    proxy_pass http://127.0.0.1:8081;
+  }
+}
+</code></pre>
+<p>反向代理还有一些其他的指令，可以了解一下：</p>
+<ol>
+<li><code>proxy_set_header</code>：在将客户端请求发送给后端服务器之前，更改来自客户端的请求头信息。</li>
+<li><code>proxy_connect_timeout</code>：配置 Nginx 与后端代理服务器尝试建立连接的超时时间。</li>
+<li><code>proxy_read_timeout</code>：配置 Nginx 向后端服务器组发出 read 请求后，等待相应的超时时间。</li>
+<li><code>proxy_send_timeout</code>：配置 Nginx 向后端服务器组发出 write 请求后，等待相应的超时时间。</li>
+<li><code>proxy_redirect</code>：用于修改后端服务器返回的响应头中的 Location 和 Refresh。</li>
+</ol>
+
+<h1>Spring Cloud Security：Oauth2 使用入门</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903987137740813?searchId=2023092017522484CC93998AFA0505B8C0">juejin.cn</a></p>
+</blockquote>
+<h2>四种授权模式</h2>
+<ul>
+<li>
+<p>Authorization Code（授权码模式）：正宗的 OAuth2 的授权模式，客户端先将用户导向认证服务器，登录后获取授权码，然后进行授权，最后根据授权码获取访问令牌；</p>
+</li>
+<li>
+<p>Implicit（简化模式）：和授权码模式相比，取消了获取授权码的过程，直接获取访问令牌；</p>
+</li>
+<li>
+<p>Resource Owner Password Credentials（密码模式）：客户端直接向用户获取用户名和密码，之后向认证服务器获取访问令牌；</p>
+</li>
+<li>
+<p>Client Credentials（客户端模式）：客户端直接通过客户端认证（比如 client_id 和 client_secret）从认证服务器获取访问令牌。</p>
+</li>
+</ul>
+<h2>两种常用的授权模式</h2>
+<h3>授权码模式</h3>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/4c7066b8d24405e1664b71a465ee4f7d_MD5.jpg" /></p>
+<ul>
+<li>(A) 客户端将用户导向认证服务器；</li>
+<li>(B) 用户在认证服务器进行登录并授权；</li>
+<li>(C) 认证服务器返回授权码给客户端；</li>
+<li>(D) 客户端通过授权码和跳转地址向认证服务器获取访问令牌；</li>
+<li>(E) 认证服务器发放访问令牌（有需要带上刷新令牌）。</li>
+</ul>
+<h3>密码模式</h3>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/558718033798315134e2a322621666b7_MD5.jpg" /></p>
+<ul>
+<li>(A) 客户端从用户获取用户名和密码；</li>
+<li>(B) 客户端通过用户的用户名和密码访问认证服务器；</li>
+<li>(C) 认证服务器返回访问令牌（有需要带上刷新令牌）。</li>
+</ul>
+
+<h1>从 Next-Auth 到 Prisma，用最新潮的技术栈做登录</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7269424598260498488?searchId=202309192239579E013D75689F6D3568F9">juejin.cn</a></p>
+</blockquote>
+<h1>用 Next-Auth 实现登录</h1>
+<p><code>pages/api/auth/[...nextauth].ts</code>中使用<code>[...nextauth]</code>是为了动态匹配<code>nextauth</code>的所有 API 路由，如:</p>
+<ul>
+<li><code>/api/auth/callback</code> 处理认证回调</li>
+<li><code>/api/auth/signin</code> 处理登录</li>
+<li><code>/api/auth/signout</code> 处理登出</li>
+<li><code>/api/auth/session</code> 获取<code>session</code>等等</li>
+</ul>
+<p>也就是说，使用<code>[...nextauth]</code>可以动态匹配所有包含<code>/api/auth/</code>和<code>nextauth</code>的<code>API</code>路由。</p>
+<hr>
+<p>这时候还要配一个环境变量</p>
+<pre><code># .env
+GITHUB_ID=YOUR_GITHUB_ID
+GITHUB_SECRET=YOUR_GITHUB_SECRET
+
+# NEXTAUTH_SECRET是必填项，用命令生成: openssl rand -base64 32
+NEXTAUTH_SECRET=YOUR_NEXTAUTH_SECRET
+NEXTAUTH_URL=http://localhost:3001 # 告诉next-auth授权回调的基础 URL，这个环境变量是必须的，虽然它没有在我们的代码里体现
+</code></pre>
+<p>现在试一下能不能完成<code>Github OAuth</code>登录。点击按钮确实会跳到授权页</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3eb1a5ac0e434d32a0da57f0463a6cda~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0..jpg?" alt=""></p>
+<hr>
+<p>需要一个更准确的信息证明真的完成授权登录了？那就在首页把个人信息回显出来。这依然需要用到<code>next-auth</code>的<code>api</code>。让我们在<code>lib</code>下面新建一个文档叫做<code>session.ts</code></p>
+<pre><code>import { getServerSession } from &quot;next-auth/next&quot;
+
+import { authOptions } from &quot;@/lib/auth&quot;
+
+export async function getCurrentUser() {
+  const session = await getServerSession(authOptions)
+  return session?.user
+}
+</code></pre>
+<hr>
+<p>为了<code>Image</code>可以生效，我们需要在<code>next.config.js</code>里添加可信域</p>
+<pre><code>/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    domains: ['avatars.githubusercontent.com'], // 添加github头像服务的域名
+  },
+}
+
+module.exports = nextConfig
+</code></pre>
+
+<h1>作为一名前端，该如何理解 Nginx？</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7082655545491980301?searchId=20230915142219A3CD8A18673BC5C81FAC">juejin.cn</a></p>
+</blockquote>
+<h2>Nginx 是什么？</h2>
+<p><code>Nginx</code> (engine x) 是一个<strong>轻量级、高性能的 HTTP</strong> 和<strong>反向代理服务器</strong>, 同时也是一个<strong>通用代理服务器</strong> (TCP/UDP/IMAP/POP3/SMTP), 最初由俄罗斯人 Igor Sysoev 编写。</p>
+<p>简单的说：</p>
+<ul>
+<li><code>Nginx</code>是一个拥有高性能 HTTP 和反向代理服务器，其特点是<code>占用内存少</code>，<code>并发能力强</code>，并且在现实中，nginx 的并发能力要比在同类型的网页服务器中表现要好</li>
+<li><code>Nginx</code>专为<code>性能优化</code>而开发，最重要的要求便是<code>性能</code>，且十分注重效率，有报告 nginx 能支持高达 50000 个并发连接数</li>
+</ul>
+<h2>动静分离</h2>
+<p>当客户端发起请求时，正常的情况是这样的：我们将动态资源和静态资源分离出来，交给不同的服务器去解析，这样就加快了解析的速度，从而降低由单个服务器的压力</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/23a49979bc5101ddbf823c9578080db6_MD5.jpg" /></p>
+<h2>安装 Nginx</h2>
+<p>关于 nginx 如何安装，这里就不做过多的介绍了，感兴趣的小伙伴看看这篇文章：<a href="https://link.juejin.cn?target=https%3A%2F%2Fblog.csdn.net%2Fyujing1314%2Farticle%2Fdetails%2F97267369" title="https://blog.csdn.net/yujing1314/article/details/97267369">【Linux】中如何安装 nginx</a></p>
+<p>这里让我们看看一些常用的命令：</p>
+<ul>
+<li>查看版本：<code>./nginx -v</code></li>
+<li>启动：<code>./nginx</code></li>
+<li>关闭：<code>./nginx -s stop</code>(推荐) 或 <code>./nginx -s quit</code></li>
+<li>重新加载 nginx 配置：<code>./nginx -s reload</code></li>
+</ul>
+<h2>Nginx 的配置文件</h2>
+<p>配置文件分为三个模块：</p>
+<ul>
+<li>全局块：从配置文件开始到 events 块之间，主要是设置一些<strong>影响 nginx 服务器整体运行的配置指令</strong>。（按道理说：并发处理服务的配置时，值越大，可支持的并发处理量越多，但此时会受到硬件、软件等设备等的制约）</li>
+<li>events 块：影响 <strong>nginx 服务器与用户的网络连接</strong>，常用的设置包括是否开启对多 workprocess 下的网络连接进行序列化，是否允许同时接收多个网络连接等等</li>
+<li>http 块：如反向代理和负载均衡都在此配置</li>
+</ul>
+<h2>location 的匹配规则</h2>
+<p>共有四种方式：</p>
+<pre><code>location[ = | ~ | ~* | ^~ ] url {
+    
+    }
+</code></pre>
+<ul>
+<li>= ：<code>精确匹配</code>，用于<strong>不含正则表达式</strong>的 url 前，要求字符串与 url <strong>严格匹配</strong>，完全相等时，才能停止向下搜索并处理请求</li>
+<li><code>^~</code>：用于<strong>不含正则表达式</strong>的 url 前，要求 ngin 服务器找到表示 <strong>url 和字符串匹配度最高</strong>的 location 后，立即使用此 location 处理请求，而不再匹配</li>
+<li><code>~</code> ：<code>最佳匹配</code>，用于表示 url <strong>包含正则表达式</strong>，并且<strong>区分</strong>大小写。</li>
+<li><code>~*</code>：与<code>~</code>一样，只是<strong>不区分</strong>大小写</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>如果 <code>url</code> 包含正则表达式，则不需要 <code>~</code> 作为开头表示</li>
+<li>nginx 的匹配具有<code>优先顺序</code>，一旦匹配上就会立马退出，不再进行向下匹配</li>
+</ul>
+
+<h1>傻傻分不清之 Cookie、Session、Token、JWT</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844904034181070861?searchId=20230920180929AB5CDCA704470B081379">juejin.cn</a></p>
+</blockquote>
+<h2>什么是凭证（Credentials）</h2>
+<p><strong>实现认证和授权的前提</strong>是需要一种<strong>媒介（证书）</strong> 来标记访问者的身份</p>
+<hr>
+<ul>
+<li><strong>cookie 是不可跨域的：</strong> 每个 cookie 都会绑定单一的域名，无法在别的域名下获取使用，<strong>一级域名和二级域名之间是允许共享使用的</strong>（<strong>靠的是 domain）</strong>。</li>
+</ul>
+<h2>Cookie 和 Session 的区别</h2>
+<ul>
+<li><strong>安全性：</strong> Session 比 Cookie 安全，Session 是存储在服务器端的，Cookie 是存储在客户端的。</li>
+<li><strong>存取值的类型不同</strong>：Cookie 只支持存字符串数据，想要设置其他类型的数据，需要将其转换成字符串，Session 可以存任意数据类型。</li>
+<li><strong>有效期不同：</strong> Cookie 可设置为长时间保持，比如我们经常使用的默认登录功能，Session 一般失效时间较短，客户端关闭（默认情况下）或者 Session 超时都会失效。</li>
+<li><strong>存储大小不同：</strong> 单个 Cookie 保存的数据不能超过 4K，Session 可存储数据远高于 Cookie，但是当访问量过多，会占用过多的服务器资源。</li>
+</ul>
+<h2>什么是 Token（令牌）</h2>
+<h3>Acesss Token</h3>
+<ul>
+<li><strong>访问资源接口（API）时所需要的资源凭证</strong></li>
+<li><strong>简单 token 的组成：</strong> uid(用户唯一的身份标识)、time(当前时间的时间戳)、sign（签名，token 的前几位以哈希算法压缩成的一定长度的十六进制字符串）</li>
+<li><strong>特点：</strong>
+<ul>
+<li><strong>服务端无状态化、可扩展性好</strong></li>
+<li><strong>支持移动端设备</strong></li>
+<li>安全</li>
+<li>支持跨程序调用</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><strong>token 的身份验证流程：</strong></li>
+</ul>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/17736ff7070d2fef06ea445f3d22efd3_MD5.jpg" /></p>
+<ol>
+<li>客户端使用用户名跟密码请求登录</li>
+<li>服务端收到请求，去验证用户名与密码</li>
+<li>验证成功后，服务端会签发一个 token 并把这个 token 发送给客户端</li>
+<li>客户端收到 token 以后，会把它存储起来，比如放在 cookie 里或者 localStorage 里</li>
+<li>客户端每次向服务端请求资源的时候需要带着服务端签发的 token</li>
+<li>服务端收到请求，然后去验证客户端请求里面带着的 token ，如果验证成功，就向客户端返回请求的数据</li>
+</ol>
+<hr>
+<ul>
+<li><strong>每一次请求都需要携带 token，需要把 token 放到 HTTP 的 Header 里</strong></li>
+<li><strong>基于 token 的用户认证是一种服务端无状态的认证方式，服务端不用存放 token 数据。用解析 token 的计算时间换取 session 的存储空间，从而减轻服务器的压力，减少频繁的查询数据库</strong></li>
+<li><strong>token 完全由应用管理，所以它可以避开同源策略</strong></li>
+</ul>
+<h2>Token 和 Session 的区别</h2>
+<ul>
+<li>Session 是一种<strong>记录服务器和客户端会话状态的机制，使服务端有状态化，可以记录会话信息</strong>。而 Token 是<strong>令牌</strong>，<strong>访问资源接口（API）时所需要的资源凭证</strong>。Token <strong>使服务端无状态化，不会存储会话信息。</strong></li>
+<li>Session 和 Token 并不矛盾，作为身份认证 Token 安全性比 Session 好，因为每一个请求都有签名还能防止监听以及重放攻击，而 Session 就必须依赖链路层来保障通讯安全了。<strong>如果你需要实现有状态的会话，仍然可以增加 Session 来在服务器端保存一些状态。</strong></li>
+</ul>
+<hr>
+<ul>
+<li>所谓 Session 认证只是简单的把 User 信息存储到 Session 里，因为 SessionID 的不可预测性，暂且认为是安全的。而 Token ，如果指的是 OAuth Token 或类似的机制的话，提供的是 认证 和 授权 ，认证是针对用户，授权是针对 App 。其目的是让某 App 有权利访问某用户的信息。这里的 Token 是唯一的。不可以转移到其它 App 上，也不可以转到其它用户上。Session 只提供一种简单的认证，即只要有此 SessionID ，即认为有此 User 的全部权利。是需要严格保密的，这个数据应该只保存在站方，不应该共享给其它网站或者第三方 App。所以简单来说：<strong>如果你的用户数据可能需要和第三方共享，或者允许第三方调用 API 接口，用 Token 。如果永远只是自己的网站，自己的 App，用什么就无所谓了。</strong></li>
+</ul>
+<h2>什么是 JWT</h2>
+<ul>
+<li>JSON Web Token（简称 JWT）是目前最流行的<strong>跨域认证</strong>解决方案。是一种<strong>认证授权机制</strong>。</li>
+<li>JWT 是为了在网络应用环境间<strong>传递声明</strong>而执行的一种基于 JSON 的开放标准（<a href="https://link.juejin.cn?target=https%3A%2F%2Ftools.ietf.org%2Fhtml%2Frfc7519" title="https://tools.ietf.org/html/rfc7519">RFC 7519</a>）。JWT 的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源。比如用在用户登录上。</li>
+<li>可以使用 HMAC 算法或者是 RSA 的公 / 私秘钥对 JWT 进行签名。因为数字签名的存在，这些传递的信息是可信的。</li>
+</ul>
+<h3>生成 JWT</h3>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/01a013ef78f676342db3ce6f3a9691bf_MD5.jpg" /></p>
+<hr>
+<ul>
+<li><strong>JWT 认证流程：</strong>
+<ul>
+<li>用户输入用户名 / 密码登录，服务端认证成功后，会返回给客户端一个 JWT</li>
+<li>客户端将 token 保存到本地（通常使用 localstorage，也可以使用 cookie）</li>
+<li>当用户希望访问一个受保护的路由或者资源的时候，需要请求头的 Authorization 字段中使用 Bearer 模式添加 JWT，其内容看起来是下面这样</li>
+</ul>
+</li>
+</ul>
+<pre><code>Authorization: Bearer &lt;token&gt;
+</code></pre>
+<ul>
+<li>服务端的保护路由将会检查请求头 Authorization 中的 JWT 信息，如果合法，则允许用户的行为</li>
+</ul>
+<h3>JWT 的使用方式</h3>
+<ul>
+<li>客户端收到服务器返回的 JWT，可以储存在 Cookie 里面，也可以储存在 localStorage。</li>
+</ul>
+<h4>方式一</h4>
+<ul>
+<li>
+<p>当用户希望访问一个受保护的路由或者资源的时候，可以把它放在 Cookie 里面自动发送，但是这样不能跨域，所以更好的做法是放在 HTTP 请求头信息的 Authorization 字段里，使用 Bearer 模式添加 JWT。</p>
+<pre><code>GET /calendar/v1/events
+Host: api.example.com
+Authorization: Bearer &lt;token&gt;
+</code></pre>
+<ul>
+<li>用户的状态不会存储在服务端的内存中，这是一种 <strong>无状态的认证机制</strong></li>
+<li>服务端的保护路由将会检查请求头 Authorization 中的 JWT 信息，如果合法，则允许用户的行为。</li>
+<li>由于 JWT 是自包含的，因此减少了需要查询数据库的需要</li>
+<li>JWT 的这些特性使得我们可以完全依赖其无状态的特性提供数据 API 服务，甚至是创建一个下载流服务。</li>
+<li>因为 JWT 并不使用 Cookie ，所以你可以使用任何域名提供你的 API 服务而<strong>不需要担心跨域资源共享问题</strong>（CORS）</li>
+</ul>
+</li>
+</ul>
+<h4>方式二</h4>
+<ul>
+<li>跨域的时候，可以把 JWT 放在 POST 请求的数据体里。</li>
+</ul>
+<h4>方式三</h4>
+<ul>
+<li>通过 URL 传输</li>
+</ul>
+<pre><code>http://www.example.com/user?token=xxx
+</code></pre>
+<h2>Token 和 JWT 的区别</h2>
+<p><strong>相同：</strong></p>
+<ul>
+<li>都是访问资源的令牌</li>
+<li>都可以记录用户的信息</li>
+<li>都是使服务端无状态化</li>
+<li>都是只有验证成功后，客户端才能访问服务端上受保护的资源</li>
+</ul>
+<p><strong>区别：</strong></p>
+<ul>
+<li>Token：服务端验证客户端发送过来的 Token 时，还需要查询数据库获取用户信息，然后验证 Token 是否有效。</li>
+<li>JWT： 将 Token 和 Payload 加密后存储于客户端，服务端只需要使用密钥解密进行校验（校验也是 JWT 自己实现的）即可，不需要查询或者减少查询数据库，因为 JWT 自包含了用户信息和加密的数据。</li>
+</ul>
+<p>常见的前后端鉴权方式</p>
+<hr>
+<ol>
+<li>Session-Cookie</li>
+<li>Token 验证（包括 JWT，SSO）</li>
+<li>OAuth2.0（开放授权）</li>
+</ol>
+<h2>常见问题</h2>
+<h3>使用 cookie 时需要考虑的问题</h3>
+<ul>
+<li>因为存储在客户端，容易被客户端篡改，使用前需要验证合法性</li>
+<li>不要存储敏感数据，比如用户密码，账户余额</li>
+<li>使用 httpOnly 在一定程度上提高安全性</li>
+<li>尽量减少 cookie 的体积，能存储的数据量不能超过 4kb</li>
+<li>设置正确的 domain 和 path，减少数据传输</li>
+<li><strong>cookie 无法跨域</strong></li>
+<li>一个浏览器针对一个网站最多存 20 个 Cookie，浏览器一般只允许存放 300 个 Cookie</li>
+<li><strong>移动端对 cookie 的支持不是很好，而 session 需要基于 cookie 实现，所以移动端常用的是 token</strong></li>
+</ul>
+<h3>使用 session 时需要考虑的问题</h3>
+<ul>
+<li>将 session 存储在服务器里面，当用户同时在线量比较多时，这些 session 会占据较多的内存，需要在服务端定期的去清理过期的 session</li>
+<li>当网站采用<strong>集群部署</strong>的时候，会遇到多台 web 服务器之间如何做 session 共享的问题。因为 session 是由单个服务器创建的，但是处理用户请求的服务器不一定是那个创建 session 的服务器，那么该服务器就无法拿到之前已经放入到 session 中的登录凭证之类的信息了。</li>
+<li>当多个应用要共享 session 时，除了以上问题，还会遇到跨域问题，因为不同的应用可能部署的主机不一样，需要在各个应用做好 cookie 跨域的处理。</li>
+<li><strong>sessionId 是存储在 cookie 中的，假如浏览器禁止 cookie 或不支持 cookie 怎么办？</strong> 一般会把 sessionId 跟在 url 参数后面即重写 url，所以 session 不一定非得需要靠 cookie 实现</li>
+<li><strong>移动端对 cookie 的支持不是很好，而 session 需要基于 cookie 实现，所以移动端常用的是 token</strong></li>
+</ul>
+<h3>使用 token 时需要考虑的问题</h3>
+<ul>
+<li>如果你认为用数据库来存储 token 会导致查询时间太长，可以选择放在内存当中。比如 redis 很适合你对 token 查询的需求。</li>
+<li><strong>token 完全由应用管理，所以它可以避开同源策略</strong></li>
+<li><strong>token 可以避免 CSRF 攻击 (因为不需要 cookie 了)</strong></li>
+<li><strong>移动端对 cookie 的支持不是很好，而 session 需要基于 cookie 实现，所以移动端常用的是 token</strong></li>
+</ul>
+<h3>使用 JWT 时需要考虑的问题</h3>
+<ul>
+<li>因为 JWT 并不依赖 Cookie 的，所以你可以使用任何域名提供你的 API 服务而不需要担心跨域资源共享问题（CORS）</li>
+<li>JWT 默认是不加密，但也是可以加密的。生成原始 Token 以后，可以用密钥再加密一次。</li>
+<li>JWT 不加密的情况下，不能将秘密数据写入 JWT。</li>
+<li>JWT 不仅可以用于认证，也可以用于交换信息。有效使用 JWT，可以降低服务器查询数据库的次数。</li>
+<li>JWT 最大的优势是服务器不再需要存储 Session，使得服务器认证鉴权业务可以方便扩展。但这也是 JWT 最大的缺点：由于服务器不需要存储 Session 状态，因此使用过程中无法废弃某个 Token 或者更改 Token 的权限。也就是说一旦 JWT 签发了，到期之前就会始终有效，除非服务器部署额外的逻辑。</li>
+<li>JWT 本身包含了认证信息，一旦泄露，任何人都可以获得该令牌的所有权限。为了减少盗用，JWT 的有效期应该设置得比较短。对于一些比较重要的权限，使用时应该再次对用户进行认证。</li>
+<li>JWT 适合一次性的命令认证，颁发一个有效期极短的 JWT，即使暴露了危险也很小，由于每次操作都会生成新的 JWT，因此也没必要保存 JWT，真正实现无状态。</li>
+<li>为了减少盗用，JWT 不应该使用 HTTP 协议明码传输，要使用 HTTPS 协议传输。</li>
+</ul>
+<h3>使用加密算法时需要考虑的问题</h3>
+<ul>
+<li>绝不要以<strong>明文存储</strong>密码</li>
+<li><strong>永远使用 哈希算法 来处理密码，绝不要使用 Base64 或其他编码方式来存储密码，这和以明文存储密码是一样的，使用哈希，而不要使用编码</strong>。编码以及加密，都是双向的过程，而密码是保密的，应该只被它的所有者知道， 这个过程必须是单向的。哈希正是用于做这个的，从来没有解哈希这种说法， 但是编码就存在解码，加密就存在解密。</li>
+</ul>
+<h3>分布式架构下 session 共享方案</h3>
+<h4>1. session 复制</h4>
+<ul>
+<li>任何一个服务器上的 session 发生改变（增删改），该节点会把这个 session 的所有内容序列化，然后广播给所有其它节点，不管其他服务器需不需要 session ，以此来保证 session 同步</li>
+</ul>
+<p><strong>优点：</strong> 可容错，各个服务器间 session 能够实时响应。<br>
+<strong>缺点：</strong> 会对网络负荷造成一定压力，如果 session 量大的话可能会造成网络堵塞，拖慢服务器性能。</p>
+<h4>2. 粘性 session /IP 绑定策略</h4>
+<ul>
+<li><strong>采用 Ngnix 中的 ip_hash 机制，将某个 ip 的所有请求都定向到同一台服务器上，即将用户与服务器绑定。</strong> 用户第一次请求时，负载均衡器将用户的请求转发到了 A 服务器上，如果负载均衡器设置了粘性 session 的话，那么用户以后的每次请求都会转发到 A 服务器上，相当于把用户和 A 服务器粘到了一块，这就是粘性 session 机制。</li>
+</ul>
+<p><strong>优点：</strong> 简单，不需要对 session 做任何处理。<br>
+<strong>缺点：</strong> 缺乏容错性，如果当前访问的服务器发生故障，用户被转移到第二个服务器上时，他的 session 信息都将失效。</p>
+<p><strong>适用场景：</strong> 发生故障对客户产生的影响较小；服务器发生故障是低概率事件 。<br>
+<strong>实现方式：</strong> 以 Nginx 为例，在 upstream 模块配置 ip_hash 属性即可实现粘性 session。</p>
+<h4>3. session 共享（常用）</h4>
+<ul>
+<li>使用分布式缓存方案比如 Memcached 、Redis 来缓存 session，但是要求 Memcached 或 Redis 必须是集群</li>
+<li>把 session 放到 Redis 中存储，虽然架构上变得复杂，并且需要多访问一次 Redis ，但是这种方案带来的好处也是很大的：
+<ul>
+<li>实现了 session 共享；</li>
+<li>可以水平扩展（增加 Redis 服务器）；</li>
+<li>服务器重启 session 不丢失（不过也要注意 session 在 Redis 中的刷新 / 失效机制）；</li>
+<li>不仅可以跨服务器 session 共享，甚至可以跨平台（例如网页端和 APP 端）</li>
+</ul>
+</li>
+</ul>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/69847f3e3385d9ba54cf13f20cada2ff_MD5.jpg" /></p>
+<h4>4. session 持久化</h4>
+<ul>
+<li>将 session 存储到数据库中，保证 session 的持久化</li>
+</ul>
+<p><strong>优点：</strong> 服务器出现问题，session 不会丢失<br>
+<strong>缺点：</strong> 如果网站的访问量很大，把 session 存储到数据库中，会对数据库造成很大压力，还需要增加额外的开销维护数据库。</p>
+<h3><strong>只要关闭浏览器 ，session 真的就消失了？</strong></h3>
+<p>不对。对 session 来说，除非程序通知服务器删除一个 session，否则服务器会一直保留，程序一般都是在用户做 log off 的时候发个指令去删除 session。<br>
+然而浏览器从来不会主动在关闭之前通知服务器它将要关闭，因此服务器根本不会有机会知道浏览器已经关闭，之所以会有这种错觉，是大部分 session 机制都使用会话 cookie 来保存 session id，而关闭浏览器后这个 session id 就消失了，再次连接服务器时也就无法找到原来的 session。如果服务器设置的 cookie 被保存在硬盘上，或者使用某种手段改写浏览器发出的 HTTP 请求头，把原来的 session id 发送给服务器，则再次打开浏览器仍然能够打开原来的 session。</p>
+<p>恰恰是<strong>由于关闭浏览器不会导致 session 被删除，迫使服务器为 session 设置了一个失效时间，当距离客户端上一次使用 session 的时间超过这个失效时间时，服务器就认为客户端已经停止了活动，才会把 session 删除以节省存储空间。</strong></p>
+
+<h1>前端想要了解的 Nginx</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903816521842702">juejin.cn</a></p>
+</blockquote>
+<h4>先来看下默认的 Nginx 配置，我将以此为基础依次介绍 Nginx 的用法</h4>
+<p>Nginx 安装目录下的<code>nginx.conf</code>就是 Nginx 全局的配置文件，我们主要修改这里的内容。<code>nginx.conf.default</code>作为配置文件的备份。</p>
+<pre><code># 设置工作进程的数量
+worker_processes  1;
+# 处理连接
+events {
+    # 设置连接数
+    worker_connections  1024;
+}
+
+http {
+    # 文件拓展名查找集合
+    include       mime.types;
+    # 当查找不到对应类型的时候默认值
+    default_type  application/octet-stream;
+
+    # 日志格式，定义别名为 main
+    #log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
+    #                  '$status $body_bytes_sent &quot;$http_referer&quot; '
+    #                  '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
+
+    # 指定日志输入目录
+    #access_log  logs/access.log  main;
+
+    # 调用 sendfile 系统传输文件
+    sendfile        on;
+    #tcp_nopush     on;
+
+    # 客户端与服务器连接超时时间，超时自动断开
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    # 开启gizip 压缩
+    #gzip  on;
+
+    # 虚拟主机
+    server {
+        listen       8080;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        # 路由
+        location / {
+                root   html;
+                index  index.html index.htm;
+            }
+    }
+
+    # 引入其他的配置文件
+    include servers/*;
+}
+</code></pre>
+<h2>搭建静态站点</h2>
+<pre><code># 虚拟主机server块
+server {
+    # 端口
+    listen   8080;
+    # 匹配请求中的host值
+    server_name  localhost;
+    
+    # 监听请求路径
+    location / {
+        # 查找目录
+        root /source;
+        # 默认查找
+        index index.html index.htm;
+    }
+}
+</code></pre>
+<p>这里说明一下相关字段</p>
+<ul>
+<li><code>server</code> 配置虚拟主机的相关参数，可以有多个</li>
+<li><code>server_name</code> 通过请求中的 host 值 找到对应的虚拟主机的配置</li>
+<li><code>location</code> 配置请求路由，处理相关页面情况</li>
+<li><code>root</code> 查找资源的路径</li>
+</ul>
+<p>配置完成后执行 <code>nginx -t</code> 看是否有错误，如果看到的是下面这种就是成功了</p>
+<pre><code>nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+</code></pre>
+<p>然后执行<code>nginx -s reload</code> 更新 Nginx 配置文件</p>
+<p>这时候打开浏览器 输入 localhost:8080 应该就能看到你的页面了</p>
+<blockquote>
+<p><code>nginx -t</code> 检查配置文件是否有语法错误<br>
+<code>nginx -s reload</code> 向主进程发送信号，重新加载配置文件<br>
+<code>nginx -s stop</code> 快速关闭<br>
+<code>nginx -s quit</code> 等待工作进程处理完成后关闭</p>
+</blockquote>
+<h2>动态匹配（请求过滤）</h2>
+<blockquote>
+<p>通常在开发环境或者测试环境的时候呢我们修改了代码，因为浏览器缓存，可能不会生效，需要手动清除缓存，才能看到修改后的效果，这里我们做一个配置让浏览器不缓存相关的资源。</p>
+</blockquote>
+<pre><code>location ~* \.(js|css|png|jpg|gif)$ {
+    add_header Cache-Control no-store;
+}
+</code></pre>
+<p><code>~* \.(js|css|png|jpg|gif)$</code> 是匹配以相关文件类型然后单独处理。 <code>add_header</code> 是给请求的响应加上一个头信息<code>Cache-Control no-store</code>，告知浏览器禁用缓存，每次都从服务器获取 效果如下：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/858f0c50a23c88eb7188c4035569909a_MD5.jpg" /></p>
+<h4>匹配规则</h4>
+<p>通常的形式如下</p>
+<pre><code>location = / {
+    [ configuration A ]
+}
+
+location / {
+    [ configuration B ]
+}
+
+location /documents/ {
+    [ configuration C ]
+}
+
+location ^~ /images/ {
+    [ configuration D ]
+}
+
+location ~* \.(gif|jpg|jpeg)$ {
+    [ configuration E ]
+}
+</code></pre>
+<ul>
+<li>= 表示精确匹配。只有请求的 url 路径与后面的字符串完全相等时，才会命中（优先级最高）。</li>
+<li><code>^~</code> 表示如果该符号后面的字符是最佳匹配，采用该规则，不再进行后续的查找。</li>
+<li><code>~</code> 表示该规则是使用正则定义的，区分大小写。</li>
+<li><code>~*</code> 表示该规则是使用正则定义的，不区分大小写。</li>
+</ul>
+<h4>通过状态码来过滤请求就像这样</h4>
+<pre><code># 通过状态码，返回指定的错误页面
+error_page 500 502 503 504 /50x.html;
+location = /50x.html {
+    root /source/error_page;
+}
+</code></pre>
+<h2>反向代理解决跨域</h2>
+<blockquote>
+<p>因为浏览器的<a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FSecurity%2FSame-origin_policy" title="https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_policy">同源策略</a>，当前端域名与后端域名不一致的时候导致请求失败。我们可以通过配置 Nginx 反向代理来解决。</p>
+</blockquote>
+<pre><code>location /api {   
+    # 请求host传给后端
+    proxy_set_header Host $http_host;
+    # 请求ip 传给后端
+    proxy_set_header X-Real-IP $remote_addr;
+    # 请求协议传给后端
+    proxy_set_header X-Scheme $scheme;
+    # 路径重写
+    rewrite  /api/(.*)  /$1  break;
+    # 代理服务器
+    proxy_pass http://localhost:9000;
+}
+</code></pre>
+<ul>
+<li>拦截路径<code>/api</code>, 可以通过正则匹配。</li>
+<li><code>proxy_set_header</code> 允许重新定义或添加字段传递给代理服务器的请求头。</li>
+<li><code>$http_host</code>、<code>$remote_addr</code>、<code>$scheme</code> 为 Nginx 内置变量。</li>
+<li><code>rewrite</code> 根据 rewrite 后的请求 URI，将路径重写，如：接口路径为 <code>/user</code>, 我们可以请求 <code>/api/user</code>。（为什么需要重写 uri？因为在使用 Nginx 做反向代理的时候，需要匹配到跨域的接口再做转发，为了方便匹配，会人为的在原接口中添加一段路径（或标示， 如例子中的<code>api</code>），因此需要在匹配之后、转发之前把添加的那段去掉，因此需要 rewrite。）</li>
+<li><code>break</code> 继续本次请求后面的处理 , 停止匹配下面的<code>location</code>。需要注意的是与之类似的<code>last</code>执行过程则是停止当前这个请求，并根据 rewrite 匹配的规则重新发起一个请求，从上到下依次匹配<code>location</code>后面的规则。</li>
+<li><code>proxy_pass</code> 代理服务器。</li>
+</ul>
+<blockquote>
+<p>原理：Nginx 拦截到相关匹配规则, Nginx 再将请求转发到<code>http://localhost:9000</code>，Nginx 得到请求后再响应到前端，可以直接请求<code>/api/user</code>完成请求。</p>
+</blockquote>
+<h2>配置 Gzip</h2>
+<p>开发过程中难免用到一些成熟的框架，或者插件，这些外部的依赖，有时候体积比较大，导致页面响应缓慢，我们可以用打包工具 .jpgack, rollup)，将代码进行压缩，以缩小代码体积。 开启 Nginx Gzip 压缩功能。</p>
+<p>需要注意的是 Gzip 压缩功能需要浏览器跟服务器都支持，即服务器压缩，浏览器解析。</p>
+<ul>
+<li>确定浏览器支持，我们就可以在 Nginx 中配置</li>
+</ul>
+<pre><code>server {
+    # 开启gzip 压缩
+    gzip on;
+    # 设置gzip所需的http协议最低版本 （HTTP/1.1, HTTP/1.0）
+    gzip_http_version 1.1;
+    # 设置压缩级别，压缩级别越高压缩时间越长  （1-9）
+    gzip_comp_level 4;
+    # 设置压缩的最小字节数， 页面Content-Length获取
+    gzip_min_length 1000;
+    # 设置压缩文件的类型  （text/html)
+    gzip_types text/plain application/javascript text/css;
+}
+</code></pre>
+<ul>
+<li>查看配置是否生效，查看 <em>响应头</em> 中的<code>Content-Encoding</code>字段，值为 <code>gzip</code></li>
+</ul>
+<h2>负载均衡</h2>
+<blockquote>
+<p>负载均衡是 Nginx 比较常用的一个功能，可优化资源利用率，最大化吞吐量，减少延迟，确保容错配置，将流量分配到多个后端服务器。</p>
+</blockquote>
+<pre><code>Syntax:	upstream name { ... }
+Context: stream
+</code></pre>
+<p>这里举出常用的几种策略</p>
+<hr>
+<ul>
+<li>轮询（默认），请求过来后，Nginx 随机分配流量到任一服务器</li>
+</ul>
+<pre><code>upstream backend {
+    server 127.0.0.1:3000;
+    server 127.0.0.1:3001;
+}
+</code></pre>
+<hr>
+<ul>
+<li><code>weight=number</code> 设置服务器的权重，默认为 1，权重大的会被优先分配</li>
+</ul>
+<pre><code>upstream backend {
+    server 127.0.0.1:3000 weight=2;
+    server 127.0.0.1:3001 weight=1;
+}
+</code></pre>
+<hr>
+<ul>
+<li><code>backup</code> 标记为备份服务器。当主服务器不可用时，将传递与备份服务器的连接。</li>
+</ul>
+<pre><code>upstream backend {
+    server 127.0.0.1:3000 backup;
+    server 127.0.0.1:3001;
+}
+</code></pre>
+<hr>
+<ul>
+<li><code>ip_hash</code> 保持会话，保证同一客户端始终访问一台服务器。</li>
+</ul>
+<pre><code>upstream backend {
+    ip_hash;  
+    server 127.0.0.1:3000 backup;
+    server 127.0.0.1:3001;
+}
+</code></pre>
+<hr>
+<ul>
+<li><code>least_conn</code> 优先分配最少连接数的服务器，避免服务器超载请求过多。</li>
+</ul>
+<pre><code>upstream backend {
+    least_conn;
+    server 127.0.0.1:3000;
+    server 127.0.0.1:3001;
+}
+</code></pre>
+<hr>
+<p>当我们需要代理一个集群时候可以通过下面这种方式实现</p>
+<pre><code>http {
+
+    upstream backend {
+        server 127.0.0.1:3000;
+        server 127.0.0.1:3001;
+    }
+
+    ...
+    server {
+        listen      9000;
+        server_name localhost;
+        
+        location / {
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Scheme $scheme;
+            
+            proxy_pass backend; 
+        }
+    }
+}
+</code></pre>
+
+<h1>前端鉴权的兄弟们：cookie、session、token、jwt、单点登录</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6898630134530752520?searchId=20230920180929AB5CDCA704470B081379">juejin.cn</a></p>
+</blockquote>
+<h1>基石：cookie</h1>
+<p><strong>配置：Domain / Path</strong></p>
+<p>cookie 是要限制::「空间范围」:: 的，通过 Domain（域）/ Path（路径）两级。</p>
+<p>Domain 属性指定浏览器发出 HTTP 请求时，哪些域名要附带这个 Cookie。如果没有指定该属性，浏览器会默认将其设为当前 URL 的一级域名，比如 <a href="https://link.juejin.cn?target=http%3A%2F%2Fwww.example.com" title="http://www.example.com">www.example.com</a> 会设为 example.com，而且以后如果访问 example.com 的任何子域名，HTTP 请求也会带上这个 Cookie。如果服务器在 Set-Cookie 字段指定的域名，不属于当前域名，浏览器会拒绝这个 Cookie。</p>
+<p>Path 属性指定浏览器发出 HTTP 请求时，哪些路径要附带这个 Cookie。只要浏览器发现，Path 属性是 HTTP 请求路径的开头一部分，就会在头信息里面带上这个 Cookie。比如，PATH 属性是 /，那么请求 / docs 路径也会包含该 Cookie。当然，前提是域名必须一致。</p>
+<p><strong>配置：Secure / HttpOnly</strong></p>
+<blockquote>
+<p>有的学校规定，不带卡套不让刷（什么奇葩学校，假设）；有的学校不让自己给卡贴贴纸。</p>
+</blockquote>
+<p>cookie 可以限制::「使用方式」::。</p>
+<blockquote>
+<p>Secure 属性指定浏览器只有在加密协议 HTTPS 下，才能将这个 Cookie 发送到服务器。另一方面，如果当前协议是 HTTP，浏览器会自动忽略服务器发来的 Secure 属性。该属性只是一个开关，不需要指定值。如果通信是 HTTPS 协议，该开关自动打开。</p>
+<p>HttpOnly 属性指定该 Cookie 无法通过 JavaScript 脚本拿到，主要是 Document.cookie 属性、XMLHttpRequest 对象和 Request API 都拿不到该属性。这样就防止了该 Cookie 被脚本读到，只有浏览器发出 HTTP 请求时，才会带上该 Cookie。</p>
+<p>—— <a href="https://link.juejin.cn?target=https%3A%2F%2Fjavascript.ruanyifeng.com%2Fbom%2Fcookie.html" title="https://javascript.ruanyifeng.com/bom/cookie.html">Cookie — JavaScript 标准参考教程（alpha）</a></p>
+</blockquote>
+<h1>应用方案：服务端 session</h1>
+<p>典型的 session 登陆 / 验证流程：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/f63792bcf66ca2f970478739325db82a_MD5.jpg" /></p>
+<ul>
+<li>浏览器登录发送账号密码，服务端查用户库，校验用户</li>
+<li>服务端把用户登录状态存为 Session，生成一个 sessionId</li>
+<li>通过登录接口返回，把 sessionId set 到 cookie 上</li>
+<li>此后浏览器再请求业务接口，sessionId 随 cookie 带上</li>
+<li>服务端查 sessionId 校验 session</li>
+<li>成功后正常做业务处理，返回结果</li>
+</ul>
+<h3><strong>Session 的存储方式</strong></h3>
+<p>显然，服务端只是给 cookie 一个 sessionId，而 session 的具体内容（可能包含用户信息、session 状态等），要自己存一下。存储的方式有几种：</p>
+<ul>
+<li>Redis（推荐）：内存型数据库，<a href="https://link.juejin.cn?target=http%3A%2F%2Fwww.redis.cn%2F" title="http://www.redis.cn/">redis 中文官方网站</a>。以 key-value 的形式存，正合 sessionId-sessionData 的场景；且访问快。</li>
+<li>内存：直接放到变量里。一旦服务重启就没了</li>
+<li>数据库：普通数据库。性能不高。</li>
+</ul>
+<h3><strong>Session 的分布式问题</strong></h3>
+<p>通常服务端是集群，而用户请求过来会走一次负载均衡，不一定打到哪台机器上。那一旦用户后续接口请求到的机器和他登录请求的机器不一致，或者登录请求的机器宕机了，session 不就失效了吗？</p>
+<p>这个问题现在有几种解决方式。</p>
+<ul>
+<li>一是从「存储」角度，把 session 集中存储。如果我们用独立的 Redis 或普通数据库，就可以把 session 都存到一个库里。</li>
+<li>二是从「分布」角度，让相同 IP 的请求在负载均衡时都打到同一台机器上。以 nginx 为例，可以配置 ip_hash 来实现。
+但通常还是采用第一种方式，因为第二种相当于阉割了负载均衡，且仍没有解决「用户请求的机器宕机」的问题。</li>
+</ul>
+<h3><strong>node.js 下的 session 处理</strong></h3>
+<p>前面的图很清楚了，服务端要实现对 cookie 和 session 的存取，实现起来要做的事还是很多的。在<code>npm</code>中，已经有封装好的中间件，比如 <a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fexpress-session" title="https://www.npmjs.com/package/express-session">express-session - npm</a>，用法就不贴了。</p>
+<p>这是它种的 cookie：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/5ebb1d601f922bcb4ce5b12e7a9a3675_MD5.jpg" /></p>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fexpress-session" title="https://www.npmjs.com/package/express-session">express-session - npm</a> 主要实现了：</p>
+<ul>
+<li>封装了对 cookie 的读写操作，并提供配置项配置字段、加密方式、过期时间等。</li>
+<li>封装了对 session 的存取操作，并提供配置项配置 session 存储方式（内存 / redis）、存储规则等。</li>
+<li>给 req 提供了 session 属性，控制属性的 set/get 并响应到 cookie 和 session 存取上，并给 req.session 提供了一些方法。</li>
+</ul>
+<h1>应用方案：token</h1>
+<p>回过头来想想，一个登录场景，也不必往 session 存太多东西，那为什么不直接打包到 cookie 中呢？这样服务端不用存了，每次只要核验 cookie 带的「证件」有效性就可以了，也可以携带一些轻量的信息。</p>
+<p>这种方式通常被叫做 token。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/d82f3cb65b8f12593689a3bc0283a543_MD5.jpg" /></p>
+<p>token 的流程是这样的：</p>
+<ul>
+<li>用户登录，服务端校验账号密码，获得用户信息</li>
+<li>把用户信息、token 配置编码成 token，通过 cookie set 到浏览器</li>
+<li>此后用户请求业务接口，通过 cookie 携带 token</li>
+<li>接口校验 token 有效性，进行正常业务接口处理</li>
+</ul>
+<h3><strong>客户端 token 的存储方式</strong></h3>
+<p>在前面 cookie 说过，cookie 并不是客户端存储凭证的唯一方式。token 因为它的「无状态性」，有效期、使用限制都包在 token 内容里，对 cookie 的管理能力依赖较小，客户端存起来就显得更自由。但 web 应用的主流方式仍是放在 cookie 里，毕竟少操心。</p>
+<h3><strong>token 的过期</strong></h3>
+<p>那我们如何控制 token 的有效期呢？很简单，把「过期时间」和数据一起塞进去，验证时判断就好。</p>
+<h2>token 的编码</h2>
+<p>最朴实无华的有<strong>base64</strong>方法
+那问题来了，如果用户 cdd 拿<code>{&quot;userid&quot;:&quot;abb”}</code>转了个 base64，再手动修改了自己的 token 为 <code>eyJ1c2VyaWQiOiJhIn0=</code>，是不是就能直接访问到 abb 的数据了？
+是的。所以看情况，如果 token 涉及到敏感权限，就要想办法避免 token 被篡改。
+解决方案就是给 token 加签名，来识别 token 是否被篡改过。增加两项配置：</p>
+<pre><code>secret: 'iAmSecret',
+signed: true,
+</code></pre>
+<p>这样会多种一个 .sig cookie，里面的值就是 <code>{&quot;userid&quot;:&quot;abb”}</code> 和 <code>iAmSecret</code>通过加密算法计算出来的，常见的比如 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdocs.microsoft.com%2Fzh-cn%2Fdotnet%2Fapi%2Fsystem.security.cryptography.hmacsha256%3Fredirectedfrom%3DMSDN%26view%3Dnetframework-4.8" title="https://docs.microsoft.com/zh-cn/dotnet/api/system.security.cryptography.hmacsha256?redirectedfrom=MSDN&amp;view=netframework-4.8">HMACSHA256 类 (System.Security.Cryptography) | Microsoft Docs</a>。
+<img src="file://Mac/Home/myGitHubMac/simple-read/_resources/604764803f7a8270fe245c9f55f1fee6_MD5.jpg" /></p>
+<p>好了，现在 cdd 虽然能伪造出<code>eyJ1c2VyaWQiOiJhIn0=</code>，但伪造不出 sig 的内容，因为他不知道 secret。</p>
+<h3><strong>JWT</strong></h3>
+<blockquote>
+<p>JSON Web Token (JWT) 是一个开放标准，定义了一种传递 JSON 信息的方式。这些信息通过数字签名确保可信。</p>
+</blockquote>
+<p>它是一种成熟的 token 字符串生成方案，包含了我们前面提到的数据、签名。
+不如直接看一下一个 JWT token 长什么样：</p>
+<h2>refresh token</h2>
+<p>业务接口用来鉴权的 token，我们称之为 access token。</p>
+<ul>
+<li>越是权限敏感的业务，我们越希望 access token 有效期足够短，以避免被盗用。</li>
+<li>但过短的有效期会造成 access token 经常过期，过期后怎么办呢？</li>
+</ul>
+<p>一种办法是，让用户重新登录获取新 token，显然不够友好
+另外一种办法是，再来一个 token，一个专门生成 access token 的 token，我们称为 refresh token。</p>
+<ul>
+<li>access token 用来访问业务接口，由于有效期足够短，盗用风险小，也可以使请求方式更宽松灵活</li>
+<li>refresh token 用来获取 access token，有效期可以长一些，通过独立服务和严格的请求方式增加安全性；由于不常验证，也可以如前面的 session 一样处理</li>
+</ul>
+<hr>
+<p>有了 refresh token 后，几种情况的请求流程变成这样：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/6cb0c3ddc8c7aa5165c7136bfe0633a5_MD5.jpg" /></p>
+<p>如果 refresh token 也过期了，就只能重新登录了。</p>
+<h2>session 和 token</h2>
+<p>session 和 token 都是边界很模糊的概念，就像前面说的，refresh token 也可能以 session 的形式组织维护。</p>
+<p>狭义上，我们通常认为 session 是「种在 cookie 上、数据存在服务端」的认证方案，token 是「客户端存哪都行、数据存在 token 里」的认证方案。</p>
+<hr>
+<p>对 session 和 token 的对比本质上是「客户端存 cookie / 存别地儿」、「服务端存数据 / 不存数据」的对比。</p>
+<p><strong>客户端存 cookie / 存别地儿</strong></p>
+<p>存 cookie 固然方便不操心，但问题也很明显：</p>
+<ul>
+<li>在浏览器端，可以用 cookie（实际上 token 就常用 cookie），但出了浏览器端，没有 cookie 怎么办？</li>
+<li>cookie 是浏览器在域下自动携带的，这就容易引发 CSRF 攻击（<a href="https://link.juejin.cn?target=https%3A%2F%2Ftech.meituan.com%2F2018%2F10%2F11%2Ffe-security-csrf.html" title="https://tech.meituan.com/2018/10/11/fe-security-csrf.html">前端安全系列（二）：如何防止 CSRF 攻击？ - 美团技术团队</a>）</li>
+</ul>
+<p>存别的地方，可以解决没有 cookie 的场景；通过参数等方式手动带，可以避免 CSRF 攻击。</p>
+<p><strong>服务端存数据 / 不存数据</strong></p>
+<ul>
+<li>存数据：请求只需携带 id，可以大幅缩短认证字符串长度，减小请求体积</li>
+<li>不存数据：不需要服务端整套的解决方案和分布式处理，降低硬件成本；避免查库带来的验证延迟</li>
+</ul>
+<h1>单点登录</h1>
+<p>前面我们已经知道了，在同域下的客户端 / 服务端认证系统中，通过客户端携带凭证，维持一段时间内的登录状态。</p>
+<p>但当我们业务线越来越多，就会有更多业务系统分散到不同域名下，就需要「一次登录，全线通用」的能力，叫做「单点登录」。</p>
+<h2>“虚假” 的单点登录（主域名相同）</h2>
+<p>简单的，如果业务系统都在同一主域名下，比如<code>wenku.baidu.com</code> <code>tieba.baidu.com</code>，就好办了。可以直接把 cookie domain 设置为主域名 <code>baidu.com</code>，百度也就是这么干的。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/2c8c9ee851be6be11ee0de3a80961516_MD5.jpg" /></p>
+<h2>“真实” 的单点登录（主域名不同）</h2>
+<p>比如滴滴这么潮的公司，同时拥有<code>didichuxing.com</code> <code>xiaojukeji.com</code> <code>didiglobal.com</code>等域名，这种 cookie 是完全绕不开的。</p>
+<p>这要能实现「一次登录，全线通用」，才是真正的单点登录。
+这种场景下，我们需要独立的认证服务，通常被称为 SSO。</p>
+<hr>
+<p><strong>一次「从 A 系统引发登录，到 B 系统不用登录」的完整流程</strong></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/29dd099936829f99cc71d9a0f526a0bc_MD5.jpg" /></p>
+<ul>
+<li>用户进入 A 系统，没有登录凭证（ticket），A 系统给他跳到 SSO</li>
+<li>SSO 没登录过，也就没有 sso 系统下没有凭证（注意这个和前面 A ticket 是两回事），输入账号密码登录</li>
+<li>SSO 账号密码验证成功，通过接口返回做两件事：一是种下 sso 系统下凭证（记录用户在 SSO 登录状态）；二是下发一个 ticket</li>
+<li>客户端拿到 ticket，保存起来，带着请求系统 A 接口</li>
+<li>系统 A 校验 ticket，成功后正常处理业务请求</li>
+<li>此时用户第一次进入系统 B，没有登录凭证（ticket），B 系统给他跳到 SSO</li>
+<li>SSO 登录过，系统下有凭证，不用再次登录，只需要下发 ticket</li>
+<li>客户端拿到 ticket，保存起来，带着请求系统 B 接口</li>
+</ul>
+<h3><strong>完整版本：SSO考虑浏览器的场景</strong></h3>
+<p>上面的过程看起来没问题，实际上很多 APP 等端上这样就够了。但在浏览器下不见得好用。</p>
+<p>看这里：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/743f5b869fb0e88d2c51ec15574f1b8c_MD5.jpg" /></p>
+<p>对浏览器来说，SSO 域下返回的数据要怎么存，才能在访问 A 的时候带上？
+浏览器对跨域有严格限制，cookie、localStorage 等方式都是有域限制的。</p>
+<p>这就需要也只能由 A 提供 A 域下存储凭证的能力。一般我们是这么做的：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/ae2f41b7a513bc4171b2023776cf9a2d_MD5.jpg" /></p>
+<p>图中我们通过颜色把浏览器当前所处的域名标记出来。注意图中灰底文字说明部分的变化。</p>
+<ul>
+<li>在 SSO 域下，SSO 不是通过接口把 ticket 直接返回，而是通过一个带 code 的 URL 重定向到系统 A 的接口上，这个接口通常在 A 向 SSO 注册时约定</li>
+<li>浏览器被重定向到 A 域下，带着 code 访问了 A 的 callback 接口，callback 接口通过 code 换取 ticket</li>
+<li>这个 code 不同于 ticket，code 是一次性的，暴露在 URL 中，只为了传一下换 ticket，换完就失效</li>
+<li>callback 接口拿到 ticket 后，在自己的域下 set cookie 成功</li>
+<li>在后续请求中，只需要把 cookie 中的 ticket 解析出来，去 SSO 验证就好</li>
+<li>访问 B 系统也是一样</li>
+</ul>
+
+<h1>工厂模式和抽象工厂模式的区别</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/factory-comparison">refactoringguru.cn</a></p>
+</blockquote>
+<h2>1.工厂</h2>
+<p><strong>工厂</strong>是一个含义模糊的术语， 表示可以创建一些东西的函数、 方法或类。 最常见的情况下， 工厂创建的是对象。 但是它们也可以创建文件和数据库记录等其他东西。</p>
+<p>例如， 下面这些东西都可以非正式地被称为 “工厂”：</p>
+<ul>
+<li>创建程序 GUI 的函数或方法；</li>
+<li>创建用户的类；</li>
+<li>以特定方式调用类构造函数的静态方法。</li>
+<li>一种创建型设计模式。</li>
+</ul>
+<p>当某人说到 “工厂” 这个词时， 其具体含义通常可以根据上下文来确定。 但如果你有疑问， 可以直接提问。 毕竟作者本人有时候也没有搞清楚。</p>
+<h2>2.构建方法</h2>
+<p>构建方法在 《<a href="https://refactoringguru.cn/ref-to-patterns-book">重构与模式</a>》 中被定义为 “创建对象的方法”。 这意味着每个工厂方法模式的结果都是 “构建方法”， 但反过来则并非如此。</p>
+<p>在实际中， 构建方法只是构造函数调用的封装器。 它可能只是一个能更好地表达意图的名称。 此外， 它可以让你的代码独立于构造函数的改动， 甚至还可以包含一些特殊的逻辑， 返回已有对象以而不是创建新对象。</p>
+<p>许多人会仅仅因为这些方法创建了新对象而称之为 “工厂方法”。
+其中的逻辑很直接： 所有的_工厂_都会创建对象， 而该方法会创建对象， 所以显然它是一个_工厂方法_。 当遇到真正的<a href="https://refactoringguru.cn/design-patterns/factory-method">工厂方法</a>时， 这自然会造成许多混淆。</p>
+<p>在下面的示例中， ​ <code>next</code>是一个构建方法：</p>
+<pre><code>class Number {
+    private $value;
+
+    public function __construct($value) {
+        $this-&gt;value = $value;
+    }
+
+    public function next() {
+        return new Number ($this-&gt;value + 1);
+    }
+}
+</code></pre>
+<h2>3.静态构建方法</h2>
+<p><strong>静态构建方法</strong>是被声明为 <code>static</code>的构建方法。 换句话说， 你无需创建对象就能在某个类上调用该方法。</p>
+<p>不要因为某些人将这些方法称为 “静态工厂方法” 而被其迷惑。 这种称呼只是一个坏习惯。</p>
+<p><a href="https://refactoringguru.cn/design-patterns/factory-method">工厂方法</a>是一种依赖于继承的设计模式。
+如果将它设置为 <code>static</code> ， 你就不能在子类中对其进行扩展， 这就破坏了该模式的目的。</p>
+<h2>4.简单工厂模式</h2>
+<p><strong>简单工厂</strong>模式 描述了一个类， 它拥有一个包含大量条件语句的构建方法， 可根据方法的参数来选择对何种产品进行初始化并将其返回。</p>
+<p>人们通常会将_简单工厂_与普通的_工厂_或其它创建型设计模式混淆。 在绝大多数情况下， 简单工厂是引入<a href="https://refactoringguru.cn/design-patterns/factory-method">工厂方法</a>或<a href="https://refactoringguru.cn/design-patterns/abstract-factory">抽象工厂</a>模式时的一个中间步骤。
+简单工厂通常没有子类。 但当从一个简单工厂中抽取出子类后， 它看上去就会更像经典的_工厂方法_模式了。</p>
+<p>顺便提一句， 如果你将一个简单工厂声明为 <code>abstract</code>类型， 它并不会神奇地变成_抽象工厂_模式。</p>
+<pre><code>class UserFactory {
+    public static function create($type) {
+        switch ($type) {
+            case 'user': return new User();
+            case 'customer': return new Customer();
+            case 'admin': return new Admin();
+            default:
+                throw new Exception('传递的用户类型错误。');
+        }
+    }
+}
+</code></pre>
+<h2>5.工厂方法模式</h2>
+<p><strong>工厂方法</strong> 是一种创建型设计模式， 其在父类中提供一个创建对象的方法， 允许子类决定实例化对象的类型。</p>
+<p>如果在基类及其扩展的子类中都有一个构建方法的话， 那它可能就是工厂方法。</p>
+<pre><code>abstract class Department {
+    public abstract function createEmployee($id);
+
+    public function fire($id) {
+        $employee = $this-&gt;createEmployee($id);
+        $employee-&gt;paySalary();
+        $employee-&gt;dismiss();
+    }
+}
+
+class ITDepartment extends Department {
+    public function createEmployee($id) {
+        return new Programmer($id);
+    }
+}
+
+class AccountingDepartment extends Department {
+    public function createEmployee($id) {
+        return new Accountant($id);
+    }
+}
+</code></pre>
+<h2>6.抽象工厂模式</h2>
+<p><strong>抽象工厂</strong> 》 是一种创建型设计模式， 它能创建一系列相关或相互依赖的对象， 而无需指定其具体类。
+<strong>工厂方法</strong>在父类中提供一个创建对象
+抽象工厂则在父类中提供多个创建不同对象的方法（也就是创建一系列对象的方法）。</p>
+<p>什么是 “系列对象”？
+例如有这样一组的对象： ​ <code>运输工具</code>+ <code>引擎</code>+ <code>控制器</code> 。 它可能会有几个变体：</p>
+<ol>
+<li><code>汽车</code>+ <code>内燃机</code>+ <code>方向盘</code></li>
+<li><code>飞机</code>+ <code>喷气式发动机</code>+ <code>操纵杆</code></li>
+</ol>
+<p>如果你的程序中并不涉及产品系列的话， 那就不需要抽象工厂。</p>
+<p>再次重申， 许多人分不清_抽象工厂_模式和声明为 <code>abstract</code>的简单工厂。 不要犯这个错误！</p>
+
+<h1>桥接设计模式</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://refactoringguru.cn/design-patterns/bridge">refactoringguru.cn</a></p>
+</blockquote>
+<h2>意图</h2>
+<p><strong>桥接模式</strong>是一种结构型设计模式， 可将一个大类或一系列紧密相关的类拆分为抽象和实现两个独立的层次结构， 从而能在开发时分别使用。</p>
+<h2>问题</h2>
+<p>假如你有一个几何 <code>形状</code>Shape 类， 从它能扩展出两个子类： ​ <code>圆形</code>Circle 和 <code>方形</code>Square 。 你希望包含颜色， 所以你打算创建名为 <code>红色</code>Red 和 <code>蓝色</code>Blue 的形状子类。
+但是， 由于你已有两个子类， 所以总共需要创建四个类才能覆盖所有组合， 例如 <code>蓝色圆形</code>Blue­Circle 和 <code>红色方形</code>Red­Square 。</p>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/bridge/problem-zh.png" alt=""></p>
+<p>所有组合类的数量将以几何级数增长。</p>
+<h2>解决方案</h2>
+<p>桥接模式通过将继承改为组合的方式来解决这个问题。
+将一个类层次转化为多个相关的类层次， 避免单个类层次的失控。
+具体来说， 就是抽取其中一个维度并使之成为独立的类层次， 这样就可以在初始类中引用这个新层次的对象， 从而使得一个类不必拥有所有的状态和行为。</p>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/bridge/solution-zh.png" alt=""></p>
+<h4>抽象部分和实现部分</h4>
+<p><em>抽象部分</em> （也被称为接口） 是一些实体的高阶控制层。 该层自身不完成任何具体的工作， 它需要将工作委派给_实现部分_层 。
+注意， 这里提到的内容与编程语言中的_接口_或_抽象类_无关。 它们并不是一回事。</p>
+<h2>桥接模式结构</h2>
+<p><img src="https://refactoringguru.cn/images/patterns/diagrams/bridge/structure-zh-indexed.png" alt=""></p>
+<ol>
+<li><strong>抽象部分</strong> （Abstraction） 提供高层控制逻辑， 依赖于完成底层实际工作的实现对象。</li>
+<li><strong>实现部分</strong> （Implementation） 为所有具体实现声明通用接口。 抽象部分仅能通过在这里声明的方法与实现对象交互。
+抽象部分可以列出和实现部分一样的方法， 但是抽象部分通常声明一些复杂行为， 这些行为依赖于多种由实现部分声明的原语操作。</li>
+<li><strong>具体实现</strong> （Concrete Implementations） 中包括特定于平台的代码。</li>
+<li>通常情况下， <strong>客户端</strong> （Client） 仅关心如何与抽象部分合作。 但是， 客户端需要将抽象对象与一个实现对象连接起来。</li>
+</ol>
+<h2>桥接模式适合应用场景</h2>
+<p>如果你想要拆分或重组一个具有多重功能的庞杂类 （例如能与多个数据库服务器进行交互的类）， 可以使用桥接模式。
+桥接模式可以将庞杂类拆分为几个类层次结构。 此后， 你可以修改任意一个类层次结构而不会影响到其他类层次结构。 这种方法可以简化代码的维护工作， 并将修改已有代码的风险降到最低。</p>
+<hr>
+<p>如果你希望在几个独立维度上扩展一个类， 可使用桥接模式。
+桥接建议将每个维度抽取为独立的类层次。 初始类将相关工作委派给属于对应类层次的对象， 无需自己完成所有工作。
+如果你需要在运行时切换不同实现方法， 可使用桥接模式。
+当然并不是说一定要实现这一点， 桥接模式可替换抽象部分中的实现对象， 具体操作就和给成员变量赋新值一样简单。</p>
+<hr>
+<p><em>顺便提一句， 最后一点是很多人混淆桥接模式和<a href="/design-patterns/strategy">策略</a>模式的主要原因。
+记住， 设计模式并不仅是一种对类进行组织的方式， 它还能用于沟通意图和解决问题。</em></p>
+<h2>桥接模式优缺点</h2>
+<ul>
+<li>
+<p>你可以创建与平台无关的类和程序。</p>
+</li>
+<li>
+<p>客户端代码仅与高层抽象部分进行互动， 不会接触到平台的详细信息。</p>
+</li>
+<li>
+<p><em>开闭原则</em>。 你可以新增抽象部分和实现部分， 且它们之间不会相互影响。</p>
+</li>
+<li>
+<p><em>单一职责原则</em>。 抽象部分专注于处理高层逻辑， 实现部分处理平台细节。</p>
+</li>
+<li>
+<p>对高内聚的类使用该模式可能会让代码更加复杂。</p>
+</li>
+</ul>
+<h2>与其他模式的关系</h2>
+<ul>
+<li><a href="/design-patterns/bridge">桥接</a>、 <a href="/design-patterns/state">状态模式</a>和<a href="/design-patterns/strategy">策略模式</a> （在某种程度上包括<a href="/design-patterns/adapter">适配器</a>） 模式的接口非常相似。 实际上， 它们都基于<a href="/design-patterns/composite">组合模式</a>——即将工作委派给其他对象， 不过也各自解决了不同的问题。 模式并不只是以特定方式组织代码的配方， 你还可以使用它们来和其他开发者讨论模式所解决的问题。</li>
+</ul>
+<hr>
+<ul>
+<li>你可以将<a href="/design-patterns/abstract-factory">抽象工厂模式</a>和<a href="/design-patterns/bridge">桥接</a>搭配使用。 如果由_桥接_定义的抽象只能与特定实现合作， 这一模式搭配就非常有用。 在这种情况下， _抽象工厂_可以对这些关系进行封装， 并且对客户端代码隐藏其复杂性。</li>
+</ul>
+
+<h1>浅谈 SAML, OAuth, OpenID 和 SSO, JWT 和 Session</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903634094784520?searchId=2023092017522484CC93998AFA0505B8C0">juejin.cn</a></p>
+</blockquote>
+<h2>关于 Token</h2>
+<p>请求 <code>API</code> 时携带 <code>token</code> 的方式也有很多种，通过 <code>HTTP Header</code> 或者 <code>url</code> 参数或者 <code>google</code> 提供的类库都可以：</p>
+<ul>
+<li><strong>HTTP Header</strong></li>
+</ul>
+<pre><code>GET /drive/v2/files HTTP/1.1
+
+Authorization: Bearer &lt;token&gt;
+Host: www.googleapis.com/
+</code></pre>
+<ul>
+<li><strong>URL 参数</strong></li>
+</ul>
+<pre><code>GET https://www.googleapis.com/drive/v2/files?token=&lt;token&gt;
+</code></pre>
+<ul>
+<li><strong>Python 函数库</strong></li>
+</ul>
+<pre><code>from googleapiclient.discovery import build
+drive = build('drive', 'v2', credentials=credentials)
+</code></pre>
+<p>更具体的说，上面用于调用 <code>API</code> 的 <code>token</code>，我们称为细分为 <code>access token</code>。通常 <code>access token</code> 是有 <strong>有效期限</strong> 的，如果 <strong>过期</strong> 就需要 <strong>重新获取</strong>。</p>
+<hr>
+<p>那么如何重新获取<code>access token</code>？先看看第一次获取 <code>token</code> 的流程是怎样的:</p>
+<ol>
+<li>首先需要向 <code>Google API</code> 注册一个应用程序，注册完毕之后就会拿到 <strong>认证信息</strong>（<code>credentials</code>）包括 <code>ID</code> 和 <code>secret</code>。不是所有的程序类型都有 <code>secret</code>。</li>
+<li>接下来就要向 <code>Google</code> 请求 <code>access token</code>。这里先忽略一些细节，例如请求参数（当然需要上面申请到的 <code>secret</code>）。重要的是，如果你想访问的是 <strong>用户资源</strong>，这里就会提醒用户进行 <strong>授权</strong>。</li>
+<li>如果 <strong>用户授权</strong> 完毕。<code>Google</code> 就会返回 <code>access token</code>。又或者是返回 <strong>授权代码</strong>（<code>authorization code</code>），再通过代码取得 <code>access token</code>。</li>
+<li><code>Google</code> 并不会仅仅返回 <code>access token</code>，还会返回额外的信息，这其中和之后更新相关的就是 <code>refresh token</code>。</li>
+</ol>
+<p><code>token</code> 获取到之后，就能够带上 <code>token</code> 访问 <code>API</code> 了。
+流程如下图所示：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/58013e96f0243908528d0114e430516c_MD5.jpg" /></p>
+<p>一旦 <code>access token</code> 过期，你就可以通过 <code>refresh token</code> 再次请求 <code>access token</code>。</p>
+<p>以上只是大致的流程，并且故意省略了一些额外的概念。比如更新 <code>access token</code> 当然也可以不需要 <code>refresh token</code>，这要根据你的 <strong>请求方式</strong> 和访问的 <strong>资源类型</strong> 而定。</p>
+<p>这里又会引起另外的两个问题：</p>
+<ol>
+<li>
+<p>如果 <code>refesh token</code> 也过期了怎么办？这时就需要用户 <strong>重新登陆授权</strong>。</p>
+</li>
+<li>
+<p>为什么要区分 <code>refresh token</code> 和 <code>access token</code>？如果合并成一个 <code>token</code> 然后把 <strong>过期时间</strong> 调整的 <strong>更长</strong>，并且每次 <strong>失效</strong> 之后用户 <strong>重新登陆授权</strong> 就好了？这个问题会和后面谈的相关概念有关，后面会给予解释说明。</p>
+</li>
+</ol>
+<h3>OAuth 2.0</h3>
+<p>从获取 <code>token</code> 到使用 <code>token</code> 访问接口。这其实是标准的 <code>OAuth2.0</code> 机制下访问 <code>API</code> 的流程。这里介绍一下 <code>OAuth</code> 里外相关的概念，更深入的理解 <code>token</code> 的作用。</p>
+<h3>SSO (Single sign-on)</h3>
+<p><code>SSO</code> 是一类 <strong>解决方案</strong> 的统称，而在具体的实施方面，我们有两种策略可供选择：</p>
+<ul>
+<li><strong>SAML 2.0</strong></li>
+<li><strong>OAuth 2.0</strong></li>
+</ul>
+<h4>Authentication VS Authorisation</h4>
+<ul>
+<li><strong>Authentication:</strong> 身份鉴别，以下简称 <strong>认证</strong>；</li>
+<li><strong>Authorisation:</strong> 资源访问 <strong>授权</strong>。</li>
+</ul>
+<p><strong>认证</strong> 的作用在于 <strong>认可</strong> 你能够访问系统，用于 <strong>鉴别访问者</strong> 是否是 <strong>合法用户</strong>；
+而 <strong>授权</strong> 用于决定你有访问 <strong>哪些资源的权限</strong>。</p>
+<p>作为系统的设计者来说，这两者是有差别的，这是不同的两个工作职责。我们可以只需要 <strong>认证功能</strong>，而不需要 <strong>授权功能</strong>，甚至不需要自己实现 <strong>认证功能</strong>。而借助 <code>Google</code> 的认证系统，即用户可以用 <code>Google</code> 的账号进行登陆。</p>
+<h4>Authorization Server/Identity Provider(IdP)</h4>
+<p>把负责 <strong>认证的服务</strong> 称为 <code>AuthorizationServer</code> 或者 <code>IdentityProvider</code>，以下简称 <code>IDP</code>。</p>
+<h4>Service Provider(SP)/Resource Server</h4>
+<p>把负责 <strong>提供资源</strong>（<code>API</code> 调用）的服务称为 <code>ResourceServer</code> 或者 <code>ServiceProvider</code>，以下简称 <code>SP</code>。</p>
+<h3>SAML 2.0</h3>
+<p>下图是 <code>SAML2.0</code> 的流程图，看图说话：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/233f3af1aad7ded5dc41fc5d54e766df_MD5.jpg" /></p>
+<ol>
+<li>还 <strong>未登陆</strong> 的用户 <strong>打开浏览器</strong> 访问你的网站（<code>SP</code>），网站 <strong>提供服务</strong> 但是并 <strong>不负责用户认证</strong>。</li>
+<li>于是 <code>SP</code> 向 <code>IDP</code> 发送了一个 <code>SAML</code> 认证请求，同时 <code>SP</code> 将 <strong>用户浏览器</strong> 重定向到 <code>IDP</code>。</li>
+<li><code>IDP</code> 在验证完来自 <code>SP</code> 的 <strong>请求无误</strong> 之后，在浏览器中呈现 <strong>登陆表单</strong> 让用户填写 <strong>用户名</strong> 和 <strong>密码</strong> 进行登陆。</li>
+<li>一旦用户登陆成功， <code>IDP</code> 会生成一个包含 <strong>用户信息</strong>（<strong>用户名</strong> 或者 <strong>密码</strong>）的 <code>SAML token</code>（<code>SAML token</code> 又称为 <code>SAML Assertion</code>，本质上是 <code>XML</code> 节点）。<code>IDP</code> 向 <code>SP</code> 返回 <code>token</code>，并且将 <strong>用户重定向</strong> 到 <code>SP</code> (<code>token</code> 的返回是在 <strong>重定向步骤</strong> 中实现的，下面会详细说明)。</li>
+<li><code>SP</code> 对拿到的 <code>token</code> 进行验证，并从中解析出 <strong>用户信息</strong>，例如 <strong>用户是谁</strong> 以及 <strong>用户的权限</strong> 有哪些。此时就能够根据这些信息允许用户访问我们网站的内容。</li>
+</ol>
+<hr>
+<p>当用户在 <code>IDP</code> 登陆成功之后，<code>IDP</code> 需要将用户 <strong>再次重定向</strong> 到 <code>SP</code> 站点，这一步通常有两个办法：</p>
+<ul>
+<li><code>HTTP</code> 重定向：这并不推荐，因为 <strong>重定向</strong> 的 <code>URL</code> 长度 <strong>有限制</strong>，无法携带更长的信息，比如 <code>SAML Token</code>。</li>
+<li><code>HTTP POST</code> 请求：这个是更常规的做法，当用户登陆完毕之后渲染出一个表单，用户点击后向 <code>SP</code> 提交 <code>POST</code> 请求。又或者可以使用 <code>JavaScript</code> 向 <code>SP</code> 发出一个 <code>POST</code> 请求。</li>
+</ul>
+<hr>
+<p>如果你的应用是基于 <code>Web</code>，那么以上的方案没有任何问题。但如果你开发的是一个 <code>iOS</code> 或者 <code>Android</code> 的手机应用，那么问题就来了：</p>
+<ol>
+<li>用户在 <code>iPhone</code> 上打开应用，此时用户需要通过 <code>IDP</code> 进行认证。</li>
+<li>应用跳转至 <code>Safari</code> 浏览器，在登陆认证完毕之后，需要通过 <code>HTTP POST</code> 的形式将 <code>token</code> 返回至 <strong>手机应用</strong>。</li>
+</ol>
+<p>虽然 <code>POST</code> 的 <code>url</code> 可以 <strong>拉起应用</strong>，但是 <strong>手机应用</strong> 无法解析 <code>POST</code> 的内容，我们也就无法读取 <code>SAML Token</code>。</p>
+<blockquote>
+<p>当然还是有办法的，比如在 <code>IDP</code> <strong>授权阶段</strong> 不跳转至系统的 <code>Safari</code> 浏览器，在 <strong>内嵌</strong> 的 <code>Webview</code> 中解决，在想方设法从 <code>Webview</code> 中提取 <code>token</code>，或者利用 <strong>代理服务器</strong>。</p>
+</blockquote>
+<p>无论如何，<code>SAML 2.0</code> 并 <strong>不适用</strong> 于当下 <strong>跨平台</strong> 的场景，这也许与它产生的年代也有关系，它诞生于 <code>2005</code> 年，在那个时刻 <code>HTTP POST</code> 确实是最好的选择方案。</p>
+<h3>OAuth 2.0</h3>
+<p>我们先简单了解 <code>SSO</code> 下的 <code>OAuth2.0</code> 的流程。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/7908973a7a8da31186c69792adbb6aca_MD5.jpg" /></p>
+<ol>
+<li>用户通过 <strong>客户端</strong>（可以是 <strong>浏览器</strong> 也可以是 <strong>手机应用</strong>）想要访问 <code>SP</code> 上的资源，但是 <code>SP</code> 告诉用户需要进行 <strong>认证</strong>，将用户 <strong>重定向</strong> 至 <code>IDP</code>。</li>
+<li><code>IDP</code> 向 <strong>用户</strong> 询问 <code>SP</code> 是否可以访问 <strong>用户信息</strong>。如果用户同意，<code>IDP</code> 向 <strong>客户端</strong> 返回 <code>authorization code</code>。</li>
+<li>客户端拿到 <code>authorization code</code> 向 <code>IDP</code> 交换 <code>access token</code>，并拿着 <code>access token</code> 向 <code>SP</code> 请求资源。</li>
+<li><code>SP</code> 接受到请求之后，拿着附带的 <code>token</code> 向 <code>IDP</code> 验证 <strong>用户的身份</strong>。确认身份无误后，<code>SP</code> 向 <strong>客户端</strong> 发放相关资源。</li>
+</ol>
+<hr>
+<p>那么 <code>OAuth</code> 是如何避免 <code>SAML</code> 流程下 <strong>无法解析</strong> <code>POST</code> 内容的信息的呢？</p>
+<ul>
+<li>一方面是用户从 <code>IDP</code> 返回 <strong>客户端</strong> 的方式，也是通过 <code>URL</code> 重定向，这里的 <code>URL</code> 允许 <strong>自定义</strong> <code>schema</code>，所以即使在 <strong>手机</strong> 上也能 <strong>拉起应用</strong>；</li>
+<li>另一方面因为 <code>IDP</code> 向 <strong>客户端</strong> 传递的是 <code>authorization code</code>，而不是 <code>XML</code> 信息，所以 <code>code</code> 可以很轻易的附着在 <strong>重定向</strong> <code>URL</code> 上进行传递。</li>
+</ul>
+<p>但以上的 <code>SSO</code> 流程体现不出 <code>OAuth</code> 的本意。<code>OAuth</code> 的本意是 <strong>一个应用</strong> 允许 <strong>另一个应用</strong> 在 <strong>用户授权</strong> 的情况下 <strong>访问自己的数据</strong>。</p>
+<hr>
+<p><code>OAuth</code> 的设计本意更倾向于 <strong>授权而非认证</strong>（当然授权用户信息就间接实现了认证），虽然 <code>Google</code> 的 <code>OAuth 2.0 API</code> 同时支持 <strong>授权</strong> 和 <strong>认证</strong>。所以你在使用 <code>Facebook</code> 或者 <code>Gmail</code> 账号登陆第三方站点时，会出现 <strong>授权对话框</strong>，告诉你 <strong>第三方站点</strong> 可以访问你的哪些信息，需要征得你的同意。</p>
+<p>在上面 <code>SSO</code> 的 <code>OAuth</code> 流程中涉及三方角色: <code>SP</code>, <code>IDP</code> 以及 <code>Client</code>。但在实际工作中 <code>Client</code> 可以是不存在的，例如你编写了一个 <strong>后端程序</strong> 定时的通过 <code>Google API</code> 从 <code>Youtube</code> 拉取最新的节目数据，那么你的 <strong>后端程序</strong> 需要得到 <code>Youtube</code> 的 <code>OAuth</code> <strong>授权</strong> 即可。</p>
+<h3>OAuth VS OpenId</h3>
+<p>如果你有留心的话，你会在某些站点看到允许以 <code>OpenID</code> 的方式登陆，其实也就是以 <code>Facebook</code> 账号或者 <code>Google</code> 账号登陆站点：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/42003ae2a70e8bfa72626d60cf4673b1_MD5.jpg" /></p>
+<p><code>OpenID</code> 和 <code>OAuth</code> 很像。但本质上来说它们是截然不同的两个东西：</p>
+<ul>
+<li>
+<p><strong>OpenID:</strong> 只用于 <strong>身份认证</strong>（<code>Authentication</code>），允许你以 <strong>同一个账户</strong> 在 <strong>多个网站登陆</strong>。它仅仅是为你的 <strong>合法身份</strong> 背书，当你以 <code>Facebook</code> 账号登陆某个站点之后，该站点 <strong>无权访问</strong> 你的在 <code>Facebook</code> 上的 <strong>数据</strong>。</p>
+</li>
+<li>
+<p><strong>OAuth:</strong> 用于 <strong>授权</strong>（<code>Authorisation</code>），允许 <strong>被授权方</strong> 访问 <strong>授权方</strong> 的 <strong>用户数据</strong>。</p>
+</li>
+</ul>
+<h4>Refresh Token</h4>
+<p>现在可以回答上面的问题了，为什么我们需要 <code>refresh token</code>？</p>
+<p>这样的处理是为了 <strong>职责的分离</strong>：</p>
+<ul>
+<li><strong>refresh token:</strong> 负责 <strong>身份认证</strong>；</li>
+<li><strong>access token:</strong> 负责 <strong>请求资源</strong>。</li>
+</ul>
+<p>虽然 <code>refresh token</code> 和 <code>access token</code> 都由 <code>IDP</code> 发出，但是 <code>access token</code> 还要和 <code>SP</code> 进行 <strong>数据交换</strong>，如果 <strong>公用的话</strong> 这样就会有 <strong>身份泄露</strong> 的可能。
+并且 <code>IDP</code> 和 <code>SP</code> 可能是 <strong>完全不同</strong> 的 <strong>服务提供</strong> 的。而在上文，我们之所以没有这样的顾虑是因为 <code>IDP</code> 和 <code>SP</code> 都是 <code>Google</code>。</p>
+<h3>JWT</h3>
+<h4>初步认识</h4>
+<p>本质上来说 <code>JWT</code> 也是 <code>token</code>，正如我们在上文提到的，它是 <strong>访问资源</strong> 的 <strong>凭证</strong>。</p>
+<p><code>Google</code> 的一些 <code>API</code> 诸如 <code>Prediction API</code> 或者 <code>Google Cloud Storage</code>，是不需要 <strong>访问</strong> 用户的 <strong>个人数据</strong> 的。因而不需要经过 <strong>用户的授权</strong> 这一步骤，应用程序可以直接访问。就像上面 <code>OAuth</code> 中没有 <code>Client</code> 没有参与的流程类似。这就要借助 <code>JWT</code> 完成访问了, 具体流程如下：</p>
+<ol>
+<li>首先需要在 <code>Google API</code> 上创建一个服务账号（<code>service account</code>）。</li>
+<li>获取 <strong>服务账号</strong> 的 <strong>认证信息</strong>（<code>credential</code>），包括 <strong>邮箱地址</strong>，<code>client ID</code>，以及一对 <strong>公钥 / 私钥</strong>。</li>
+<li>使用 <code>Client ID</code> 和 <strong>私钥</strong> 创一个 <strong>签名</strong> 的 <code>JWT</code>，然后将这个 <code>JWT</code> 发送给 <code>Google</code> 交换 <code>access token</code>。</li>
+<li><code>Google</code> 返回 <code>access token</code>。</li>
+<li>程序通过 <code>access token</code> 访问 <code>API</code>。</li>
+</ol>
+<p>甚至你可以不需要向 <code>Google</code> 索要 <code>access token</code>，而是携带 <code>JWT</code> 作为 <code>HTTP header</code> 里的 <code>bearer token</code> 直接访问 <code>API</code> 也是可以的。这才是 <code>JWT</code> 的最大魅力。</p>
+<h4>payload</h4>
+<p><code>payload</code> 用于携带你希望 <strong>向服务端传递</strong> 的信息。你既可以往里添加 <strong>官方字段</strong>，例如：<code>iss(Issuer)</code>, <code>sub(Subject)</code>, <code>exp(Expirationtime)</code>，也可以塞入 <strong>自定义的字段</strong>，比如 <code>userId</code>:</p>
+<pre><code>{
+    &quot;userId&quot;: &quot;b08f86af-35da-48f2-8fab-cef3904660bd&quot;
+}
+</code></pre>
+<h4>signature</h4>
+<p><code>signature</code> 译为 <strong>签名</strong>，创建签名</p>
+<p>如果上述描述还不直观，用 <strong>伪代码</strong> 表示就是：</p>
+<pre><code>// Signature algorithm
+data = base64urlEncode( header ) + “.” + base64urlEncode( payload )
+signature = Hash( data, secret );
+</code></pre>
+<h3>JWT 究竟带来了什么</h3>
+<h4>确保数据完整性</h4>
+<p><code>JWT</code> 的目的不是为了 <strong>隐藏</strong> 或者 <strong>保密数据</strong>，而是为了确保 <strong>数据</strong> 确实来自被 <strong>授权的人</strong> 创建的，以防止 <strong>中途篡改</strong>。</p>
+<p>回想一下，当你拿到 <code>JWT</code> 时候，你完全可以在没有 <code>secret</code> 的情况下解码出 <code>header</code> 和 <code>payload</code>，因为 <code>header</code> 和 <code>payload</code> 只是经过了 <code>base64</code> 编码（<code>encode</code>）而已，编码的目的在于 <strong>利于数据结构的传输</strong>。</p>
+<p>虽然创建 <code>signature</code> 的过程近似于 <strong>加密</strong> (<code>encrypt</code>)，但本质其实是一种 <strong>签名</strong> (<code>sign</code>) 的行为，用于保证 <strong>数据的完整性</strong>，实际上也并且并 <strong>没有加密任何数据</strong>。</p>
+<h4>用于接口调用</h4>
+<p>接下来在 <code>API</code> 调用中就可以附上 <code>JWT</code>（通常是在 <code>HTTP Header</code> 中）。又因为 <code>SP</code> 会与程序 <strong>共享</strong> 一个 <code>secret</code>，所以 <strong>程序</strong> 可以通过 <code>header</code> 提供的相同的 <code>hash</code> 算法来 <strong>验证签名</strong> 是否正确，从而判断应用是否有权力调用 <code>API</code>。</p>
+<h3>有状态的对话 Session</h3>
+<p>因为 <code>HTTP</code> 是 <strong>无状态</strong> 的，所以 <strong>客户端</strong> 和 <strong>服务端</strong> 需要解决的问题是，如何让它们之间的对话变得有状态。例如只有是 <strong>登陆状态</strong> 的 <strong>用户</strong> 才有权限调用某些接口，那么在 <strong>用户登陆</strong> 之后，需要记住该用户是 <strong>已经登陆</strong> 的状态。常见的方法是使用 <code>session</code> 机制。</p>
+<p>常见的 <code>session</code> 模型是这样工作的：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/7d9667d80eb2eabd5502386c228f5778_MD5.jpg" /></p>
+<ol>
+<li>用户在浏览器 <strong>登陆</strong> 之后，服务端为用户生成 <strong>唯一</strong> 的 <code>session id</code>，存储在 <strong>服务端</strong> 的 <strong>存储服务</strong>（例如 <code>MySQL</code>, <code>Redis</code>）中。</li>
+<li>该 <code>session id</code> 也同时 <strong>返回给浏览器</strong>，以 <code>SESSION_ID</code> 为 <code>KEY</code> 存储在浏览器的 <code>cookie</code> 中。</li>
+<li>如果用户再次访问该网站，<code>cookie</code> 里的 <code>SESSION_ID</code> 会随着 <strong>请求</strong> 一同发往 <strong>服务端</strong>。</li>
+<li>服务端通过判断 <code>SESSION_ID</code> 是否已经在 <code>Redis</code> 中判断用户是否处于 <strong>登陆状态</strong>。</li>
+</ol>
+<hr>
+<p>相信你已经察觉了，理论上来说，<code>JWT</code> 机制可以取代 <code>session</code> 机制。用户不需要提前进行登陆，后端也不需要 <code>Redis</code> 记录用户的登陆信息。客户端的本地保存一份合法的 <code>JWT</code>，当用户需要调用接口时，附带上该合法的 <code>JWT</code>，每一次调用接口，后端都使用请求中附带的 <code>JWT</code> 做一次 <strong>合法性的验证</strong>。
+这样也间接达到了 <strong>认证用户</strong> 的目的。</p>
+
+<h1>理解前端基础渲染模式｜CSR、SSR、同构、静态化</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7204085076504920119">juejin.cn</a></p>
+</blockquote>
+<h2>客户端渲染（CSR）</h2>
+<h3>什么是客户端渲染呢？</h3>
+<p>服务器直接转发静态 html 资源即可。</p>
+<p>常见的形式就是：
+打包的时候生成只有 css、js 等外链标签的空白页面，
+客户端在请求时，服务端不做任何处理，直接以原文件的形式返回给客户端客户端，
+客户端获取到页面后，在加载完 js 后才通过 js 来渲染页面内容。</p>
+<h2>服务端渲染（SSR）</h2>
+<p>这里主要说的是传统的服务端渲染，现代的服务端渲染指的是同构渲染。
+客户端渲染就是 <code>data + template = html</code> 过程在服务端进行，客户端不需要渲染页面。</p>
+<p>具体解释就是：服务端渲染的模式下，当用户第一次请求页面时，由服务器把需要的组件或页面渲染成 HTML 字符串，然后把它返回给客户端。</p>
+<h2>什么是同构渲染？</h2>
+<h3>何为同构？</h3>
+<p>同构是指写一份代码但可同时在浏览器和服务器中运行的应用。为了同时拥有 ssr 和 csr 的特点，当前流行的方案就是 ssr + csr 同构，比如现在比较流行的的 Next.js。</p>
+<p>而同构渲染也就是指：在服务端先进行渲染一次（SSR，组装页面 html 内容），客户端拿到代码后，再进行渲染一次（CSH（client-side hydration），也就是 hydrate，主要对 html 进行事件绑定和内容校验，如果 hydrate 发现内容不一致的话，会在开发环境提示警告），后续页面的所有操作和渲染行为都和 CSR 一致（didMount 后的更新页面内容都属于正常的 CSR 了）。</p>
+<h3>认识同构</h3>
+<p>同构应用运行原理的核心在于虚拟 DOM，虚拟 DOM 的优点在于：</p>
+<ol>
+<li>因为操作 DOM 树是高耗时的操作，尽量减少 DOM 树操作能优化网页性能。而 DOM Diff 算法能找出 2 个不同 Object 的最小差异，得出最小 DOM 操作;</li>
+<li>虚拟 DOM 的在渲染的时候不仅仅可以通过操作 DOM 树来表示结果，也能有其他的表示方法。例如虚拟 DOM 渲染成字符串（服务器渲染）等。</li>
+</ol>
+<p>构建同构应用的最终目的是从一份项目源码中构建出 2 份 JavaScript 代码。一份用于在 node 环境中运行渲染出 HTML。其中用于在 node 环境中运行的 JavaScript 代码需要注意：</p>
+<ol>
+<li>不能包含浏览器环境提供的 API；</li>
+<li>不建议包含 css 代码，因为服务端渲染的目的是渲染 html 内容， 渲染出 css 代码会增加额外的计算量，影响服务端渲染，因此建议 css 需要用外联方式；</li>
+<li>不能像用于浏览器环境的输出代码那样把 node_modules 里的第三方模块和 nodejs 原生模块打包进去，而是需要分开进行打包，客户端打包一份和服务端打包一份，或者打包的时候区分各自运行的文件。</li>
+</ol>
+<h2>扩展渲染模式</h2>
+<p>上面说的渲染模式属于基础渲染模式，现在还有了更多的渲染模式，且运用都很广泛。</p>
+<ol>
+<li>静态化渲染：打包的时候进行 <code>data + template = html</code> 过程，然后客户端在请求时，服务端不做任何处理，直接以原文件的形式返回给客户端，客户端获取到也没可以正常显示页面后再去执行 js 内容。</li>
+<li>增量静态渲染：之前有一篇文章专门介绍了 <a href="https://juejin.cn/post/7199812069050171452" title="https://juejin.cn/post/7199812069050171452">ISR 渲染模式</a>，可以去看一下。</li>
+</ol>
+
+<h1>看完这篇 Session、Cookie、Token，和面试官扯皮就没问题了</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844904115080790023?searchId=20230920180929AB5CDCA704470B081379">juejin.cn</a></p>
+</blockquote>
+<h2>Cookie 和 Session</h2>
+<p>HTTP 协议是一种<code>无状态协议</code>，即每次服务端接收到客户端的请求时，都是一个全新的请求，服务器并不知道客户端的历史请求记录；
+Session 和 Cookie 的主要目的就是为了弥补 HTTP 的无状态特性。</p>
+<h3>Session 是什么</h3>
+<p>客户端请求服务端，服务端会为这次请求开辟一块<code>内存空间</code>，这个对象便是 Session 对象，存储结构为 <code>ConcurrentHashMap</code>。
+Session 弥补了 HTTP 无状态特性，服务器可以利用 Session 存储客户端在同一个会话期间的一些操作记录。</p>
+<h3>Session 如何判断是否是同一会话</h3>
+<p>服务器第一次接收到请求时，开辟了一块 Session 空间（创建了 Session 对象），同时生成一个 sessionId ，并通过响应头的 **Set-Cookie：JSESSIONID=XXXXXXX ** 命令，向客户端发送要求设置 Cookie 的响应； 客户端收到响应后，在本机客户端设置了一个 **JSESSIONID=XXXXXXX ** 的 Cookie 信息，该 Cookie 的过期时间为浏览器会话结束；</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/15b13b3d71ba0ed9e94821a296f5749c_MD5.jpg" /></p>
+<p>接下来客户端每次向同一个网站发送请求时，请求头都会带上该 Cookie 信息（包含 sessionId ）， 然后，
+服务器通过读取请求头中的 Cookie 信息，获取名称为 JSESSIONID 的值，得到此次请求的 sessionId。</p>
+<h3>Session 的缺点</h3>
+<p>Session 机制有个缺点，比如 A 服务器存储了 Session，就是做了负载均衡后，假如一段时间内 A 的访问量激增，会转发到 B 进行访问，但是 B 服务器并没有存储 A 的 Session，会导致 Session 的失效。</p>
+<h3>Cookies 是什么</h3>
+<p>HTTP 协议中的 Cookie 包括 <code>Web Cookie</code> 和<code>浏览器 Cookie</code>，它是服务器发送到 Web 浏览器的一小块数据。
+服务器发送到浏览器的 Cookie，浏览器会进行存储，并与下一个请求一起发送到服务器。
+通常，它用于判断两个请求是否来自于同一个浏览器，例如用户保持登录状态。</p>
+<h2>Cookie 目的</h2>
+<p>Cookie 主要用于下面三个目的</p>
+<ul>
+<li>会话管理</li>
+</ul>
+<ul>
+<li>个性化</li>
+<li>追踪</li>
+</ul>
+<hr>
+<ul>
+<li>会话管理
+登陆、购物车、游戏得分或者服务器应该记住的其他内容</li>
+<li>个性化
+用户偏好、主题或者其他设置</li>
+<li>追踪
+记录和分析用户行为</li>
+</ul>
+<hr>
+<p>Cookie 曾经用于一般的客户端存储。</p>
+<ul>
+<li>虽然这是合法的，因为它们是在客户端上存储数据的唯一方法，但如今建议使用现代存储 API。</li>
+<li>Cookie 随每个请求一起发送，因此它们可能会降低性能（尤其是对于移动数据连接而言）</li>
+</ul>
+<h3>创建 Cookie</h3>
+<p>当接收到客户端发出的 HTTP 请求时，服务器可以发送带有响应的 <code>Set-Cookie</code> 标头，Cookie 通常由浏览器存储，然后将 Cookie 与 HTTP 标头一同向服务器发出请求。</p>
+<h4>Set-Cookie 和 Cookie 标头</h4>
+<p><code>Set-Cookie</code> HTTP 响应标头将 cookie 从服务器发送到用户代理。下面是一个发送 Cookie 的例子</p>
+<p>此标头告诉客户端存储 Cookie</p>
+<p>现在，随着对服务器的每个新请求，浏览器将使用 Cookie 头将所有以前存储的 Cookie 发送回服务器。</p>
+<h3>Cookie 类型</h3>
+<p>有两种类型的 Cookies，一种是 Session Cookies，一种是 Persistent Cookies，</p>
+<p>会话 Cookie 存储在内存中，永远不会写入磁盘，当浏览器关闭时，此后 Cookie 将永久丢失。
+如果 Cookie 包含<code>有效期</code> ，则将其视为持久性 Cookie。在到期指定的日期，Cookie 将从磁盘中删除。</p>
+<h4>会话 Cookies</h4>
+<p>会话 Cookie 有个特征，客户端关闭时 Cookie 会删除，因为它没有指定<code>Expires</code>或 <code>Max-Age</code> 指令。</p>
+<p>但是，Web 浏览器可能会使用会话还原，这会使大多数会话 Cookie 保持永久状态，就像从未关闭过浏览器一样。</p>
+<h4>永久性 Cookies</h4>
+<p>永久性 Cookie 不会在客户端关闭时过期，而是在<code>特定日期（Expires）</code>或<code>特定时间长度（Max-Age）</code>外过期。例如</p>
+<pre><code>Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT;
+</code></pre>
+<h4>Cookie 的 Secure 和 HttpOnly 标记</h4>
+<p>安全的 Cookie 需要经过 HTTPS 协议通过加密的方式发送到服务器。即使是安全的，也不应该将敏感信息存储在 cookie 中，因为它们本质上是不安全的，并且此标志不能提供真正的保护。</p>
+<h3><strong>HttpOnly 的作用</strong></h3>
+<ul>
+<li>会话 Cookie 中缺少 HttpOnly 属性会导致攻击者可以通过程序 (JS 脚本、Applet 等) 获取到用户的 Cookie 信息，造成用户 Cookie 信息泄露，增加攻击者的跨站脚本攻击威胁。</li>
+<li>HttpOnly 是微软对 Cookie 做的扩展，该值指定 Cookie 是否可通过客户端脚本访问。</li>
+<li>如果在 Cookie 中没有设置 HttpOnly 属性为 true，可能导致 Cookie 被窃取。</li>
+<li>窃取的 Cookie 可以包含标识站点用户的敏感信息，如 ASP.NET 会话 ID 或 Forms 身份验证票证，攻击者可以重播窃取的 Cookie，以便伪装成用户或获取敏感信息，进行跨站脚本攻击等。</li>
+</ul>
+<h3>Cookie 的作用域</h3>
+<p><code>Domain</code> 和 <code>Path</code> 标识定义了 Cookie 的作用域：即 Cookie 应该发送给哪些 URL。</p>
+<p><code>Domain</code> 标识指定了哪些主机可以接受 Cookie。如果不指定，默认为当前主机 (<strong>不包含子域名</strong>）。如果指定了<code>Domain</code>，则一般包含子域名。</p>
+<p>例如，如果设置 <code>Domain=mozilla.org</code>，则 Cookie 也包含在子域名中（如<code>developer.mozilla.org</code>）。</p>
+<p>例如，设置 <code>Path=/docs</code>，则以下地址都会匹配：</p>
+<ul>
+<li><code>/docs</code></li>
+<li><code>/docs/Web/</code></li>
+<li><code>/docs/Web/HTTP</code></li>
+</ul>
+<h2>JSON Web Token 和 Session Cookies 的对比</h2>
+<p><code>JSON Web Token ，简称 JWT</code>，它和 <code>Session</code>都可以为网站提供用户的身份认证，但是它们不是一回事。</p>
+<h3>JWT 和 Session Cookies 的相同之处</h3>
+<p><strong>JWT 和 Session Cookies 就是用来处理在不同页面之间切换，保存用户登录信息的机制</strong>。
+它们能够支持你在发送不同请求之间，记录并验证你的登录状态的一种机制。</p>
+<p>如果没有这两者，那你可能需要在每个页面切换时都需要进行登录了。因为 HTTP 是一个无状态的协议。这也就意味着当你访问某个网页，然后单击同一站点上的另一个页面时，服务器的<code>内存中</code>将不会记住你之前的操作。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/efa5ef830d7911ed8d3327281271deae_MD5.jpg" /></p>
+<h3>什么是 Session Cookies</h3>
+<p>Session Cookies 也称为<code>会话 Cookies</code>，在 Session Cookies 中，用户的登录状态会保存在<code>服务器</code>的<code>内存</code>中。当用户登录时，Session 就被服务端安全的创建。</p>
+<p>在每次请求时，服务器都会从会话 Cookie 中读取 SessionId，如果服务端的数据和读取的 SessionId 相同，那么服务器就会发送响应给浏览器，允许用户登录。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/34d420204aa3937d1adba7dab612d440_MD5.jpg" /></p>
+<h3>什么是 Json Web Tokens</h3>
+<p>Json Web Token 的简称就是 JWT，通常可以称为 <code>Json 令牌</code>。
+它是<code>RFC 7519</code> 中定义的用于<code>安全的</code>将信息作为 <code>Json 对象</code>进行传输的一种形式。
+JWT 中存储的信息是经过<code>数字签名</code>的，因此可以被信任和理解。签名是使用 <code>head</code> 和 <code>payload</code> 计算的，因此你还可以验证内容是否遭到篡改。</p>
+<p><code>单点登录</code>是当今广泛使用 JWT 的一项功能，因为它的开销很小。</p>
+<hr>
+<p>使用 JWT 主要用来下面两点</p>
+<ul>
+<li><code>认证(Authorization)</code>：这是使用 JWT 最常见的一种情况，一旦用户登录，后面每个请求都会包含 JWT，从而允许用户访问该令牌所允许的路由、服务和资源。</li>
+<li><code>信息交换(Information Exchange)</code>：JWT 是能够安全传输信息的一种方式。通过使用公钥 / 私钥对 JWT 进行签名认证。此外，由于</li>
+</ul>
+<h4>JWT 的格式</h4>
+<p>JWT 主要由三部分组成，每个部分用 <code>.</code> 进行分割，各个部分分别是</p>
+<ul>
+<li><code>Header</code></li>
+<li><code>Payload</code></li>
+<li><code>Signature</code>
+Header.Payload.Signature</li>
+</ul>
+<h4><strong>Header</strong></h4>
+<p>Header 是 JWT 的标头，它通常由两部分组成：<code>令牌的类型(即 JWT)</code>和使用的 <code>签名算法</code>，例如 HMAC SHA256 或 RSA。</p>
+<pre><code>{
+  &quot;alg&quot;: &quot;HS256&quot;,
+  &quot;typ&quot;: &quot;JWT&quot;
+}
+</code></pre>
+<p>指定类型和签名算法后，Json 块被 <code>Base64Url</code> 编码形成 JWT 的第一部分。</p>
+<h4><strong>Payload</strong></h4>
+<p>Token 的第二部分是 <code>Payload</code>，Payload 中包含一个声明。
+声明是有关实体（通常是用户）和其他数据的声明。共有三种类型的声明：<strong>registered, public 和 private</strong> 声明。</p>
+<ul>
+<li><code>registered 声明</code>： 包含一组建议使用的预定义声明，主要包括</li>
+</ul>
+<table><thead><tr><th>ISS</th><th>签发人</th></tr></thead><tbody><tr><td>iss (issuer)</td><td>签发人</td></tr><tr><td>exp (expiration time)</td><td>过期时间</td></tr><tr><td>sub (subject)</td><td>主题</td></tr><tr><td>aud (audience)</td><td>受众</td></tr><tr><td>nbf (Not Before)</td><td>生效时间</td></tr><tr><td>iat (Issued At)</td><td>签发时间</td></tr><tr><td>jti (JWT ID)</td><td>编号</td></tr></tbody></table>
+<ul>
+<li><code>public 声明</code>：公共的声明，可以添加任何的信息，一般添加用户的相关信息或其他业务需要的必要信息，但不建议添加敏感信息，因为该部分在客户端可解密。</li>
+<li><code>private 声明</code>：自定义声明，旨在在同意使用它们的各方之间共享信息，既不是注册声明也不是公共声明。</li>
+</ul>
+<p>例如</p>
+<pre><code>{
+  &quot;sub&quot;: &quot;1234567890&quot;,
+  &quot;name&quot;: &quot;John Doe&quot;,
+  &quot;admin&quot;: true
+}
+</code></pre>
+<p>然后 payload Json 块会被<code>Base64Url</code> 编码形成 JWT 的第二部分。</p>
+<h4><strong>signature</strong></h4>
+<p>JWT 的第三部分是一个签证信息，这个签证信息由三部分组成</p>
+<ul>
+<li>header (base64 后的)</li>
+<li>payload (base64 后的)</li>
+<li>secret</li>
+</ul>
+<p>比如我们需要 HMAC SHA256 算法进行签名</p>
+<pre><code>HMACSHA256(
+  base64UrlEncode(header) + &quot;.&quot; +
+  base64UrlEncode(payload),
+  secret)
+</code></pre>
+<p>签名用于验证消息在此过程中没有更改，并且对于使用私钥进行签名的令牌，它还可以验证 JWT 的发送者的真实身份</p>
+<h4>拼凑在一起</h4>
+<p>现在我们把上面的三个由点分隔的 Base64-URL 字符串部分组成在一起，这个字符串可以在 HTML 和 HTTP 环境中轻松传递这些字符串。</p>
+<p>下面是一个完整的 JWT 示例，它对 header 和 payload 进行编码，然后使用 signature 进行签名</p>
+<pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+</code></pre>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/32e2642054325e98054c185da5d5b3c5_MD5.jpg" /></p>
+<h3>JWT 和 Session Cookies 的不同</h3>
+<p>JWT 和 Session Cookies 都提供安全的用户身份验证，但是它们有以下几点不同</p>
+<ol>
+<li>JWT 具有加密签名，而 Session Cookies 则没有。</li>
+<li>JSON 是无状态,session不是</li>
+<li>JWT 支持跨域认证</li>
+</ol>
+<h4>JSON 是无状态的</h4>
+<p>JWT 是<code>无状态</code>的，因为声明被存储在<code>客户端</code>，而不是服务端内存中。</p>
+<p>身份验证可以在<code>本地</code>进行，而不是在请求必须通过服务器数据库或类似位置中进行。 这意味着可以对用户进行多次身份验证，而无需与站点或应用程序的数据库进行通信，也无需在此过程中消耗大量资源。</p>
+<h4>可扩展性</h4>
+<p>Session Cookies 是存储在服务器内存中，这就意味着如果网站或者应用很大的情况下会耗费大量的资源。由于 JWT 是无状态的，在许多情况下，它们可以节省服务器资源。因此 JWT 要比 Session Cookies 具有更强的<code>可扩展性</code>。</p>
+<h4>JWT 支持跨域认证</h4>
+<p>Session Cookies 只能用在<code>单个节点的域</code>或者它的<code>子域</code>中有效。如果它们尝试通过第三个节点访问，就会被禁止。如果你希望自己的网站和其他站点建立安全连接时，这是一个问题。</p>
+<p>使用 JWT 可以解决这个问题，使用 JWT 能够通过<code>多个节点</code>进行用户认证，也就是我们常说的<code>跨域认证</code>。</p>
+<h3>JWT 和 Session Cookies 的选型</h3>
+<p>我们上面探讨了 JWT 和 Cookies 的不同点，相信你也会对选型有了更深的认识，大致来说</p>
+<p>对于只需要登录用户并访问存储在站点数据库中的一些信息的中小型网站来说，Session Cookies 通常就能满足。</p>
+<p>如果你有企业级站点，应用程序或附近的站点，并且需要处理大量的请求，尤其是第三方或很多第三方（包括位于不同域的 API），则 JWT 显然更适合。</p>
+<h2>后记</h2>
+<p><strong>禁用 Cookies，如何使用 Session</strong> ？
+但还是选择了解了一下，如何禁用 Cookies 后，使用 Session</p>
+<ul>
+<li>如果禁用了 Cookies，服务器仍会将 sessionId 以 cookie 的方式发送给浏览器，但是，浏览器不再保存这个 cookie (即 sessionId) 了。</li>
+<li>如果想要继续使用 session，需要采用 <code>URL 重写</code> 的方式来实现，可以参考 <a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.cnblogs.com%2FRenyi-Fan%2Fp%2F11012086.html" title="https://www.cnblogs.com/Renyi-Fan/p/11012086.html">www.cnblogs.com/Renyi-Fan/p…</a></li>
+</ul>
