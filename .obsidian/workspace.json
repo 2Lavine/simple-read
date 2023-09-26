@@ -4,35 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "7fa128f45eb39f7b",
+        "id": "b5f535a3d43abea1",
         "type": "tabs",
         "children": [
           {
-            "id": "bf26adbbe4778309",
+            "id": "7d45faf81db236de",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "done/Nginx 从入门到实践，万字详解！.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "02cbd6a50aeed5d8",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
+                "file": "done/2023-09-25.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -76,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md"
+                "file": "done/2023-09-25.md"
               }
             }
           },
@@ -108,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
+                "file": "done/2023-09-25.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -125,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
+                "file": "done/2023-09-25.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -179,25 +166,40 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "02cbd6a50aeed5d8",
+  "active": "7c656948499aebb2",
   "lastOpenFiles": [
-    "md/深入浅出 Fetch API.md",
+    "md/README.md",
+    "done/2023-09-25.md",
+    "_resources/Pasted image 20230926140951.png",
+    "_resources/Pasted image 20230926135151.png",
+    "S-ARCHSS Project Assignment v2.0.pdf",
+    "S-ARCHSS Project Assignment (Case Study Templates Exercise 2) v2.0.docx",
+    "S-ARCHSS Project Assignment (Case Study Templates Exercise 1) v2.0.docx",
+    "03. Architect the Solution Architecture (Method) v3.0.pdf",
+    "done/从 Fetch 到 Streams —— 以流的角度处理网络请求.md",
+    "done/一文读懂 TypeScript 泛型及应用（ 7.8K 字）.md",
+    "_resources/d41aeb242b0ab73fb346c0d00b7c762f_MD5.webp",
+    "_resources/e129d47721bdd09835a2cec6f75d56c5_MD5.webp",
+    "_resources/5dfeace852a46a34ee8c0524ee6afd7a_MD5.webp",
+    "_resources/429f5c5328c5504db3655e1c20f12fa7_MD5.webp",
+    "done/fetch 简介: 新一代 Ajax API.md",
+    "done/TS 的. d.ts 和 declare 用法.md",
     "md/fetch 简介: 新一代 Ajax API.md",
-    "md/TS 的. d.ts 和 declare 用法.md",
+    "done/d.ts 的精读.md",
+    "done/2023-09-24.md",
+    "done/深入浅出 Fetch API.md",
+    "done/从 ajax 到 fetch、axios.md",
+    "done/你知道 Ajax、Fetch、Axios 三者的区别吗？.md",
+    "_resources/f8af18c389fc1894fc1377b33ac98d83_MD5.webp",
+    "_resources/d8c74f038de090a92b1c5db1f44aba4a_MD5.webp",
+    "_resources/0f83f03d088d12d44c88eeaddb177252_MD5.webp",
+    "_resources/8d1b652b9022b920d4d5199ec59b92b6_MD5.webp",
+    "cur useless/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
     "done/2023-09-23.md",
     "done/Fetch API 介绍及使用 Fetch 发送请求.md",
     "md/Response.md",
     "done/从 Next-Auth 到 Prisma，用最新潮的技术栈做登录.md",
     "done/Spring Cloud Security：Oauth2 使用入门.md",
-    "_resources/007566fb35630e11791d64dcf8ef57ae_MD5.webp",
-    "_resources/74f9325a16683011dbd1e3943b11ff98_MD5.webp",
-    "_resources/e67864b5f07ec9d0e6d225d2b29b1603_MD5.webp",
-    "_resources/bc2ca13fb19768371ea7cdb0f3cda77e_MD5.webp",
-    "_resources/77f9b81aa3eb4856bf177171e4ab06fe_MD5.webp",
-    "_resources/44d37f861a0ffcc5a77f5c5ce4cf96cf_MD5.webp",
-    "_resources/05c7a9114fc12aee3830e0063ac0837d_MD5.webp",
-    "_resources/558718033798315134e2a322621666b7_MD5.webp",
-    "_resources/4c7066b8d24405e1664b71a465ee4f7d_MD5.webp",
     "cur useless/whisper 字幕.md",
     "cur useless/Zeabur CLI 从设计到实现 - 飞鸟记.md",
     "cur useless/使用 next.js 完成从开发到部署.md",
@@ -205,28 +207,12 @@
     "cur useless/工厂方法设计模式.md",
     "cur useless/低能量自救指南：浅谈心力、脑力、体力的作用机制.md",
     "cur useless/Docker 实战 | JavaGuide(Java 面试 + 学习指南).md",
-    "cur useless/跳出知识本身，检查自己的「阅读理解」—— 理解过程的一种解释和工具.md",
-    "done/工厂模式和抽象工厂模式的区别.md",
-    "achieve/抽象工厂设计模式.md",
-    "done/Nginx 从入门到实践，万字详解！.md",
-    "done/理解前端基础渲染模式｜CSR、SSR、同构、静态化.md",
-    "done/前端想要了解的 Nginx.md",
-    "_resources/d10f79a61dd5e20c3beba2c18bfa6080_MD5.webp",
-    "done/作为一名前端，该如何理解 Nginx？.md",
-    "cur useless/Next.js 性能优化之 ISR 渲染入门和原理探索.md",
-    "cur useless/百万级数据 excel 导出功能如何实现？.md",
-    "done/Next.js 了解篇｜一文带你梳理清楚 Next.js 的功能.md",
-    "md/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
     "done",
     "output/2023-9-17 22-51-25.html",
     "output/2023-9-17 22-46-11.html",
     "output/2023-9-17 22-38-55.html",
     "output/2023-9-17 22-38-43.html",
     "output/2023-9-17 22-38-35.html",
-    "output/2023-9-17 22-37-17.html",
-    "output/2023-9-17 22-34-48.html",
-    "output/2023-9-17 22-25-19.html",
-    "done",
     "未命名.canvas"
   ]
 }

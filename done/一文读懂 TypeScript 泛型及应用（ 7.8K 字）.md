@@ -1,21 +1,12 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844904184894980104?searchId=2023092020480389FB90237504642263AF)
 
-觉得 TypeScript 泛型有点难，想系统学习 TypeScript 泛型相关知识的小伙伴们看过来，**本文从八个方面入手，全方位带你一步步学习 TypeScript 中泛型**，详细的内容大纲请看下图：
-
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/6/10/1729b3d970e872ef~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
-
-**动静（图）结合**，在泛型学习之路助你一臂之力，还在犹豫什么，赶紧开启 TypeScript 泛型的学习之旅吧！
-
-> 想入门 TypeScript 的小伙伴看过来，阿宝哥特意为你们准备的 —— [1.2W 字 | 了不起的 TypeScript 入门教程](https://juejin.cn/post/6844904182843965453 "https://juejin.cn/post/6844904182843965453")（1027+ 个👍）教程。
-
 ### 一、泛型是什么
 
-软件工程中，我们不仅要创建一致的定义良好的 API，同时也要考虑可重用性。 组件不仅能够支持当前的数据类型，同时也能支持未来的数据类型，这在创建大型系统时为你提供了十分灵活的功能。
-
 **在像 C# 和 Java 这样的语言中，可以使用泛型来创建可重用的组件，一个组件可以支持多种类型的数据。 这样用户就可以以自己的数据类型来使用组件。**
-
 设计泛型的关键目的是在成员之间提供有意义的约束，这些成员可以是：类的实例成员、类的方法、函数参数和函数返回值。
 
+
+---
 为了便于大家更好地理解上述的内容，我们来举个例子，在这个例子中，我们将一步步揭示泛型的作用。首先我们来定义一个通用的 `identity` 函数，该函数接收一个参数并直接返回它：
 
 ```
@@ -37,8 +28,7 @@ console.log(identity(1)) // 1
 ```
 
 这里 `identity` 的问题是我们将 `Number` 类型分配给参数和返回类型，使该函数仅可用于该原始类型。但该函数并不是可扩展或通用的，很明显这并不是我们所希望的。
-
-我们确实可以把 `Number` 换成 `any`，我们失去了定义应该返回哪种类型的能力，并且在这个过程中使编译器失去了类型保护的作用。我们的目标是让 `identity` 函数可以适用于任何特定的类型，为了实现这个目标，我们可以使用泛型来解决这个问题，具体实现方式如下：
+我们的目标是让 `identity` 函数可以适用于任何特定的类型，为了实现这个目标，我们可以使用泛型来解决这个问题，具体实现方式如下：
 
 ```
 function identity <T>(value: T) : T {
@@ -48,19 +38,31 @@ function identity <T>(value: T) : T {
 console.log(identity<Number>(1)) // 1
 ```
 
-对于刚接触 TypeScript 泛型的读者来说，首次看到 `<T>` 语法会感到陌生。但这没什么可担心的，就像传递参数一样，我们传递了我们想要用于特定函数调用的类型。
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/6/10/1729b3d9774a21ac~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
 
-参考上面的图片，当我们调用 `identity<Number>(1)` ，`Number` 类型就像参数 `1` 一样，它将在出现 `T` 的任何位置填充该类型。图中 `<T>` 内部的 `T` 被称为类型变量，它是我们希望传递给 identity 函数的类型占位符，同时它被分配给 `value` 参数用来代替它的类型：此时 `T` 充当的是类型，而不是特定的 Number 类型。
+---
+对于刚接触 TypeScript 泛型的读者来说，首次看到 `<T>` 语法会感到陌生。
 
-其中 `T` 代表 **Type**，在定义泛型时通常用作第一个类型变量名称。但实际上 `T` 可以用任何有效名称代替。除了 `T` 之外，以下是常见泛型变量代表的意思：
+但这没什么可担心的，就像传递参数一样，我们传递了我们想要用于特定函数调用的类型。
+
+![[../_resources/429f5c5328c5504db3655e1c20f12fa7_MD5.webp]]
+
+参考上面的图片，当我们调用 `identity<Number>(1)` ，`Number` 类型就像参数 `1` 一样，它将在出现 `T` 的任何位置填充该类型。
+图中 `<T>` 内部的 `T` 被称为类型变量，它是我们希望传递给 identity 函数的类型占位符，同时它被分配给 `value` 参数用来代替它的类型：此时 `T` 充当的是类型，而不是特定的 Number 类型。
+
+
+---
+其中 `T` 代表 **Type**，在定义泛型时通常用作第一个类型变量名称。
+
+但实际上 `T` 可以用任何有效名称代替。除了 `T` 之外，以下是常见泛型变量代表的意思：
 
 *   K（Key）：表示对象中的键类型；
 *   V（Value）：表示对象中的值类型；
 *   E（Element）：表示元素类型。
 
-其实并不是只能定义一个类型变量，我们可以引入希望定义的任何数量的类型变量。比如我们引入一个新的类型变量 `U`，用于扩展我们定义的 `identity` 函数：
+其实并不是只能定义一个类型变量，我们可以引入希望定义的任何数量的类型变量。
+
+比如我们引入一个新的类型变量 `U`，用于扩展我们定义的 `identity` 函数：
 
 ```
 function identity <T, U>(value: T, message: U) : T {
@@ -71,9 +73,11 @@ function identity <T, U>(value: T, message: U) : T {
 console.log(identity<Number, string>(68, "Semlinker"));
 ```
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/6/10/1729b3dbccc38ea7~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
 
-除了为类型变量显式设定值之外，一种更常见的做法是使编译器自动选择这些类型，从而使代码更简洁。我们可以完全省略尖括号，比如：
+
+---
+除了为类型变量显式设定值之外，一种更常见的做法是使编译器自动选择这些类型，从而使代码更简洁。
+我们可以完全省略尖括号，比如：
 
 ```
 function identity <T, U>(value: T, message: U) : T {
@@ -86,24 +90,11 @@ console.log(identity(68, "Semlinker"));
 
 对于上述代码，编译器足够聪明，能够知道我们的参数类型，并将它们赋值给 T 和 U，而不需要开发人员显式指定它们。下面我们来看张动图，直观地感受一下类型传递的过程：
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/6/10/1729b3d9773f34ad~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
+![[../_resources/e129d47721bdd09835a2cec6f75d56c5_MD5.webp]]
 
-（图片来源：[medium.com/better-prog…](https://link.juejin.cn?target=https%3A%2F%2Fmedium.com%2Fbetter-programming%2Ftypescript-generics-90be93d8c292%25EF%25BC%2589 "https://medium.com/better-programming/typescript-generics-90be93d8c292%EF%BC%89")
 
-> 感谢 @仑（前端搬砖党）指出，该动图有 bug。
-> 
-> 动态图最后一句错了吗？console.log(identity([1,2,3])) 这里注入类型应该是 number[] 吧？
-
-如你所见，该函数接收你传递给它的任何类型，使得我们可以为不同类型创建可重用的组件。现在我们再来看一下 `identity` 函数：
-
-```
-function identity <T, U>(value: T, message: U) : T {
-  console.log(message);
-  return value;
-}
-```
-
-相比之前定义的 `identity` 函数，新的 `identity` 函数增加了一个类型变量 `U`，但该函数的返回类型我们仍然使用 `T`。如果我们想要返回两种类型的对象该怎么办呢？针对这个问题，我们有多种方案，其中一种就是使用元组，即为元组设置通用的类型：
+---
+如果我们想要返回两种类型的对象该怎么办呢？针对这个问题，我们有多种方案，其中一种就是使用元组，即为元组设置通用的类型：
 
 ```
 function identity <T, U>(value: T, message: U) : [T, U] {
@@ -111,12 +102,14 @@ function identity <T, U>(value: T, message: U) : [T, U] {
 }
 ```
 
-虽然使用元组解决了上述的问题，但有没有其它更好的方案呢？答案是有的，你可以使用泛型接口。
+虽然使用元组解决了上述的问题，但有没有其它更好的方案呢？
+答案是有的，你可以使用泛型接口。
 
 ### 二、泛型接口
 
-为了解决上面提到的问题，首先让我们创建一个用于的 `identity` 函数通用 `Identities` 接口：
+为了解决上面提到的问题（返回两种类型的对象），
 
+首先让我们创建一个用于的 `identity` 函数通用 `Identities` 接口：
 ```
 interface Identities<V, M> {
   value: V,
@@ -139,16 +132,6 @@ function identity<T, U> (value: T, message: U): Identities<T, U> {
 
 console.log(identity(68, "Semlinker"));
 ```
-
-以上代码成功运行后，在控制台会输出以下结果：
-
-```
-68: number
-Semlinker: string
-{value: 68, message: "Semlinker"}
-```
-
-泛型除了可以应用在函数和接口之外，它也可以应用在类中，下面我们就来看一下在类中如何使用泛型。
 
 ### 三、泛型类
 
@@ -181,12 +164,13 @@ console.log(myStringClass.getIdentity()); // Semlinker!
 ```
 
 接下来我们以实例化 `myNumberClass` 为例，来分析一下其调用过程：
-
 *   在实例化 `IdentityClass` 对象时，我们传入 `Number` 类型和构造函数参数值 `68`；
 *   之后在 `IdentityClass` 类中，类型变量 `T` 的值变成 `Number` 类型；
 *   `IdentityClass` 类实现了 `GenericInterface<T>`，而此时 `T` 表示 `Number` 类型，因此等价于该类实现了 `GenericInterface<Number>` 接口；
-*   而对于 `GenericInterface<U>` 接口来说，类型变量 `U` 也变成了 `Number`。这里我有意使用不同的变量名，以表明类型值沿链向上传播，且与变量名无关。
+*   而对于 `GenericInterface<U>` 接口来说，类型变量 `U` 也变成了 `Number`。
 
+
+---
 泛型类可确保在整个类中一致地使用指定的数据类型。比如，你可能已经注意到在使用 Typescript 的 React 项目中使用了以下约定：
 
 ```
@@ -207,6 +191,8 @@ class MyComponent extends React.Component<Props, State> {
 
 在以上代码中，我们将泛型与 React 组件一起使用，以确保组件的 props 和 state 是类型安全的。
 
+
+---
 相信看到这里一些读者会有疑问，我们在什么时候需要使用泛型呢？通常在决定是否使用泛型时，我们有以下两个参考标准：
 
 *   当你的函数、接口或类将处理多种数据类型时；
@@ -218,12 +204,10 @@ class MyComponent extends React.Component<Props, State> {
 
 ### 四、泛型约束
 
-有时我们可能希望限制每个类型变量接受的类型数量，这就是泛型约束的作用。下面我们来举几个例子，介绍一下如何使用泛型约束。
-
+有时我们可能希望限制每个类型变量接受的类型数量，这就是泛型约束的作用。
 #### 4.1 确保属性存在
 
 有时候，我们希望类型变量对应的类型上存在某些属性。这时，除非我们显式地将特定属性定义为类型变量，否则编译器不会知道它们的存在。
-
 一个很好的例子是在处理字符串或数组时，我们会假设 `length` 属性是可用的。让我们再次使用 `identity` 函数并尝试输出参数的长度：
 
 ```
@@ -253,7 +237,14 @@ identity(68); // Error
 // Argument of type '68' is not assignable to parameter of type 'Length'.(2345)
 ```
 
-此外，我们还可以使用 `,` 号来分隔多种约束类型，比如：`<T extends Length, Type2, Type3>`。而对于上述的 `length` 属性问题来说，如果我们显式地将变量设置为数组类型，也可以解决该问题，具体方式如下：
+
+
+----
+此外，我们还可以使用 `,` 号来分隔多种约束类型，比如：`<T extends Length, Type2, Type3>`。
+
+
+---
+而对于上述的 `length` 属性问题来说，如果我们显式地将变量设置为数组类型，也可以解决该问题，具体方式如下：
 
 ```
 function identity<T>(arg: T[]): T[] {
@@ -270,7 +261,11 @@ function identity<T>(arg: Array<T>): Array<T> {
 
 #### 4.2 检查对象上的键是否存在
 
-泛型约束的另一个常见的使用场景就是检查对象上的键是否存在。不过在看具体示例之前，我们得来了解一下 `keyof` 操作符，**`keyof` 操作符是在 TypeScript 2.1 版本引入的，该操作符可以用于获取某种类型的所有键，其返回类型是联合类型。** "耳听为虚，眼见为实"，我们来举个 `keyof` 的使用示例：
+泛型约束的另一个常见的使用场景就是检查对象上的键是否存在。
+
+不过在看具体示例之前，我们得来了解一下 `keyof` 操作符，**`keyof` 操作符是在 TypeScript 2.1 版本引入的，该操作符可以用于获取某种类型的所有键，其返回类型是联合类型。** 
+
+举个 `keyof` 的使用示例：
 
 ```
 interface Person {
@@ -284,16 +279,20 @@ type K2 = keyof Person[];  // number | "length" | "push" | "concat" | ...
 type K3 = keyof { [x: string]: Person };  // string | number
 ```
 
-通过 `keyof` 操作符，我们就可以获取指定类型的所有键，之后我们就可以结合前面介绍的 `extends` 约束，即限制输入的属性名包含在 `keyof` 返回的联合类型中。具体的使用方式如下：
+通过 `keyof` 操作符，我们就可以获取指定类型的所有键，之后我们就可以结合前面介绍的 `extends` 约束，即限制输入的属性名包含在 `keyof` 返回的联合类型中。
 
+具体的使用方式如下：
 ```
 function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
   return obj[key];
 }
 ```
 
-在以上的 `getProperty` 函数中，我们通过 `K extends keyof T` 确保参数 key 一定是对象中含有的键，这样就不会发生运行时错误。这是一个类型安全的解决方案，与简单调用 `let value = obj[key];` 不同。
+在以上的 `getProperty` 函数中，我们通过 `K extends keyof T` 确保参数 key 一定是对象中含有的键，这样就不会发生运行时错误。
+这是一个类型安全的解决方案，与简单调用 `let value = obj[key];` 不同。
 
+
+---
 下面我们来看一下如何使用 `getProperty` 函数：
 
 ```
@@ -331,7 +330,8 @@ Argument of type '"superset_of"' is not assignable to parameter of type
 
 ### 五、泛型参数默认类型
 
-在 TypeScript 2.3 以后，我们可以为泛型中的类型参数指定默认类型。当使用泛型时没有在代码中直接指定类型参数，从实际值参数中也无法推断出类型时，这个默认类型就会起作用。
+在 TypeScript 2.3 以后，我们可以为泛型中的类型参数指定默认类型。
+当使用泛型时没有在代码中直接指定类型参数，从实际值参数中也无法推断出类型时，这个默认类型就会起作用。
 
 泛型参数默认类型与普通函数默认值类似，对应的语法很简单，即 `<T=Default Type>`，对应的使用示例如下：
 
@@ -344,28 +344,22 @@ const strA: A = { name: "Semlinker" };
 const numB: A<number> = { name: 101 };
 ```
 
-泛型参数的默认类型遵循以下规则：
-
-*   有默认类型的类型参数被认为是可选的。
-*   必选的类型参数不能在可选的类型参数后。
-*   如果类型参数有约束，类型参数的默认类型必须满足这个约束。
-*   当指定类型实参时，你只需要指定必选类型参数的类型实参。 未指定的类型参数会被解析为它们的默认类型。
-*   如果指定了默认类型，且类型推断无法选择一个候选类型，那么将使用默认类型作为推断结果。
-*   一个被现有类或接口合并的类或者接口的声明可以为现有类型参数引入默认类型。
-*   一个被现有类或接口合并的类或者接口的声明可以引入新的类型参数，只要它指定了默认类型。
-
 ### 六、泛型条件类型
 
-在 TypeScript 2.8 中引入了条件类型，使得我们可以根据某些条件得到不同的类型，这里所说的条件是类型兼容性约束。尽管以上代码中使用了 `extends` 关键字，也不一定要强制满足继承关系，而是检查是否满足结构兼容性。
+在 TypeScript 2.8 中引入了条件类型，使得我们可以根据某些条件得到不同的类型，这里所说的条件是类型兼容性约束。
 
+尽管以上代码中使用了 `extends` 关键字，也不一定要强制满足继承关系，而是检查是否满足结构兼容性。
 条件类型会以一个条件表达式进行类型关系检测，从而在两种类型中选择其一：
 
 ```
 T extends U ? X : Y
 ```
 
-以上表达式的意思是：若 `T` 能够赋值给 `U`，那么类型是 `X`，否则为 `Y`。在条件类型表达式中，我们通常还会结合 `infer` 关键字，实现类型抽取：
+以上表达式的意思是：若 `T` 能够赋值给 `U`，那么类型是 `X`，否则为 `Y`。
 
+
+---
+在条件类型表达式中，我们通常还会结合 `infer` 关键字，实现类型抽取：
 ```
 interface Dictionary<T = any> {
   [key: string]: T;
@@ -379,10 +373,13 @@ type StrDictMember = DictMember<StrDict> // string
 
 在上面示例中，当类型 T 满足 `T extends Dictionary` 约束时，我们会使用 `infer` 关键字声明了一个类型变量 V，并返回该类型，否则返回 `never` 类型。
 
-> 在 TypeScript 中，`never` 类型表示的是那些永不存在的值的类型。 例如， `never` 类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型。
-> 
-> 另外，需要注意的是，没有类型是 `never` 的子类型或可以赋值给 `never` 类型（除了 `never` 本身之外）。 即使 `any` 也不可以赋值给 `never`。
 
+---
+ 在 TypeScript 中，`never` 类型表示的是那些永不存在的值的类型。 例如， `never` 类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型。
+另外，需要注意的是，没有类型是 `never` 的子类型或可以赋值给 `never` 类型（除了 `never` 本身之外）。 即使 `any` 也不可以赋值给 `never`。
+
+
+---
 除了上述的应用外，利用条件类型和 `infer` 关键字，我们还可以方便地实现获取 Promise 对象的返回值类型，比如：
 
 ```
@@ -406,10 +403,45 @@ type extractStringPromise = UnPromisify<typeof stringPromise>; // string
 type extractPersonPromise = UnPromisify<typeof personPromise>; // Person
 ```
 
+
+---
+```
+type PromiseType<T> = (args: any[]) => Promise<T>;
+type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
+```
+
+在给定的条件类型 `T extends PromiseType<infer U> ? U : never` 中，`U` 是一个类型参数，而 `T` 是待推断的类型。
+
+`PromiseType<T>` 是一个泛型类型，它接受一个类型参数 `T`，并返回一个函数类型 `(args: any[]) => Promise<T>`。换句话说，`PromiseType<T>` 表示一个接受任意参数的函数，返回一个 `Promise`，其中 `Promise` 的泛型类型是 `T`。
+
+`UnPromisify<T>` 是另一个泛型类型，它接受一个类型参数 `T`，并使用条件类型来判断 `T` 是否可以赋值给 `PromiseType<infer U>`。如果 `T` 可以赋值给 `PromiseType<infer U>`，则返回 `U` 类型；否则返回 `never` 类型。
+
+举个例子，假设我们有一个函数类型 `Foo`：
+
+```typescript
+type Foo = (args: any[]) => Promise<string>;
+```
+
+现在，我们可以使用 `UnPromisify<T>` 来提取 `Foo` 的返回值类型：
+
+```typescript
+type ReturnType = UnPromisify<Foo>; // string
+```
+
+在这个例子中，`Foo` 是一个函数类型，它接受任意参数，并返回一个 `Promise`，其中 `Promise` 的泛型类型是 `string`。通过调用 `UnPromisify<Foo>`，我们可以获取 `Foo` 的返回值类型，即 `string`。所以，`ReturnType` 的类型被推断为 `string`。
+
+总结来说，`U` 是根据 `T` 是否可以赋值给 `PromiseType<infer U>` 来进行类型推断的结果。而 `T` 是待推断的类型，可能是一个函数类型或其他类型。
+
+---
+在 TypeScript 中，`extends` 关键字在类型系统中的含义并不完全等同于继承的概念。
+
+当我们使用 `extends` 关键字来比较两个类型时，它实际上表示的是 "类型 A 是否可以赋值给类型 B"。也就是说，`A extends B` 表达的是类型 A 是否是类型 B 的子类型或兼容类型，而不是表示继承关系。
+
+在条件类型 `T extends Dictionary<infer V> ? V : never` 中，`extends` 关键字用来判断类型 `T` 是否可以赋值给 `Dictionary<infer V>`。如果 `T` 可以赋值给 `Dictionary<infer V>`，则返回 `V` 类型；否则返回 `never` 类型。
+
+所以，`NameType extends Dictionary<infer V>` 表达的是类型 `NameType` 是否可以赋值给 `Dictionary<infer V>`，而不是表示 `NameType` 继承自 `Dictionary<infer V>`。这个条件类型的目的是根据 `NameType` 类型是否符合 `Dictionary<infer V>` 的形式来进行类型推断。
+
 ### 七、泛型工具类型
-
-为了方便开发者 TypeScript 内置了一些常用的工具类型，比如 Partial、Required、Readonly、Record 和 ReturnType 等。出于篇幅考虑，这里我们只简单介绍其中几个常用的工具类型。
-
 #### 7.1 Partial
 
 `Partial<T>` 的作用就是将某个类型里的属性全部变为可选项 `?`。
@@ -476,7 +508,6 @@ type Record<K extends keyof any, T> = {
 ```
 
 **示例：**
-
 ```
 interface PageInfo {
   title: string;
@@ -490,7 +521,6 @@ const x: Record<Page, PageInfo> = {
   home: { title: "home" }
 };
 ```
-
 #### 7.3 Pick
 
 `Pick<T, K extends keyof T>` 的作用是将某个类型中的子属性挑出来，变成包含这个类型部分属性的子类型。
@@ -509,7 +539,6 @@ type Pick<T, K extends keyof T> = {
 ```
 
 **示例：**
-
 ```
 interface Todo {
   title: string;
@@ -614,8 +643,12 @@ const secondClass: SecondClass = creator2.create();
 'T' only refers to a type, but is being used as a value here.
 ```
 
-这个错误的意思是：`T` 类型仅指类型，但此处被用作值。那么如何解决这个问题呢？根据 TypeScript 文档，为了使通用类能够创建 T 类型的对象，我们需要通过其构造函数来引用 T 类型。对于上述问题，在介绍具体的解决方案前，我们先来介绍一下构造签名。
+这个错误的意思是：`T` 类型仅指类型，但此处被用作值。
 
+那么如何解决这个问题呢？根据 TypeScript 文档，为了使通用类能够创建 T 类型的对象，我们需要通过其构造函数来引用 T 类型。对于上述问题，在介绍具体的解决方案前，我们先来介绍一下构造签名。
+
+
+---
 在 TypeScript 接口中，你可以使用 `new` 关键字来描述一个构造函数：
 
 ```
@@ -625,8 +658,7 @@ interface Point {
 ```
 
 以上接口中的 `new (x: number, y: number)` 我们称之为构造签名，其语法如下：
-
-> _ConstructSignature:_  `new` _TypeParametersopt_ `(` _ParameterListopt_ `)` _TypeAnnotationopt_
+_ConstructSignature:_  `new` _TypeParametersopt_ `(` _ParameterListopt_ `)` _TypeAnnotationopt_
 
 在上述的构造签名中，`TypeParametersopt` 、`ParameterListopt` 和 `TypeAnnotationopt` 分别表示：可选的类型参数、可选的参数列表和可选的类型注解。与该语法相对应的几种常见的使用形式如下：
 
@@ -649,7 +681,10 @@ new C < ... > ( ... )
 *   包含一个或多个构造签名的对象类型被称为构造函数类型；
 *   构造函数类型可以使用构造函数类型字面量或包含构造签名的对象类型字面量来编写。
 
-那么什么是构造函数类型字面量呢？构造函数类型字面量是包含单个构造函数签名的对象类型的简写。具体来说，构造函数类型字面量的形式如下：
+
+---
+那么什么是构造函数类型字面量呢？构造函数类型字面量是包含单个构造函数签名的对象类型的简写。
+具体来说，构造函数类型字面量的形式如下：
 
 ```
 new < T1, T2, ... > ( p1, p2, ... ) => R
@@ -775,11 +810,3 @@ const firstClass: FirstClass = creator1.create(FirstClass);
 const creator2 = new GenericCreator<SecondClass>();
 const secondClass: SecondClass = creator2.create(SecondClass);
 ```
-
-### 九、参考资源
-
-*   [typescript-generics](https://link.juejin.cn?target=https%3A%2F%2Fmedium.com%2Fbetter-programming%2Ftypescript-generics-90be93d8c292 "https://medium.com/better-programming/typescript-generics-90be93d8c292")
-*   [typescript-generics-explained](https://link.juejin.cn?target=https%3A%2F%2Fmedium.com%2F%40rossbulat%2Ftypescript-generics-explained-15c6493b510f "https://medium.com/@rossbulat/typescript-generics-explained-15c6493b510f")
-*   [typescript-tip-of-the-week-generics](https://link.juejin.cn?target=https%3A%2F%2Fdev.to%2Fshadow1349%2Ftypescript-tip-of-the-week-generics-170g "https://dev.to/shadow1349/typescript-tip-of-the-week-generics-170g")
-
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/6/22/172dc5bb94585adf~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
