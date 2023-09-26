@@ -1,0 +1,1667 @@
+<h1>2023-09-24</h1><p>XMLHttpRequest 是一种在浏览器中进行异步通信的技术，其原理如下：</p>
+<ol>
+<li>创建 XMLHttpRequest 对象：通过 <code>new XMLHttpRequest()</code> 创建一个 XMLHttpRequest 对象。</li>
+<li>设置请求的方法和 URL：使用 <code>open()</code> 方法设置请求的方法（GET、POST、PUT、DELETE等）和要发送的 URL。</li>
+<li>设置请求头（可选）：使用 <code>setRequestHeader()</code> 方法设置请求头，例如 Content-Type。</li>
+<li>注册事件处理程序：通过注册事件处理程序，可以在请求的不同阶段进行相应的处理。常用的事件包括 <code>onload</code>（请求成功完成）、<code>onerror</code>（请求出错）等。</li>
+<li>发送请求：使用 <code>send()</code> 方法发送请求。对于 GET 请求，可以将参数附加到 URL 上；对于 POST 请求，可以将参数作为 <code>send()</code> 方法的参数传递。</li>
+<li>接收响应：当服务器返回响应时，通过事件处理程序onload 进行处理。可以使用 <code>responseText</code> 属性获取响应的文本数据，或使用 <code>responseXML</code> 属性获取响应的 XML 数据。</li>
+</ol>
+<p>XMLHttpRequest 的原理是通过在浏览器和服务器之间建立一个 HTTP 请求-响应的通信通道，实现了异步通信。它允许在不刷新整个页面的情况下，通过发送请求和接收响应，实现动态更新页面内容的功能。</p>
+<p>onreadystatechange 和 onload 是 XMLHttpRequest 对象的两个不同的事件。</p>
+<ul>
+<li>
+<p>onreadystatechange 事件：当 readyState 属性发生变化时触发。readyState 属性表示请求的当前状态，它有以下几个可能的值：0（未初始化）、1（正在加载）、2（已加载）、3（正在交互）、4（完成）。通过注册 onreadystatechange 事件处理程序，可以在请求的不同阶段执行相应的操作。</p>
+</li>
+<li>
+<p>onload 事件：当请求成功完成并且响应数据完全接收时触发。通常在 readyState 的值为 4 时触发，表示请求已经完成。在 onload 事件处理程序中，可以使用 status 属性来获取响应的状态码，使用 responseText 或 responseXML 属性来获取响应的数据。</p>
+</li>
+</ul>
+
+<h1>2023-09-25</h1><p>dispensable</p>
+<p>Tiers vs Layers
+Tiers more physical
+Layers more logical</p>
+<p>application not recommended in DMZ</p>
+<h2>Architecture Styles (Communication)</h2>
+<p>Data flow</p>
+<ul>
+<li>file ftp</li>
+<li>Database Level
+Call and return</li>
+<li>access via url</li>
+<li>remote Procedure call (RFC)
+Event base</li>
+<li>peer to peer</li>
+<li>subscribe
+Message level: message queue</li>
+</ul>
+<h2>Method to archeitect</h2>
+<ol>
+<li>Identify requirements
+<ol>
+<li>different roles should focues different requirements
+Identify requirements flow</li>
+</ol>
+</li>
+<li>stakeholders request</li>
+<li>get glossary</li>
+<li>Define system context
+<ol>
+<li>Identify actors</li>
+<li>get actors locations</li>
+<li>get data flows between actors</li>
+</ol>
+</li>
+<li>outline fun,non-fun requirements:  User case digram</li>
+<li>proritize requirements</li>
+<li>Details:fon requirements details:   User case Description</li>
+<li>update arch doc and review requirements</li>
+</ol>
+<h2>Logical ArchitectureActivity</h2>
+<p>10 Tasks</p>
+<ol>
+<li>Surveys Architecture Assets</li>
+<li>Define Architecture Overview</li>
+<li>Outline Functional Elements by BCE Components(Boundry Control Entity)</li>
+<li>Outline Deploy  Element</li>
+<li>Verify</li>
+<li>Detail Fun Elements</li>
+<li>Detail Deploy Elements
+1.</li>
+</ol>
+<hr>
+<p>how to do a Surveys</p>
+<ol>
+<li>find Issues</li>
+<li>get alternatives</li>
+<li>justification</li>
+</ol>
+<hr>
+<p>The system will integrate to the external systems through Web Service is non-fun requirements</p>
+<h3>Architecture Overview</h3>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20230926135151.png" /></p>
+<h3>Detail Deploy Elements</h3>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20230926140951.png" /></p>
+<hr>
+<p>API Gateway 是一种服务，用于接收客户端请求并将其路由到相应的后端服务。它可以用于构建和管理多个微服务的 API 入口，并提供一些功能，如请求转发、身份认证、授权、请求限流、负载均衡等。</p>
+<p>API Gateway 使用的传输协议可以是 HTTP、HTTPS 或 WebSocket，具体取决于配置和需求。通常情况下，API Gateway 接收客户端的 HTTP 请求，并将其转发到后端服务的 HTTP 端点。</p>
+<p>与 API Gateway 不同，Web Server 是一种用于处理和响应 HTTP 请求的软件。它通常被用于托管网站、Web 应用程序或 API。Web Server 只负责处理请求和响应，而不涉及其他功能，如请求路由、身份认证、授权等。</p>
+<p>总结来说，API Gateway 是用于管理和处理多个后端服务的 API 入口，提供了更丰富的功能和灵活性；而 Web Server 则是用于处理 HTTP 请求的基本服务器，主要用于托管网站和简单的应用程序。</p>
+
+<h1>TS 的. d.ts 和 declare 用法</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7219189313723154489?from=search-suggest">juejin.cn</a></p>
+</blockquote>
+<h1>一、.d.ts 是干嘛用的</h1>
+<p>.d.ts 文件是 ts 用来声明变量，模块，type，interface 等等的，
+在. d.ts 声明变量或者模块等东西之后，在其他地方可以不用 import 导入这些东西就可以直接用。</p>
+<p>但是也不是说创建了. d.ts 文件，里面声明的东西就能生效了，
+需要在 tsconfig.json 文件里面的<code>include</code>数组里面添加这个文件，</p>
+<p>比如我们在 vue3+Ts 项目中的 tsconfig.json 中可以做如下配置：</p>
+<pre><code>{
+  &quot;include&quot;: [
+    &quot;src/**/*.ts&quot;,
+    &quot;src/**/*.d.ts&quot;,
+    &quot;src/**/*.tsx&quot;,
+    &quot;src/**/*.vue&quot;,
+    &quot;src/typings/*.d.ts&quot;,
+    &quot;tests/**/*.ts&quot;,
+    &quot;tests/**/*.tsx&quot;
+  ],
+  &quot;exclude&quot;: [
+    &quot;node_modules&quot;
+  ]
+}
+</code></pre>
+<hr>
+<p>其中 <code>src/**/*.vue</code>, 就表 示在 vue 文件中，使用在. d.ts 中声明的 type 和 interface 时，是不需要单独 import 的，可以直接使用。</p>
+<pre><code>// test.d.ts
+
+declare interface Obj {
+        a:number,
+        b:string
+}
+</code></pre>
+<p>我们在 vue 文件中，可以直接使用：</p>
+<pre><code>&lt;script lang='ts' setup&gt;
+    import {reactive} from 'vue'
+    // 可以直接使用Obj
+    const obj = reactive&lt;Obj&gt;({
+      a:1,
+      b:'q'
+    })
+&lt;/script&gt;
+</code></pre>
+<h2>二、declare 用法</h2>
+<p>d.ts 文件中的顶级声明必须以 <code>declare</code> 或 <code>export</code> 修饰符开头.</p>
+<p>通过<code>declare</code>声明的类型或者变量或者模块，在<code>include</code>包含的文件范围内，都可以直接引用而不用去 import 或者 import type 相应的变量或者类型。</p>
+<h2>declare 声明一个类型</h2>
+<pre><code>declare type Asd =   {
+        a:number
+    }
+</code></pre>
+<p>在 include 包含的文件范围内，可以直接使用 Asd 这个 type</p>
+<h2>declare 声明一个模块</h2>
+<pre><code>declare module '*.css'
+    declare module '*.less'
+    declare module '*.png'
+</code></pre>
+<p>在编辑 ts 文件的时候，如果你想导入一个. css/.less/.png 格式的文件，如果没有经过 declare 的话是会提示语法错误的</p>
+<h2>declare 声明一个作用域</h2>
+<pre><code>在test.d.ts中声明：
+
+declare namespace API {
+    interface ResponseList {
+        code:number,
+      
+    }
+}
+</code></pre>
+<p>在 vue 文件中可以直接使用, 不用 import</p>
+<pre><code>index.vue
+
+const res = ref&lt;API.ResponseList&gt;({})
+</code></pre>
+
+<h1>d.ts 的精读</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6857022744723849230?from=search-suggest">juejin.cn</a></p>
+</blockquote>
+<h2>d.ts 的用法</h2>
+<p>declare const model:number`</p>
+<p><code>declare</code>是一个关键字，标识声明的意思，在<code>d.ts</code>文件里面，在最外层声明变量或者函数或者类要在前面加上这个关键字。
+在<code>typescript</code>的规则里面，如果一个<code>.ts、.d.ts</code>文件如果没有用到<code>import</code>或者<code>export</code>语法的话，那么最顶层声明的变量就是全局变量。</p>
+<h3>全局使用模式</h3>
+<p>全局变量<br>
+<code>declare let aaa:number|string</code>
+<code>declare const max:200</code></p>
+<h2>全局函数</h2>
+<p>由上面的全局变量的写法我们很自然的推断出一个全局函数的写法如下：</p>
+<pre><code>decalre function getName(id:number|string):string
+</code></pre>
+<p>如果有些参数可有可无，可以加个? 表示非必须。</p>
+<pre><code>declare function render(callback?:()=&gt;void): string
+js中调用的时候，回调传不传都可以：
+
+render()
+
+render(function () {
+    alert('finish.')
+})
+</code></pre>
+<h3>模块化使用方式（CommonJS）</h3>
+<p>如果文件里我们使用了 import 或者 export 语法，
+那么 bbb 和 ccc 在其他代码里不能访问到，即不是全局变量</p>
+<p><code>export { aaa }</code> 使用：
+<code>import { a1, a2 } from &quot;./A&quot;</code>
+<code>console.log(a1)</code> <code>console.log(a2)</code> 那么对应的 A.d.ts 文件是这样写的：
+<code>declare var a1: 1</code> <code>declare var a2: 2</code>
+<code>export { a1,a2 }</code></p>
+<h2>d.ts 的优点</h2>
+<ul>
+<li>可以对数据、方法、对象的类型进行限定</li>
+<li>最大好处就是可以有对应方法、参数的提示信息，方便选择</li>
+</ul>
+<h2>d.ts 文件放的位置</h2>
+<blockquote>
+<p>经常有人问写出来的<code>d.ts文件（A.d.ts）</code>文件放到哪个目录里，如果是模块化的话那就放到和源码<code>（A.js）</code>文件同一个目录下，如果是全局变量的话理论上放到哪里都可以 ---—当然除非你在<code>tsconfig.json</code> 文件里面特殊配置过。</p>
+</blockquote>
+
+<h1>fetch 简介: 新一代 Ajax API</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903432613019661?searchId=20230922220824D75FAF6A213F99E4750A">juejin.cn</a></p>
+</blockquote>
+<h2>Request  clone</h2>
+<p>在 <code>Request</code> 对象创建完成之后, 所有的属性都变为只读属性. 请注意, <code>Request</code> 有一个很重要的 <code>clone</code> 方法, 特别是在 Service Worker API 中使用时 —— 一个 Request 就代表一串流 (stream), 如果想要传递给另一个 <code>fetch</code> 方法, 则需要进行克隆。</p>
+<h2>处理Blob结果</h2>
+<p>如果你想通过 fetch 加载图像或者其他二进制数据, 则会略有不同:</p>
+<pre><code>fetch('flowers.jpg')
+    .then(function(response) {
+      return response.blob();
+    })
+    .then(function(imageBlob) {
+      document.querySelector('img').src = URL.createObjectURL(imageBlob);
+    });
+</code></pre>
+<p>响应 Body mixin 的 <code>blob()</code> 方法处理响应流(Response stream), 并且将其读完。</p>
+<hr>
+<p>另一种常用的 AJAX 调用是提交表单数据 —— 示例代码如下:</p>
+<pre><code>fetch('/submit', {
+    method: 'post',
+    body: new FormData(document.getElementById('comment-form'))
+});
+</code></pre>
+<p>提交 JSON 的示例如下:</p>
+<pre><code>fetch('/submit-json', {
+    method: 'post',
+    body: JSON.stringify({
+        email: document.getElementById('email').value
+        answer: document.getElementById('answer').value
+    })
+});
+</code></pre>
+
+<h1>一文读懂 TypeScript 泛型及应用（ 7.8K 字）</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844904184894980104?searchId=2023092020480389FB90237504642263AF">juejin.cn</a></p>
+</blockquote>
+<h3>一、泛型是什么</h3>
+<p><strong>在像 C# 和 Java 这样的语言中，可以使用泛型来创建可重用的组件，一个组件可以支持多种类型的数据。 这样用户就可以以自己的数据类型来使用组件。</strong>
+设计泛型的关键目的是在成员之间提供有意义的约束，这些成员可以是：类的实例成员、类的方法、函数参数和函数返回值。</p>
+<hr>
+<p>为了便于大家更好地理解上述的内容，我们来举个例子，在这个例子中，我们将一步步揭示泛型的作用。首先我们来定义一个通用的 <code>identity</code> 函数，该函数接收一个参数并直接返回它：</p>
+<pre><code>function identity (value) {
+  return value;
+}
+
+console.log(identity(1)) // 1
+</code></pre>
+<p>现在，我们将 <code>identity</code> 函数做适当的调整，以支持 TypeScript 的 Number 类型的参数：</p>
+<pre><code>function identity (value: Number) : Number {
+  return value;
+}
+
+console.log(identity(1)) // 1
+</code></pre>
+<p>这里 <code>identity</code> 的问题是我们将 <code>Number</code> 类型分配给参数和返回类型，使该函数仅可用于该原始类型。但该函数并不是可扩展或通用的，很明显这并不是我们所希望的。
+我们的目标是让 <code>identity</code> 函数可以适用于任何特定的类型，为了实现这个目标，我们可以使用泛型来解决这个问题，具体实现方式如下：</p>
+<pre><code>function identity &lt;T&gt;(value: T) : T {
+  return value;
+}
+
+console.log(identity&lt;Number&gt;(1)) // 1
+</code></pre>
+<hr>
+<p>对于刚接触 TypeScript 泛型的读者来说，首次看到 <code>&lt;T&gt;</code> 语法会感到陌生。</p>
+<p>但这没什么可担心的，就像传递参数一样，我们传递了我们想要用于特定函数调用的类型。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/429f5c5328c5504db3655e1c20f12fa7_MD5.jpg" /></p>
+<p>参考上面的图片，当我们调用 <code>identity&lt;Number&gt;(1)</code> ，<code>Number</code> 类型就像参数 <code>1</code> 一样，它将在出现 <code>T</code> 的任何位置填充该类型。
+图中 <code>&lt;T&gt;</code> 内部的 <code>T</code> 被称为类型变量，它是我们希望传递给 identity 函数的类型占位符，同时它被分配给 <code>value</code> 参数用来代替它的类型：此时 <code>T</code> 充当的是类型，而不是特定的 Number 类型。</p>
+<hr>
+<p>其中 <code>T</code> 代表 <strong>Type</strong>，在定义泛型时通常用作第一个类型变量名称。</p>
+<p>但实际上 <code>T</code> 可以用任何有效名称代替。除了 <code>T</code> 之外，以下是常见泛型变量代表的意思：</p>
+<ul>
+<li>K（Key）：表示对象中的键类型；</li>
+<li>V（Value）：表示对象中的值类型；</li>
+<li>E（Element）：表示元素类型。</li>
+</ul>
+<p>其实并不是只能定义一个类型变量，我们可以引入希望定义的任何数量的类型变量。</p>
+<p>比如我们引入一个新的类型变量 <code>U</code>，用于扩展我们定义的 <code>identity</code> 函数：</p>
+<pre><code>function identity &lt;T, U&gt;(value: T, message: U) : T {
+  console.log(message);
+  return value;
+}
+
+console.log(identity&lt;Number, string&gt;(68, &quot;Semlinker&quot;));
+</code></pre>
+<hr>
+<p>除了为类型变量显式设定值之外，一种更常见的做法是使编译器自动选择这些类型，从而使代码更简洁。
+我们可以完全省略尖括号，比如：</p>
+<pre><code>function identity &lt;T, U&gt;(value: T, message: U) : T {
+  console.log(message);
+  return value;
+}
+
+console.log(identity(68, &quot;Semlinker&quot;));
+</code></pre>
+<p>对于上述代码，编译器足够聪明，能够知道我们的参数类型，并将它们赋值给 T 和 U，而不需要开发人员显式指定它们。下面我们来看张动图，直观地感受一下类型传递的过程：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/e129d47721bdd09835a2cec6f75d56c5_MD5.jpg" /></p>
+<hr>
+<p>如果我们想要返回两种类型的对象该怎么办呢？针对这个问题，我们有多种方案，其中一种就是使用元组，即为元组设置通用的类型：</p>
+<pre><code>function identity &lt;T, U&gt;(value: T, message: U) : [T, U] {
+  return [value, message];
+}
+</code></pre>
+<p>虽然使用元组解决了上述的问题，但有没有其它更好的方案呢？
+答案是有的，你可以使用泛型接口。</p>
+<h3>二、泛型接口</h3>
+<p>为了解决上面提到的问题（返回两种类型的对象），</p>
+<p>首先让我们创建一个用于的 <code>identity</code> 函数通用 <code>Identities</code> 接口：</p>
+<pre><code>interface Identities&lt;V, M&gt; {
+  value: V,
+  message: M
+}
+</code></pre>
+<p>在上述的 <code>Identities</code> 接口中，我们引入了类型变量 <code>V</code> 和 <code>M</code>，来进一步说明有效的字母都可以用于表示类型变量，之后我们就可以将 <code>Identities</code> 接口作为 <code>identity</code> 函数的返回类型：</p>
+<pre><code>function identity&lt;T, U&gt; (value: T, message: U): Identities&lt;T, U&gt; {
+  console.log(value + &quot;: &quot; + typeof (value));
+  console.log(message + &quot;: &quot; + typeof (message));
+  let identities: Identities&lt;T, U&gt; = {
+    value,
+    message
+  };
+  return identities;
+}
+
+console.log(identity(68, &quot;Semlinker&quot;));
+</code></pre>
+<h3>三、泛型类</h3>
+<p>在类中使用泛型也很简单，我们只需要在类名后面，使用 <code>&lt;T, ...&gt;</code> 的语法定义任意多个类型变量，具体示例如下：</p>
+<pre><code>interface GenericInterface&lt;U&gt; {
+  value: U
+  getIdentity: () =&gt; U
+}
+
+class IdentityClass&lt;T&gt; implements GenericInterface&lt;T&gt; {
+  value: T
+
+  constructor(value: T) {
+    this.value = value
+  }
+
+  getIdentity(): T {
+    return this.value
+  }
+
+}
+
+const myNumberClass = new IdentityClass&lt;Number&gt;(68);
+console.log(myNumberClass.getIdentity()); // 68
+
+const myStringClass = new IdentityClass&lt;string&gt;(&quot;Semlinker!&quot;);
+console.log(myStringClass.getIdentity()); // Semlinker!
+</code></pre>
+<p>接下来我们以实例化 <code>myNumberClass</code> 为例，来分析一下其调用过程：</p>
+<ul>
+<li>在实例化 <code>IdentityClass</code> 对象时，我们传入 <code>Number</code> 类型和构造函数参数值 <code>68</code>；</li>
+<li>之后在 <code>IdentityClass</code> 类中，类型变量 <code>T</code> 的值变成 <code>Number</code> 类型；</li>
+<li><code>IdentityClass</code> 类实现了 <code>GenericInterface&lt;T&gt;</code>，而此时 <code>T</code> 表示 <code>Number</code> 类型，因此等价于该类实现了 <code>GenericInterface&lt;Number&gt;</code> 接口；</li>
+<li>而对于 <code>GenericInterface&lt;U&gt;</code> 接口来说，类型变量 <code>U</code> 也变成了 <code>Number</code>。</li>
+</ul>
+<hr>
+<p>泛型类可确保在整个类中一致地使用指定的数据类型。比如，你可能已经注意到在使用 Typescript 的 React 项目中使用了以下约定：</p>
+<pre><code>type Props = {
+  className?: string
+   ...
+};
+
+type State = {
+  submitted?: bool
+   ...
+};
+
+class MyComponent extends React.Component&lt;Props, State&gt; {
+   ...
+}
+</code></pre>
+<p>在以上代码中，我们将泛型与 React 组件一起使用，以确保组件的 props 和 state 是类型安全的。</p>
+<hr>
+<p>相信看到这里一些读者会有疑问，我们在什么时候需要使用泛型呢？通常在决定是否使用泛型时，我们有以下两个参考标准：</p>
+<ul>
+<li>当你的函数、接口或类将处理多种数据类型时；</li>
+<li>当函数、接口或类在多个地方使用该数据类型时。</li>
+</ul>
+<p>很有可能你没有办法保证在项目早期就使用泛型的组件，但是随着项目的发展，组件的功能通常会被扩展。这种增加的可扩展性最终很可能会满足上述两个条件，在这种情况下，引入泛型将比复制组件来满足一系列数据类型更干净。</p>
+<p>我们将在本文的后面探讨更多满足这两个条件的用例。不过在这样做之前，让我们先介绍一下 Typescript 泛型提供的其他功能。</p>
+<h3>四、泛型约束</h3>
+<p>有时我们可能希望限制每个类型变量接受的类型数量，这就是泛型约束的作用。</p>
+<h4>4.1 确保属性存在</h4>
+<p>有时候，我们希望类型变量对应的类型上存在某些属性。这时，除非我们显式地将特定属性定义为类型变量，否则编译器不会知道它们的存在。
+一个很好的例子是在处理字符串或数组时，我们会假设 <code>length</code> 属性是可用的。让我们再次使用 <code>identity</code> 函数并尝试输出参数的长度：</p>
+<pre><code>function identity&lt;T&gt;(arg: T): T {
+  console.log(arg.length); // Error
+  return arg;
+}
+</code></pre>
+<p>在这种情况下，编译器将不会知道 <code>T</code> 确实含有 <code>length</code> 属性，尤其是在可以将任何类型赋给类型变量 <code>T</code> 的情况下。我们需要做的就是让类型变量 <code>extends</code> 一个含有我们所需属性的接口，比如这样：</p>
+<pre><code>interface Length {
+  length: number;
+}
+
+function identity&lt;T extends Length&gt;(arg: T): T {
+  console.log(arg.length); // 可以获取length属性
+  return arg;
+}
+</code></pre>
+<p><code>T extends Length</code> 用于告诉编译器，我们支持已经实现 <code>Length</code> 接口的任何类型。之后，当我们使用不含有 <code>length</code> 属性的对象作为参数调用 <code>identity</code> 函数时，TypeScript 会提示相关的错误信息：</p>
+<pre><code>identity(68); // Error
+// Argument of type '68' is not assignable to parameter of type 'Length'.(2345)
+</code></pre>
+<hr>
+<p>此外，我们还可以使用 <code>,</code> 号来分隔多种约束类型，比如：<code>&lt;T extends Length, Type2, Type3&gt;</code>。</p>
+<hr>
+<p>而对于上述的 <code>length</code> 属性问题来说，如果我们显式地将变量设置为数组类型，也可以解决该问题，具体方式如下：</p>
+<pre><code>function identity&lt;T&gt;(arg: T[]): T[] {
+   console.log(arg.length);  
+   return arg; 
+}
+
+// or
+function identity&lt;T&gt;(arg: Array&lt;T&gt;): Array&lt;T&gt; {      
+  console.log(arg.length);
+  return arg; 
+}
+</code></pre>
+<h4>4.2 检查对象上的键是否存在</h4>
+<p>泛型约束的另一个常见的使用场景就是检查对象上的键是否存在。</p>
+<p>不过在看具体示例之前，我们得来了解一下 <code>keyof</code> 操作符，<strong><code>keyof</code> 操作符是在 TypeScript 2.1 版本引入的，该操作符可以用于获取某种类型的所有键，其返回类型是联合类型。</strong></p>
+<p>举个 <code>keyof</code> 的使用示例：</p>
+<pre><code>interface Person {
+  name: string;
+  age: number;
+  location: string;
+}
+
+type K1 = keyof Person; // &quot;name&quot; | &quot;age&quot; | &quot;location&quot;
+type K2 = keyof Person[];  // number | &quot;length&quot; | &quot;push&quot; | &quot;concat&quot; | ...
+type K3 = keyof { [x: string]: Person };  // string | number
+</code></pre>
+<p>通过 <code>keyof</code> 操作符，我们就可以获取指定类型的所有键，之后我们就可以结合前面介绍的 <code>extends</code> 约束，即限制输入的属性名包含在 <code>keyof</code> 返回的联合类型中。</p>
+<p>具体的使用方式如下：</p>
+<pre><code>function getProperty&lt;T, K extends keyof T&gt;(obj: T, key: K): T[K] {
+  return obj[key];
+}
+</code></pre>
+<p>在以上的 <code>getProperty</code> 函数中，我们通过 <code>K extends keyof T</code> 确保参数 key 一定是对象中含有的键，这样就不会发生运行时错误。
+这是一个类型安全的解决方案，与简单调用 <code>let value = obj[key];</code> 不同。</p>
+<hr>
+<p>下面我们来看一下如何使用 <code>getProperty</code> 函数：</p>
+<pre><code>enum Difficulty {
+  Easy,
+  Intermediate,
+  Hard
+}
+
+function getProperty&lt;T, K extends keyof T&gt;(obj: T, key: K): T[K] {
+  return obj[key];
+}
+
+let tsInfo = {
+   name: &quot;Typescript&quot;,
+   supersetOf: &quot;Javascript&quot;,
+   difficulty: Difficulty.Intermediate
+}
+ 
+let difficulty: Difficulty = 
+  getProperty(tsInfo, 'difficulty'); // OK
+
+let supersetOf: string = 
+  getProperty(tsInfo, 'superset_of'); // Error
+</code></pre>
+<p>在以上示例中，对于 <code>getProperty(tsInfo, 'superset_of')</code> 这个表达式，TypeScript 编译器会提示以下错误信息：</p>
+<pre><code>Argument of type '&quot;superset_of&quot;' is not assignable to parameter of type 
+'&quot;difficulty&quot; | &quot;name&quot; | &quot;supersetOf&quot;'.(2345)
+</code></pre>
+<p>很明显通过使用泛型约束，在编译阶段我们就可以提前发现错误，大大提高了程序的健壮性和稳定性。接下来，我们来介绍一下泛型参数默认类型。</p>
+<h3>五、泛型参数默认类型</h3>
+<p>在 TypeScript 2.3 以后，我们可以为泛型中的类型参数指定默认类型。
+当使用泛型时没有在代码中直接指定类型参数，从实际值参数中也无法推断出类型时，这个默认类型就会起作用。</p>
+<p>泛型参数默认类型与普通函数默认值类似，对应的语法很简单，即 <code>&lt;T=Default Type&gt;</code>，对应的使用示例如下：</p>
+<pre><code>interface A&lt;T=string&gt; {
+  name: T;
+}
+
+const strA: A = { name: &quot;Semlinker&quot; };
+const numB: A&lt;number&gt; = { name: 101 };
+</code></pre>
+<h3>六、泛型条件类型</h3>
+<p>在 TypeScript 2.8 中引入了条件类型，使得我们可以根据某些条件得到不同的类型，这里所说的条件是类型兼容性约束。</p>
+<p>尽管以上代码中使用了 <code>extends</code> 关键字，也不一定要强制满足继承关系，而是检查是否满足结构兼容性。
+条件类型会以一个条件表达式进行类型关系检测，从而在两种类型中选择其一：</p>
+<pre><code>T extends U ? X : Y
+</code></pre>
+<p>以上表达式的意思是：若 <code>T</code> 能够赋值给 <code>U</code>，那么类型是 <code>X</code>，否则为 <code>Y</code>。</p>
+<hr>
+<p>在条件类型表达式中，我们通常还会结合 <code>infer</code> 关键字，实现类型抽取：</p>
+<pre><code>interface Dictionary&lt;T = any&gt; {
+  [key: string]: T;
+}
+ 
+type StrDict = Dictionary&lt;string&gt;
+
+type DictMember&lt;T&gt; = T extends Dictionary&lt;infer V&gt; ? V : never
+type StrDictMember = DictMember&lt;StrDict&gt; // string
+</code></pre>
+<p>在上面示例中，当类型 T 满足 <code>T extends Dictionary</code> 约束时，我们会使用 <code>infer</code> 关键字声明了一个类型变量 V，并返回该类型，否则返回 <code>never</code> 类型。</p>
+<hr>
+<p>在 TypeScript 中，<code>never</code> 类型表示的是那些永不存在的值的类型。 例如， <code>never</code> 类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型。
+另外，需要注意的是，没有类型是 <code>never</code> 的子类型或可以赋值给 <code>never</code> 类型（除了 <code>never</code> 本身之外）。 即使 <code>any</code> 也不可以赋值给 <code>never</code>。</p>
+<hr>
+<p>除了上述的应用外，利用条件类型和 <code>infer</code> 关键字，我们还可以方便地实现获取 Promise 对象的返回值类型，比如：</p>
+<pre><code>async function stringPromise() {
+  return &quot;Hello, Semlinker!&quot;;
+}
+
+interface Person {
+  name: string;
+  age: number;
+}
+
+async function personPromise() {
+  return { name: &quot;Semlinker&quot;, age: 30 } as Person;
+}
+
+type PromiseType&lt;T&gt; = (args: any[]) =&gt; Promise&lt;T&gt;;
+type UnPromisify&lt;T&gt; = T extends PromiseType&lt;infer U&gt; ? U : never;
+
+type extractStringPromise = UnPromisify&lt;typeof stringPromise&gt;; // string
+type extractPersonPromise = UnPromisify&lt;typeof personPromise&gt;; // Person
+</code></pre>
+<hr>
+<pre><code>type PromiseType&lt;T&gt; = (args: any[]) =&gt; Promise&lt;T&gt;;
+type UnPromisify&lt;T&gt; = T extends PromiseType&lt;infer U&gt; ? U : never;
+</code></pre>
+<p>在给定的条件类型 <code>T extends PromiseType&lt;infer U&gt; ? U : never</code> 中，<code>U</code> 是一个类型参数，而 <code>T</code> 是待推断的类型。</p>
+<p><code>PromiseType&lt;T&gt;</code> 是一个泛型类型，它接受一个类型参数 <code>T</code>，并返回一个函数类型 <code>(args: any[]) =&gt; Promise&lt;T&gt;</code>。换句话说，<code>PromiseType&lt;T&gt;</code> 表示一个接受任意参数的函数，返回一个 <code>Promise</code>，其中 <code>Promise</code> 的泛型类型是 <code>T</code>。</p>
+<p><code>UnPromisify&lt;T&gt;</code> 是另一个泛型类型，它接受一个类型参数 <code>T</code>，并使用条件类型来判断 <code>T</code> 是否可以赋值给 <code>PromiseType&lt;infer U&gt;</code>。如果 <code>T</code> 可以赋值给 <code>PromiseType&lt;infer U&gt;</code>，则返回 <code>U</code> 类型；否则返回 <code>never</code> 类型。</p>
+<p>举个例子，假设我们有一个函数类型 <code>Foo</code>：</p>
+<pre><code class="language-typescript">type Foo = (args: any[]) =&gt; Promise&lt;string&gt;;
+</code></pre>
+<p>现在，我们可以使用 <code>UnPromisify&lt;T&gt;</code> 来提取 <code>Foo</code> 的返回值类型：</p>
+<pre><code class="language-typescript">type ReturnType = UnPromisify&lt;Foo&gt;; // string
+</code></pre>
+<p>在这个例子中，<code>Foo</code> 是一个函数类型，它接受任意参数，并返回一个 <code>Promise</code>，其中 <code>Promise</code> 的泛型类型是 <code>string</code>。通过调用 <code>UnPromisify&lt;Foo&gt;</code>，我们可以获取 <code>Foo</code> 的返回值类型，即 <code>string</code>。所以，<code>ReturnType</code> 的类型被推断为 <code>string</code>。</p>
+<p>总结来说，<code>U</code> 是根据 <code>T</code> 是否可以赋值给 <code>PromiseType&lt;infer U&gt;</code> 来进行类型推断的结果。而 <code>T</code> 是待推断的类型，可能是一个函数类型或其他类型。</p>
+<hr>
+<p>在 TypeScript 中，<code>extends</code> 关键字在类型系统中的含义并不完全等同于继承的概念。</p>
+<p>当我们使用 <code>extends</code> 关键字来比较两个类型时，它实际上表示的是 &quot;类型 A 是否可以赋值给类型 B&quot;。也就是说，<code>A extends B</code> 表达的是类型 A 是否是类型 B 的子类型或兼容类型，而不是表示继承关系。</p>
+<p>在条件类型 <code>T extends Dictionary&lt;infer V&gt; ? V : never</code> 中，<code>extends</code> 关键字用来判断类型 <code>T</code> 是否可以赋值给 <code>Dictionary&lt;infer V&gt;</code>。如果 <code>T</code> 可以赋值给 <code>Dictionary&lt;infer V&gt;</code>，则返回 <code>V</code> 类型；否则返回 <code>never</code> 类型。</p>
+<p>所以，<code>NameType extends Dictionary&lt;infer V&gt;</code> 表达的是类型 <code>NameType</code> 是否可以赋值给 <code>Dictionary&lt;infer V&gt;</code>，而不是表示 <code>NameType</code> 继承自 <code>Dictionary&lt;infer V&gt;</code>。这个条件类型的目的是根据 <code>NameType</code> 类型是否符合 <code>Dictionary&lt;infer V&gt;</code> 的形式来进行类型推断。</p>
+<h3>七、泛型工具类型</h3>
+<h4>7.1 Partial</h4>
+<p><code>Partial&lt;T&gt;</code> 的作用就是将某个类型里的属性全部变为可选项 <code>?</code>。</p>
+<p><strong>定义：</strong></p>
+<pre><code>/**
+ * node_modules/typescript/lib/lib.es5.d.ts
+ * Make all properties in T optional
+ */
+type Partial&lt;T&gt; = {
+    [P in keyof T]?: T[P];
+};
+</code></pre>
+<p>在以上代码中，首先通过 <code>keyof T</code> 拿到 <code>T</code> 的所有属性名，然后使用 <code>in</code> 进行遍历，将值赋给 <code>P</code>，最后通过 <code>T[P]</code> 取得相应的属性值。中间的 <code>?</code> 号，用于将所有属性变为可选。</p>
+<p><strong>示例：</strong></p>
+<pre><code>interface Todo {
+  title: string;
+  description: string;
+}
+
+function updateTodo(todo: Todo, fieldsToUpdate: Partial&lt;Todo&gt;) {
+  return { ...todo, ...fieldsToUpdate };
+}
+
+const todo1 = {
+  title: &quot;organize desk&quot;,
+  description: &quot;clear clutter&quot;
+};
+
+const todo2 = updateTodo(todo1, {
+  description: &quot;throw out trash&quot;
+});
+</code></pre>
+<p>在上面的 <code>updateTodo</code> 方法中，我们利用 <code>Partial&lt;T&gt;</code> 工具类型，定义 <code>fieldsToUpdate</code> 的类型为 <code>Partial&lt;Todo&gt;</code>，即：</p>
+<pre><code>{
+   title?: string | undefined;
+   description?: string | undefined;
+}
+</code></pre>
+<h4>7.2 Record</h4>
+<p><code>Record&lt;K extends keyof any, T&gt;</code> 的作用是将 <code>K</code> 中所有的属性的值转化为 <code>T</code> 类型。</p>
+<p><strong>定义：</strong></p>
+<pre><code>/**
+ * node_modules/typescript/lib/lib.es5.d.ts
+ * Construct a type with a set of properties K of type T
+ */
+type Record&lt;K extends keyof any, T&gt; = {
+    [P in K]: T;
+};
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code>interface PageInfo {
+  title: string;
+}
+
+type Page = &quot;home&quot; | &quot;about&quot; | &quot;contact&quot;;
+
+const x: Record&lt;Page, PageInfo&gt; = {
+  about: { title: &quot;about&quot; },
+  contact: { title: &quot;contact&quot; },
+  home: { title: &quot;home&quot; }
+};
+</code></pre>
+<h4>7.3 Pick</h4>
+<p><code>Pick&lt;T, K extends keyof T&gt;</code> 的作用是将某个类型中的子属性挑出来，变成包含这个类型部分属性的子类型。</p>
+<p><strong>定义：</strong></p>
+<pre><code>// node_modules/typescript/lib/lib.es5.d.ts
+
+/**
+ * From T, pick a set of properties whose keys are in the union K
+ */
+type Pick&lt;T, K extends keyof T&gt; = {
+    [P in K]: T[P];
+};
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code>interface Todo {
+  title: string;
+  description: string;
+  completed: boolean;
+}
+
+type TodoPreview = Pick&lt;Todo, &quot;title&quot; | &quot;completed&quot;&gt;;
+
+const todo: TodoPreview = {
+  title: &quot;Clean room&quot;,
+  completed: false
+};
+</code></pre>
+<h4>7.4 Exclude</h4>
+<p><code>Exclude&lt;T, U&gt;</code> 的作用是将某个类型中属于另一个的类型移除掉。</p>
+<p><strong>定义：</strong></p>
+<pre><code>// node_modules/typescript/lib/lib.es5.d.ts
+
+/**
+ * Exclude from T those types that are assignable to U
+ */
+type Exclude&lt;T, U&gt; = T extends U ? never : T;
+</code></pre>
+<p>如果 <code>T</code> 能赋值给 <code>U</code> 类型的话，那么就会返回 <code>never</code> 类型，否则返回 <code>T</code> 类型。最终实现的效果就是将 <code>T</code> 中某些属于 <code>U</code> 的类型移除掉。</p>
+<p><strong>示例：</strong></p>
+<pre><code>type T0 = Exclude&lt;&quot;a&quot; | &quot;b&quot; | &quot;c&quot;, &quot;a&quot;&gt;; // &quot;b&quot; | &quot;c&quot;
+type T1 = Exclude&lt;&quot;a&quot; | &quot;b&quot; | &quot;c&quot;, &quot;a&quot; | &quot;b&quot;&gt;; // &quot;c&quot;
+type T2 = Exclude&lt;string | number | (() =&gt; void), Function&gt;; // string | number
+</code></pre>
+<h4>7.5 ReturnType</h4>
+<p><code>ReturnType&lt;T&gt;</code> 的作用是用于获取函数 <code>T</code> 的返回类型。</p>
+<p><strong>定义：</strong></p>
+<pre><code>// node_modules/typescript/lib/lib.es5.d.ts
+
+/**
+ * Obtain the return type of a function type
+ */
+type ReturnType&lt;T extends (...args: any) =&gt; any&gt; = T extends (...args: any) =&gt; infer R ? R : any;
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code>type T0 = ReturnType&lt;() =&gt; string&gt;; // string
+type T1 = ReturnType&lt;(s: string) =&gt; void&gt;; // void
+type T2 = ReturnType&lt;&lt;T&gt;() =&gt; T&gt;; // {}
+type T3 = ReturnType&lt;&lt;T extends U, U extends number[]&gt;() =&gt; T&gt;; // number[]
+type T4 = ReturnType&lt;any&gt;; // any
+type T5 = ReturnType&lt;never&gt;; // any
+type T6 = ReturnType&lt;string&gt;; // Error
+type T7 = ReturnType&lt;Function&gt;; // Error
+</code></pre>
+<p>简单介绍了泛型工具类型，最后我们来介绍如何使用泛型来创建对象。</p>
+<h3>八、使用泛型创建对象</h3>
+<h4>8.1 构造签名</h4>
+<p>有时，泛型类可能需要基于传入的泛型 T 来创建其类型相关的对象。比如：</p>
+<pre><code>class FirstClass {
+  id: number | undefined;
+}
+
+class SecondClass {
+  name: string | undefined;
+}
+
+class GenericCreator&lt;T&gt; {
+  create(): T {
+    return new T();
+  }
+}
+
+const creator1 = new GenericCreator&lt;FirstClass&gt;();
+const firstClass: FirstClass = creator1.create();
+
+const creator2 = new GenericCreator&lt;SecondClass&gt;();
+const secondClass: SecondClass = creator2.create();
+</code></pre>
+<p>在以上代码中，我们定义了两个普通类和一个泛型类 <code>GenericCreator&lt;T&gt;</code>。在通用的 <code>GenericCreator</code> 泛型类中，我们定义了一个名为 <code>create</code> 的成员方法，该方法会使用 new 关键字来调用传入的实际类型的构造函数，来创建对应的对象。但可惜的是，以上代码并不能正常运行，对于以上代码，在 <strong>TypeScript v3.9.2</strong> 编译器下会提示以下错误：</p>
+<pre><code>'T' only refers to a type, but is being used as a value here.
+</code></pre>
+<p>这个错误的意思是：<code>T</code> 类型仅指类型，但此处被用作值。</p>
+<p>那么如何解决这个问题呢？根据 TypeScript 文档，为了使通用类能够创建 T 类型的对象，我们需要通过其构造函数来引用 T 类型。对于上述问题，在介绍具体的解决方案前，我们先来介绍一下构造签名。</p>
+<hr>
+<p>在 TypeScript 接口中，你可以使用 <code>new</code> 关键字来描述一个构造函数：</p>
+<pre><code>interface Point {
+  new (x: number, y: number): Point;
+}
+</code></pre>
+<p>以上接口中的 <code>new (x: number, y: number)</code> 我们称之为构造签名，其语法如下：
+<em>ConstructSignature:</em>  <code>new</code> <em>TypeParametersopt</em> <code>(</code> <em>ParameterListopt</em> <code>)</code> <em>TypeAnnotationopt</em></p>
+<p>在上述的构造签名中，<code>TypeParametersopt</code> 、<code>ParameterListopt</code> 和 <code>TypeAnnotationopt</code> 分别表示：可选的类型参数、可选的参数列表和可选的类型注解。与该语法相对应的几种常见的使用形式如下：</p>
+<pre><code>new C  
+new C ( ... )  
+new C &lt; ... &gt; ( ... )
+</code></pre>
+<p>介绍完构造签名，我们再来介绍一个与之相关的概念，即构造函数类型。</p>
+<h4>8.2 构造函数类型</h4>
+<p>在 TypeScript 语言规范中这样定义构造函数类型：</p>
+<blockquote>
+<p>An object type containing one or more construct signatures is said to be a <em><strong>constructor type</strong></em>. Constructor types may be written using constructor type literals or by including construct signatures in object type literals.</p>
+</blockquote>
+<p>通过规范中的描述信息，我们可以得出以下结论：</p>
+<ul>
+<li>包含一个或多个构造签名的对象类型被称为构造函数类型；</li>
+<li>构造函数类型可以使用构造函数类型字面量或包含构造签名的对象类型字面量来编写。</li>
+</ul>
+<hr>
+<p>那么什么是构造函数类型字面量呢？构造函数类型字面量是包含单个构造函数签名的对象类型的简写。
+具体来说，构造函数类型字面量的形式如下：</p>
+<pre><code>new &lt; T1, T2, ... &gt; ( p1, p2, ... ) =&gt; R
+</code></pre>
+<p>该形式与以下对象类型字面量是等价的：</p>
+<pre><code>{ new &lt; T1, T2, ... &gt; ( p1, p2, ... ) : R }
+</code></pre>
+<p>下面我们来举个实际的示例：</p>
+<pre><code>// 构造函数类型字面量
+new (x: number, y: number) =&gt; Point
+</code></pre>
+<p>等价于以下对象类型字面量：</p>
+<pre><code>{
+   new (x: number, y: number): Point;
+}
+</code></pre>
+<h4>8.3 构造函数类型的应用</h4>
+<p>在介绍构造函数类型的应用前，我们先来看个例子：</p>
+<pre><code>interface Point {
+  new (x: number, y: number): Point;
+  x: number;
+  y: number;
+}
+
+class Point2D implements Point {
+  readonly x: number;
+  readonly y: number;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+const point: Point = new Point2D(1, 2);
+</code></pre>
+<p>对于以上的代码，TypeScript 编译器会提示以下错误信息：</p>
+<pre><code>Class 'Point2D' incorrectly implements interface 'Point'.
+Type 'Point2D' provides no match for the signature 'new (x: number, y: number): Point'.
+</code></pre>
+<p>相信很多刚接触 TypeScript 不久的小伙伴都会遇到上述的问题。要解决这个问题，我们就需要把对前面定义的 <code>Point</code> 接口进行分离，即把接口的属性和构造函数类型进行分离：</p>
+<pre><code>interface Point {
+  x: number;
+  y: number;
+}
+
+interface PointConstructor {
+  new (x: number, y: number): Point;
+}
+</code></pre>
+<p>完成接口拆分之后，除了前面已经定义的 <code>Point2D</code> 类之外，我们又定义了一个 <code>newPoint</code> 工厂函数，该函数用于根据传入的 PointConstructor 类型的构造函数，来创建对应的 Point 对象。</p>
+<pre><code>class Point2D implements Point {
+  readonly x: number;
+  readonly y: number;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+function newPoint(
+  pointConstructor: PointConstructor,
+  x: number,
+  y: number
+): Point {
+  return new pointConstructor(x, y);
+}
+
+const point: Point = newPoint(Point2D, 1, 2);
+</code></pre>
+<h4>8.4 使用泛型创建对象</h4>
+<p>了解完构造签名和构造函数类型之后，下面我们来开始解决上面遇到的问题，首先我们需要重构一下 <code>create</code> 方法，具体如下所示：</p>
+<pre><code>class GenericCreator&lt;T&gt; {
+  create&lt;T&gt;(c: { new (): T }): T {
+    return new c();
+  }
+}
+</code></pre>
+<p>在以上代码中，我们重新定义了 <code>create</code> 成员方法，根据该方法的签名，我们可以知道该方法接收一个参数，其类型是构造函数类型，且该构造函数不包含任何参数，调用该构造函数后，会返回类型 T 的实例。</p>
+<p>如果构造函数含有参数的话，比如包含一个 <code>number</code> 类型的参数时，我们可以这样定义 create 方法：</p>
+<pre><code>create&lt;T&gt;(c: { new(a: number): T; }, num: number): T {
+  return new c(num);
+}
+</code></pre>
+<p>更新完 <code>GenericCreator</code> 泛型类，我们就可以使用下面的方式来创建 <code>FirstClass</code> 和 <code>SecondClass</code> 类的实例：</p>
+<pre><code>const creator1 = new GenericCreator&lt;FirstClass&gt;();
+const firstClass: FirstClass = creator1.create(FirstClass);
+
+const creator2 = new GenericCreator&lt;SecondClass&gt;();
+const secondClass: SecondClass = creator2.create(SecondClass);
+</code></pre>
+
+<h1>从 Fetch 到 Streams —— 以流的角度处理网络请求</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844904029244358670?searchId=202309222121251330180011D325DEEAB8">juejin.cn</a></p>
+</blockquote>
+<h2>Fetch API 不香吗？</h2>
+<p><code>fetch()</code> 的写法简单又直观，只要在发起请求时将整个配置项传入就可以了。而且相较于 XHR 还提供了更多的控制参数，例如是否携带 Cookie、是否需要手动跳转等。</p>
+<pre><code>fetch('https://example.org/foo', {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+        'content-type': 'application/json'
+    },
+    credentials: 'include',
+    redirect: 'follow',
+    body: JSON.stringify({ foo: 'bar' })
+}).then(res =&gt; res.json()).then(...)
+</code></pre>
+<h2>Fetch API 真香吗？</h2>
+<p>看起来 Fetch API 相比较于传统的 XHR 优势不少，不过在「真香」之前，我们先来看三个在 XHR 上很容易实现的功能：</p>
+<ol>
+<li>如何中断一个请求？
+<code>XMLHttpRequest</code> 对象上有一个 <code>abort()</code> 方法，调用这个方法即可中断一个请求。此外 XHR 还有 <code>onabort</code> 事件，可以监听请求的中断并做出响应。</li>
+</ol>
+<hr>
+<ol>
+<li>如何超时中断一个请求？
+<code>XMLHttpRequest</code> 对象上有一个 <code>timeout</code> 属性，为其赋值后若在指定时间请求还未完成，请求就会自动中断。此外 XHR 还有 <code>ontimeout</code> 事件，可以监听请求的超时中断并做出响应。</li>
+</ol>
+<hr>
+<ol>
+<li>如何获取请求的传输进度？
+在异步请求一个比较大的文件时，由于可能比较耗时，展示文件的下载进度在 UI 上会更友好。<code>XMLHttpRequest</code> 提供了 <code>onprogress</code> 事件，所以使用 XHR 可以很方便地实现这个功能。<pre><code>const xhr = new XMLHttpRequest();
+xhr.open('GET', '/foo');
+xhr.addEventListener('progress', (event) =&gt; {
+    const { lengthComputable, loaded, total } = event;
+    if (lengthComputable) {
+        console.log(`Downloaded ${loaded} of ${total} (${(loaded / total * 100).toFixed(2)}%)`);
+    } else {
+        console.log(`Downloaded ${loaded}`);
+    }
+});
+xhr.send();
+</code></pre>
+</li>
+</ol>
+<hr>
+<p>随着 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FAPI%2FAbortController" title="https://developer.mozilla.org/en-US/docs/Web/API/AbortController"><code>AbortController</code></a> 与 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FAPI%2FAbortSignal" title="https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal"><code>AbortSignal</code></a> 在各大浏览器上完整实现，Fetch API 也能像 XHR 那样中断一个请求了，只是稍微绕了一点。
+通过创建一个 <code>AbortController</code> 实例，我们得到了一个 Fetch API 原生支持的控制中断的控制器。这个实例的 <code>signal</code> 参数是一个 <code>AbortSignal</code> 实例，还提供了一个 <code>abort()</code> 方法发送中断信号。
+只需要将 <code>signal</code> 参数传递进 <code>fetch()</code> 的初始化参数中，就可以在 fetch 请求之外控制请求的中断了：</p>
+<pre><code>const controller = new AbortController();
+const { signal } = controller;
+fetch('/foo', { signal }).then(...);
+signal.onabort = () =&gt; { ... };
+controller.abort();
+</code></pre>
+<hr>
+<p>对于第二个问题，既然已经稍微绕路实现中断请求了，为何不再绕一下远路呢？只需要 <code>AbortController</code> 配合 <code>setTimeout()</code> 就能实现类似的效果了。</p>
+<hr>
+<p>但是第三个获取请求进度的问题呢？你打开了 MDN，仔细地看了 <code>fetch()</code> 方法的所有参数，都没有找到类似 <code>progress</code> 这样的参数，毕竟 Fetch API 并没有什么回调事件。
+难道 Fetch API 就不能实现这么简单的功能吗？
+当然可以，这里就要绕一条更远的路，提一提和它相关的 Streams API 了——不是 Web Socket，也不是 Media Stream，更不是只能在 Node.js 上使用的 Stream，不过和它很像。</p>
+<h2>Streams API 能做什么？</h2>
+<p>对于非 Web 前端的同学来说，流应该是个很常见的概念，它允许我们一段一段地接收与处理数据。相比较于获取整个数据再处理，流不仅不需要占用一大块内存空间来存放整个数据，节省内存占用空间，而且还能实时地对数据进行处理，不需要等待整个数据获取完毕，从而缩短整个操作的耗时。</p>
+<hr>
+<p>此外流还有管道的概念，我们可以封装一些类似中间件的中间流，用管道将各个流连接起来，在管道的末端就能拿到处理后的数据。
+例如，下面的这段 Node.js 代码片段实现了解压 zip 中的文件的功能，只需要从 zip 的中央文件记录表中读取出各个文件在 zip 文件内的起止偏移值，就能将对应的文件解压出来。</p>
+<pre><code>const input = fs.createReadStream(null, {
+    fd, start, end, autoClose: false
+});
+const output = fs.createWriteStream(outputPath + name);
+// 可以从流中直接读取数据
+input.on('data', (chunk) =&gt; { ... });
+// 或者直接将流引向另一个流
+input.pipe(zlib.createInflateRaw()).pipe(output);
+</code></pre>
+<p>其中的 <code>input</code> 是一个可读取的流，<code>output</code> 是一个可写入的流，而 <code>zlib.createInflateRaw()</code> 就是创建了一个既可读取又可写入的流，它在写入端以流的形式接受 Deflate 压缩的数据，在读取端以流的形式输出解压缩后的数据。我们想象一下，如果输入的 zip 文件是一个上 GB 的大文件，使用流的方式就不需要占用同样大小的上 GB 的内存空间。而且从代码上看，使用流实现的代码逻辑同样简洁和清晰。</p>
+<hr>
+<p>很可惜，过去在客户端 JavaScript 上并没有原生的流 API——当然你可以自己封装实现流，比如 JSZip 在 3.0 版本就封装了一个 <code>StreamHelper</code>，但是基本上除了使用这些 stream 库的库以外，没有其它地方能 <strong>产生</strong> 兼容这个库的流了。
+没有能产生流的数据源才是大问题，比如想要读取一个文件？过去 <code>FileReader</code> 只能在 <code>onload</code> 事件上拿到整个文件的数据，或者对文件使用 <code>slice()</code> 方法得到 <code>Blob</code> 文件片段。</p>
+<p>现在 Streams API 已经在浏览器上逐步实现（或者说，早在 2016 年 Chrome 就开始支持一部分功能了），能用上流处理的 API 想必也会越来越多，而 Streams API 最早的受益者之一就是 Fetch API。</p>
+<hr>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/66ad818998e74dcad2fe9c510559a3df_MD5.jpg" /></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/5c6dcb74c68cf605ce0da493520cff64_MD5.jpg" /></p>
+<p>Streams API 赋予了网络请求以片段处理数据的能力，过去我们使用 <code>XMLHttpRequest</code> 获取一个文件时，我们必须等待浏览器下载完整的文件，等待浏览器处理成我们需要的格式，收到所有的数据后才能处理它。
+现在有了流，我们可以以 <code>TypedArray</code> 片段的形式接收一部分二进制数据，然后直接对数据进行处理，这就有点像是浏览器内部接收并处理数据的逻辑。
+甚至我们可以将一些操作以流的形式封装，再用管道把多个流连接起来，管道的另一端就是最终处理好的数据。</p>
+<hr>
+<p>Fetch API 会在发起请求后得到的 Promise 对象中返回一个 <code>Response</code> 对象，而 <code>Response</code> 对象除了提供 <code>headers</code>、<code>redirect()</code> 等参数和方法外，还实现了 <code>Body</code> 这个 mixin 类，而在 <code>Body</code> 上我们才看到我们常用的那些 <code>res.json()</code>、<code>res.text()</code>、<code>res.arrayBuffer()</code> 等方法。在 <code>Body</code> 上还有一个 <code>body</code> 参数，</p>
+<p>这个 <code>body</code> 参数就是一个 <code>ReadableStream</code>。</p>
+<p>既然本文是从 Fetch API 的角度出发，而如前所述，能产生数据的数据源才是流处理中最重要的一个部分，那么下面我们来重点了解下这个在 <code>Body</code> 中负责提供数据的 <code>ReadableStream</code>。</p>
+<hr>
+<p>流的排队策略（也就是下文即将提到的构造流时传入的 <code>queuingStrategy</code> 参数，它可以控制流的缓冲区大小，不过 Streams API 有一个开箱即用的默认配置，所以可以不指定），也不会讨论没有浏览器实现的 BYOR reader，感兴趣的同学可以参考相关规范文档</p>
+<h2>ReadableStream</h2>
+<p>下面是一个 <code>ReadableStream</code> 实例上的参数和可以使用的方法</p>
+<p><code>ReadableStream</code></p>
+<ul>
+<li><code>locked</code></li>
+<li><code>cancel()</code></li>
+<li><code>pipeThrough()</code></li>
+<li><code>pipeTo()</code></li>
+<li><code>tee()</code></li>
+<li><code>getReader()</code></li>
+</ul>
+<p>其中直接调用 <code>getReader()</code> 方法会得到一个 <code>ReadableStreamDefaultReader</code> 实例，
+通过这个实例我们就能读取 <code>ReadableStream</code> 上的数据。</p>
+<h3>从 <code>ReadableStream</code> 中读取数据</h3>
+<p><code>ReadableStreamDefaultReader</code> 实例上提供了如下的方法：</p>
+<ul>
+<li><code>closed</code></li>
+<li><code>cancel()</code></li>
+<li><code>read()</code></li>
+<li><code>releaseLock()</code></li>
+</ul>
+<p>假设我们需要读取一个流中的的数据，可以循环调用 reader 的 <code>read()</code> 方法，它会返回一个 <code>Promise</code> 对象，在 <code>Promise</code> 中返回一个包含 <code>value</code> 参数和 <code>done</code> 参数的对象。</p>
+<pre><code>const reader = stream.getReader();
+let bytesReceived = 0;
+const processData = (result) =&gt; {
+    if (result.done) {
+        console.log(`complete, total size: ${bytesReceived}`);
+        return;
+    }
+    const value = result.value; // Uint8Array
+    const length = value.length;
+    console.log(`got ${length} bytes data:`, value);
+    bytesReceived += length;
+    // 读取下一个文件片段，重复处理步骤
+    return reader.read().then(processData);
+};
+reader.read().then(processData);
+</code></pre>
+<p>其中 <code>result.value</code> 参数为这次读取得到的片段，它是一个 <code>Uint8Array</code>，通过循环调用 <code>reader.read()</code> 方法就能一点点地获取流的整个数据；
+而 <code>result.done</code> 参数负责表明这个流是否已经读取完毕，当 <code>result.done</code> 为 <code>true</code> 时表明流已经关闭，不会再有新的数据，此时 <code>result.value</code> 的值为 <code>undefined</code>。</p>
+<hr>
+<p>我们可以通过读取 <code>Response</code> 中的流得到正在接收的文件片段，累加各个片段的 <code>length</code> 就能得到类似 XHR <code>onprogress</code> 事件的 <code>loaded</code>，也就是已下载的字节数；
+通过从 <code>Response</code> 的 <code>headers</code> 中取出 <code>Content-Length</code> 就能得到类似 XHR <code>onprogress</code> 事件的 <code>total</code>，也就是总字节数。于是我们可以写出下面的代码，成功得到下载进度：</p>
+<pre><code>let total = null;
+let loaded = 0;
+const logProgress = (reader) =&gt; {
+    return reader.read().then(({ value, done }) =&gt; {
+        if (done) {
+            console.log('Download completed');
+            return;
+        }
+        loaded += value.length;
+        if (total === null) {
+            console.log(`Downloaded ${loaded}`);
+        } else {
+            console.log(`Downloaded ${loaded} of ${total} (${(loaded / total * 100).toFixed(2)}%)`);
+        }
+        return logProgress(reader);
+    });
+};
+fetch('/foo').then((res) =&gt; {
+    total = res.headers.get('content-length');
+    return res.body.getReader();
+}).then(logProgress);
+</code></pre>
+<p>上面的代码只顾着输出进度了，结果并没有把返回数据传回来。
+虽然我们可以直接在上面的代码里处理二进制数据片段，可是有时我们还是会偷懒，直接得到完整的数据进行处理（比如一个巨大的 JSON 字符串）。</p>
+<hr>
+<p>如果我们希望接收的数据是文本，一种解决方案是借助 <code>TextDecoder</code> 得到解析后的文本并拼接，最后将整个文本返回：</p>
+<pre><code>let text = '';
+const logProcess = (res) =&gt; {
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    const push = ({ value, done }) =&gt; {
+        if (done) return JSON.parse(text);
+        text += decoder.decode(value, { stream: true });
+        // ...
+        return reader.read().then(push);
+    };
+    return reader.read().then(push);
+};
+fetch('/foo').then(logProgress).then((res) =&gt; { ... });
+</code></pre>
+<p>不过如果你犯了强迫症，一定要像原来那样显示调用 <code>res.json()</code> 之类的方法得到数据，这该怎么办呢？既然 <code>fetch()</code> 方法返回一个 <code>Response</code> 对象，而这个对象的数据已经在 <code>ReadableStream</code> 中读取下载进度时被使用了，那我再构造一个 <code>ReadableStream</code>，外面再包一个 <code>Response</code> 对象并返回，问题不就解决了吗？</p>
+<h3>构造一个 <code>ReadableStream</code></h3>
+<p>构造一个 <code>ReadableStream</code> 时可以定义以下方法和参数：</p>
+<pre><code>const stream = new ReadableStream({
+    start(controller) {
+        // start 方法会在实例创建时立刻执行，并传入一个流控制器
+        controller.desiredSize
+            // 填满队列所需字节数
+        controller.close()
+            // 关闭当前流
+        controller.enqueue(chunk)
+            // 将片段传入流的队列
+        controller.error(reason)
+            // 对流触发一个错误
+    },
+    pull(controller) {
+        // 将会在流的队列没有满载时重复调用，直至其达到高水位线
+    },
+    cancel(reason) {
+        // 将会在流将被取消时调用
+    }
+}, queuingStrategy); // { highWaterMark: 1 }
+</code></pre>
+<p>而构造一个 <code>Response</code> 对象就简单了，<code>Response</code> 对象的第一个参数即是返回值，可以是字符串、<code>Blob</code>、<code>TypedArray</code>，甚至是一个 Stream；而它的第二个参数则和 <code>fetch()</code> 方法很像，也是一些初始化参数。</p>
+<pre><code>const response = new Response(source, init);
+</code></pre>
+<hr>
+<p>了解以上的内容后，我们只需要构造一个 <code>ReadableStream</code>，然后把「从 reader 中循环读取数据」的逻辑放在这个流的 <code>start()</code> 方法内，它会在流实例化后立即调用。当 reader 读取数据时可以输出下载进度，同时调用 <code>controller.enqueue()</code> 把得到的数据推进我们构造出来的流，最后在读取完毕时调用 <code>controller.close()</code> 关闭这个流，问题就能轻松解决。</p>
+<pre><code>const logProgress = (res) =&gt; {
+    const total = res.headers.get('content-length');
+    let loaded = 0;
+    const reader = res.body.getReader();
+    const stream = new ReadableStream({
+        start(controller) {
+            const push = () =&gt; {
+                reader.read().then(({ value, done }) =&gt; {
+                    if (done) {
+                        controller.close();
+                        return;
+                    }
+                    loaded += value.length;
+                    if (total === null) {
+                        console.log(`Downloaded ${loaded}`);
+                    } else {
+                        console.log(`Downloaded ${loaded} of ${total} (${(loaded / total * 100).toFixed(2)}%)`);
+                    }
+                    controller.enqueue(value);
+                    push();
+                });
+            };
+            push();
+        }
+    });
+    return new Response(stream, { headers: res.headers });
+};
+fetch('/foo').then(logProgress).then(res =&gt; res.json()).then((data) =&gt; { ... });
+</code></pre>
+<h3>分流一个 <code>ReadableStream</code></h3>
+<p>感觉是不是绕了一个远路？就为了这点功能我们居然构造了一个 <code>ReadableStream</code> 实例？有没有更简单的方法？其实是有的，如果你稍有留意的话，应该会注意到 <code>ReadableStream</code> 实例上有一个名字看起来有点奇怪的 <code>tee()</code> 方法。</p>
+<p>这个方法可以将一个流分流成两个一模一样的流，两个流可以读取完全相同的数据。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/488f9ed809d01bd8b28be12c6e7eaa5e_MD5.jpg" /></p>
+<hr>
+<p>所以我们可以利用tee个特性将一个流分成两个流，将其中一个流用于输出下载进度，而另一个流直接返回：</p>
+<pre><code>const logProgress = (res) =&gt; {
+    const total = res.headers.get('content-length');
+    let loaded = 0;
+    const [progressStream, returnStream] = res.body.tee();
+    const reader = progressStream.getReader();
+    const log = () =&gt; {
+        reader.read().then(({ value, done }) =&gt; {
+            if (done) return;
+            // 省略输出进度
+            log();
+        });
+    };
+    log();
+    return new Response(returnStream, { headers: res.headers });
+};
+fetch('/foo').then(logProgress).then(res =&gt; res.json()).then((data) =&gt; { ... });
+</code></pre>
+<hr>
+<p>另外其实 fetch 请求返回的 <code>Response</code> 实例上有一个一看就知道是什么意思的 <code>clone()</code> 方法，这个方法可以得到一个克隆的 <code>Response</code> 实例。所以我们可以将其中一个实例用来获取流并得到下载进度，另一个实例直接返回，这样就省去了构造 <code>Response</code> 的步骤，效果是一样的。其实这个方法一般用在 Service Worker 里，例如将请求得到的结果缓存起来等等。</p>
+<p>很好，下载进度的问题完美解决了，那么让我们回到最早的问题。Fetch API 最早是没有 <code>signal</code> 这个参数的，所以早期的 fetch 请求很难中断——对，是「很难」，而不是「不可能」。如果浏览器实现了 <code>ReadableStream</code> 并在 <code>Response</code> 上提供了 <code>body</code> 的话，是可以通过流的中断实现这个功能的。</p>
+<h3>中断一个 <code>ReadableStream</code></h3>
+<p>再回过头看看 <code>ReadableStream</code> 实例上还没提到的方法，想必你一定注意到了那个 <code>cancel()</code> 方法。</p>
+<p>通过 <code>ReadableStream</code> 上的 <code>cancel()</code> 方法，我们可以关闭这个流。
+此外你可能也注意到 reader 上也有一个 <code>cancel()</code> 方法，这个方法的作用是关闭与这个 reader 相关联的流，所以从结果上来看，两者是一样的。
+而对于 Fetch API 来说，关闭返回的 <code>Response</code> 对象的流的结果就相当于中断了这个请求。</p>
+<p>所以，我们可以像之前那样构造一个 <code>ReadableStream</code> 用于传递从 <code>res.body.getReader()</code> 中得到的数据，并对外暴露一个 <code>aborter()</code> 方法。调用这个 <code>aborter()</code> 方法时会调用 <code>reader.cancel()</code> 关闭 fetch 请求返回的流，然后调用 <code>controller.error()</code> 抛出错误，中断构造出来的传递给后续操作的流：</p>
+<pre><code>let aborter = null;
+const abortHandler = (res) =&gt; {
+    const reader = res.body.getReader();
+    const stream = new ReadableStream({
+        start(controller) {
+            let aborted = false;
+            const push = () =&gt; {
+                reader.read().then(({ value, done }) =&gt; {
+                    if (done) {
+                        if (!aborted) controller.close();
+                        return;
+                    }
+                    controller.enqueue(value);
+                    push();
+                });
+            };
+            aborter = () =&gt; {
+                reader.cancel();
+                controller.error(new Error('Fetch aborted'));
+                aborted = true;
+            };
+            push();
+        }
+    });
+    return new Response(stream, { headers: res.headers });
+};
+fetch('/foo').then(abortHandler).then(res =&gt; res.json()).then((data) =&gt; { ... });
+aborter();
+</code></pre>
+<blockquote>
+<p><a href="#heading-17" title="#heading-17">课后习题 Q2</a>：从上面的结果来看，当我们调用 <code>aborter()</code> 方法时，请求被成功中止了。不过如果不调用 <code>controller.error()</code> 抛出错误强制中断流，而是继续之前的流程调用 <code>controller.close()</code> 关闭流，会发生什么事吗？</p>
+</blockquote>
+<h3>流的锁机制</h3>
+<p>或许你还是很奇怪，既然流本身就有一个 <code>cancel()</code> 方法，为什么我们不直接暴露这个方法，反而要绕路构造一个新的 <code>ReadableStream</code> 呢？例如像下面这样：</p>
+<pre><code>let aborter = null;
+const abortHandler = (res) =&gt; {
+    aborter = () =&gt; res.body.cancel();
+    return res;
+};
+fetch('/foo').then(abortHandler).then(res =&gt; res.json()).then((data) =&gt; { ... });
+aborter();
+</code></pre>
+<p>可惜这样执行会得到下面的错误：这个流被锁了。</p>
+<pre><code>TypeError: Failed to execute 'cancel' on 'ReadableStream': Cannot cancel a locked stream
+</code></pre>
+<hr>
+<p>你不信邪，既然流的 reader 被关闭时会关闭相关联的流，那么只要再获取一个 reader 并 <code>cancel()</code> 不就好了？</p>
+<pre><code>let aborter = null;
+const abortHandler = (res) =&gt; {
+    aborter = () =&gt; res.body.getReader().cancel();
+    return res;
+};
+fetch('/foo').then(abortHandler).then(res =&gt; res.json()).then((data) =&gt; { ... });
+aborter();
+</code></pre>
+<p>可惜这样执行还是会得到下面的错误：</p>
+<pre><code>TypeError: Failed to execute 'getReader' on 'ReadableStream': ReadableStreamReader constructor can only accept readable streams that are not yet locked to a reader
+</code></pre>
+<hr>
+<p>于是我们接触到了流的锁机制。一个流只能同时有一个处于活动状态的 reader，当一个流被一个 reader 使用时，这个流就被该 reader 锁定了，此时流的 <code>locked</code> 属性为 <code>true</code>。
+如果这个流需要被另一个 reader 读取，那么当前处于活动状态的 reader 可以调用 <code>reader.releaseLock()</code> 方法释放锁。此外 reader 的 <code>closed</code> 属性是一个 <code>Promise</code>，当 reader 被关闭或者释放锁时，这个 <code>Promise</code> 会被 resolve，可以在这里编写关闭 reader 的处理逻辑：</p>
+<pre><code>reader.closed.then(() =&gt; {
+  console.log('reader closed');
+});
+reader.releaseLock();
+</code></pre>
+<p>可是上面的代码似乎没用上 reader 啊？再仔细思考下 <code>res =&gt; res.json()</code> 这段代码，是不是有什么启发？
+在 <a href="https://link.juejin.cn?target=https%3A%2F%2Ffetch.spec.whatwg.org%2F%23body-mixin" title="https://fetch.spec.whatwg.org/#body-mixin">5.2. Body mixin</a> 中有如下一段话：
+简单来说，当我们调用 <code>Body</code> 上的方法时，浏览器隐式地创建了一个 reader 读取了返回数据的流，并创建了一个 <code>Promise</code> 实例，待所有数据被读取完后再 resolve 并返回格式化后的数据。所以，当我们调用了 <code>Body</code> 上的方法时，其实就创建了一个我们无法接触到的 reader，此时这个流就被锁住了，自然也无法从外部取消。</p>
+<h3>示例：断点续传</h3>
+<p>现在我们可以随时中断一个请求，以及获取到请求过程中的数据，甚至还能修改这些数据。或许我们可以用来做些有趣的事情，比如各个下载器中非常流行的断点续传功能。</p>
+<p>首先我们先来了解下断点续传的原理，简述如下：</p>
+<ol>
+<li>发起请求</li>
+<li>从响应头中拿到 <code>Content-Length</code> 属性</li>
+<li>在响应过程中拿到正在下载的数据</li>
+<li>终止下载</li>
+<li>重新下载，但是此时根据已经拿到的数据设置 <code>Range</code> 请求头</li>
+<li>重复步骤 3-5，直至下载完成</li>
+<li>下载完成，将已拿到的数据拼接成完整的</li>
+</ol>
+<p>在过去只能使用 <code>XMLHttpRequest</code> 或者还没有 Stream API 的时候，我们只能在请求完成时拿到数据。如果期间请求中断了，那也不会得到已经下载的数据，也就是这部分请求的流量被浪费了。
+所以断点续传最大的问题是获取已拿到的数据，也就是上面的第 3 步，根据已拿到的数据就能算出还有哪些数据需要请求。</p>
+<hr>
+<p>其实在 Streams API 诞生之前，大家已经有着各种各样奇怪的方式实现断点续传了。例如国外的 Mega 网盘在下载文件时不会直接通知浏览器下载，而是先把数据放在浏览器内，传输完成后再下载文件。此外它还可以暂停传输，在浏览器内实现了断点续传的功能。仔细观察网络请求就会发现，Mega 在下载时不是下载整个文件，而是下载文件的一个个小片段。所以 Mega 是通过建立多个小的请求获取文件的各个小片段，待下载完成后再拼接为一个大文件。即便用户中途暂停，已下载的块也不会丢失，继续下载时会重新请求未完成的片段。虽然暂停时正在下载的片段还是会被丢弃（注意下面的视频中，暂停下载后重新请求的 URL 和之前的请求是一样的），不过相比较于丢弃整个文件来说，现在的实现已经是很大的优化了。</p>
+<hr>
+<p>除了建立多个小请求得到零散文件块，变相实现断点续传外，其实 Firefox 浏览器上的私有特性允许开发者获取正在下载的文件片段，例如云音乐就使用了该特性优化了 Firefox 浏览器上的音频文件请求。Firefox 浏览器的 <code>XMLHttpRequest</code> 为 <code>responseType</code> 属性提供了私有的可用参数 <code>moz-chunked-arraybuffer</code>。请求还未完成时，可以在 <code>onprogress</code> 事件中请求 XHR 实例的 <code>response</code> 属性，它将会返回上一次触发事件后接收到的数据，而在 <code>onprogress</code> 事件外获取该属性将始终是 <code>null</code>：</p>
+<pre><code>let chunks = [];
+const xhr = new XMLHttpRequest();
+xhr.open('GET', '/foo');
+xhr.responseType = 'moz-chunked-arraybuffer';
+xhr.addEventListener('progress', (event) =&gt; {
+    chunks.push(xhr.response);
+});
+xhr.addEventListener('abort', () =&gt; {
+    const blob = new Blob(chunks);
+});
+xhr.send();
+</code></pre>
+<p>看起来是个很不错的特性，只可惜在 Bugzilla 上某个 <a href="https://link.juejin.cn?target=https%3A%2F%2Fbugzilla.mozilla.org%2Fshow_bug.cgi%3Fid%3D1523898%23c32" title="https://bugzilla.mozilla.org/show_bug.cgi?id=1523898#c32">和云音乐相关的 issue</a> 里，有人发现这个特性已经在 Firefox 68 中移除了。原因也可以理解，Firefox 现在已经在 fetch 上实现 Stream API 了，有标准定义当然还是跟着标准走（虽然至今还是 LS 阶段），所以也就不再需要这些私有属性了。</p>
+<hr>
+<p>从之前的示例我们已经知道，我们可以从 fetch 请求返回的 <code>ReadableStream</code> 里得到正在下载的数据片段，只要在请求的过程中把它们放在一个类似缓冲区的地方就可以实现之前的第 3 步了，而这也是在浏览器上实现这个功能的难点。请求中断后再次请求时，只需要根据已下载片段的字节数就可以算出接下来要请求哪些片段了。简单来看，逻辑大概是下面这样：</p>
+<pre><code>const chunks = [];
+let length = 0;
+const chunkCache = (res) =&gt; {
+    const reader = res.body.getReader();
+    const stream = new ReadableStream({
+        start(controller) {
+            const push = () =&gt; {
+                reader.read().then(({ value, done }) =&gt; {
+                    if (done) {
+                        let chunk;
+                        while (chunk = chunks.shift()) {
+                            controller.enqueue(chunk);
+                        }
+                        controller.close();
+                        return;
+                    }
+                    chunks.push(value);
+                    length += value.length;
+                    push();
+                });
+            };
+            push();
+        }
+    });
+    return new Response(stream, { headers: res.headers });
+};
+const controller = new AbortController();
+fetch('/foo', {
+    headers: {
+        'Range': `bytes=${length}-`
+    },
+    signal: controller.signal
+}).then(chunkCache).then(...);
+// 请求中断后再次执行上述 fetch() 方法
+</code></pre>
+<p>下面的例子对上述代码简单封装得到了 <code>ResumableFetch</code>，并使用它实现了图片下载的断点续传。</p>
+<p>封装的 <code>ResumableFetch</code> 类会在请求过程中创建一个 <code>ReadableStream</code> 实例并直接返回，同时已下载的片段将会放进一个数组 <code>chunks</code> 并记录已下载的文件大小 <code>length</code>。当请求中断并重新下载时会根据已下载的文件大小设置 <code>Range</code> 请求头，此时拿到的就是还未下载的片段。下载完成后再将片段从 <code>chunks</code> 中取出，此时不需要对片段进行处理，只需要逐一传递给 <code>ReadableStream</code> 即可得到完整的文件。</p>
+<h3>管道</h3>
+<p>到这里 <code>ReadableStream</code> 上的方法已经描述的差不多了，最后只剩下 <code>pipeTo()</code> 方法和 <code>pipeThrough()</code> 方法没有提到了。从字面意思上来看，这就是我们之前提到的管道，可以将流直接指向另一个流，最后拿到处理后的数据。</p>
+<pre><code>var reader = response.body
+    .pipeThrough(new TextDecoder()).getReader();
+reader.read().then(result =&gt; {
+    // result.value will be a string
+});
+</code></pre>
+<p>为了不破坏兼容性，<code>TextEncoder</code> 和 <code>TextDecoder</code> 分别扩展出了新的 <code>TextEncoderStream</code> 和 <code>TextDecoderStream</code>，允许我们以流的方式编码或者解码文本。</p>
+<hr>
+<p>例如下面的例子会在请求中检索 <code>It works!</code> 这段文字，当找到这段文字时返回 <code>true</code> 同时断开请求。此时我们不需要再接收后续的数据，可以减少请求的流量：</p>
+<pre><code>fetch('/index.html').then((res) =&gt; {
+    const decoder = new TextDecoderStream('gbk', { ignoreBOM: true });
+    const textStream = res.body.pipeThrough(decoder);
+    const reader = textStream.getReader();
+    const findMatched = () =&gt; reader.read().then(({ value, done }) =&gt; {
+        if (done) {
+            return false;
+        }
+        if (value.indexOf('It works!') &gt;= 0) {
+            reader.cancel();
+            return true;
+        }
+        return findMatched();
+    });
+    return findMatched();
+}).then((isMatched) =&gt; { ... });
+</code></pre>
+<hr>
+<p>或者在未来，我们甚至在流里实现实时转码视频并播放，或者将浏览器还不支持的图片以流的形式实时渲染出来：</p>
+<pre><code>const encoder = new VideoEncoder({
+    input: 'gif', output: 'h264'
+});
+const media = new MediaStream();
+const video = document.createElement('video');
+fetch('/sample.gif').then((res) =&gt; {
+    response.body.pipeThrough(encoder).pipeTo(media);
+    video.srcObject = media;
+});
+</code></pre>
+<p>从中应该可以看出来这两种方法的区别：<code>pipeTo()</code> 方法应该会接受一个可以写入的流，也就是 <code>WritableStream</code>；而 <code>pipeThrough()</code> 方法应该会接受一个既可写入又可读取的流，也就是 <code>TransformStream</code>。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/94860e80d78d14bbd96e724c068cc40d_MD5.jpg" /></p>
+<h2><code>WritableStream</code></h2>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/f8af18c389fc1894fc1377b33ac98d83_MD5.jpg" /></p>
+<p>我们已经从 <code>ReadableStream</code> 中了解到很多关于流的知识了，所以下面我们简单过一下 <code>WritableStream</code>。<code>WritableStream</code> 就是可写入的流，如果说 <code>ReadableStream</code> 是一个管道中流的起点，那么 <code>WritableStream</code> 可以理解为流的终点。</p>
+<hr>
+<p>下面是一个 <code>WritableStream</code> 实例上的参数和可以使用的方法：
+<code>WritableStream</code></p>
+<ul>
+<li><code>locked</code></li>
+<li><code>abort()</code></li>
+<li><code>getWriter()</code></li>
+</ul>
+<p>可用的方法和参数很少，估计大家从名字就能知道它们是做什么的。</p>
+<hr>
+<p>其中直接调用 <code>getWriter()</code> 方法会得到一个 <code>WritableStreamDefaultWriter</code> 实例，通过这个实例我们就能向 <code>WritableStream</code> 写入数据。
+同样的，当我们激活了一个 writer 后，这个流就会被锁定（<code>locked = true</code>）。
+这个 writer 上有如下属性和方法：</p>
+<p><code>WritableStreamDefaultWriter</code></p>
+<ul>
+<li><code>closed</code></li>
+<li><code>desiredSize</code></li>
+<li><code>ready</code></li>
+<li><code>abort()</code></li>
+<li><code>close()</code></li>
+<li><code>write()</code></li>
+<li><code>releaseLock()</code></li>
+</ul>
+<p>看起来和 <code>ReadableStreamDefaultReader</code> 没太大区别，多出的 <code>abort()</code> 方法相当于抛出了一个错误，使这个流不能再被写入。另外这里多出了一个 <code>ready</code> 属性，这个属性是一个 <code>Promise</code>，当它被 resolve 时，表明目前流的缓冲区队列不再过载，可以安全地写入。所以如果需要循环向一个流写入数据的话，最好放在 <code>ready</code> 处理。</p>
+<hr>
+<p>同样的，我们可以自己构造一个 <code>WritableStream</code>，构造时可以定义以下方法和参数：</p>
+<pre><code>const stream = new WritableStream({
+    start(controller) {
+        // 将会在对象创建时立刻执行，并传入一个流控制器
+        controller.error(reason)
+            // 对流抛出一个错误
+    },
+    write(chunk, controller) {
+        // 将会在一个新的数据片段写入时调用，可以获取到写入的片段
+    },
+    close(controller) {
+        // 将会在流写入完成时调用
+    },
+    abort(reason) {
+        // 将会在流强制关闭时调用，此时流会进入一个错误状态，不能再写入
+    }
+}, queuingStrategy); // { highWaterMark: 1 }
+</code></pre>
+<hr>
+<p>下面的例子中，我们通过循环调用 <code>writer.write()</code> 方法向一个 <code>WritableStream</code> 写入数据：</p>
+<pre><code>const stream = new WritableStream({
+    write(chunk) {
+        return new Promise((resolve) =&gt; {
+            console.log('got chunk:', chunk);
+            // 在这里对数据进行处理
+            resolve();
+        });
+    },
+    close() {
+        console.log('stream closed');
+    },
+    abort() {
+        console.log('stream aborted');
+    }
+});
+const writer = stream.getWriter();
+// 将数据逐一写入 stream
+data.forEach((chunk) =&gt; {
+    // 待前一个数据写入完成后再写入
+    writer.ready.then(() =&gt; {
+        writer.write(chunk);
+    });
+});
+// 在关闭 writer 前先保证所有的数据已经被写入
+writer.ready.then(() =&gt; {
+    writer.close();
+});
+</code></pre>
+<p>下面是 <code>WritableStream</code> 的浏览器支持情况，可见 <code>WritableStream</code> 在各个浏览器上的的实现时间和 <code>pipeTo()</code> 与 <code>pipeThrough()</code> 方法的实现时间是吻合的，毕竟要有了可写入的流，管道才有存在的意义。</p>
+<h2><code>TransformStream</code></h2>
+<p>从之前的介绍中我们知道，<code>TransformStream</code> 是一个既可写入又可读取的流，正如它的名字一样，它作为一个中间流起着转换的作用。所以一个 <code>TransformStream</code> 实例只有如下参数：</p>
+<p><code>TransformStream</code></p>
+<ul>
+<li><code>readable</code>: <em>ReadableStream</em></li>
+<li><code>writable</code>: <em>WritableStream</em></li>
+</ul>
+<p><code>TransformStream</code> 上没有其他的方法，它只暴露了自身的 <code>ReadableStream</code> 与 <code>WritableStream</code>。
+我们只需要在数据源流上链式使用 <code>pipeThrough()</code> 方法就能实现流的数据传递，或者使用暴露出来的 <code>readable</code> 和 <code>writable</code> 直接操作数据即可使用它。</p>
+<hr>
+<p><code>TransformStream</code> 的处理逻辑主要在流内部实现，下面是构造一个 <code>TransformStream</code> 时可以定义的方法和参数：</p>
+<pre><code>const stream = new TransformStream({
+    start(controller) {
+        // 将会在对象创建时立刻执行，并传入一个流控制器
+        controller.desiredSize
+            // 填满队列所需字节数
+        controller.enqueue(chunk)
+            // 向可读取的一端传入数据片段
+        controller.error(reason)
+            // 同时向可读取与可写入的两侧触发一个错误
+        controller.terminate()
+            // 关闭可读取的一侧，同时向可写入的一侧触发错误
+    },
+    transform(chunk, controller) {
+        // 将会在一个新的数据片段传入可写入的一侧时调用
+    },
+    flush(controller) {
+        // 当可写入的一端得到的所有的片段完全传入 transform() 方法处理后，在可写入的一端即将关闭时调用
+    }
+}, queuingStrategy); // { highWaterMark: 1 }
+</code></pre>
+<p>有了 <code>ReadableStream</code> 与 <code>WritableStream</code> 作为前置知识，<code>TransformStream</code> 就不需要做太多介绍了。</p>
+<hr>
+<p>下面的示例代码摘自 MDN，是一段实现 <code>TextEncoderStream</code> 和 <code>TextDecoderStream</code> 的 polyfill，本质上只是对 <code>TextEncoder</code> 和 <code>TextDecoder</code> 进行了一层封装：</p>
+<pre><code>const tes = {
+    start() { this.encoder = new TextEncoder() },
+    transform(chunk, controller) {
+        controller.enqueue(this.encoder.encode(chunk))
+    }
+}
+let _jstes_wm = new WeakMap(); /* info holder */
+class JSTextEncoderStream extends TransformStream {
+    constructor() {
+        let t = { ...tes }
+        super(t)
+        _jstes_wm.set(this, t)
+    }
+    get encoding() { return _jstes_wm.get(this).encoder.encoding }
+}
+</code></pre>
+<pre><code>const tes = {
+    start() {
+        this.decoder = new TextDecoder(this.encoding, this.options)
+    },
+    transform(chunk, controller) {
+        controller.enqueue(this.decoder.decode(chunk))
+    }
+}
+let _jstds_wm = new WeakMap(); /* info holder */
+class JSTextDecoderStream extends TransformStream {
+    constructor(encoding = 'utf-8', { ...options } = {}) {
+        let t = { ...tds, encoding, options }
+        super(t)
+        _jstes_wm.set(this, t)
+    }
+    get encoding() { return _jstds_wm.get(this).decoder.encoding }
+    get fatal() { return _jstds_wm.get(this).decoder.fatal }
+    get ignoreBOM() { return _jstds_wm.get(this).decoder.ignoreBOM }
+}
+</code></pre>
+<h2>在 Service Worker 中使用 Streams API</h2>
+<h3>控制请求的响应速度</h3>
+<p>你会注意到页面中的文字是一个个显示出来的（甚至标题栏也是这样的), 其实这是借助 Service Worker 的 <code>onfetch</code> 事件配合 Streams API 实现的。</p>
+<hr>
+<p>熟悉 Service Worker 的同学应该知道 Service Worker 里有一个 <code>onfetch</code> 事件，可以在事件内捕获到页面所有的请求，<code>onfetch</code> 事件的事件对象 <code>FetchEvent</code> 中包含如下参数和方法，排除客户端 id 之类的参数，</p>
+<p>我们主要关注 <code>request</code> 属性以及事件对象提供的两个方法：</p>
+<pre><code>addEventListener('fetch', (fetchEvent) =&gt; {
+    fetchEvent.clientId
+    fetchEvent.preloadResponse
+    fetchEvent.replacesClientId
+    fetchEvent.resultingClientId
+    fetchEvent.request
+        // 浏览器原本需要发起请求的 Request 对象
+    fetchEvent.respondWith()
+        // 阻止浏览器默认的 fetch 请求处理，自己提供一个返回结果的 Promise
+    fetchEvent.waitUntil()
+        // 延长事件的生命周期，例如在返回数据后再做一些事情
+});
+</code></pre>
+<hr>
+<p>使用 Service Worker 最常见的例子是借助 <code>onfetch</code> 事件实现中间缓存甚至离线缓存。
+我们可以调用 <code>caches.open()</code> 打开或者创建一个缓存对象 <code>cache</code>，
+如果 <code>cache.match(event.request)</code> 有缓存的结果时，可以调用 <code>event.respondWith()</code> 方法直接返回缓存好的数据；
+如果没有缓存的数据，我们再在 Service Worker 里调用 <code>fetch(event.request)</code> 发出真正的网络请求，
+请求结束后我们再在 <code>event.waitUntil()</code> 里调用 <code>cache.put(event.request, response.clone())</code> 缓存响应的副本。</p>
+<p>Service Worker 在这之间充当了一个中间人的角色，可以捕获到页面发起的所有请求，然后根据情况返回缓存的请求，所以可以猜到我们甚至可以改变预期的请求，返回另一个请求的返回值。</p>
+<hr>
+<p>Streams API 在 Service Worker 中同样可用，所以我们可以在 Service Worker 里监听 <code>onfetch</code> 事件，然后用上我们之前学习到的知识，改变 fetch 请求的返回结果为一个速度很缓慢的流。这里我们让这个流每隔约 30 ms 才吐出 1 个字节，最后就能实现上面视频中的效果：</p>
+<pre><code>globalThis.addEventListener('fetch', (event) =&gt; {
+    event.respondWith((async () =&gt; {
+        const response = await fetch(event.request);
+        const { body } = response;
+        const reader = body.getReader();
+        const stream = new ReadableStream({
+            start(controller) {
+                const sleep = time =&gt; new Promise(resolve =&gt; setTimeout(resolve, time));
+                const pushSlowly = () =&gt; {
+                    reader.read().then(async ({ value, done }) =&gt; {
+                        if (done) {
+                            controller.close();
+                            return;
+                        }
+                        const length = value.length;
+                        for (let i = 0; i &lt; length; i++) {
+                            await sleep(30);
+                            controller.enqueue(value.slice(i, i + 1));
+                        }
+                        pushSlowly();
+                    });
+                };
+                pushSlowly();
+            }
+        });
+        return new Response(stream, { headers: response.headers });
+    })());
+});
+</code></pre>
+<blockquote>
+<p>在 Service Worker 里 Streams API 可以做出更多有趣的事情，感兴趣的同学可以参考下之前提到的那篇<a href="https://link.juejin.cn?target=https%3A%2F%2Fjakearchibald.com%2F2016%2Fstreams-ftw%2F" title="https://jakearchibald.com/2016/streams-ftw/">《2016 - the year of web streams》</a></p>
+</blockquote>
+<h3>下载一个前端生成的大文件</h3>
+<p>看着不是很实用？那么再举一个比较实用的例子吧。</p>
+<ul>
+<li>如果我们需要让用户在浏览器中下载一个文件，一般都是会指向一个服务器上的链接，然后浏览器发起请求从服务器上下载文件。</li>
+<li>
+<ul>
+<li>那么如果我们需要让用户下载一个在客户端生成的文件，比如从 canvas 上生成的图像，应该怎么办呢？</li>
+</ul>
+</li>
+</ul>
+<p>其实让客户端主动下载文件已经有现成的库 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Feligrey%2FFileSaver.js" title="https://github.com/eligrey/FileSaver.js">FileSaver.js</a> 实现了，</p>
+<hr>
+<p>库 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Feligrey%2FFileSaver.js" title="https://github.com/eligrey/FileSaver.js">FileSaver.js</a>的原理可以用下面的代码简述：</p>
+<pre><code>const a = document.createElement('a');
+const blob = new Blob(chunk, options);
+const url = URL.createObjectURL(blob);
+a.href = url;
+a.download = 'filename';
+const event = new MouseEvent('click');
+a.dispatchEvent(event);
+setTimeout(() =&gt; {
+    URL.revokeObjectURL(url);
+    if (blob.close) blob.close();
+}, 1e3);
+</code></pre>
+<p>这里利用了 HTML <code>&lt;a&gt;</code> 标签上的 <code>download</code> 属性，当链接存在该属性时，浏览器会将链接的目标视为一个需要下载的文件，链接不会在浏览器中打开，转而会将链接的内容下载到设备的硬盘上。此外在浏览器中还有 <code>Blob</code> 对象，它相当于一个类似文件的二进制数据对象（<code>File</code> 就是继承于它）。我们可以将需要下载的数据（无论是什么类型，字符串、TypedArray 甚至是其他 <code>Blob</code> 对象）传进 <code>Blob</code> 的构造函数里，这样我们就得到了一个 <code>Blob</code> 对象。最后我们再通过 <code>URL.createObjectURL()</code> 方法可以得到一个 <code>blob:</code> 开头的 Blob URL，将它放到有 <code>download</code> 属性的 <code>&lt;a&gt;</code> 链接上，并触发鼠标点击事件，浏览器就能下载对应的数据了。</p>
+<hr>
+<p>不过问题来了，如果需要下载的文件数据量非常大，比如这个数据是通过 XHR/fetch 或者 WebRTC 传输得到的，直接生成 Blob 可能会遇到内存不足的问题。</p>
+<p>下面是一个比较极端的糟糕例子，描述了在浏览器客户端打包下载图片的流程。客户端 JavaScript 发起多个请求得到多个文件，然后通过 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FStuk%2Fjszip" title="https://github.com/Stuk/jszip">JSZip</a> 这个库生成了一个巨大的 <code>ArrayBuffer</code> 数据，也就是 zip 文件的数据。接下来就像之前提到的那样，我们基于它构造一个 <code>Blob</code> 对象并用 <code>FileSaver.js</code> 下载了这个图片。如你所想的一样，所有的数据都是存放在内存中的，而在生成 zip 文件时，我们又占用了近乎一样大小的内存空间，最终可能会在浏览器内占用峰值为总文件大小 2-3 倍的内存空间（也就是下图中黄色背景的部分），流程过后可能还需要看浏览器的脸色 GC 回收。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/0f83f03d088d12d44c88eeaddb177252_MD5.jpg" /></p>
+<hr>
+<p>现在有了 Streams API，我们就有了另一种解决方式。<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fjimmywarting%2FStreamSaver.js" title="https://github.com/jimmywarting/StreamSaver.js">StreamSaver.js</a> 就是这样的一个例子，它借助了 Streams API 和 Service Worker 解决了内存占用过大的问题。阅读它的源码，可以看出它的工作流程类似下面这样：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/569016eec1ce6ac0235b8cbd5e4ba868_MD5.jpg" /></p>
+<p>StreamSaver.js 包含两部分代码，一部分是客户端代码，一部分是 Service Worker 的代码（对于不支持 Service Worker 的情况，作者在 GitHub Pages 上提供了一个运行 Service Worker 的页面供跨域使用）。</p>
+<p>在初始化时客户端代码会创建一个 <code>TransformStream</code> 并将可写入的一端封装为 <code>writer</code> 暴露给外部使用，在脚本调用 <code>writer.write(chunk)</code> 写入文件片段时，客户端会和 Service Worker 之间建立一个 <code>MessageChannel</code>，并将之前的 <code>TransformStream</code> 中可读取的一端通过 <code>port1.postMessage()</code> 传递给 Service Worker。Service Worker 里监听到通道的 <code>onmessage</code> 事件时会生成一个随机的 URL，并将 URL 和可读取的流存入一个 Map 中，然后将这个 URL 通过 <code>port2.postMessage()</code> 传递给客户端代码。</p>
+<p>客户端接收到 URL 后会控制浏览器跳转到这个链接，此时 Service Worker 的 <code>onfetch</code> 事件接收到这个请求，将 URL 和之前的 Map 存储的 URL 比对，将对应的流取出来，再加上一些让浏览器认为可以下载的响应头（例如 <code>Content-Disposition</code>）封装成 <code>Response</code> 对象，最后通过 <code>event.respondWith()</code> 返回。这样在当客户端将数据写入 <code>writer</code> 时，经过 Service Worker 的流转，数据可以立刻下载到用户的设备上。这样就不需要分配巨大的内存来存放 Blob，数据块经过流的流转后直接被回收了，降低了内存的占用。</p>
+<hr>
+<p>所以借助 StreamSaver.js，之前下载图片的流程可以优化如下：JSZip 提供了一个 <code>StreamHelper</code> 的接口来模拟流的实现，所以我们可以调用 <code>generateInternalStream()</code> 方法以小文件块的形式接收数据，每次接收到数据时数据会写入 StreamSaver.js 的 writer，经过 Service Worker 后数据直接被下载。这样就不会再像之前那样在生成 zip 时占用大量的内存空间了，因为 zip 数据在实时生成时被划分成了小块并迅速被处理掉了。</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/760f0c2da4158e158d4f7359ec99b939_MD5.jpg" /></p>
+<blockquote>
+<p><a href="#heading-17" title="#heading-17">课后习题 Q3</a>：StreamSaver.js 在不支持 <code>TransformStream</code> 的浏览器下其实是可以正常工作的，这是怎么实现的呢？</p>
+</blockquote>
+<h2>参考答案</h2>
+<ol>
+<li>
+<p><strong>如果我们调用了流的 <code>tee()</code> 方法得到了两个流，但我们只读取了其中一个流，另一个流在之后读取，会发生什么吗？</strong></p>
+<p>使用 <code>tee()</code> 方法分流出来的两个流之间是相互独立的，所以被读取的流会实时读取到传递的数据，过一段时间读取另一个流，拿到的数据也是完全一样的。不过由于另一个流没有被读取，克隆的数据可能会被浏览器放在一个缓冲区里，即便后续被读取可能也无法被浏览器即时 GC。</p>
+<pre><code>const file = document.querySelector('input[type=&quot;file&quot;]').files[0];
+const stream = file.stream();
+const readStream = (stream) =&gt; {
+    let total = 0;
+    const reader = stream.getReader();
+    const read = () =&gt; reader.read().then(({ value, done }) =&gt; {
+        if (done) return;
+        total += value.length;
+        console.log(total);
+        read();
+    });
+    read();
+};
+
+const [s1, s2] = stream.tee();
+readStream(s1);
+readStream(s2);
+</code></pre>
+<p>例如在上述代码中选择一个 200MB 的文件，然后直接调用 <code>readStream(stream)</code>，在 Chrome 浏览器下没有较大的内存起伏；如果调用 <code>stream.tee()</code> 后得到两个流 <code>s1</code> 和 <code>s2</code>，如果同时对两个流调用 <code>readStream()</code> 方法，在 Chrome 浏览器下同样没有较大的内存起伏，最终输出的文件大小也是一致的；如果只对 <code>s1</code> 调用的话，会发现执行结束后 Chrome 浏览器下内存占用多了约 200MB，此时再对 <code>s2</code> 调用，最终得到的文件大小虽然一致，但是内存并没有及时被 GC 回收，此时浏览器的内存占用还是之前的 200MB。</p>
+<p>可能你会好奇，之前我们尝试过使用 <code>tee()</code> 方法得到两段流，一个流直接返回另一个流用于输出下载进度，会有这样的资源占用问题吗？会不会出现两个流速度不一致的情况？其实计算下载进度的代码并不会非常耗时，数据计算完成后也不会再有多余的引用，浏览器可以迅速 GC。此外计算的速度是大于网络传输本身的速度的，所以并不会造成瓶颈，可以认为两个流最终的速度是基本一样的。</p>
+</li>
+</ol>
+<hr>
+<ol start="2">
+<li>
+<p><strong>如果不调用 <code>controller.error()</code> 抛出错误强制中断流，而是继续之前的流程调用 <code>controller.close()</code> 关闭流，会发生什么事吗？</strong></p>
+<p>从上面的结果来看，当我们调用 <code>aborter()</code> 方法时，请求被成功中止了。不过如果不调用 <code>controller.error()</code> 这个方法抛出错误的话，由于我们主动关闭了 fetch 请求返回的流，循环调用的 <code>reader.read()</code> 方法会接收到 <code>done = true</code>，然后会调用 <code>controller.close()</code>。这就意味着这个流是被正常关闭的，此时 Promise 链的后续操作不会被中断，而是会收到已经传输的不完整数据。</p>
+<p>如果没有做特殊的逻辑处理的话，直接返回不完整的数据可能会导致错误。不过如果能好好利用上的话，或许可以做更多事情——比如断点续传的另一种实现，这就有点像 Firefox 的私有实现 <code>moz-chunked-arraybuffer</code> 了。</p>
+</li>
+</ol>
+<hr>
+<ol>
+<li>
+<p><strong>StreamSaver.js 在不支持 <code>TransformStream</code> 的浏览器下其实是可以正常工作的，这是怎么实现的呢？</strong></p>
+<p>记得我们之前提到过构造一个 <code>ReadableSteam</code> 然后包装成 <code>Response</code> 对象返回的实现吧？我们最终的目的是需要构造一个流并返回给浏览器，这样传入的数据可以立即被下载，并且没有多余引用而迅速 GC。所以对于不支持 <code>TransformStream</code> 甚至 <code>WritableStream</code> 的浏览器，StreamSaver.js 封装了一个模拟 <code>WritableStream</code> 实现的 polyfill。当 polyfill 得到数据时，会将得到的数据片段通过 <code>MessageChannel</code> 直接传递给 Service Worker。Service Worker 发现这不是一个流，会构造出一个 <code>ReadableStream</code> 实例，并将数据通过 <code>controller.enqueue()</code> 方法传递进流。后续的流程估计你已经猜到了，和当前的后续流程是一样的，同样是生成一个随机 URL 并跳转，然后返回封装了这个流的 <code>Response</code> 对象。</p>
+<p>事实上，现在的 <a href="https://link.juejin.cn?target=https%3A%2F%2Fsend.firefox.com" title="https://send.firefox.com">Firefox Send</a> 就使用了这样的实现，当用户下载文件时会发出请求，Service Worker 接收到下载请求后会建立真实的 fetch 请求连接服务器，将返回的数据实时解密后直接下载到用户的设备上。这样的直观效果是，浏览器直接下载了文件，文件会显示在浏览器的下载列表中，同时页面上还会有下载进度：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/8d1b652b9022b920d4d5199ec59b92b6_MD5.jpg" /></p>
+</li>
+</ol>
+
+<h1>从 ajax 到 fetch、axios</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903590058786824?searchId=202309222121251330180011D325DEEAB8">juejin.cn</a></p>
+</blockquote>
+<h3>fetch</h3>
+<p>在 MDN 上，讲到它跟 jquery ajax 的区别，这也是 fetch 很奇怪的地方：</p>
+<p>当接收到一个代表错误的 HTTP 状态码时，从 fetch() 返回的 Promise 不会被标记为 reject， 即使该 HTTP 响应的状态码是 404 或 500。
+相反，它会将 Promise 状态标记为 resolve （但是会将 resolve 的返回值的 ok 属性设置为 false ）， 仅当网络故障时或请求被阻止时，才会标记为 reject。</p>
+<p>默认情况下, fetch 不会从服务端发送或接收任何 cookies, 如果站点依赖于用户 session，则会导致未经认证的请求（要发送 cookies，必须设置 credentials 选项）.</p>
+<hr>
+<p>还要提一下的是，fetch 是比较底层的 API，很多情况下都需要我们再次封装。 比如：</p>
+<pre><code>// jquery ajax
+$.post(url, {name: 'test'})
+// fetch
+fetch(url, {
+    method: 'POST',
+    body: Object.keys({name: 'test'}).map((key) =&gt; {
+        return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+    }).join('&amp;')
+})
+</code></pre>
+<p>由于 fetch 是比较底层的 API，所以需要我们手动将参数拼接成'name=test'的格式，而 jquery ajax 已经封装好了。所以 fetch 并不是开箱即用的。</p>
+<h3>axios</h3>
+<p>并发请求</p>
+<pre><code>function getUserAccount() {
+  return axios.get('/user/12345');
+}
+
+function getUserPermissions() {
+  return axios.get('/user/12345/permissions');
+}
+
+axios.all([getUserAccount(), getUserPermissions()])
+  .then(axios.spread(function (acct, perms) {
+    // Both requests are now complete
+  }));
+</code></pre>
+
+<h1>你知道 Ajax、Fetch、Axios 三者的区别吗？</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7086325194934976519?searchId=202309222121251330180011D325DEEAB8">juejin.cn</a></p>
+</blockquote>
+<h2>1.Ajax</h2>
+<p>简单来说，Ajax 是一种思想，XMLHttpRequest 只是实现 Ajax 的一种方式。其中 XMLHttpRequest 模块就是实现 Ajax 的一种很好的方式，这也是很多面试官喜欢让面试者手撕的代码之一。
+<strong>注意：</strong> 我们使用这种方式实现网络请求时，如果请求内部又包含请求，以此循环，就会出现回调地狱，这也是一个诟病，后来才催生了更加优雅的请求方式。</p>
+<h2>3.Axios</h2>
+<blockquote>
+<p>Axios 是一个基于 promise 封装的网络请求库，它是基于 XHR 进行二次封装。</p>
+</blockquote>
+<p><strong>示例代码：</strong></p>
+<pre><code>// 发送 POST 请求
+axios({
+    method: 'post',
+    url: '/user/12345',
+    data: {
+        firstName: 'Fred',
+        lastName: 'Flintstone'
+    }
+})
+</code></pre>
+
+<h1>深入浅出 Fetch API</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903425814052872?searchId=20230922220824D75FAF6A213F99E4750A">juejin.cn</a></p>
+</blockquote>
+<h2>为什么需要替代<code>XMLHttpRequest</code></h2>
+<p>看了前面的例子，你可能会问，为什么不直接使用那些<a href="https://link.juejin.cn?target=http%3A%2F%2Fwww.sitepoint.com%2Fcomparison-javascript-http-libraries%2F" title="http://www.sitepoint.com/comparison-javascript-http-libraries/">现有的<code>XMLHttpRequest</code>包装器</a>呢？ 原因在于 Fetch API 不仅仅为你提供了一个<code>fetch()</code>方法。</p>
+<p>对于传统的<code>XMLHttpRequest</code>而言，你必须使用它的一个实例来执行请求和检索返回的响应。 但是通过 Fetch API，我们能够明确的配置请求对象。</p>
+<hr>
+<p>你可以通过<code>Request</code>构造器函数创建一个新的请求对象，这也是建议标准的一部分。 第一个参数是请求的 URL，第二个参数是一个选项对象，用于配置请求。请求对象一旦创建了， 你便可以将所创建的对象传递给<code>fetch()</code>方法，用于替代默认的 URL 字符串。示例代码如下：</p>
+<pre><code>var req = new Request(URL, {method: 'GET', cache: 'reload'});
+fetch(req).then(function(response) {
+	return response.json();
+}).then(function(json) {
+	insertPhotos(json);
+});
+</code></pre>
+<p>上面的代码中我们指明了请求使用的方法为<code>GET</code>，并且指定不缓存响应的结果。</p>
+<hr>
+<p>有关<code>Request</code>对象的另一件更酷的事在于，你还可以基于原有的对象创建一个新的对象。 新的请求和旧的并没有什么不同，但你可以通过稍微调整配置对象，将其用于不同的场景。 例如，你可以基于原有的 GET 请求创建一个 POST 请求，它们具有相同的请求源。代码如下：</p>
+<pre><code>// 基于req对象创建新的postReq对象
+var postReq = new Request(req, {method: 'POST'});
+</code></pre>
+<hr>
+<p>每个<code>Request</code>对象都有一个<code>header</code>属性，在 Fetch API 中它对应了一个<code>Headers</code>对象。
+通过<code>Headers</code>对象，你能够修改请求头。
+不仅如此，对于返回的响应，你还能轻松的返回响应头中的各个属性。 但是需要注意的是，响应头是只读的。</p>
+<pre><code>var headers = new Headers();
+headers.append('Accept', 'application/json');
+var request = new Request(URL, {headers: headers});
+
+fetch(request).then(function(response) {
+	console.log(response.headers);
+});
+</code></pre>
+<p>在上面的代码中，你可以通过<code>Headers</code>构造器来获取这个对象，用于为新的<code>Request</code>对象配置请求头。</p>
+<hr>
+<p><code>Request</code>和<code>Response</code>都完全遵循 HTTP 标准。如果你曾经使用过某种服务器端语言，你应该对它们很熟悉。
+但是对于浏览器而言创建 HTTP 响应的要点是什么？总之，你不能将它发送给其他人。
+但是， 你可以通过 <a href="https://link.juejin.cn?target=http%3A%2F%2Fwww.w3.org%2FTR%2Fservice-workers%2F" title="http://www.w3.org/TR/service-workers/">Service Worker API</a> 将响应发送给你自己。</p>
+<p>Service Worker 允许通过截取来自浏览器的请求头和提供本地构造的响应头来替换来自服务器的响应头的方式来构建离线应用。 你需要注意的是，在本文写作的时候 Service Worker 仍然是实验性的，并且仍处在不断变化之中。</p>
+<h2>Fetch API 面临的阻力</h2>
+<p>其中一种反对观点认为，Promises 缺少了一些重要的<code>XMLHttpRequest</code>的使用场景。
+使用<code>XMLHttpRequest</code>你可以模拟进度（监听<code>progress</code>事件），也可以取消请求（使用<code>abort()</code>方法</p>
+<p>但是，如果有必要你也可以使用 Promise 来包裹它。</p>

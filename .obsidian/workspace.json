@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "done/2023-09-25.md",
+                "file": "md/README.md",
                 "mode": "source",
                 "source": false
               }
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "done/2023-09-25.md"
+                "file": "md/README.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/2023-09-25.md",
+                "file": "md/README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/2023-09-25.md",
+                "file": "md/README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -166,22 +166,38 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "7d45faf81db236de",
   "lastOpenFiles": [
-    "md/README.md",
+    "_resources/e129d47721bdd09835a2cec6f75d56c5_MD5.jpg",
+    "_resources/f8af18c389fc1894fc1377b33ac98d83_MD5.jpg",
+    "_resources/d8c74f038de090a92b1c5db1f44aba4a_MD5.jpg",
+    "_resources/d4ded57bd3529597307b6c72e95d1cd8_MD5.jpg",
+    "_resources/d41aeb242b0ab73fb346c0d00b7c762f_MD5.jpg",
+    "_resources/c41350294a14159d545a02cd40713dbd_MD5.jpg",
+    "_resources/a6d5691e4dffb36269eafc6d6135ea72_MD5.jpg",
+    "_resources/94860e80d78d14bbd96e724c068cc40d_MD5.jpg",
+    "_resources/8d1b652b9022b920d4d5199ec59b92b6_MD5.jpg",
+    "_resources/847acff7854f272fcd612d92c892e4ff_MD5.jpg",
+    "_resources/6cbc663c564c04d68c6e626ae97178c5_MD5.jpg",
     "done/2023-09-25.md",
-    "_resources/Pasted image 20230926140951.png",
-    "_resources/Pasted image 20230926135151.png",
+    "output/2023-9-26 22-49-28.html",
+    "achieve/你知道 Ajax、Fetch、Axios 三者的区别吗？.md",
+    "achieve/深入浅出 Fetch API.md",
+    "achieve/从 ajax 到 fetch、axios.md",
+    "achieve/从 Fetch 到 Streams —— 以流的角度处理网络请求.md",
+    "achieve/一文读懂 TypeScript 泛型及应用（ 7.8K 字）.md",
+    "achieve/fetch 简介: 新一代 Ajax API.md",
+    "achieve/d.ts 的精读.md",
+    "achieve/TS 的. d.ts 和 declare 用法.md",
+    "achieve/2023-09-25.md",
+    "achieve/2023-09-24.md",
+    "md/README.md",
     "S-ARCHSS Project Assignment v2.0.pdf",
     "S-ARCHSS Project Assignment (Case Study Templates Exercise 2) v2.0.docx",
     "S-ARCHSS Project Assignment (Case Study Templates Exercise 1) v2.0.docx",
     "03. Architect the Solution Architecture (Method) v3.0.pdf",
     "done/从 Fetch 到 Streams —— 以流的角度处理网络请求.md",
     "done/一文读懂 TypeScript 泛型及应用（ 7.8K 字）.md",
-    "_resources/d41aeb242b0ab73fb346c0d00b7c762f_MD5.webp",
-    "_resources/e129d47721bdd09835a2cec6f75d56c5_MD5.webp",
-    "_resources/5dfeace852a46a34ee8c0524ee6afd7a_MD5.webp",
-    "_resources/429f5c5328c5504db3655e1c20f12fa7_MD5.webp",
     "done/fetch 简介: 新一代 Ajax API.md",
     "done/TS 的. d.ts 和 declare 用法.md",
     "md/fetch 简介: 新一代 Ajax API.md",
@@ -190,29 +206,14 @@
     "done/深入浅出 Fetch API.md",
     "done/从 ajax 到 fetch、axios.md",
     "done/你知道 Ajax、Fetch、Axios 三者的区别吗？.md",
-    "_resources/f8af18c389fc1894fc1377b33ac98d83_MD5.webp",
-    "_resources/d8c74f038de090a92b1c5db1f44aba4a_MD5.webp",
-    "_resources/0f83f03d088d12d44c88eeaddb177252_MD5.webp",
-    "_resources/8d1b652b9022b920d4d5199ec59b92b6_MD5.webp",
     "cur useless/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
     "done/2023-09-23.md",
     "done/Fetch API 介绍及使用 Fetch 发送请求.md",
-    "md/Response.md",
-    "done/从 Next-Auth 到 Prisma，用最新潮的技术栈做登录.md",
-    "done/Spring Cloud Security：Oauth2 使用入门.md",
-    "cur useless/whisper 字幕.md",
-    "cur useless/Zeabur CLI 从设计到实现 - 飞鸟记.md",
-    "cur useless/使用 next.js 完成从开发到部署.md",
-    "cur useless/Next.js 项目最佳实践.md",
-    "cur useless/工厂方法设计模式.md",
-    "cur useless/低能量自救指南：浅谈心力、脑力、体力的作用机制.md",
-    "cur useless/Docker 实战 | JavaGuide(Java 面试 + 学习指南).md",
     "done",
     "output/2023-9-17 22-51-25.html",
     "output/2023-9-17 22-46-11.html",
     "output/2023-9-17 22-38-55.html",
     "output/2023-9-17 22-38-43.html",
-    "output/2023-9-17 22-38-35.html",
     "未命名.canvas"
   ]
 }
