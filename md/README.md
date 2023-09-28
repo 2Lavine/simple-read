@@ -24,8 +24,9 @@
 ## 数组 
 
 - [ ] [数组过于简单，但你该了解这些！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/数组理论基础.md) 
-- [x] [数组：704.二分查找](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0704.二分查找.md)
-- [x] [数组：27.移除元素](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0027.移除元素.md)
+- [x] [数组：704.二分查找](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0704.二分查找.md) https://leetcode.cn/problems/binary-search/submissions/
+- [x] [数组：27.移除元素](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0027.移除元素.md) https://leetcode.cn/problems/remove-element/description/
+	- [ ] 用双指针在原数组上操作
 - [x] [数组：977.有序数组的平方](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0977.有序数组的平方.md)    
 - [x] [数组：209.长度最小的子数组](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0209.长度最小的子数组.md)
 	1. [ ] 窗口的起始位置如何移动：如果当前窗口的值大于s了，窗口就要向前移动了（也就是该缩小了）。
