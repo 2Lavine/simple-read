@@ -1,3 +1,6 @@
+---
+aliases: leetcode
+---
 
 编程素养
     [看了这么多代码，谈一谈代码风格！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/前序/代码风格.md)
@@ -43,6 +46,7 @@
 	- [ ] return dummy.next instead of head bsc head may be deleted 
 - [x] [链表：707.设计链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0707.设计链表.md)
 	- [ ] 临界数据
+	- [ ] get和 Delete的临界取不到 length，而 add的临界取得到length
 - [x] [链表：206.翻转链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0206.翻转链表.md) 
 	- [ ] 纯翻转不用空节点
 	- [ ] 更改 next 之后，原来的 next 会改变,就会有节点变成孤岛

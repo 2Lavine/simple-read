@@ -13,26 +13,37 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/README.md",
+                "file": "md/2023-09-28.md",
                 "mode": "source",
                 "source": false
               }
             }
           },
           {
-            "id": "c5506638036f84d9",
+            "id": "76215c76f5f0d14b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/2023-09-27.md",
+                "file": "md/leetcode.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "11b920a545647041",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "mini-react-docs/ref/ref基础用法.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -76,7 +87,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/2023-09-27.md"
+                "file": "md/2023-09-28.md"
               }
             }
           },
@@ -108,7 +119,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/2023-09-27.md",
+                "file": "md/2023-09-28.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -125,7 +136,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/2023-09-27.md",
+                "file": "md/2023-09-28.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -179,10 +190,28 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "c5506638036f84d9",
+  "active": "7d45faf81db236de",
   "lastOpenFiles": [
     "md/2023-09-27.md",
-    "md/README.md",
+    "md/leetcode.md",
+    "Untitled.md",
+    "readme.md",
+    "mini-react-docs/ref/ref基础用法.md",
+    "mini-react-docs/reconciler/构建副作用链表算法.md",
+    "mini-react-docs/reconciler/单节点dom-diff算法.md",
+    "mini-react-docs/reconciler/dom-diff所有场景.md",
+    "mini-react-docs/ReactContext/context源码解析.md",
+    "mini-react-docs/ReactContext/react.context基础知识.md",
+    "mini-react-docs/hooks/彻底搞懂函数组件hook链表.md",
+    "mini-react-docs/hydrate/hydrate源码剖析.md",
+    "done/从源码的角度理解useEffect以及useLayoutEffect的区别.md",
+    "md/2023-09-28.md",
+    "python3 leet.md",
+    "leetc.md",
+    "done/how_useReducer_work.md",
+    "done/how_batchedUpdates_work.md",
+    "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
+    "md/为什么别人的 hooks 里面有那么多的 ref.md",
     "_resources/e129d47721bdd09835a2cec6f75d56c5_MD5.jpg",
     "_resources/f8af18c389fc1894fc1377b33ac98d83_MD5.jpg",
     "_resources/d8c74f038de090a92b1c5db1f44aba4a_MD5.jpg",
@@ -200,28 +229,10 @@
     "achieve/从 ajax 到 fetch、axios.md",
     "achieve/从 Fetch 到 Streams —— 以流的角度处理网络请求.md",
     "achieve/一文读懂 TypeScript 泛型及应用（ 7.8K 字）.md",
-    "achieve/fetch 简介: 新一代 Ajax API.md",
-    "achieve/d.ts 的精读.md",
-    "achieve/TS 的. d.ts 和 declare 用法.md",
-    "achieve/2023-09-25.md",
-    "achieve/2023-09-24.md",
     "S-ARCHSS Project Assignment v2.0.pdf",
     "S-ARCHSS Project Assignment (Case Study Templates Exercise 2) v2.0.docx",
     "S-ARCHSS Project Assignment (Case Study Templates Exercise 1) v2.0.docx",
     "03. Architect the Solution Architecture (Method) v3.0.pdf",
-    "done/从 Fetch 到 Streams —— 以流的角度处理网络请求.md",
-    "done/一文读懂 TypeScript 泛型及应用（ 7.8K 字）.md",
-    "done/fetch 简介: 新一代 Ajax API.md",
-    "done/TS 的. d.ts 和 declare 用法.md",
-    "md/fetch 简介: 新一代 Ajax API.md",
-    "done/d.ts 的精读.md",
-    "done/2023-09-24.md",
-    "done/深入浅出 Fetch API.md",
-    "done/从 ajax 到 fetch、axios.md",
-    "done/你知道 Ajax、Fetch、Axios 三者的区别吗？.md",
-    "cur useless/使用 Next.js 13、Prisma、Postgresql 和 NextAuth 的全栈博客.md",
-    "done/2023-09-23.md",
-    "done/Fetch API 介绍及使用 Fetch 发送请求.md",
     "done",
     "output/2023-9-17 22-51-25.html",
     "output/2023-9-17 22-46-11.html",

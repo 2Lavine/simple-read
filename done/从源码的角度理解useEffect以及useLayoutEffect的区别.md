@@ -2,92 +2,20 @@
 
 ### 前置知识
 
-- 监听函数和 `clear清除函数` 的约定。我们将传递给 `useEffect` 或者 `useLayoutEffect` 的函数叫做监听函数。监听函数的返回值叫 `clear清除函数`
 - React 渲染主要分为两个阶段：render 阶段 以及 commit 阶段。render 阶段是可以并发的，可以中断的。render 阶段主要是协调子节点，找出有副作用的节点，构造副作用链表以及 fiber 树。commit 阶段是同步的，一旦开始就不能够中断。commit 阶段对真实的 DOM 进行增删改查，执行对应的生命周期方法。
 - 在 react-dom.development.js 中找到 `commitRootImpl` 函数并在入口处设置断点，然后在 `commitRootImpl` 中找到调用 `commitBeforeMutationEffects`、`commitMutationEffects`、`commitLayoutEffects` 这三个函数的地方并设置断点。后面会具体解释这些函数的作用。
-
-![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/effect-01.jpg)
-
-![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/effect-02.jpg)
-
 ### useLayoutEffect 和 useEffect 的区别
 
 - `useLayoutEffect` 的 `监听函数` 以及 `clear 清除函数` 都是同步执行的，是在真实的 DOM 发生了改变之后，浏览器绘制之前执行的。
 - `useEffect` 的 `监听函数` 以及 `clear清除函数` 是异步执行的，是在真实的 DOM 发生了改变并且浏览器绘制之后(此时 JS 主线程已经执行完毕)异步执行的
 
+
+---
 - useLayoutEffect 和 useEffect 的使用场景
   - useLayoutEffect 的 `监听函数` 以及 `clear 清除函数` 的执行都会阻塞浏览器渲染。当需要操作真实的 DOM 时，需要放在 useLayoutEffect 的监听函数中执行，同时 useLayoutEffect 的监听函数尽量避免耗时长的任务
-  - useEffect 的 `监听函数` 以及 `clear清除函数` 的执行都不会阻塞浏览器渲染。useEffect 尽量避免操作真实的 DOM，因为 useEffect 的监听函数的执行时机是在浏览器绘制之后执行。如果此时在 useEffect 的监听函数里又操作真实的 DOM，会导致浏览器回流重绘。同时可以将耗时长的任务放在 useEffect 的 `监听函数` 中执行。
+  - useEffect 的 `监听函数` 以及 `clear清除函数` 的执行都不会阻塞浏览器渲染。
+  - useEffect 尽量避免操作真实的 DOM，因为 useEffect 的监听函数的执行时机是在浏览器绘制之后执行。如果此时在 useEffect 的监听函数里又操作真实的 DOM，会导致浏览器回流重绘。同时可以将耗时长的任务放在 useEffect 的 `监听函数` 中执行。
 
-### 场景复现
-
-修改 `index.html` 文件，添加两个额外的 dom
-
-```html
-<body>
-  <div id="root"></div>
-  <div style="margin-top: 100px" id="useEffect"></div>
-  <div id="useLayoutEffect"></div>
-</body>
-```
-
-演示的 demo 组件：
-
-```jsx
-import React, { useEffect, useState, useLayoutEffect } from "react";
-import ReactDOM from "react-dom";
-
-const sleep = () => {
-  const start = Date.now();
-  while (Date.now() - start < 5000) {}
-};
-const Counter = () => {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    document.getElementById("useEffect").innerText = "useEffect：" + count;
-    return () => {
-      console.log("use effect 清除 =============");
-    };
-  });
-  useLayoutEffect(() => {
-    document.getElementById("useLayoutEffect").innerText =
-      "useLayoutEffect：" + count;
-    return () => {
-      console.log("use layout effect 清除 ===========");
-    };
-  });
-  const onBtnClick = () => {
-    setCount(count + 1);
-  };
-  return <button onClick={onBtnClick}>Counter：{count}</button>;
-};
-
-class Index extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showCounter: true,
-    };
-  }
-  render() {
-    return [
-      <div
-        style={{ marginTop: "100px" }}
-        onClick={() =>
-          this.setState({ showCounter: !this.state.showCounter }, () =>
-            console.log("this.setState回调函数执行======")
-          )
-        }
-      >
-        切换显示计数器
-      </div>,
-      this.state.showCounter && <Counter />,
-    ];
-  }
-}
-
-ReactDOM.render(<Index />, document.getElementById("root"));
-```
 
 #### useLayoutEffect 监听函数
 
@@ -137,7 +65,9 @@ useEffect(() => {
 });
 ```
 
-点击 Counter 按钮，**页面立即刷新，过了大概 5 秒，useEffect：后面的数字才更新。因此 useEffect 的监听函数是异步执行的，不会阻塞页面更新。但是如果监听函数里面有 DOM 操作，会导致页面回流重绘**
+点击 Counter 按钮，**页面立即刷新，过了大概 5 秒，useEffect：后面的数字才更新。
+因此 useEffect 的监听函数是异步执行的，不会阻塞页面更新。
+但是如果监听函数里面有 DOM 操作，会导致页面回流重绘
 
 #### useEffect 清除函数
 
@@ -155,17 +85,26 @@ useEffect(() => {
 
 点击 Counter 按钮，**页面立即刷新，过了大概 5 秒，useEffect：后面的数字才更新。因此 useEffect 的清除函数是异步执行的，不会阻塞页面更新。**
 
-**清除函数有个细微差别，我们在 useEffect 的监听函数里面改变 useEffect 的 innerText，为什么 清除函数睡眠了 5 秒后，这个 DOM 才更新？？答案就是，清除函数和监听函数是一起执行的，先执行清除函数，紧接着执行监听函数**
+**清除函数有个细微差别，我们在 useEffect 的监听函数里面改变 useEffect 的 innerText，为什么 清除函数睡眠了 5 秒后，这个 DOM 才更新？？
+答案就是，清除函数和监听函数是一起执行的，先执行清除函数，紧接着执行监听函数**
 
 下面让我们从源码层面来解析这个过程，可以在下面函数的地方设置断点并且 debug
 
 ### commitRootImpl
-
 commit 阶段分成三个子阶段：
+ 第一阶段：commitBeforeMutationEffects。DOM 变更前
+ 第二阶段：commitMutationEffects。DOM 变更，操作真实的 DOM 节点。注意这个阶段是 `卸载` 相关的生命周期方法执行时机
+第三阶段：commitLayoutEffects。DOM 变更后
 
+
+---
 - 第一阶段：commitBeforeMutationEffects。DOM 变更前
   - 调用 类组件的 getSnapshotBeforeUpdate 生命周期方法
-  - 启动一个微任务以刷新 passive effects 异步队列。passive effects 异步队列存的是 useEffect 的清除函数以及监听函数
+  - 启动一个微任务以刷新 passive effects 异步队列。
+	  - passive effects 异步队列存的是 useEffect 的清除函数以及监听函数
+
+
+---
 - 第二阶段：commitMutationEffects。DOM 变更，操作真实的 DOM 节点。注意这个阶段是 `卸载` 相关的生命周期方法执行时机
 
   - 操作真实的 DOM 节点：增删改查
@@ -174,6 +113,8 @@ commit 阶段分成三个子阶段：
   - 将函数组件的 `useEffect` 的 `清除函数` 添加进异步队列，异步执行。
   - **所有的函数组件的 useLayoutEffect 的清除函数都在这个阶段执行完成**
 
+
+---
 - 第三阶段：commitLayoutEffects。DOM 变更后
   - 调用函数组件的 `useLayoutEffect` 监听函数，同步执行
   - 将函数组件的 `useEffect` 监听函数放入异步队列，异步执行
@@ -181,7 +122,9 @@ commit 阶段分成三个子阶段：
   - 执行类组件的 `componentDidUpdate` 生命周期方法，同步执行
   - 执行类组件 `this.setState(arg, callback)` 中的 `callback` 回调，同步执行
 
-每一个子阶段都是一个 while 循环，**从头开始**遍历副作用链表。
+
+---
+commitRootImpl每一个子阶段都是一个 while 循环，**从头开始**遍历副作用链表。
 
 ```js
 let nextEffect;
@@ -242,14 +185,12 @@ function commitBeforeMutationLifeCycles(current, finishedWork) {
 
 #### commitMutationEffects
 
-这个函数操作 DOM，主要有三个方法：
-
+这个函数主要操作 DOM，
+如果是PlacementAndUpdate则执行
 - commitPlacement。调用 `parentNode.appendChild(child);` 或者 `container.insertBefore(child, beforeChild)` 插入 DOM 节点
-- commitWork。同步调用函数组件 `useLayoutEffect` 的`清除函数`，这个函数对于类组件没有任何操作
-- commitDeletion。主要是删除 DOM 节点，以及调用当前节点以及子节点所有的 `卸载` 相关的生命周期方法
-  - 同步调用函数组件的 `useLayoutEffect` 的 `清除函数`，这是同步执行的
-  - 将函数组件的 `useEffect` 的 `清除函数` 添加进异步刷新队列，这是异步执行的
-  - 同步调用类组件的 `componentWillUnmount` 生命周期方法
+- commitWork。同步调用函数组件 `useLayoutEffect` 的`清除函数`
+如果是 Delete 则执行
+	commitDeletion
 
 ```js
 function commitMutationEffects(root, renderPriorityLevel) {
@@ -271,6 +212,14 @@ function commitMutationEffects(root, renderPriorityLevel) {
     nextEffect = nextEffect.nextEffect;
   }
 }
+
+```
+
+
+---
+commitPlacement方法
+调用 `parentNode.appendChild(child);` 或者 `container.insertBefore(child, beforeChild)` 插入 DOM 节点
+```
 function commitPlacement(finishedWork) {
   if (isContainer) {
     insertOrAppendPlacementNodeIntoContainer(finishedWork, before, parent);
@@ -279,6 +228,11 @@ function commitPlacement(finishedWork) {
   }
 }
 
+function unmountHostComponents(finishedRoot, current, renderPriorityLevel) {
+  while (true) {
+    commitUnmount(finishedRoot, node);
+  }
+}
 function insertOrAppendPlacementNodeIntoContainer(node, before, parent) {
   if (before) {
     insertInContainerBefore(parent, stateNode, before);
@@ -286,6 +240,14 @@ function insertOrAppendPlacementNodeIntoContainer(node, before, parent) {
     appendChildToContainer(parent, stateNode);
   }
 }
+
+```
+
+
+---
+commit Work方法
+- 同步调用函数组件 `useLayoutEffect` 的`清除函数`，这个函数对于类组件没有任何操作
+```js
 function commitWork(current, finishedWork) {
   switch (finishedWork.tag) {
     case FunctionComponent: {
@@ -308,15 +270,23 @@ function commitHookEffectListUnmount(tag, finishedWork) {
     effect = effect.next;
   } while (effect !== firstEffect);
 }
+```
+
+
+---
+CommitDeletion 主要是删除 DOM 节点，以及调用当前节点以及子节点所有的 `卸载` 相关的生命周期方法
+  - 同步调用函数组件的 `useLayoutEffect` 的 `清除函数`，这是同步执行的
+  - 同步调用类组件的 `componentWillUnmount` 生命周期方法
+  - 将函数组件的 `useEffect` 的 `清除函数` 添加进异步刷新队列，这是异步执行的
+  - 所有的函数组件的 useLayoutEffect 的清除函数都在这个阶段执行完成
+
+```js
+
 function commitDeletion(finishedRoot, current, renderPriorityLevel) {
   // 调用所有子节点的 componentWillUnmount() 方法
   unmountHostComponents(finishedRoot, current);
 }
-function unmountHostComponents(finishedRoot, current, renderPriorityLevel) {
-  while (true) {
-    commitUnmount(finishedRoot, node);
-  }
-}
+
 function commitUnmount(finishedRoot, current, renderPriorityLevel) {
   switch (current.tag) {
     case FunctionComponent: {
@@ -345,9 +315,16 @@ function commitUnmount(finishedRoot, current, renderPriorityLevel) {
 #### commitLayoutEffects
 
 当执行到这个函数，此时 `useLayoutEffect` 的清除函数已经全部执行完成。
+准备调用`useLayoutEffect` 监听函数或者执行声明周期方法
 
+通过commitLifeCycles 调用不同组件的方法
+
+如果是函数组件调用commitHookEffectListMount
 - 调用函数组件的 `useLayoutEffect` 监听函数，同步执行
+	- 通过commitHookEffectListMount执行
 - 将函数组件的 `useEffect` 监听函数放入异步队列，异步执行
+
+类组件则
 - 执行类组件的 `componentDidMount` 生命周期方法，同步执行
 - 执行类组件的 `componentDidUpdate` 生命周期方法，同步执行
 - 执行类组件 `this.setState(arg, callback)` 中的 `callback` 回调，同步执行
@@ -381,6 +358,13 @@ function commitLifeCycles(finishedRoot, current, finishedWork, committedLanes) {
   }
 }
 
+```
+
+
+---
+使用commitHookEffectListMount执行useLayoutEffect的监听函数
+
+```js
 // 执行useLayoutEffect监听函数
 function commitHookEffectListMount(tag, finishedWork) {
   do {
