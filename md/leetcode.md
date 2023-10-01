@@ -1,5 +1,5 @@
 ---
-aliases: leetcode
+aliases: []
 ---
 
 编程素养
