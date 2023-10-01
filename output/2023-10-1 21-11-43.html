@@ -1,0 +1,2742 @@
+<h1>2023-09-27</h1><p>CIA 是计算机安全中的三个重要概念，分别代表保密性（Confidentiality）、完整性（Integrity）和可用性（Availability）。
+confidentiality: protect from unauthorises disclosure
+integrity :protect from improper modify
+availability fault tolerance and load balance</p>
+<h1>Assets</h1>
+<h2>Crown Jones：</h2>
+<ul>
+<li>Crown Jones is Assets critical to achieving the business</li>
+<li>Some Sensitive Data like  customer account data of a bank, patient medical records of a hospital</li>
+</ul>
+<h2>Stepping Stones</h2>
+<ul>
+<li>Stepping Stones is Assets attackers would want to take control before reaching the crown jewels</li>
+</ul>
+<h1>Security  Objective and Threats</h1>
+<p>CIA AAN
+Authentication
+Authorization
+Accountability(Accounting ): Monitoing User Activities. Identify who do it.
+Non-repudication: prevent Denny validity of transaction</p>
+<h1>Vulnerability</h1>
+<h3>Digital Signature</h3>
+<ul>
+<li>believe that the message was created by a known sender (authentication),</li>
+<li>that the sender cannot deny having sent the message (non-repudiation)</li>
+<li>that the message was not altered in transit (integrity).</li>
+</ul>
+<h3>Digital Certificate</h3>
+<p>Docs to prove ownership of Public Key
+It contains</p>
+<ul>
+<li>Publick Key Owner(also called Subject) Information</li>
+<li>Certificate's Generator Signature</li>
+</ul>
+<p>To protect confidentiality of data at rest use:Encryption
+To protect integrity of data at rest use: HMAC,Digital Signature
+To protect confidentiality and integrityof data in transit use: TLS or IPsec or SSH
+To protect confidentiality of data in transit,end-to-end use: Encryption at application level</p>
+<p>主机入侵检测系统（Host Intrusion Detection System，简称HIDS）：
+安装在需要保护的每个系统上</p>
+<p>网络入侵检测系统（Network Intrusion Detection System，简称NIDS）：
+NIDS传感器安装在防火墙和路由器上</p>
+<hr>
+<p>taxonomy 分类
+入侵检测系统  Intrusion Detection System</p>
+<hr>
+<h2>二分法</h2>
+<p>right 永远无效，因此不可能取等号
+<code>right=len(nums) </code># [left,right)
+<code>while left&lt;=right:  left,right 始终有效，因此可以取等号 </code>right = len(nums)-1
+``#[left,right]
+`while left&lt;=right:</p>
+<h2>Python 数组操作</h2>
+<p>在 Python 中，与 JavaScript 中的常用数组方法对应的方法如下：</p>
+<ol>
+<li><code>push</code>：在 Python 中，使用 <code>append</code> 方法来向列表中添加元素。例如，<code>arr.append(5)</code> 将数字 5 添加到列表 <code>arr</code> 的末尾。</li>
+<li><code>pop</code>：在 Python 中，使用 <code>pop</code> 方法来移除列表中的元素。默认情况下，<code>pop</code> 方法将移除并返回列表的最后一个元素。例如，<code>arr.pop()</code> 将移除并返回列表 <code>arr</code> 的最后一个元素。</li>
+<li><code>shift</code>：<code>arr.pop(0)</code> 将移除并返回列表 <code>arr</code> 的第一个元素。</li>
+<li><code>unshift</code>：使用切片和连接操作来实现类似的功能。例如，<code>arr = [5] + arr</code> 将数字 5 添加到列表 <code>arr</code> 的开头。或者insert方法 my_list.insert(0, 5)  # 在索引 0 处插入元素 5</li>
+</ol>
+<hr>
+<p>在你的代码中，出现了一个错误。问题出在这一行代码上：
+arr = arr.insert(0,nums[right]**2)
+list.insert() 方法会直接修改原始列表，并返回 None</p>
+
+<h1>2023-09-28</h1><p>Dogpile 是一个计算机科学术语，通常用于描述在并发系统中的一种现象。它指的是当一个资源（如数据库查询或网络请求）被多个并发进程或线程同时请求时，所有请求都会等待资源的释放，并在资源可用时同时竞争获取该资源，导致短时间内资源的突然高负载。</p>
+<p>Dogpile 现象通常发生在缓存系统中，当缓存中的数据过期时，多个并发请求会同时触发对数据的重新计算或重新加载。这会导致大量请求同时访问后端资源，造成短暂的资源瓶颈和延迟。</p>
+<h2>解决 Dogpile</h2>
+<p>为了解决 Dogpile 现象，常见的做法是在缓存失效时，只允许一个请求重新计算或重新加载数据，而其他请求则等待已计算的结果。这样可以避免多个请求同时访问后端资源，减轻资源压力和提高系统性能。</p>
+<hr>
+<p>&quot;Sanity&quot; 是一个英语词汇，指的是理智、明智、健全的心智状态或行为。它表示一个人的思维、判断和决策是否合理、合乎常理。</p>
+<p>在计算机科学和软件开发领域，&quot;sanity&quot; 有时也用来表示对系统、代码或数据的合理性检查。这种检查通常是为了确保系统或代码的正确性、稳定性和安全性，以防止可能导致不正常行为或错误的问题。</p>
+<hr>
+<p>垂直扩展是通过增加单个服务器的处理能力来提升系统性能，而水平扩展是通过添加更多的服务器来提升系统性能。两者可以结合使用，以获得更好的性能和可扩展性。</p>
+<hr>
+<p>–Uneven distribution</p>
+<h2>Round Robin</h2>
+<p>Round Robin算法按照固定的顺序将请求依次分发给服务器。每当有新的请求到达时，算法将该请求分发给下一个服务器，循环往复。</p>
+<hr>
+<p>平均等待时间公式 E[T] = 1 / (sμ - λ)
+这个公式是排队论中的一个基本公式，用于描述M/M/1队列模型的平均等待时间。在这里，我们首先解释一下公式中的各个参数：</p>
+<ul>
+<li>( E[T] )：平均等待时间，也可以理解为平均响应时间。</li>
+<li>( \lambda )：到达率，即单位时间内到达的顾客/请求的数量。</li>
+<li>( \mu )：服务率，即单位时间内服务员可以服务的顾客/请求的数量。</li>
+<li>( s )：服务员的数量。</li>
+</ul>
+<p>现在，我们来解释这个公式的来源和意义：</p>
+<ol>
+<li>
+<p><strong>来源</strong>：这个公式是基于M/M/1队列模型的平衡方程和Little公式推导出来的。M/M/1意味着到达过程、服务过程都是泊松过程，并且只有一个服务员。</p>
+</li>
+<li>
+<p><strong>现实意义</strong>：</p>
+<ul>
+<li>( E[T] ) 表示一个顾客/请求在系统中的平均等待时间，包括等待服务和接受服务的时间。这是一个关键的性能指标，因为它可以告诉我们顾客/请求平均需要多长时间才能得到满足。</li>
+<li>当 ( s\mu )（所有服务员的总服务率）大于 ( \lambda )（到达率）时，这个公式才有意义。如果到达率超过了总服务率，那么队列将会无限增长，平均等待时间将会趋近于无穷大。</li>
+<li>公式中的分母 ( s\mu - \lambda ) 反映了服务能力与到达率之间的差异。当这个差异越大，即服务能力远大于到达率时，平均等待时间会减少。反之，如果到达率接近服务能力，那么平均等待时间会显著增加。</li>
+</ul>
+</li>
+</ol>
+<p>总的来说，这个公式为我们提供了一个工具，可以预测和分析在给定到达率和服务率下，顾客/请求的平均等待时间。这对于系统设计、资源分配和性能优化都是非常有价值的。</p>
+
+<h1>2023-09-29</h1><p>API限流（API Gateway Throttling）</p>
+
+<h1>JavaScript事件基础</h1><h3>event.target VS event.currentTarget</h3>
+<ul>
+<li>两者都是只读属性</li>
+<li>event.target。触发事件的元素，可以用来实现<code>事件委托</code>。</li>
+<li>event.currentTarget。绑定事件的元素，这在多个元素绑定同一个事件时尤其有用</li>
+<li>当事件处理函数是在冒泡或者捕获阶段触发时，<code>event.target</code> 和 <code>event.currentTarget</code> 不同。只有当绑定和触发都是同一个元素时，两者才相同</li>
+</ul>
+<pre><code class="language-html">&lt;body&gt;
+  &lt;div id=&quot;root&quot;&gt;
+    &lt;div id=&quot;parent&quot; &gt;
+      &lt;button id=&quot;child&quot;&gt;事件执行&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    const root = document.getElementById('root')
+    const parent = document.getElementById('parent')
+    const child = document.getElementById('child')
+
+    // 点击按钮，冒泡阶段触发
+    parent.addEventListener('click', (e) =&gt; {
+        console.log('parent监听click事件', e.target) // child。触发事件的是child
+        console.log('parent监听click事件', e.currentTarget) // parent。绑定事件的是parent
+    })
+    // 点击按钮，冒泡阶段触发
+    child.addEventListener('click', (e) =&gt; {
+        console.log('child监听click事件', e.target) // child。触发事件的是child
+        console.log('child监听click事件', e.currentTarget) // child。绑定事件的是child
+    })
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<h3>事件冒泡 VS 事件捕获</h3>
+<ul>
+<li>事件捕获</li>
+<li>事件目标</li>
+<li>事件冒泡</li>
+<li>事件委托。react合成事件就是基于事件委托</li>
+<li>先绑定先执行</li>
+</ul>
+<p>先捕获后冒泡</p>
+<pre><code class="language-js">target.addEventListener(type, listener, useCapture); // useCapture 为true则表示捕获阶段触发
+// 或者
+target.addEventListener(type, listener, { capture }); // captrue为true则表示捕获阶段触发
+</code></pre>
+<h3>stopPropagation VS stopImmediatePropagation</h3>
+<ul>
+<li>stopImmediatePropagation不仅阻止事件向上冒泡，还阻止当前元素其余的事件监听器继续执行</li>
+<li>stopPropagation只会阻止向上冒泡</li>
+</ul>
+<p>在下面的demo中，如果调用<code>e.stopPropagation()</code>，那么打印为：<br>
+parent 捕获事件<br>
+child 捕获事件<br>
+child 冒泡事件 1<br>
+child 冒泡事件 2<br>
+child 冒泡事件 3</p>
+<p>如果调用<code>e.stopImmediatePropagation()</code>，那么打印为：<br>
+parent 捕获事件<br>
+child 捕获事件<br>
+child 冒泡事件 1<br>
+child 冒泡事件 2</p>
+<pre><code class="language-html">&lt;body&gt;
+  &lt;div id=&quot;root&quot;&gt;
+    &lt;div id=&quot;parent&quot; &gt;
+      &lt;button id=&quot;child&quot;&gt;事件执行&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    const root = document.getElementById('root')
+    const parent = document.getElementById('parent')
+    const child = document.getElementById('child')
+
+    parent.addEventListener('click', e =&gt; {
+      console.log('parent 冒泡事件')
+    })
+    parent.addEventListener('click', e =&gt; {
+      console.log('parent 捕获事件')
+    }, true)
+
+    child.addEventListener('click', e =&gt; {
+      console.log('child 冒泡事件 1')
+    })
+    child.addEventListener('click', e =&gt; {
+      // e.stopPropagation()
+    //   e.stopImmediatePropagation()
+      console.log('child 冒泡事件 2')
+    })
+    child.addEventListener('click', e =&gt; {
+      console.log('child 冒泡事件 3')
+    })
+
+    child.addEventListener('click', e =&gt; {
+      console.log('child 捕获事件')
+    }, true)
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<h3>事件委托(事件代理)</h3>
+<p>事件委托本质上就是将事件绑定到特定的容器上，而不用每个元素都绑定一次。</p>
+<p>下面的demo中，使用<code>onClick</code>注册冒泡事件，<code>onClickCapture</code>注册捕获事件。为提高性能，节省内存，我们没有将这些事件各自绑定到<code>parent</code>元素或者<code>child</code>元素中，而是给它们添加一个<code>props</code>属性。</p>
+<pre><code class="language-html">&lt;body&gt;
+  &lt;div id=&quot;root&quot;&gt;
+    &lt;div id=&quot;parent&quot; &gt;
+      &lt;button id=&quot;child&quot;&gt;事件执行&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    const root = document.getElementById('root')
+    const parent = document.getElementById('parent')
+    const child = document.getElementById('child')
+    parent.props = {
+      onClick: () =&gt; { console.log('parent 冒泡事件') },
+      onClickCapture: () =&gt; { console.log('parent 捕获事件')}
+    }
+    child.props = {
+      onClick: () =&gt; { console.log('child 冒泡事件') },
+      onClickCapture: () =&gt; { console.log('child 捕获事件')}
+    }
+    // 在容器root的冒泡阶段注册代理事件，并在其中模拟捕获和冒泡阶段的事件执行顺序
+    root.addEventListener('click', e =&gt; {
+      const path = e.path
+      // 先执行捕获阶段事件
+      for(let i = path.length - 1; i &gt;= 0; i-- ){
+        const props = path[i].props || {}
+        const handler = props.onClickCapture;
+        handler &amp;&amp; handler()
+      }
+      
+      // 后冒泡阶段
+      for(let i = 0; i &lt; path.length; i++){
+        const props = path[i].props || {}
+        const handler = props.onClick;
+        handler &amp;&amp; handler()
+      }
+    })
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<p>上面的例子是在容器<code>root</code>的冒泡阶段注册代理事件，如果元素绑定了原生的事件，那么<code>props</code>中的事件都在原生的事件(包括捕获和冒泡)执行完后才执行，比如下面的例子</p>
+<pre><code class="language-html">&lt;body&gt;
+  &lt;div id=&quot;root&quot;&gt;
+    &lt;div id=&quot;parent&quot; &gt;
+      &lt;button id=&quot;child&quot;&gt;事件执行&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    const root = document.getElementById('root')
+    const parent = document.getElementById('parent')
+    const child = document.getElementById('child')
+    parent.props = {
+      onClick: () =&gt; { console.log('parent 冒泡事件') },
+      onClickCapture: () =&gt; { console.log('parent 捕获事件')}
+    }
+    child.props = {
+      onClick: () =&gt; { console.log('child 冒泡事件') },
+      onClickCapture: () =&gt; { console.log('child 捕获事件')}
+    }
+    root.addEventListener('click', e =&gt; {
+      const path = e.path
+      // 先执行捕获阶段事件
+      for(let i = path.length - 1; i &gt;= 0; i-- ){
+        const props = path[i].props || {}
+        const handler = props.onClickCapture;
+        handler &amp;&amp; handler()
+      }
+      
+      // 后冒泡阶段
+      for(let i = 0; i &lt; path.length; i++){
+        const props = path[i].props || {}
+        const handler = props.onClick;
+        handler &amp;&amp; handler()
+      }
+    })
+
+    parent.addEventListener('click', () =&gt; {
+      console.log('parent 原生 冒泡事件')
+    })
+    parent.addEventListener('click', () =&gt; {
+      console.log('parent 原生 捕获事件')
+    }, true)
+
+    child.addEventListener('click', () =&gt; {
+      console.log('child 原生 冒泡事件')
+    })
+
+    child.addEventListener('click', () =&gt; {
+      console.log('child 原生 捕获事件')
+    }, true)
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<h3>props捕获和冒泡事件分开执行</h3>
+<p>在容器<code>root</code> 的冒泡阶段执行 <code>props</code> 的冒泡事件。在容器<code>root</code> 的捕获阶段执行 <code>props</code> 的捕获事件</p>
+<pre><code class="language-html">&lt;body&gt;
+  &lt;div id=&quot;root&quot;&gt;
+    &lt;div id=&quot;parent&quot; &gt;
+      &lt;button id=&quot;child&quot;&gt;事件执行&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    const root = document.getElementById('root')
+    const parent = document.getElementById('parent')
+    const child = document.getElementById('child')
+    parent.props = {
+      onClick: () =&gt; { console.log('parent 冒泡事件') },
+      onClickCapture: () =&gt; { console.log('parent 捕获事件')}
+    }
+    child.props = {
+      onClick: () =&gt; { console.log('child 冒泡事件') },
+      onClickCapture: () =&gt; { console.log('child 捕获事件')}
+    }
+    root.addEventListener('click', e =&gt; {
+      const path = e.path
+      for(let i = 0; i &lt; path.length; i++){
+        const props = path[i].props || {}
+        const handler = props.onClick;
+        handler &amp;&amp; handler()
+      }
+    })
+
+    root.addEventListener('click', e =&gt; {
+      const path = e.path
+      for(let i = path.length - 1; i &gt;= 0; i-- ){
+        const props = path[i].props || {}
+        const handler = props.onClickCapture;
+        handler &amp;&amp; handler()
+      }
+    }, true)
+
+    parent.addEventListener('click', () =&gt; {
+      console.log('parent 原生 冒泡事件')
+    })
+    parent.addEventListener('click', () =&gt; {
+      console.log('parent 原生 捕获事件')
+    }, true)
+
+    child.addEventListener('click', () =&gt; {
+      console.log('child 原生 冒泡事件')
+    })
+
+    child.addEventListener('click', () =&gt; {
+      console.log('child 原生 捕获事件')
+    }, true)
+  &lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+
+<h1>dom-diff所有场景</h1><h2>单节点</h2>
+<p>单节点指的是更新后的元素只有一个的场景</p>
+<h3>多节点变单节点，key 和 type 都相同</h3>
+<p>多节点变单节点，key 和 type 都相同，则可以复用</p>
+<pre><code class="language-js">// 更新前
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B&lt;/li&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C&lt;/li&gt;
+&lt;/ul&gt;
+// 更新后
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>这里 <code>li#B</code> 可以复用旧的节点，其余节点全部删除</p>
+<h3>多节点变单节点，key 相同 type 不同，则不能复用</h3>
+<pre><code class="language-js">// 更新前
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B&lt;/li&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C&lt;/li&gt;
+&lt;/ul&gt;
+// 更新后
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;p key=&quot;B&quot; id=&quot;B&quot;&gt;B&lt;/p&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>将旧节点<code>li#A</code>、<code>li#B</code>、<code>li#C</code>全部删除，为 <code>p#B</code> 创建新的 fiber 节点</p>
+<h2>多节点</h2>
+<p>多节点指的是更新后的元素有多个的场景。在对多节点 dom diff 过程中，React 首先采用一轮 for 循环同时遍历新旧节点，如果遇到 key 不同的节点，则直接退出当前 for 循环，并将剩下的 fiber 节点存入 map 中，然后继续遍历新的元素，从 map 中查找旧的 fiber 节点，看看是否可以复用。</p>
+<p>以下面的 demo 为例：</p>
+<pre><code class="language-js">// 更新前
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B&lt;/li&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C&lt;/li&gt;
+  &lt;li key=&quot;D&quot; id=&quot;D&quot;&gt;D&lt;/li&gt;
+  &lt;li key=&quot;E&quot; id=&quot;E&quot;&gt;E&lt;/li&gt;
+  &lt;li key=&quot;F&quot; id=&quot;F&quot;&gt;F&lt;/li&gt;
+&lt;/ul&gt;
+// 更新后
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A&lt;/li&gt;
+  &lt;li key=&quot;B2&quot; id=&quot;B2&quot;&gt;B2&lt;/li&gt;
+  &lt;li key=&quot;E&quot; id=&quot;E&quot;&gt;E&lt;/li&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C&lt;/li&gt;
+  &lt;li key=&quot;F&quot; id=&quot;F&quot;&gt;F&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<ul>
+<li>第一轮 for 循环同时遍历旧的 fiber 节点和新的 element 节点，当比较到<code>li#B</code> 和<code>li#B2</code>时，发现两者<code>key</code>不同，则直接结束当前 for 循环。</li>
+<li>将剩下的 fiber 节点存入 map 中，以 key 做为键(如果 key 为 null，则以 index 做为键)</li>
+</ul>
+<pre><code class="language-js">const existingChildren = {
+  B: fiberB,
+  C: fiberC,
+  D: fiberD,
+  E: fiberE,
+  F: fiberF,
+};
+</code></pre>
+<ul>
+<li>
+<p>从<code>li#B2</code>开始继续遍历剩下的新的 element，在<code>existingChildren</code>中查找是否存在<code>key</code>和<code>type</code>都相同的 fiber 节点，如果存在，则复用 fiber 节点，并将 fiber 节点从<code>existingChildren</code>删除</p>
+</li>
+<li>
+<p>新的 element 遍历完成后，如果<code>existingChildren</code>还有没复用的 fiber 节点，则将<code>existingChildren</code>剩下的全部删除</p>
+</li>
+</ul>
+<h3>新旧节点数量相同，key 和 type 都相同</h3>
+<p>这种场景下全部可以复用旧的节点</p>
+<pre><code class="language-js">// 更新前
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B&lt;/li&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C&lt;/li&gt;
+&lt;/ul&gt;
+// 更新后
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A2&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B2&lt;/li&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C2&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<h3>新旧节点数量相同，有的 type 不同</h3>
+<p>删除 <code>li#B</code> 节点，为 <code>p#p</code> 创建新的 fiber 节点，同时继续遍历后面的节点。</p>
+<p>除了 <code>li#B</code> 不能复用外，其余节点均可以复用</p>
+<pre><code class="language-js">// 更新前
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B&lt;/li&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C&lt;/li&gt;
+&lt;/ul&gt;
+// 更新后
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A2&lt;/li&gt;
+  &lt;p key=&quot;B&quot; id=&quot;p&quot;&gt;p&lt;/p&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C2&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p><strong>type 不同并不会提前退出循环，而是会继续遍历下面的节点</strong></p>
+<h3>新节点变少，同时 key 和 type 均相同</h3>
+<pre><code class="language-js">// 更新前
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B&lt;/li&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C&lt;/li&gt;
+  &lt;li key=&quot;D&quot; id=&quot;D&quot;&gt;D&lt;/li&gt;
+&lt;/ul&gt;
+// 更新后
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A2&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B2&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>这种情况下，新的元素先遍历完成，<strong>第一轮 for 循环结束</strong>，由于<code>key</code>和<code>type</code>都相同，因此可以复用 <code>li#A</code>以及<code>li#B</code>。</p>
+<p>由于旧的 fiber 节点还没遍历完，因此继续遍历剩下的<code>li#C</code>和<code>li#D</code>节点，并全部标记为删除</p>
+<h3>新节点增加，同时 key 和 type 均相同</h3>
+<pre><code class="language-js">// 更新前
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B&lt;/li&gt;
+&lt;/ul&gt;
+// 更新后
+&lt;ul key=&quot;ul&quot;&gt;
+  &lt;li key=&quot;A&quot; id=&quot;A&quot;&gt;A2&lt;/li&gt;
+  &lt;li key=&quot;B&quot; id=&quot;B&quot;&gt;B2&lt;/li&gt;
+  &lt;li key=&quot;C&quot; id=&quot;C&quot;&gt;C2&lt;/li&gt;
+  &lt;li key=&quot;D&quot; id=&quot;D&quot;&gt;D2&lt;/li&gt;
+  &lt;li key=&quot;E&quot; id=&quot;E&quot;&gt;E2&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>这种情况下，旧的 fiber 节点先遍历完成，<strong>第一轮 for 循环结束</strong>，由于<code>key</code>和<code>type</code>都相同，因此可以复用 <code>li#A</code>以及<code>li#B</code>。</p>
+<p>同时，由于新的元素 <code>C</code>、 <code>D</code>、 <code>E</code>还没遍历完成，因此继续遍历这几个元素，并为他们创建新的 fiber 节点</p>
+
+<h1>dom-diff算法简介</h1><h3>React17 中 DOM DIFF 算法动机</h3>
+<p>在 React17+中，DOM DIFF 就是根据当前显示的页面对应的 Fiber 树和 <code>render</code> 函数生成的最新的 <code>element tree</code> 对比生成新的 Fiber 树的过程。</p>
+<ul>
+<li>将一棵树转换成另一棵树的最小操作次数，即使使用最优的算法，该算法的复杂程度仍为 O(n^3 )，其中 n 是树中元素的数量。这个开销实在是太过高昂。</li>
+</ul>
+<p>于是 React 在以下两个假设的基础之上提出了一套 O(n)的启发式算法：</p>
+<ul>
+<li>两个不同类型的元素会产生出不同的树</li>
+<li>开发者可以通过设置 key 属性，来告知渲染哪些子元素在不同的渲染下可以保存不变</li>
+</ul>
+<h3>Diffing 算法</h3>
+<ul>
+<li>如果元素类型不同，则直接拆卸原有的树并重新构建新的树</li>
+<li>如果两个元素类型相同，则保留 DOM 节点，仅比对及更新有改变的属性</li>
+<li>组件元素类型相同时，组件实例保持不变</li>
+</ul>
+<p><strong>在整个 diffing 过程中，同时使用 type 和 key 判断是否复用，首先判断 key，其次判断 type</strong></p>
+<hr>
+<p>在子元素列表末尾新增元素时，更新开销比较小，比如：</p>
+<pre><code class="language-jsx">&lt;ul&gt;
+  &lt;li&gt;first&lt;/li&gt;
+  &lt;li&gt;second&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;first&lt;/li&gt;
+  &lt;li&gt;second&lt;/li&gt;
+  &lt;li&gt;third&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>React 会先匹配两个 <code>&lt;li&gt;first&lt;/li&gt;</code> 对应的树，然后匹配第二个元素 <code>&lt;li&gt;second&lt;/li&gt;</code> 对应的树，最后插入第三个元素的 <code>&lt;li&gt;third&lt;/li&gt;</code> 树。</p>
+<h3>为什么需要 key</h3>
+<hr>
+<p>如果只是简单的将新增元素插入到表头，那么更新开销会比较大，比如：</p>
+<pre><code class="language-jsx">&lt;ul&gt;
+  &lt;li&gt;Duke&lt;/li&gt;
+  &lt;li&gt;Villanova&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Connecticut&lt;/li&gt;
+  &lt;li&gt;Duke&lt;/li&gt;
+  &lt;li&gt;Villanova&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>React 并不会意识到应该保留 <code>&lt;li&gt;Duke&lt;/li&gt;</code> 和 <code>&lt;li&gt;Villanova&lt;/li&gt;</code>，而是会重建每一个子元素。这种情况会带来性能问题</p>
+<p>可以得知：</p>
+<p><strong>插入表尾比表头性能要好很多</strong></p>
+<p>因此我们可以使用 <code>key</code> 告诉 <code>react</code> 复用元素</p>
+<h3>单节点</h3>
+<ul>
+<li>记住这里是指 <code>render</code> 函数重新生成的 <code>element tree</code> 的子节点只有一个的情况
+单节点，
+只有 <code>type</code> 和 <code>key</code> 都相同才可以复用，否则重新创建一个新的节点</li>
+</ul>
+<p>如果新的 <code>element tree</code> 子节点只有一个元素：</p>
+<ul>
+<li>如果不存在旧的 fiber 的 DOM 节点，则重新生成新的 fiber 节点</li>
+<li>如果存在旧的 fiber 的 DOM 节点：
+<ul>
+<li>如果 key 和 type 都相同才可以复用</li>
+<li>如果 key 或者 type 不同，则给旧的 fiber 添加删除标记，并生成新的 fiber 节点</li>
+</ul>
+</li>
+</ul>
+<h4>新 <code>element tree</code> 子节点只有一个元素：第一种场景 type 不同</h4>
+<pre><code class="language-jsx">// 旧的 fiber 树
+&lt;div&gt;
+    &lt;h1 key=&quot;null&quot;&gt;h1&lt;/h1&gt;
+&lt;/div&gt;
+// 更新后的 element tree
+&lt;div&gt;
+    &lt;h2 key=&quot;null&quot;&gt;h2&lt;/h2&gt;
+&lt;/div&gt;
+</code></pre>
+<h4>新 <code>element tree</code> 子节点只有一个元素：第二种场景 多节点变为单节点</h4>
+<pre><code class="language-jsx">// 旧的 fiber 树
+&lt;div&gt;
+    &lt;h1 key=&quot;h1-key&quot;&gt;h1&lt;/h1&gt;
+    &lt;h2 key=&quot;h2-key&quot;&gt;h2&lt;/h2&gt;
+&lt;/div&gt;
+// 更新后的 element tree
+&lt;div&gt;
+    &lt;h2 key=&quot;h2-key&quot;&gt;h2&lt;/h2&gt;
+&lt;/div&gt;
+</code></pre>
+<p>首先比较 <code>key</code></p>
+<ul>
+<li><code>h2-key</code> 和 <code>h1-key</code> 不同，则 <code>h1-key</code> 标记为删除</li>
+<li>继续遍历旧的 fiber 树，<code>h2-key</code> 相同，同时 type 相同，则可以复用
+如果旧的 fiber 树中，<code>h2</code> 后面还有 <code>h3</code>，<code>h4</code>等，依然只是保留 <code>h2</code>，将其他的删除</li>
+</ul>
+<pre><code class="language-jsx">&lt;div&gt;
+    &lt;h1 key=&quot;h1-key&quot;&gt;h1&lt;/h1&gt;
+    &lt;h2 key=&quot;h2-key&quot;&gt;h2&lt;/h2&gt;
+    &lt;h3 key=&quot;h3-key&quot;&gt;h3&lt;/h3&gt;
+    &lt;h4 key=&quot;h4-key&quot;&gt;h4&lt;/h4&gt;
+&lt;/div&gt;
+// 更新后的 element tree
+&lt;div&gt;
+    &lt;h2 key=&quot;h2-key&quot;&gt;h2&lt;/h2&gt;
+&lt;/div&gt;
+</code></pre>
+<p>当遍历到 <code>h2-key</code> 时，发现 <code>key</code> 和 <code>type</code> 都相同，因此 <code>h2</code> 可以复用，此时已经没有必要再继续比较接下来的节点，因此 <code>h3</code> 和 <code>h4</code> 都标记为删除</p>
+<h4>新 <code>element tree</code> 子节点只有一个元素：第三种情形如果 <code>key</code> 相同， <code>type</code> 不同：</h4>
+<pre><code class="language-jsx">&lt;div&gt;
+    &lt;h1 key=&quot;h1-key&quot;&gt;h1&lt;/h1&gt;
+    &lt;p key=&quot;h2-key&quot;&gt;h2&lt;/p&gt;
+    &lt;h3 key=&quot;h3-key&quot;&gt;h3&lt;/h3&gt;
+    &lt;h4 key=&quot;h4-key&quot;&gt;h4&lt;/h4&gt;
+&lt;/div&gt;
+// 更新后的 element tree
+&lt;div&gt;
+    &lt;h2 key=&quot;h2-key&quot;&gt;h2&lt;/h2&gt;
+&lt;/div&gt;
+</code></pre>
+<ul>
+<li>比较 <code>h1-key</code>，发现 <code>key</code> 不同，则 <code>h1</code> 标记为删除，继续遍历</li>
+<li>比较 <code>h2-key</code> 发现 <code>key</code> 相同，比较 <code>type</code> 发现不同，则标记 <code>p</code> 删除，由于已经找到相同的 <code>key</code>，根据 react 的假设，已经没有必要再继续遍历下去了，因此 <code>h3</code> 和 <code>h4</code> 标记为删除。重新创建一个 <code>h2</code> 节点</li>
+</ul>
+<h3>多节点</h3>
+<p>注意，这里是指 <code>render</code> 函数重新生成的 <code>element tree</code> 的子节点有多个的情况
+同理，多节点的情况，也是只有 <code>type</code> 和 <code>key</code> 都相同，才能复用，否则重新创建节点</p>
+<ul>
+<li>节点有可能更新、删除、新增</li>
+<li>多节点的时候会经历二轮遍历</li>
+<li>第一轮遍历主要是处理节点的更新，更新包括属性和类型的更新，第二轮遍历处理新增、删除、移动的情况</li>
+<li>移动时的原则是尽量少量的移动，如果必须有一个要动，新地位高的不动，新地位低的动</li>
+</ul>
+<h4>多节点第一次遍历第一种情况：全部子节点可复用</h4>
+<p>全部子节点都可以复用，只需要更新即可，这种只需要一轮循环</p>
+<pre><code class="language-jsx">&lt;ul&gt;
+    &lt;li key=&quot;A&quot;&gt;A&lt;/li&gt;
+    &lt;li key=&quot;B&quot;&gt;B&lt;/li&gt;
+    &lt;li key=&quot;C&quot;&gt;C&lt;/li&gt;
+    &lt;li key=&quot;D&quot;&gt;D&lt;/li&gt;
+&lt;/ul&gt;
+
+// 更新后：
+&lt;ul&gt;
+    &lt;li key=&quot;A&quot;&gt;A-new&lt;/li&gt;
+    &lt;li key=&quot;B&quot;&gt;B-new&lt;/li&gt;
+    &lt;li key=&quot;C&quot;&gt;C-new&lt;/li&gt;
+    &lt;li key=&quot;D&quot;&gt;D-new&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<h4>多节点第一次遍历第二种情况：key 相同，type 不同，不退出第一轮</h4>
+<p>在这种情况中，由于 <code>key</code> 相同而 <code>type</code> 不同导致不可复用，则将 旧的 fiber 节点标记为删除，并继续遍历，此时不会跳出第一轮循环</p>
+<pre><code class="language-jsx">&lt;ul&gt;
+    &lt;li key=&quot;A-key&quot;&gt;A&lt;/li&gt;
+    &lt;li key=&quot;B-key&quot;&gt;B&lt;/li&gt;
+    &lt;li key=&quot;C-key&quot;&gt;C&lt;/li&gt;
+    &lt;li key=&quot;D-key&quot;&gt;D&lt;/li&gt;
+&lt;/ul&gt;
+
+// 更新后：
+&lt;ul&gt;
+    &lt;div key=&quot;A-key&quot;&gt;A-new&lt;/div&gt;
+    &lt;li key=&quot;B-key&quot;&gt;B-new&lt;/li&gt;
+    &lt;li key=&quot;C-key&quot;&gt;C-new&lt;/li&gt;
+    &lt;li key=&quot;D-key&quot;&gt;D-new&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>首先判断 <code>key</code></p>
+<ul>
+<li><code>A-key</code> 相同，但是 <code>type</code> 不同，因此将 <code>&lt;li key=&quot;A-key&quot;&gt;A&lt;/li&gt;</code> 标记为删除，重新创建 <code>&lt;div key=&quot;A-key&quot;&gt;A-new&lt;/div&gt;</code> 节点</li>
+<li>由于其余节点的 <code>key</code> 和 <code>type</code> 都相同，因此都可以复用</li>
+</ul>
+<h4>多节点第一次遍历第三种情况：key 不同，退出第一轮循环</h4>
+<p>如果第一轮遍历的时候，发现 key 不一样，则立刻跳出第一轮循环。
+key 不一样，说明可能有位置变化</p>
+<pre><code class="language-jsx">&lt;ul&gt;
+    &lt;li key=&quot;A-key&quot;&gt;A&lt;/li&gt;          // oldIndex 为0
+    &lt;li key=&quot;B-key&quot;&gt;B&lt;/li&gt;          // oldIndex 为1
+    &lt;li key=&quot;C-key&quot;&gt;C&lt;/li&gt;          // oldIndex 为2
+    &lt;li key=&quot;D-key&quot;&gt;D&lt;/li&gt;          // oldIndex 为3
+    &lt;li key=&quot;E-key&quot;&gt;E&lt;/li&gt;          // oldIndex 为4
+    &lt;li key=&quot;F-key&quot;&gt;F&lt;/li&gt;          // oldIndex 为5
+&lt;/ul&gt;
+
+// 更新后：
+&lt;ul&gt;
+    &lt;li key=&quot;A-key&quot;&gt;A-new&lt;/li&gt;
+    &lt;li key=&quot;C-key&quot;&gt;C-new&lt;/li&gt;
+    &lt;li key=&quot;E-key&quot;&gt;E-new&lt;/li&gt;
+    &lt;li key=&quot;B-key&quot;&gt;B-new&lt;/li&gt;
+    &lt;li key=&quot;G-key&quot;&gt;G-new&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<hr>
+<p>old的 key 顺序ABCDEF
+new 的 key 顺序ACEBG
+第一轮循环：</p>
+<ul>
+<li><code>A-key</code> 相同并且 <code>type</code> 相同，能复用，更新 A 就可以</li>
+<li><code>B-key</code> 和 <code>C-key</code> 不同，立即退出第一轮循环，</li>
+</ul>
+<hr>
+<p>old的 key 顺序ABCDEF
+new 的 key 顺序ACEBG
+第二轮循环
+初始化 <code>lastPlacedIndex</code> 为旧的 fiber <code>A-key</code>的索引。
+<code>lastPlacedIndex</code> 表示最近的一个可复用的节点在 旧 fiber 节点中的位置索引</p>
+<ul>
+<li>从 <code>B-key</code> 节点开始遍历旧的 fiber 节点，并构造一个 map：</li>
+</ul>
+<pre><code class="language-js">const fiberMap = { &quot;B-key&quot;: B, &quot;C-key&quot;: C, &quot;D-key&quot;: D, &quot;E-key&quot;: E, &quot;F-key&quot;: F };
+</code></pre>
+<p><code>fiberMap</code> 的键值是元素的 <code>key</code>，值对应元素的 <code>fiber</code> 节点</p>
+<ul>
+<li>继续遍历剩余的 新的子节点</li>
+<li><code>C-key</code> 在 <code>fiberMap</code> 中存在，并且旧的 <code>C-key</code> 节点的 <code>oldIndex = 2 大于 lastPlacedIndex = 0</code>，因此 <code>C-key</code> 不需要移动，标记更新即可。将 <code>lastPlacedIndex</code> 设置为 <code>C-key</code> 的 <code>oldIndex</code>，此时 <code>lastPlacedIndex = 2</code>。同时将 <code>C-key</code> 从 <code>fiberMap</code> 中删除，最终得到</li>
+</ul>
+<pre><code class="language-jsx">lastPlacedIndex = 2;
+fiberMap = { &quot;B-key&quot;: B, &quot;D-key&quot;: D, &quot;E-key&quot;: E, &quot;F-key&quot;: F };
+</code></pre>
+<ul>
+<li><code>B-key</code> 在 <code>fiberMap</code> 中存在，<strong>需要注意，由于 <code>B-key</code> 的 <code>oldIndex</code> 小于 <code>lastPlacedIndex</code>，因此这个节点需要标记为移动并且更新</strong>，最终得到：</li>
+</ul>
+<pre><code class="language-jsx">lastPlacedIndex = 4; // lastPlacedIndex不变
+fiberMap = { &quot;D-key&quot;: D, &quot;F-key&quot;: F }; // 从 fiberMap中删除 `B-key`
+</code></pre>
+<ul>
+<li><code>G-key</code> 在 <code>fiberMap</code> 中不存在，因此这是一个新增的节点</li>
+<li>到此，新的节点已经遍历完成，将 <code>fiberMap</code> 中剩余的旧节点都标记为删除</li>
+<li>最后，在 commit 阶段，先删除 D 和 F，再更新 A、C 和 E，然后移动并更新 B，最后插入 G</li>
+</ul>
+<h4>第四种情况：极端场景，前面的节点都需要移动</h4>
+<p>old的 key 顺序ABCD
+new 的 key 顺序DABC</p>
+<p>第一轮遍历：</p>
+<ul>
+<li><code>D-key</code> 和 <code>A-key</code> 不同，<code>key</code> 改变了，不能复用，跳出第一轮循环
+第二轮循环
+初始化 <code>lastPlacedIndex = 0</code>，并创建一个旧的 fiber 节点的映射</li>
+</ul>
+<pre><code class="language-js">const fiberMap = { &quot;A-key&quot;: A, &quot;B-key&quot;: B, &quot;C-key&quot;: C, &quot;D-key&quot;: D };
+</code></pre>
+<ul>
+<li><code>D-key</code> 在 <code>fiberMap</code> 中存在，并且 <code>oldIndex &gt; lastPlacedIndex</code> ，因此可以复用并且标记为更新，不需要移动</li>
+</ul>
+<pre><code class="language-js">lastPlacedIndex = 3; // 将 lastPlacedIndex 设置为 D-key 的 oldIndex
+const fiberMap = { &quot;A-key&quot;: A, &quot;B-key&quot;: B, &quot;C-key&quot;: C }; // 将 D-key 从 fiberMap 中删除
+</code></pre>
+<ul>
+<li>继续遍历接下来的节点，可想而知，由于 <code>lastPlacedIndex</code> 都大于这些节点的 <code>oldIndex</code>，因此这些节点都需要标记为移动并且更新</li>
+</ul>
+<p>从中可以看出，这种更新，react 并不会仅仅将 D-key 节点移动到前面，而是将 A-key，B-key，C-key 都移动到 D-key 后面。</p>
+<p><strong>因此我们需要避免将节点从后面移动到前面的操作</strong></p>
+
+<h1>how_batchedUpdates_work</h1><blockquote>
+<p>React 更新过程相关的代码都在 ReactFiberWorkLoop.js 文件中</p>
+</blockquote>
+<h2>批处理（异步更新）机制简述</h2>
+<p>在 <code>React</code> 源码中，通过全局变量 <code>executionContext</code> 控制 <code>React</code> 执行上下文，指示 <code>React</code> 开启同步或者异步更新。
+<code>executionContext</code> 一开始被初始化为 <code>NoContext</code>，因此 <code>React</code> 默认是同步更新的。</p>
+<hr>
+<p>当我们在合成事件中调用 <code>setState</code> 时：</p>
+<pre><code class="language-jsx">const onBtnClick = () =&gt; {
+  debugger;
+  setCount(1);
+  setCount(2);
+};
+&lt;button onClick={onBtnClick}&gt;{count}&lt;/button&gt;;
+</code></pre>
+<p>实际上合成事件会调用 <code>batchedEventUpdates(onBtnClick)</code>，将我们的函数 <code>onBtnClick</code> 拦截一层。<code>batchedEventUpdates</code> 实现如下：</p>
+<pre><code class="language-js">function batchedUpdates(fn, a) {
+  var prevExecutionContext = executionContext; // 保存原来的值
+  executionContext |= EventContext;
+  try {
+    return fn(a); // 调用我们的合成事件逻辑onBtnClick
+  } finally {
+    executionContext = prevExecutionContext; // 函数执行完成恢复成原来的值
+
+    if (executionContext === NoContext) {
+      // Flush the immediate callbacks that were scheduled during this batch
+      resetRenderTimer();
+      flushSyncCallbackQueue();
+    }
+  }
+}
+
+const batchedEventUpdates = batchedUpdates;
+</code></pre>
+<p>可以看出该方法在执行时会更改 <code>executionContext</code> 指示 <code>React</code> 异步更新。
+这也是为什么我们在合成事件中多次调用 <code>setState</code>，而 <code>React</code> 只会更新一次的原因。</p>
+<p>函数执行完成，<code>executionContext</code> 又会恢复成原来的值。如果我们的 <code>setState</code> 逻辑是在 <code>setTimeout</code> 中，当合成事件执行完毕，此时 <code>executionContext</code> 恢复成原来的值， <code>setTimeout</code> 中的 <code>setState</code> 就变成了同步更新</p>
+<hr>
+<p>executionContext |= EventContext; 的作用是将 EventContext 中的标志位合并到 executionContext 中的标志位中</p>
+<hr>
+<p>在 <code>React17</code> 版本中提供了一个 <code>unstable_batchedUpdates</code> API，如果我们希望在 <code>setTimeout</code> 等异步任务中开启批量更新，则可以使用这个方法包裹一下我们的业务代码。</p>
+<pre><code class="language-js">exports.unstable_batchedUpdates = batchedUpdates;
+</code></pre>
+<h2>更新队列 syncQueue</h2>
+<p><code>React</code> 使用 <code>syncQueue</code> 维护一个更新队列。
+<code>syncQueue</code> 数组存的是 <code>performSyncWorkOnRoot</code>，
+<code>performSyncWorkOnRoot</code> 这个方法从根节点开始更新</p>
+<pre><code class="language-js">function scheduleSyncCallback(callback) {
+  if (syncQueue === null) {
+    syncQueue = [callback];
+    // 开始调度，其实这部分逻辑相当于queueMicrotask(flushSyncCallbackQueueImpl)，让更新在
+    // 下一个微任务中执行
+    immediateQueueCallbackNode = Scheduler_scheduleCallback(
+      Scheduler_ImmediatePriority,
+      flushSyncCallbackQueueImpl
+    );
+  } else {
+    // 注意这里不需要再开启一个新的微任务！！
+    syncQueue.push(callback);
+  }
+
+  return fakeCallbackNode;
+}
+// flushSyncCallbackQueueImpl简单实现如下：
+function flushSyncCallbackQueueImpl() {
+  syncQueue.forEach((cb) =&gt; cb());
+  syncQueue = null;
+}
+</code></pre>
+<p>在 <code>scheduleSyncCallback</code> 函数中如果 <code>syncQueue</code> 为 <code>null</code>，则初始化一个数组，开启一个微任务调度。而如果 <code>syncQueue</code> 不为 <code>null</code>，则添加进更新队列，此时不需要再重新开启一个微任务调度</p>
+<hr>
+<p>如果 <code>executionContext === NoContext</code> 则直接刷新 <code>syncQueue</code></p>
+<pre><code class="language-js">function scheduleUpdateOnFiber(fiber, lane, eventTime) {
+  // 省略前面的代码
+  if (executionContext === NoContext) {
+    resetRenderTimer();
+    flushSyncCallbackQueue();
+  }
+  // 省略后面的代码
+}
+</code></pre>
+<h2>批量更新场景</h2>
+<p>在合成事件等 <code>React</code> 能够接管的场景中，<code>setState</code> 是<strong>批量更新</strong>的。点击按钮，查看控制台可以发现只打印了一次：</p>
+<p>render====== 2</p>
+<pre><code class="language-jsx">const Counter = () =&gt; {
+  const [count, setCount] = useReducer(reducer, 0);
+  console.log(&quot;render======&quot;, count);
+  return (
+    &lt;button
+      onClick={() =&gt; {
+        debugger;
+        setCount(1);
+        setCount(2);
+      }}
+    &gt;
+      {count}
+    &lt;/button&gt;
+  );
+};
+</code></pre>
+<h2>同步更新场景</h2>
+<p>在 <code>setTimeout</code>、<code>Promise回调</code> 等 <code>异步任务</code> 场景中，<code>setState</code> 是<strong>同步更新</strong>的。点击按钮，查看控制台可以发现打印了两句话：</p>
+<p>render====== 1
+render====== 2</p>
+<pre><code class="language-jsx">const Counter = () =&gt; {
+  const [count, setCount] = useReducer(reducer, 0);
+  console.log(&quot;render======&quot;, count);
+  return (
+    &lt;button
+      onClick={() =&gt; {
+        setTimeout(() =&gt; {
+          debugger;
+          setCount(1);
+          setCount(2);
+        }, 0);
+      }}
+    &gt;
+      {count}
+    &lt;/button&gt;
+  );
+};
+</code></pre>
+<h3>批量更新机制主流程源码</h3>
+<p>在 <code>onClick</code> 函数里加一行 <code>debugger</code>。点击按钮，开始 debug。首先执行的是 <code>dispatchAction</code> 函数，但是如果我们追溯函数调用栈，可以发现实际上是会先执行合成事件相关的函数：</p>
+<p><img src="https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/batchupdate-01.jpg" alt="image"></p>
+<p>合成事件调用了 <code>batchedEventUpdates</code>，此时 <code>executionContext</code> 已经被设置为<strong>批量更新</strong>了
+回到 <code>dispatchAction</code> 方法中，这个方法主要是构造更新队列，然后调用 <code>scheduleUpdateOnFiber</code> 开始调度更新，</p>
+<hr>
+<p>回到 <code>dispatchAction</code> 方法中，这个方法主要是构造更新队列，然后调用 <code>scheduleUpdateOnFiber</code> 开始调度更新，
+异步 or 同步更新的逻辑主要在这个函数的流程中！！<code>scheduleUpdateOnFiber</code> 主要流程如下：</p>
+<pre><code class="language-js">const SyncLane = 1;
+const SyncLanePriority = 15;
+const NoContext = 0;
+let executionContext = NoContext;
+let syncQueue = [];
+const scheduleUpdateOnFiber = (fiber, lane, eventTime) =&gt; {
+  const root = markUpdateLaneFromFiberToRoot(fiber);
+  if (lane === SyncLane) {
+    // 开始创建一个任务，从根节点开始进行更新
+    ensureRootIsScheduled(root);
+    // 如果当前的executionContext执行上下文环境是NoContext(非批量)
+    if (executionContext === NoContext) {
+      // 需要注意，我们在ensureRootIsScheduled函数中，将flushSyncCallbackQueue放在了微任务中去执行，
+      // 但是如果executionContext是同步更新的话，这里会直接调用flushSyncCallbackQueue开始更新任务，更新完成后
+      // flushSyncCallbackQueue会清空syncQueue
+
+      flushSyncCallbackQueue();
+    }
+  }
+};
+function ensureRootIsScheduled(root) {
+  const newCallbackPriority = returnNextLanesPriority();
+  const existingCallbackPriority = root.callbackPriority;
+
+  if (existingCallbackPriority === newCallbackPriority) {
+    // The priority hasn't changed. We can reuse the)
+    return;
+  }
+
+  if (newCallbackPriority === SyncLanePriority) {
+    newCallbackNode = scheduleSyncCallback(
+      performSyncWorkOnRoot.bind(null, root)
+    );
+  }
+  root.callbackPriority = newCallbackPriority;
+}
+
+// 其实就是把performSyncWorkOnRoot函数添加到队列里，在下一个微任务里面执行
+function scheduleSyncCallback(callback) {
+  if (syncQueue === null) {
+    syncQueue = [callback]; // Flush the queue in the next tick, at the earliest.
+
+    immediateQueueCallbackNode = Scheduler_scheduleCallback(
+      Scheduler_ImmediatePriority,
+      flushSyncCallbackQueue
+    );
+  } else {
+    syncQueue.push(callback);
+  }
+}
+// flushSyncCallbackQueue简单实现如下：
+function flushSyncCallbackQueue() {
+  syncQueue.forEach((cb) =&gt; cb());
+  syncQueue = null;
+}
+</code></pre>
+<p><code>performSyncWorkOnRoot</code> 从根节点开始更新，这个不属于本节内容。
+当我们点击按钮，从合成事件派发到 <code>React</code> 从当前 <code>fiber</code> 节点开始调度更新，并且决定是异步或者同步更新的主要流程如下图：</p>
+<p><img src="https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/batchupdate-03.jpg" alt="image"></p>
+
+<h1>how_useReducer_work</h1><h3>前言</h3>
+<p>阅读完本章，可以收获下面几点知识</p>
+<ul>
+<li>认识什么是更新队列，什么是 hook 链表</li>
+<li>如何查看 fiber 节点中真实的 hook 链表</li>
+<li>hook 的主流程以及源码剖析</li>
+</ul>
+<p>建议在阅读主流程源码时，在主流程函数各个入口打个断点，走一遍主流程的源码会更有感觉
+本章节所有案例都基于以下示例代码：</p>
+<pre><code class="language-jsx">import React, { useReducer, useEffect, useState } from &quot;react&quot;;
+import { render } from &quot;react-dom&quot;;
+
+function reducer(state, action) {
+  return state + 1;
+}
+
+const Counter = () =&gt; {
+  const [count, setCount] = useReducer(reducer, 0);
+  return (
+    &lt;div
+      onClick={() =&gt; {
+        debugger;
+        setCount(1);
+        setCount(2);
+      }}
+    &gt;
+      {count}
+    &lt;/div&gt;
+  );
+};
+
+render(&lt;Counter /&gt;, document.getElementById(&quot;root&quot;));
+</code></pre>
+<h3>第一节 环状链表</h3>
+<p><code>React</code> 使用环状链表保存更新队列 <code>queue={ pending: null }</code>，
+queue是一个环创链表
+其中 <code>pending</code> 永远指向最后一个更新。比如多次调用 <code>setState</code> 时：</p>
+<pre><code class="language-js">const [count, setCount] = useReducer(reducer, 0);
+setCount(1); // 生成一个更新对象：update1 = { action: 1, next: update1 }
+setCount(2); // 生成一个更新对象：update2 = { action: 2, next: update1 }
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/queue-01.jpg" alt="image"></p>
+<hr>
+<p>环状链表简单实现如下，这个可以动手写一下，找找感觉</p>
+<pre><code class="language-js">const queue = { pending: null }; // queue.pending永远指向最后一个更新
+
+function dispatchAction(action) {
+  const update = { action, next: null };
+  const pending = queue.pending;
+  if (pending === null) {
+    update.next = update;
+  } else {
+    update.next = pending.next;
+    pending.next = update;
+  }
+  queue.pending = update;
+}
+
+// 队列
+dispatchAction(1);
+dispatchAction(2);
+</code></pre>
+<hr>
+<p>dispatchAction 优化前后的 state 比较</p>
+<pre><code class="language-js">import { scheduleUpdateOnFiber } from &quot;./ReactFiberWorkLoop&quot;;
+function dispatchAction(currentlyRenderingFiber, queue, action) {
+  const update = { action, next: null };
+  const pending = queue.pending;
+  if (pending === null) {
+    update.next = update;
+  } else {
+    update.next = pending.next;
+    pending.next = update;
+  }
+  queue.pending = update;
+  const lastRenderedReducer = queue.lastRenderedReducer; // 上一次的reducer
+  const lastRenderState = queue.lastRenderState; // 上一次的state
+  const eagerState = lastRenderedReducer(lastRenderState, action); // 计算新的state
+  // 如果新的state和旧的state相同，则跳过更新
+  if (Object.is(eagerState, lastRenderState)) {
+    return;
+  }
+  scheduleUpdateOnFiber(currentlyRenderingFiber);
+}
+</code></pre>
+<h3>第二节 什么是 hook 链表</h3>
+<p>假设我们有下面这段代码，<code>React</code> 每次执行到 <code>hook</code> 函数时，都会构造一个 <code>hook</code> 对象，并连接成一个链表</p>
+<pre><code class="language-js">const [count, setCount] = useReducer(reducer, 0); 
+// 构造一个hook对象 hook1 = { memoizedState: 0, queue: { pending: null }, next: hook2 }
+const [count2, setCount2] = useReducer(reducer, 1000);
+// 构造一个hook对象 hook2 = { memoizedState: 1000, queue: { pending: null }, next: hook3 }
+useEffect(() =&gt; {
+  // 构造一个hook对象，hook3 = { memoizedState: { create: callback }, next: null}
+  console.log(&quot;useEffect&quot;);
+}, []);
+</code></pre>
+<p>在 <code>hook</code> 对象中，<code>hook.memoizedState</code> 属性用于保存当前状态，比如 <code>hook1.memoizedState</code> 对应的就是 <code>count</code>。
+<code>hook1.next</code> 指向 <code>hook2</code>。<code>hook1.queue</code>保存的是调用 <code>setCount</code> 后的更新队列。</p>
+<p>每个 <code>hook</code> 都会维护自己的更新队列 <code>queue</code></p>
+<hr>
+<p><strong><em>注意！！！函数组件中，组件对应的 fiber 节点也有一个 memoizedState 属性，fiber.memoizedState 用于保存组件的 hook 链表</em></strong></p>
+<p><img src="https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-02.jpg" alt="image"></p>
+<h4>如何查看真实的 hook 链表？</h4>
+<p>这里有两种方法，一种是通过容器节点<code>root</code>，一种是在源码中打断点
+通过容器节点 <code>root</code> 查找对应的 <code>fiber</code> 节点 输入console.dir(root)</p>
+<p>另一种方法是在源码中打断点，这个需要了解源码。
+在<code>react-dom.development.js</code>中搜索<code>renderWithHooks</code>方法，</p>
+<p>在 <code>var children = Component(props, secondArg)</code> 处打一个断点，然后在它下面一行再打一个断点，等 <code>Component(props, secondArg)</code> 函数执行完成，
+则 <code>hook</code> 链表构造完成，此时可以在控制台打印<code>console.log(workInProgress)</code>即可看到当前 <code>fiber</code> 节点的信息</p>
+<p><img src="https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hook-04.jpg" alt="image"></p>
+<h3>第三节 hook 源码流程</h3>
+<p>本节开始介绍 <code>hook</code> 源码主流程。
+<code>React</code> 对于初次挂载阶段和更新阶段，<code>hook</code> 的流程处理不同。因此这里我分为三个阶段来介绍：</p>
+<ul>
+<li>初次挂载阶段。即函数组件第一次执行。</li>
+<li>触发更新阶段。比如点击按钮触发 <code>setState</code> 执行，这个阶段就是构造 <code>hook</code> 更新队列 <code>queue</code> 的阶段</li>
+<li>更新阶段。即函数组件第二次或者第 n 次执行。
+<code>React</code> 内部通过提供各个阶段的 <code>HooksDispatcher</code> 对象，抹平了 API 差异。比如 当我们调用 <code>useReducer(reducer, 0)</code> 时，我们不需要关心函数组件是第一次执行还是第 n 次执行。</li>
+</ul>
+<hr>
+<p><code>React</code> 内部通过提供各个阶段的 <code>HooksDispatcher</code> 对象，抹平了 API 差异。比如 当我们调用 <code>useReducer(reducer, 0)</code> 时，我们不需要关心函数组件是第一次执行还是第 n 次执行。</p>
+<p><code>React</code> 源码内部维护一个全局变量 <code>ReactCurrentDispatcher</code>。在调用函数组件前，<code>React</code>会判断如果是第一次执行组件，即挂载阶段，则将
+<code>ReactCurrentDispatcher</code> 变量设置为 <code>HooksDispatcherOnMount</code>，如果是更新阶段，则设置为 <code>HooksDispatcherOnUpdate</code>。
+这样当我们调用 <code>useReducer(reducer, 0)</code>时，实际上调用的是 <code>HooksDispatcherOnMount.useReducer</code> 或者 <code>HooksDispatcherOnUpdate.useReducer</code></p>
+<pre><code class="language-js">export function useReducer(reducer, initialState) {
+  return ReactCurrentDispatcher.current.useReducer(reducer, initialState);
+  //下面在 render hooks 中实现了
+  ReactCurrentDispatcher.current =
+    current !== null ? HooksDispatcherOnUpdate : HooksDispatcherOnMount;
+}
+</code></pre>
+<h4>初次挂载阶段</h4>
+<p>这个阶段，函数组件第一次执行。这个阶段源码主流程图如下，建议在流程图中每个函数的入口处各打一个断点，并根据流程图走一遍 <code>React</code> 源码流程。</p>
+<p>PerformUnitOfWork(WIP)
+beginWork
+MountInComponent
+renderWithHooks
+Component(xx)//执行组件
+内部调用hooks
+MountReducer
+mountWIPHook 构造 hook链表</p>
+<hr>
+<p>在整个流程中，最关键的是 <code>renderWithHooks</code> 方法，<strong>不管是初次挂载阶段还是更新阶段，都会走这个方法！！！</strong>。该方法最最最主要做了以下几件事情：</p>
+<ul>
+<li>
+<p>将全局的 <code>currentlyRenderingFiber</code> 变量指向当前工作的 <code>fiber</code> 节点。</p>
+</li>
+<li>
+<p>重置 <code>fiber</code> 的 <code>hook</code> 链表为 <code>null</code>。<code>workInProgress.memoizedState = null</code>。</p>
+<ul>
+<li>更新阶段一样会重置 <code>hook</code> 链表并重新生成</li>
+</ul>
+</li>
+<li>
+<p>设置 ReactCurrentDispatcher。</p>
+<ul>
+<li>通过 current决定是调用 <code>mountReducer</code> 还是 <code>updateReducer</code></li>
+<li>如果是初次挂载阶段，则设置为 <code>HooksDispatcherOnMount</code>，</li>
+<li>更新阶段则设置为 <code>HooksDispatcherOnUpdate</code>。以此</li>
+</ul>
+</li>
+<li>
+<p>调用我们的函数组件 <code>Counter</code>，并将结果 <code>children</code> 返回。并重置 <code>currentlyRenderingFiber</code>、<code>currentHook</code>、<code>workInProgressHook</code> 为 <code>null</code></p>
+</li>
+</ul>
+<p><code>mountWorkInProgressHook</code> 方法主要就是构造 <code>hook</code> 链表</p>
+<hr>
+<p>renderWithHooks 代码</p>
+<pre><code class="language-js">const HooksDispatcherOnMount = {
+  useReducer: mountReducer,
+};
+const HooksDispatcherOnUpdate = {
+  useReducer: updateReducer,
+};
+export function renderWithHooks(current, workInProgress, Component) {
+  currentlyRenderingFiber = workInProgress;
+  currentlyRenderingFiber.memoizedState = null;
+  ReactCurrentDispatcher.current =
+    current !== null ? HooksDispatcherOnUpdate : HooksDispatcherOnMount;
+  const children = Component();
+  重置 `currentlyRenderingFiber`、`currentHook`、`workInProgressHook` 为 `null`
+  return children;
+}
+
+</code></pre>
+<h4>触发更新阶段</h4>
+<pre><code class="language-jsx">const Counter = () =&gt; {
+  const [count, setCount] = useReducer(reducer, 0);
+  return (
+    &lt;div
+      onClick={() =&gt; {
+        debugger;
+        setCount(1);
+        setCount(2);
+      }}
+    &gt;
+      {count}
+    &lt;/div&gt;
+  );
+};
+</code></pre>
+<p>当我们点击按钮时，调用 <code>setCount</code> 方法，实际上调用的是 <code>dispatchAction</code> 方法，主要逻辑如下：</p>
+<ul>
+<li>构造更新队列。生成一个更新对象 <code>update</code>，并加入 <code>hook</code> 的更新队列 <code>queue</code></li>
+<li>计算新的状态值并缓存起来。通过 <code>update.eagerState</code> 缓存，这是 <code>React</code> 的一种优化手段，当我们多次调用 <code>setCount(2)</code>，传的是相同的值时，<code>React</code> 不会再触发更新。</li>
+<li>如果判断 <code>update.eagerState</code> 和上一次的 <code>currentState</code> 相同，则不触发更新。否则调用 <code>scheduleUpdateOnFiber</code> 触发更新</li>
+</ul>
+<h4>更新阶段</h4>
+<p>这个阶段，函数组件第 2 次执行或者第 n(n &gt; 2)次执行，这个阶段也是从 <code>performUnitOfWork</code> 开始。主流程如下：</p>
+<p>performUnitOfWork(worklnProgress)
+beginWork(current, worklnProgress, renderLanes)</p>
+<ul>
+<li>根据worklnProgress.tag判断这是更新阶段，因此调用updateFunctionComponent方法
+updateFunctionComponent
+renderWithHooks</li>
+<li>Component(props,secondArg)实际上就是我们的函数组件Counter</li>
+<li>Component内部调用useReducer,实际上调用的就是HooksDispatcherOnUpdate.useReducer
+updateReducer
+updateWorklnProgressHook</li>
+</ul>
+<h3>第四节 hook 主流程源码实现</h3>
+<p>ReactFiberBeginWork.js
+主要是根据不同的 WIP.tag判断是更新还是初次挂载阶段</p>
+<pre><code class="language-js">import {
+  IndeterminateComponent,
+  FunctionComponent,
+  HostComponent,
+} from &quot;./ReactWorkTags&quot;;
+import { renderWithHooks } from &quot;./ReactFiberHooks&quot;;
+export function beginWork(current, workInProgress) {
+  if (current) {
+    switch (workInProgress.tag) {
+      case FunctionComponent:
+        return updateFunctionComponent(
+          current,
+          workInProgress,
+          workInProgress.type
+        );
+      default:
+        break;
+    }
+  } else {
+    switch (workInProgress.tag) {
+      case IndeterminateComponent:
+        return mountIndeterminateComponent(
+          current,
+          workInProgress,
+          workInProgress.type
+        );
+      default:
+        break;
+    }
+  }
+}
+
+function updateFunctionComponent(current, workInProgress, Component) {
+  const newChildren = renderWithHooks(current, workInProgress, Component);
+  reconcileChildren(null, workInProgress, newChildren);
+  return workInProgress.child;
+}
+
+function mountIndeterminateComponent(current, workInProgress, Component) {
+  const children = renderWithHooks(current, workInProgress, Component);
+  workInProgress.tag = FunctionComponent; // 初次渲染后，此时组件类型已经明确，因此需要修改tag
+  reconcileChildren(null, workInProgress, children);
+  return workInProgress.child; // null
+}
+</code></pre>
+<hr>
+<p>MountReducer 和 moundWork</p>
+<pre><code class="language-js">const ReactCurrentDispatcher = {
+  current: null,
+};
+let workInProgressHook = null; // 当前工作中的新的hook指针
+let currentHook = null; // 当前的旧的hook指针
+let currentlyRenderingFiber; // 当前正在工作的fiber
+
+function mountReducer(reducer, initialState) {
+  // 构建hooks单向链表
+  const hook = mountWorkInProgressHook();
+  hook.memoizedState = initialState;
+  const queue = (hook.queue = { pending: null }); // 更新队列
+  const dispatch = dispatchAction.bind(null, currentlyRenderingFiber, queue);
+  return [hook.memoizedState, dispatch];
+}
+function mountWorkInProgressHook() {
+  const hook = {
+    // 创建一个hook对象
+    memoizedState: null, // 自己的状态
+    queue: null, // 自己的更新队列，环形列表
+    next: null, // 下一个更新
+  };
+  if (workInProgressHook === null) {
+    currentlyRenderingFiber.memoizedState = workInProgressHook = hook;
+  } else {
+    workInProgressHook = workInProgressHook.next = hook;
+  }
+
+  return workInProgressHook;
+}
+</code></pre>
+<hr>
+<p>updateReducer和updateWorkInProgressHook</p>
+<pre><code class="language-js">// 不同的阶段useReducer有不同的实现
+function updateReducer(reducer, initialState) {
+  const hook = updateWorkInProgressHook();
+  const queue = hook.queue; // 更新队列
+  const lastRenderedReducer = queue.lastRenderedReducer; // 上一次reducer方法
+
+  const current = currentHook;
+  const pendingQueue = queue.pending;
+  if (pendingQueue !== null) {
+    // 根据旧的状态和更新队列里的更新对象计算新的状态
+    const first = pendingQueue.next; // 第一个更新对象
+    let newState = current.memoizedState; // 旧的状态
+    let update = first;
+    do {
+      const action = update.action;
+      newState = reducer(newState, action);
+      update = update.next;
+    } while (update !== null &amp;&amp; update !== first);
+    queue.pending = null; // 更新完成，清空链表
+    hook.memoizedState = newState; // 让新的hook对象的memoizedState等于计算的新状态
+    queue.lastRenderState = newState;
+  }
+  const dispatch = dispatchAction.bind(null, currentlyRenderingFiber, queue);
+  return [hook.memoizedState, dispatch];
+}
+function updateWorkInProgressHook() {
+  let nextCurrentHook;
+  if (currentHook === null) {
+    // 如果currentHook为null，说明这是第一个hook
+    const current = currentlyRenderingFiber.alternate; // 旧的fiber节点
+    nextCurrentHook = current.memoizedState; // 旧的fiber的memoizedState指向旧的hook链表的第一个节点
+  } else {
+    nextCurrentHook = currentHook.next;
+  }
+
+  currentHook = nextCurrentHook;
+
+  const newHook = {
+    memoizedState: currentHook.memoizedState,
+    queue: currentHook.queue,
+    next: null,
+  };
+
+  if (workInProgressHook === null) {
+    // 说明这是第一个hook
+    currentlyRenderingFiber.memoizedState = workInProgressHook = newHook;
+  } else {
+    workInProgressHook.next = newHook;
+    workInProgressHook = workInProgressHook.next = newHook;
+  }
+  return workInProgressHook;
+}
+
+
+</code></pre>
+
+<h1>react.context基础知识</h1><h2>理论知识</h2>
+<p>与 React Context 相关的 API</p>
+<ul>
+<li>React.createContext</li>
+<li>Context.Provider</li>
+<li>Class.contextType</li>
+<li>Context.Consumer</li>
+<li>useContext。唯一的 Hook</li>
+<li>Context.displayName</li>
+</ul>
+<p>这些 api 按用途可以划分如下：</p>
+<ul>
+<li>创建 context: React.createContext</li>
+<li>提供 context 值: Context.Provider</li>
+<li>订阅 context 值：
+<ul>
+<li>Class.contextType。用于类组件订阅 Context</li>
+<li>Context.Consumer。用于函数组件订阅 Context</li>
+<li>useContext。用于函数组件订阅 Context</li>
+</ul>
+</li>
+</ul>
+<h3>创建 context：React.createContext</h3>
+<pre><code class="language-javascript">const MyContext = React.createContext(defaultValue);
+</code></pre>
+<p>返回一个包含 <code>Provider</code> 和 <code>Consumer</code> 的 <code>MyContext</code> 对象</p>
+<p>当组件树中没有对应的 <code>Provider</code> 组件时，<code>defaultValue</code> 才生效</p>
+<h3>Context.Provider</h3>
+<pre><code class="language-javascript">&lt;MyContext.Provider value={/* 某个值 */}&gt;
+</code></pre>
+<p><code>Provider</code> 接收一个 <code>value</code> 属性。<strong><em>当 <code>value</code> 变化时，所有订阅的组件都会强制刷新，不受限于 <code>shouldComponentUpdate</code></em></strong></p>
+<blockquote>
+<p>当 Provider 的 value 值发生变化时，它内部的所有消费组件都会重新渲染。从 Provider 到其内部 consumer 组件（包括 .contextType 和 useContext）的传播不受制于 shouldComponentUpdate 函数，因此当 consumer 组件在其祖先组件跳过更新的情况下也能更新。</p>
+</blockquote>
+<h3>订阅 Context</h3>
+<p>react 提供了三个订阅 <code>context</code> 的 api</p>
+<ul>
+<li>MyClass.contextType = MyContext。用于类组件</li>
+<li>MyContext.Consumer。用于函数组件</li>
+<li>useContext。用于函数组件</li>
+</ul>
+<h4>类组件订阅 Context：contextType</h4>
+<pre><code class="language-jsx">class ThemedButton extends React.Component {
+  static contextType = ThemeContext;
+  render() {
+    return &lt;button id=&quot;button类组件&quot;&gt;{this.context}&lt;/button&gt;;
+  }
+}
+</code></pre>
+<h4>函数组件订阅 Context：Consumer</h4>
+<pre><code class="language-jsx">function ThemeFooter() {
+  return (
+    &lt;div id=&quot;footer&quot;&gt;
+      &lt;ThemeContext.Consumer&gt;{(value) =&gt; value}&lt;/ThemeContext.Consumer&gt;
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<h4>函数组件订阅 Context：useContext</h4>
+<pre><code class="language-javascript">function ThemeHeader() {
+  const value = useContext(ThemeContext);
+
+  return &lt;div id=&quot;header函数组件&quot;&gt;{value}&lt;/div&gt;;
+}
+</code></pre>
+<p>目前 <code>useContext</code> 是 <code>react</code> 官方提供的唯一一个与 <code>context</code> 有关的 hook api</p>
+<h4>订阅多个 context</h4>
+<p>如果需要订阅多个 context，可以通过<code>Context.Consumer</code> 组件。</p>
+<pre><code class="language-jsx">class App extends React.Component {
+  render() {
+    return (
+      &lt;ThemeContext.Provider value={theme}&gt;
+        &lt;UserContext.Provider value={signedInUser}&gt;
+          &lt;Layout /&gt;
+        &lt;/UserContext.Provider&gt;
+      &lt;/ThemeContext.Provider&gt;
+    );
+  }
+}
+function Content() {
+  return (
+    &lt;ThemeContext.Consumer&gt;
+      {(theme) =&gt; (
+        &lt;UserContext.Consumer&gt;
+          {(user) =&gt; &lt;ProfilePage user={user} theme={theme} /&gt;}
+        &lt;/UserContext.Consumer&gt;
+      )}
+    &lt;/ThemeContext.Consumer&gt;
+  );
+}
+</code></pre>
+<p>函数组件还可以通过 useContext 订阅多个 context</p>
+
+<h1>ref原理及源码</h1><h2>学习目标</h2>
+<ul>
+<li>为什么 React 不将 ref 存在 fiber 的 props 中，这样在组件中就能通过 props.ref 获取到值</li>
+<li>ref 的值什么时候设置，什么时候被释放？</li>
+</ul>
+<h2>React element 中的 ref 属性</h2>
+<p>React.createElement 对 ref 属性进行特殊处理
+ref 属性和 key 属性一样都是比较特殊的，不会被添加到 props 中
+我们知道在构建时，JSX 经过 babel 编译为一系列 React.createElement，比如下面的代码</p>
+<pre><code class="language-jsx">&lt;div ref={this.domRef} id=&quot;counter&quot; name=&quot;test&quot;&gt;
+  dom ref
+&lt;/div&gt;
+</code></pre>
+<p>经过 babel 编译，变成下面的函数调用</p>
+<pre><code class="language-js">React.createElement(
+  &quot;div&quot;,
+  {
+    ref: this.domRef,
+    id: &quot;counter&quot;,
+    name: &quot;test&quot;,
+  },
+  &quot;dom ref&quot;
+);
+</code></pre>
+<p>接着我们具体看一下createElement函数</p>
+<h2>createElement</h2>
+<p>React.createElement 最终返回的是一个 react element 对象
+他会判断config是否为null，如果不为null，则检查config中是否存在ref和key属性，并将其分别赋值给ref和key变量。
+因此ref 和 key 都是直接添加到 fiber 的属性当中的。<strong>为什么 React 不将 ref 存储在 props 中？</strong></p>
+<pre><code class="language-js">function createElement(type, config, children) {
+  var propName;
+
+  var props = {};
+  var key = null;
+  var ref = null;
+
+  if (config != null) {
+    if (config.ref) {
+      ref = config.ref;
+    }
+
+    if (config.key) {
+      key = &quot;&quot; + config.key;
+    }
+
+    for (propName in config) {
+      if (
+        hasOwnProperty.call(config, propName) &amp;&amp;
+        !RESERVED_PROPS.hasOwnProperty(propName)
+      ) {
+        props[propName] = config[propName];
+      }
+    }
+  }
+  var childrenLength = arguments.length - 2;
+
+  if (childrenLength === 1) {
+    props.children = children;
+  } else if (childrenLength &gt; 1) {
+    var childArray = Array(childrenLength);
+
+    for (var i = 0; i &lt; childrenLength; i++) {
+      childArray[i] = arguments[i + 2];
+    }
+
+    props.children = childArray;
+  }
+
+  return ReactElement(type, key, ref, ReactCurrentOwner.current, props);
+}
+
+var ReactElement = function (type, key, ref, owner, props) {
+  return {
+    $$typeof: REACT_ELEMENT_TYPE,
+    type: type,
+    key: key,
+    ref: ref,
+    props: props,
+    _owner: owner,
+  };
+};
+var RESERVED_PROPS = {
+  key: true,
+  ref: true,
+};
+</code></pre>
+<h2>ref 对象</h2>
+<p>我们在使用 ref，必须显示的调用 React.createRef 或者 React.useRef 方法创建一个 ref 对象（回调 ref 不需要调用这两个方法）
+这两个函数都比较简单，都是用于创建 ref 对象，比如：</p>
+<pre><code class="language-js">function createRef() {
+  return {
+    current: null,
+  };
+}
+// 在函数组件初次渲染阶段，useRef就是mountRef
+function mountRef(initialValue) {
+  var hook = mountWorkInProgressHook();
+  var ref = {
+    current: initialValue,
+  };
+
+  hook.memoizedState = ref;
+  return ref;
+}
+
+// 在函数组件更新阶段，useRef就是updateRef
+function updateRef(initialValue) {
+  var hook = updateWorkInProgressHook();
+  return hook.memoizedState;
+}
+</code></pre>
+<hr>
+<p>为什么 React 要采用对象保存 ref？这是因为对象是引用类型，方便存值，比如下面的例子中，我们给 div 传递了 ref 属性</p>
+<pre><code class="language-jsx">&lt;div ref={this.domRef} id=&quot;counter&quot; name=&quot;test&quot;&gt;
+  dom ref
+&lt;/div&gt;
+</code></pre>
+<p>this.domRef 是一个对象：</p>
+<pre><code class="language-js">this.domRef = { current };
+</code></pre>
+<p>在render阶段，当React为一个div创建fiber节点时，它会将该div的ref属性赋值给fiber节点的ref属性。这是通过fiber.ref = this.domRef来完成的，其中this.domRef是div的ref属性。</p>
+<p>在commit阶段，React会将fiber节点的ref属性赋值给fiber.ref.current，这个current属性存储了与fiber节点相关联的DOM实例。这样，当commit阶段完成后，我们就可以通过this.domRef.current来访问到对应的DOM节点。</p>
+<h2>fiber ref 属性是什么时候设置的？</h2>
+<p><strong>fiber ref 属性就是在协调阶段设置的</strong>。</p>
+<ul>
+<li>在 render 阶段，React会为当前的fiber协调子元素，即将当前fiber节点的子节点和新的子element节点比较，以创建新的workInProgress节点。</li>
+<li>在协调时，会将element上的ref属性赋值给fiber ref属性。</li>
+</ul>
+<p>前面说过，React.createElement 在创建 react element 对象时，会将 ref 单独放在 element 对象的属性中，而不是放在 element.props 属性中，element 对象属性如下所示：</p>
+<pre><code class="language-js">{
+  $$typeof: Symbol(react.element),
+  key: null,
+  props: { id: &quot;counter&quot;, name: &quot;test&quot;, children: &quot;dom ref：0&quot;, onClick },
+  ref: { current: null },
+  type: &quot;div&quot;,
+};
+</code></pre>
+<p>在 render 阶段，React 会为当前的 fiber 协调子元素，即将当前 fiber 节点的子节点和新的子 element 节点比较，以创建新的 workInProgress 节点。
+在协调时，会将 element 上的 ref 属性赋值给 fiber ref 属性，</p>
+<hr>
+<p>以下面的例子为例：</p>
+<pre><code class="language-jsx">&lt;div id=&quot;container&quot;&gt;
+  &lt;div ref={this.domRef} id=&quot;counter&quot; name=&quot;test&quot;&gt;
+    dom ref
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>在 beginWork 阶段，<code>div#container</code> 执行 reconcileChildren 工作，为 <code>div#counter</code> 创建子 fiber 节点，然后给新的 <code>div#counter</code> fiber 节点设置 ref 属性。伪代码如下：</p>
+<pre><code class="language-js">// returnFiber即 div#container，element即是新的div#counter对应的react element对象
+// currentFirstChild是returnFiber的第一个子节点
+function reconcileSingleElement(returnFiber, currentFirstChild, element) {
+  if (!currentFirstChild) {
+    // 第一次渲染
+    var _created4 = createFiberFromElement(element, returnFiber.mode, lanes);
+    _created4.ref = element.ref;
+    _created4.return = returnFiber;
+    return _created4;
+  } else {
+    var _existing3 = useFiber(child, element.props);
+    _existing3.ref = element.ref;
+    _existing3.return = returnFiber;
+    return _existing3;
+  }
+}
+</code></pre>
+<p>从上面的代码可以看出，在 reconcile 阶段，无论是第一次渲染还是更新阶段，都会使用 element.ref 重新赋值给新的 fiber。区别在于，第一次渲染时，会调用 createFiberFromElement 创建新的 fiber 节点，而在更新阶段，会调用 useFiber 复用旧的 fiber 节点。</p>
+<p><strong>因此，fiber ref 属性是在父节点的 reconcile 阶段被设置的</strong></p>
+<h2>fiber ref 副作用标记</h2>
+<p>render 阶段如果满足下面两个条件之一，会为 fiber 节点添加一个 Ref 副作用标记：</p>
+<ul>
+<li>第一次渲染，并且 ref 有值，即 current === null &amp;&amp; ref !== null</li>
+<li>更新阶段，即第二次或者后续的渲染中，如果 ref 发生了变化，即 current !== null &amp;&amp; current.ref !== workInProgress.ref</li>
+</ul>
+<h3>markRef</h3>
+<p>下面是 HTML 元素和类组件的场景
+从下面的代码可以看出，不管是类组件还是 HTML 元素的 fiber，在为他们调用 reconcileChildren 协调子元素之前，都会调用 markRef 判断是否为它们添加 Ref 副作用</p>
+<pre><code class="language-js">function beginWork(current, workInProgress, renderLanes) {
+  switch (workInProgress.tag) {
+    case ClassComponent: {
+      return updateClassComponent(current, workInProgress);
+    }
+    case HostComponent:
+      return updateHostComponent(current, workInProgress, renderLanes);
+  }
+}
+function updateClassComponent(current, workInProgress) {
+  //....
+  var nextUnitOfWork = finishClassComponent(current, workInProgress);
+  return nextUnitOfWork;
+}
+
+function finishClassComponent(current, workInProgress) {
+  // 即使是shouldComponentUpdate返回了false，Ref也要更新
+  markRef(current, workInProgress);
+  //...
+  reconcileChildren(current, workInProgress, nextChildren, renderLanes);
+  //...
+  return workInProgress.child;
+}
+function updateHostComponent(current, workInProgress, renderLanes) {
+  //...
+  markRef(current, workInProgress);
+  reconcileChildren(current, workInProgress, nextChildren, renderLanes);
+  return workInProgress.child;
+}
+function markRef(current, workInProgress) {
+  var ref = workInProgress.ref;
+
+  if (
+    (current === null &amp;&amp; ref !== null) ||
+    (current !== null &amp;&amp; current.ref !== ref)
+  ) {
+    // 添加一个 Ref 副作用（effect）
+    workInProgress.flags |= Ref;
+  }
+}
+</code></pre>
+
+<h1>ref基础用法</h1><h2>Ref</h2>
+<p>ref 可以<strong>直接</strong>作用于下面的节点</p>
+<ul>
+<li>用于 HTML 元素。ref.current 保存的是 dom 节点</li>
+<li>用于 class 组件。ref.current 保存的是类组件的实例</li>
+</ul>
+<blockquote>
+<p>函数组件<strong>不能直接</strong>使用 ref 属性，即我们不能直接将 ref 作为属性直接传递给函数组件，需要使用 React.forwardRef 转发</p>
+</blockquote>
+<h3>为 DOM 元素添加 ref</h3>
+<p>React 会在组件挂载时给 current 属性传入 DOM 元素，并在组件卸载时传入 null 值。ref 会在 componentDidMount 或 componentDidUpdate 生命周期钩子触发前更新。</p>
+<pre><code class="language-jsx">class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.domRef = React.createRef();
+  }
+  componentDidMount() {
+    console.log(&quot;dom节点ref：this.domRef&quot;, this.domRef);
+  }
+
+  render() {
+    return &lt;div ref={this.domRef}&gt;dom Ref&lt;/div&gt;;
+  }
+}
+</code></pre>
+<h3>为类组件添加 ref</h3>
+<pre><code class="language-jsx">class ClassCounter extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  getData() {
+    console.log(&quot;获取数据&quot;);
+  }
+  render() {
+    return &lt;div&gt;Class Counter&lt;/div&gt;;
+  }
+}
+
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.classRef = React.createRef();
+  }
+  componentDidMount() {
+    console.log(&quot;类组件ref：this.classRef&quot;, this.classRef);
+    this.classRef.current.getData();
+  }
+
+  render() {
+    return [&lt;div ref={this.domRef}&gt;dom Ref&lt;/div&gt;];
+  }
+}
+</code></pre>
+<h3>函数组件与 Ref</h3>
+<p>我们不能将 ref 直接传递给函数组件，这是 React 在调用 React.createElement 创建 element 时，会将 ref 属性剔除，ref 不会出现在组件的 props 中，比如下面的例子：</p>
+<pre><code class="language-jsx">const FunctionCounter = (props) =&gt; {
+  const [count, setCount] = useState(0);
+  console.log(&quot;props..&quot;, props);
+  return &lt;div ref={props.ref}&gt;{`计数器：${count}-${props.name}`}&lt;/div&gt;;
+};
+
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.domRef = React.createRef();
+  }
+  componentDidMount() {
+    console.log(&quot;dom节点ref：this.domRef&quot;, this.domRef);
+  }
+
+  render() {
+    return &lt;FunctionCounter ref={this.domRef} name=&quot;test&quot; /&gt;;
+  }
+}
+</code></pre>
+<p>直接给函数组件 FunctionCounter 传递 ref 是不生效的，在 FunctionCounter 中通过 props.ref 是访问不了父组件 Home 传递的 ref 属性的。但是我们可以变通一下，比如传递自定义属性 myRef：</p>
+<pre><code class="language-jsx">const FunctionCounter = (props) =&gt; {
+  const [count, setCount] = useState(0);
+  console.log(&quot;props..&quot;, props);
+  return &lt;div ref={props.myRef}&gt;{`计数器：${count}-${props.name}`}&lt;/div&gt;;
+};
+
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.domRef = React.createRef();
+  }
+  componentDidMount() {
+    console.log(&quot;dom节点ref：this.domRef&quot;, this.domRef);
+  }
+
+  render() {
+    return &lt;FunctionCounter myRef={this.domRef} name=&quot;test&quot; /&gt;;
+  }
+}
+</code></pre>
+<p>这实际上也是一种 ref 转发方式</p>
+<h2>回调 ref</h2>
+<p>传递给 ref 属性的是一个函数，同时不需要使用 createRef 创建一个 ref 对象。</p>
+<p>React 将在组件挂载时，会调用 ref 回调函数并传入 DOM 元素或者类组件实例，当卸载时调用它并传入 null。在 componentDidMount 或 componentDidUpdate 触发前，React 会保证 refs 一定是最新的。</p>
+<pre><code class="language-jsx">class ClassCounter extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  getData() {
+    console.log(&quot;获取数据&quot;);
+  }
+  render() {
+    return &lt;div&gt;Class Counter&lt;/div&gt;;
+  }
+}
+
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.classRef = null; // 不需要使用React.createRef
+    this.domRef = null; // React.createRef
+  }
+  componentDidMount() {
+    console.log(&quot;类组件ref：this.classRef&quot;, this.classRef);
+    this.classRef.getData();
+    console.log(&quot;dom节点ref：this.domRef&quot;, this.domRef);
+  }
+
+  render() {
+    return [
+      &lt;div ref={(el) =&gt; (this.domRef = el)}&gt;dom Ref&lt;/div&gt;,
+      &lt;ClassCounter ref={(instance) =&gt; (this.classRef = instance)} /&gt;,
+    ];
+  }
+}
+</code></pre>
+<h2>Ref 转发：React.forwardRef</h2>
+<pre><code class="language-jsx">const FunctionCounter = (props, ref) =&gt; {
+  const [count, setCount] = useState(0);
+  return &lt;div ref={ref}&gt;{`计数器：${count}-${props.name}`}&lt;/div&gt;;
+};
+
+const ForwardRefCounter = React.forwardRef(FunctionCounter);
+
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.domRef = null;
+  }
+  componentDidMount() {
+    console.log(&quot;dom节点ref：this.domRef&quot;, this.domRef);
+  }
+
+  render() {
+    return &lt;ForwardRefCounter ref={(el) =&gt; (this.domRef = el)} name=&quot;test&quot; /&gt;;
+  }
+}
+</code></pre>
+<h2>useImperativeHandle</h2>
+<p>useImperativeHandle 必须和 React.forwardRef 一起使用</p>
+<pre><code class="language-jsx">const FunctionCounter = (props, ref) =&gt; {
+  const [count, setCount] = useState(0);
+  useImperativeHandle(ref, () =&gt; ({
+    focus: () =&gt; {
+      console.log(&quot;focus...&quot;);
+    },
+  }));
+  return &lt;div&gt;{`计数器：${count}-${props.name}`}&lt;/div&gt;;
+};
+
+const ForwardRefCounter = React.forwardRef(FunctionCounter);
+
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.domRef = null; // React.createRef
+  }
+  componentDidMount() {
+    console.log(&quot;dom节点ref：this.domRef&quot;, this.domRef);
+  }
+
+  render() {
+    return &lt;ForwardRefCounter ref={(el) =&gt; (this.domRef = el)} name=&quot;test&quot; /&gt;;
+  }
+}
+</code></pre>
+
+<h1>为什么别人的 hooks 里面有那么多的 ref</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7271643757640007680?utm_source=gold_browser_extension">juejin.cn</a></p>
+</blockquote>
+<h2>前言</h2>
+<p>在学习一些开源的库的时候，很容易发现开源库中 <code>hooks</code> 里面会写很多的 <code>ref</code> 来存储<code>hooks</code>的参数。</p>
+<p>使用了 <code>ref</code> 之后，使用变量的地方就需要 <code>.current</code> 才能拿到变量的值，这比我直接使用变量肯定是变得麻烦了。对于有代码洁癖的人来说，这肯定是很别扭的。</p>
+<p>但是在开源库的 <code>hooks</code> 中频繁的使用了 <code>ref</code>，这肯定不是一个毫无原因的点，那么究竟是什么原因，让开源库也不得不使用 <code>.current</code> 去获取变量呢？</p>
+<h2><code>useCallback</code></h2>
+<h3>第二阶段 - 可以缓存</h3>
+<p>可以缓存就遇到了两个点：</p>
+<ol>
+<li>缓存是吧，不会每一次都重新创建是吧，这样是不是性能就能提高了！那我把我所有用到的函数都使用 <code>useCallback</code>缓存一下。</li>
+<li><code>react</code> 每一次<code>render</code>的时候会导致子组件重新渲染，使用<code>memo</code>可以缓存这个子组件，在父组件更新的时候，会浅层的比较子组件的<code>props</code>，所以传给子组件的函数就需要使用缓存<code>useCallback</code>起来，那么父组件中定义函数的时候图方便，一股脑的都使用 <code>useCallback</code>缓存。</li>
+</ol>
+<h3>第三阶段 - 缓存不一定是好事</h3>
+<p>到这里我们就大概的意识到了，处处使用<code>useCallback</code>可能并不是我们想象的那样，对正确的使用<code>useCallback</code>有了一定的了解</p>
+<h3>总结</h3>
+<p>那么究竟在何时应该使用<code>useCallback</code>呢？</p>
+<ol>
+<li>我们知道 <code>react</code> 在父组件更新的时候，会对子组件进行全量的更新，我们可以使用 <code>memo</code>对子组件进行缓存，在更新的时候浅层的比较一下<code>props</code>，如果<code>props</code>没有变化，就不会更新子组件，那如果<code>props</code>中有函数，我们就需要使用 <code>useCallback</code>缓存一下这个父组件传给子组件的函数。</li>
+<li>我们的<code>useEffect</code>中可能会有依赖函数的场景，这个时候就需要使用<code>useCallback</code>缓存一下函数，避免<code>useEffect</code>的无限调用</li>
+</ol>
+<hr>
+<p>针对<code>useEffect</code>这个<code>hooks</code>补充一点<code>react</code>官方文档里面有提到，<a href="https://link.juejin.cn?target=https%3A%2F%2Fzh-hans.react.dev%2Freference%2Freact%2FuseEffect%23wrapping-effects-in-custom-hooks" title="https://zh-hans.react.dev/reference/react/useEffect#wrapping-effects-in-custom-hooks">建议我们使用自定义的 hooks 封装 useEffect</a>。</p>
+<ol start="3">
+<li>那使用<code>useCallback</code>的第三个场景就出现了，就是我们在自定义<code>hooks</code>需要返回函数的时候，建议使用 <code>useCallback</code>缓存一下，因为我们不知道用户拿我们返回的函数去干什么，万一他给加到他的<code>useEffect</code>的依赖里面不就出问题了嘛。</li>
+</ol>
+<h2>一个自定义<code>hook</code>的案例</h2>
+<h3>提出问题</h3>
+<p>那么，现在就有一个很严重的问题，<code>onEnd</code>和 <code>countdownCallBack</code>这两个函数是外部传入的，我们要不要把他放到我们自定义<code>hook</code>的<code>useEffect</code>依赖项里面呢</p>
+<p>我们不能保证外部传入的变量一定是一个被<code>useCallback</code>包裹的函数，那么肯定就不能放到<code>useEffect</code>依赖项里面。</p>
+<h2>如何解决这个问题呢？答案就是使用<code>useRef</code>。
+总结</h2>
+<p>编写自定义<code>hooks</code>时候，我们需要注意一下外部传入的参数，以及我们返回给用户的返回值，核心点是决不相信外部传入的内容，以及绝对要给用户一个可靠的返回值。</p>
+
+<h1>从源码的角度理解useEffect以及useLayoutEffect的区别</h1><blockquote>
+<p>本章从源码层面介绍 <code>useLayoutEffect</code> 以及 <code>useEffect</code> 的区别以及执行时机，类组件常见生命周期的执行时机，类组件 <code>this.setState(arg, callback)</code> 中 <code>callback</code> 的执行时机。建议在阅读本章时，在各个函数的入口处打个断点调试，找找感觉。</p>
+</blockquote>
+<h3>前置知识</h3>
+<ul>
+<li>React 渲染主要分为两个阶段：render 阶段 以及 commit 阶段。render 阶段是可以并发的，可以中断的。render 阶段主要是协调子节点，找出有副作用的节点，构造副作用链表以及 fiber 树。commit 阶段是同步的，一旦开始就不能够中断。commit 阶段对真实的 DOM 进行增删改查，执行对应的生命周期方法。</li>
+<li>在 react-dom.development.js 中找到 <code>commitRootImpl</code> 函数并在入口处设置断点，然后在 <code>commitRootImpl</code> 中找到调用 <code>commitBeforeMutationEffects</code>、<code>commitMutationEffects</code>、<code>commitLayoutEffects</code> 这三个函数的地方并设置断点。后面会具体解释这些函数的作用。</li>
+</ul>
+<h3>useLayoutEffect 和 useEffect 的区别</h3>
+<ul>
+<li><code>useLayoutEffect</code> 的 <code>监听函数</code> 以及 <code>clear 清除函数</code> 都是同步执行的，是在真实的 DOM 发生了改变之后，浏览器绘制之前执行的。</li>
+<li><code>useEffect</code> 的 <code>监听函数</code> 以及 <code>clear清除函数</code> 是异步执行的，是在真实的 DOM 发生了改变并且浏览器绘制之后(此时 JS 主线程已经执行完毕)异步执行的</li>
+</ul>
+<hr>
+<ul>
+<li>useLayoutEffect 和 useEffect 的使用场景
+<ul>
+<li>useLayoutEffect 的 <code>监听函数</code> 以及 <code>clear 清除函数</code> 的执行都会阻塞浏览器渲染。当需要操作真实的 DOM 时，需要放在 useLayoutEffect 的监听函数中执行，同时 useLayoutEffect 的监听函数尽量避免耗时长的任务</li>
+<li>useEffect 的 <code>监听函数</code> 以及 <code>clear清除函数</code> 的执行都不会阻塞浏览器渲染。</li>
+<li>useEffect 尽量避免操作真实的 DOM，因为 useEffect 的监听函数的执行时机是在浏览器绘制之后执行。如果此时在 useEffect 的监听函数里又操作真实的 DOM，会导致浏览器回流重绘。同时可以将耗时长的任务放在 useEffect 的 <code>监听函数</code> 中执行。</li>
+</ul>
+</li>
+</ul>
+<h4>useLayoutEffect 监听函数</h4>
+<p>在 <code>useLayoutEffect</code> 的监听函数中调用 <code>sleep</code> 函数</p>
+<pre><code class="language-js">useLayoutEffect(() =&gt; {
+  document.getElementById(&quot;useLayoutEffect&quot;).innerText =
+    &quot;useLayoutEffect：&quot; + count;
+  sleep(); // 死循环5秒
+  return () =&gt; {
+    console.log(&quot;use layout effect 清除 ===========&quot;);
+  };
+});
+</code></pre>
+<p>点击 Counter 按钮，<strong>过了大概 5 秒页面才刷新。可以看出 useLayoutEffect 的监听函数是同步执行的，会阻塞页面渲染</strong></p>
+<h4>useLayoutEffect 清除函数</h4>
+<p>在 <code>useLayoutEffect</code> 的<code>clear 清除函数</code>中调用 <code>sleep</code> 函数</p>
+<pre><code class="language-js">useLayoutEffect(() =&gt; {
+  document.getElementById(&quot;useLayoutEffect&quot;).innerText =
+    &quot;useLayoutEffect：&quot; + count;
+  return () =&gt; {
+    console.log(&quot;use layout effect 清除 ===========&quot;);
+    sleep(); // 死循环5秒
+  };
+});
+</code></pre>
+<p>点击 Counter 按钮，<strong>过了大概 5 秒页面才刷新。可以看出 useLayoutEffect 的清除函数是同步执行的，会阻塞页面渲染</strong></p>
+<h4>useEffect 监听函数</h4>
+<p>在 <code>useEffect</code> 的监听函数中调用 <code>sleep</code> 函数</p>
+<pre><code class="language-js">useEffect(() =&gt; {
+  document.getElementById(&quot;useEffect&quot;).innerText = &quot;useEffect：&quot; + count;
+  sleep(); // 死循环5秒
+  return () =&gt; {
+    console.log(&quot;use effect 清除 =============&quot;);
+  };
+});
+</code></pre>
+<p>点击 Counter 按钮，**页面立即刷新，过了大概 5 秒，useEffect：后面的数字才更新。
+因此 useEffect 的监听函数是异步执行的，不会阻塞页面更新。
+但是如果监听函数里面有 DOM 操作，会导致页面回流重绘</p>
+<h4>useEffect 清除函数</h4>
+<p>在 <code>useEffect</code> 的监听函数中调用 <code>sleep</code> 函数</p>
+<pre><code class="language-js">useEffect(() =&gt; {
+  document.getElementById(&quot;useEffect&quot;).innerText = &quot;useEffect：&quot; + count;
+  return () =&gt; {
+    console.log(&quot;use effect 清除 =============&quot;);
+    sleep(); // 死循环5秒
+  };
+});
+</code></pre>
+<p>点击 Counter 按钮，<strong>页面立即刷新，过了大概 5 秒，useEffect：后面的数字才更新。因此 useEffect 的清除函数是异步执行的，不会阻塞页面更新。</strong></p>
+<p><strong>清除函数有个细微差别，我们在 useEffect 的监听函数里面改变 useEffect 的 innerText，为什么 清除函数睡眠了 5 秒后，这个 DOM 才更新？？
+答案就是，清除函数和监听函数是一起执行的，先执行清除函数，紧接着执行监听函数</strong></p>
+<p>下面让我们从源码层面来解析这个过程，可以在下面函数的地方设置断点并且 debug</p>
+<h3>commitRootImpl</h3>
+<p>commit 阶段分成三个子阶段：
+第一阶段：commitBeforeMutationEffects。DOM 变更前
+第二阶段：commitMutationEffects。DOM 变更，操作真实的 DOM 节点。注意这个阶段是 <code>卸载</code> 相关的生命周期方法执行时机
+第三阶段：commitLayoutEffects。DOM 变更后</p>
+<hr>
+<ul>
+<li>第一阶段：commitBeforeMutationEffects。DOM 变更前
+<ul>
+<li>调用 类组件的 getSnapshotBeforeUpdate 生命周期方法</li>
+<li>启动一个微任务以刷新 passive effects 异步队列。
+<ul>
+<li>passive effects 异步队列存的是 useEffect 的清除函数以及监听函数</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li>
+<p>第二阶段：commitMutationEffects。DOM 变更，操作真实的 DOM 节点。注意这个阶段是 <code>卸载</code> 相关的生命周期方法执行时机</p>
+<ul>
+<li>操作真实的 DOM 节点：增删改查</li>
+<li>同步调用函数组件 <code>useLayoutEffect</code> 的 <code>清除函数</code></li>
+<li>同步调用类组件的 <code>componentWillUnmount</code> 生命周期方法</li>
+<li>将函数组件的 <code>useEffect</code> 的 <code>清除函数</code> 添加进异步队列，异步执行。</li>
+<li><strong>所有的函数组件的 useLayoutEffect 的清除函数都在这个阶段执行完成</strong></li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li>第三阶段：commitLayoutEffects。DOM 变更后
+<ul>
+<li>调用函数组件的 <code>useLayoutEffect</code> 监听函数，同步执行</li>
+<li>将函数组件的 <code>useEffect</code> 监听函数放入异步队列，异步执行</li>
+<li>执行类组件的 <code>componentDidMount</code> 生命周期方法，同步执行</li>
+<li>执行类组件的 <code>componentDidUpdate</code> 生命周期方法，同步执行</li>
+<li>执行类组件 <code>this.setState(arg, callback)</code> 中的 <code>callback</code> 回调，同步执行</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>commitRootImpl每一个子阶段都是一个 while 循环，<strong>从头开始</strong>遍历副作用链表。</p>
+<pre><code class="language-js">let nextEffect;
+function commitRootImpl(root, renderPriorityLevel) {
+  const finishedWork = root.finishedWork;
+  root.finishedWork = null;
+  let firstEffect;
+  if (firstEffect !== null) {
+    // commie阶段被划分成多个小阶段。每个阶段都从头开始遍历整个副作用链表
+    nextEffect = firstEffect;
+    // 第一阶段，DOM变更前，调用getSnapshotBeforeUpdate等生命周期方法。
+    commitBeforeMutationEffects();
+    // 重置 nextEffect，从头开始
+    nextEffect = firstEffect;
+    // 第二阶段，操作真实的DOM
+    commitMutationEffects(root, renderPriorityLevel);
+    // 注意：由于此时真实的DOM已经操作完成，因此将 finishedWork 设置成当前的 fiber tree。
+    root.current = finishedWork;
+    // 重置 nextEffect，从头开始
+    nextEffect = firstEffect;
+    // 第三阶段：DOM变更后
+    commitLayoutEffects(root, lanes);
+  }
+}
+</code></pre>
+<h4>commitBeforeMutationEffects</h4>
+<p>这个函数主要是在 DOM 变更前执行，主要逻辑如下：</p>
+<ul>
+<li>调用 类组件的 getSnapshotBeforeUpdate 生命周期方法</li>
+<li>启动一个微任务以刷新 passive effects。passive effects 指的是 useEffect 的清除函数以及监听函数</li>
+</ul>
+<pre><code class="language-js">function commitBeforeMutationEffects() {
+  while (nextEffect !== null) {
+    // 调用类组件的 getSnapshotBeforeUpdate 生命周期方法
+    commitBeforeMutationLifeCycles(current, nextEffect);
+    // 提前启动一个异步任务以便JS主线程执行完成后刷新异步队列
+    scheduleCallback(NormalPriority$1, function () {
+      flushPassiveEffects();
+      return null;
+    });
+    nextEffect = nextEffect.nextEffect;
+  }
+}
+function commitBeforeMutationLifeCycles(current, finishedWork) {
+  switch (finishedWork.tag) {
+    case FunctionComponent:
+      // 函数组件没有操作
+      return;
+    case ClassComponent:
+      instance.getSnapshotBeforeUpdate(prevProps, prevState);
+      return;
+  }
+}
+</code></pre>
+<h4>commitMutationEffects</h4>
+<p>这个函数主要操作 DOM，
+如果是PlacementAndUpdate则执行</p>
+<ul>
+<li>commitPlacement。调用 <code>parentNode.appendChild(child);</code> 或者 <code>container.insertBefore(child, beforeChild)</code> 插入 DOM 节点</li>
+<li>commitWork。同步调用函数组件 <code>useLayoutEffect</code> 的<code>清除函数</code>
+如果是 Delete 则执行
+commitDeletion</li>
+</ul>
+<pre><code class="language-js">function commitMutationEffects(root, renderPriorityLevel) {
+  while (nextEffect !== null) {
+    // 插入，更新，删除 DOM 节点
+    switch (primaryFlags) {
+      case PlacementAndUpdate: {
+        // 插入
+        commitPlacement(nextEffect);
+        commitWork(_current, nextEffect);
+        break;
+      }
+      case Deletion: {
+        // 删除
+        commitDeletion(root, nextEffect);
+        break;
+      }
+    }
+    nextEffect = nextEffect.nextEffect;
+  }
+}
+
+</code></pre>
+<hr>
+<p>commitPlacement方法
+调用 <code>parentNode.appendChild(child);</code> 或者 <code>container.insertBefore(child, beforeChild)</code> 插入 DOM 节点</p>
+<pre><code>function commitPlacement(finishedWork) {
+  if (isContainer) {
+    insertOrAppendPlacementNodeIntoContainer(finishedWork, before, parent);
+  } else {
+    insertOrAppendPlacementNode(finishedWork, before, parent);
+  }
+}
+
+function unmountHostComponents(finishedRoot, current, renderPriorityLevel) {
+  while (true) {
+    commitUnmount(finishedRoot, node);
+  }
+}
+function insertOrAppendPlacementNodeIntoContainer(node, before, parent) {
+  if (before) {
+    insertInContainerBefore(parent, stateNode, before);
+  } else {
+    appendChildToContainer(parent, stateNode);
+  }
+}
+
+</code></pre>
+<hr>
+<p>commit Work方法</p>
+<ul>
+<li>同步调用函数组件 <code>useLayoutEffect</code> 的<code>清除函数</code>，这个函数对于类组件没有任何操作</li>
+</ul>
+<pre><code class="language-js">function commitWork(current, finishedWork) {
+  switch (finishedWork.tag) {
+    case FunctionComponent: {
+      // 调用函数组件的清除函数
+      commitHookEffectListUnmount(Layout | HasEffect, finishedWork);
+      return;
+    }
+    case ClassComponent:
+      // 可以看到 类组件 在这里是不执行任何操作的
+      return;
+  }
+}
+// 执行函数组件的 useLayoutEffect 监听函数的回调，即清除函数
+function commitHookEffectListUnmount(tag, finishedWork) {
+  do {
+    // Unmount
+    var destroy = effect.destroy;
+    effect.destroy = undefined;
+    destroy(); // 执行 useLayoutEffect 的清除函数
+    effect = effect.next;
+  } while (effect !== firstEffect);
+}
+</code></pre>
+<hr>
+<p>CommitDeletion 主要是删除 DOM 节点，以及调用当前节点以及子节点所有的 <code>卸载</code> 相关的生命周期方法</p>
+<ul>
+<li>同步调用函数组件的 <code>useLayoutEffect</code> 的 <code>清除函数</code>，这是同步执行的</li>
+<li>同步调用类组件的 <code>componentWillUnmount</code> 生命周期方法</li>
+<li>将函数组件的 <code>useEffect</code> 的 <code>清除函数</code> 添加进异步刷新队列，这是异步执行的</li>
+<li>所有的函数组件的 useLayoutEffect 的清除函数都在这个阶段执行完成</li>
+</ul>
+<pre><code class="language-js">
+function commitDeletion(finishedRoot, current, renderPriorityLevel) {
+  // 调用所有子节点的 componentWillUnmount() 方法
+  unmountHostComponents(finishedRoot, current);
+}
+
+function commitUnmount(finishedRoot, current, renderPriorityLevel) {
+  switch (current.tag) {
+    case FunctionComponent: {
+      do {
+        if (effect 是 useEffect) {
+          // 将 useEffect 的清除函数添加进异步刷新队列，useEffect 的清除函数是异步执行的
+          enqueuePendingPassiveHookEffectUnmount(current, effect);
+        } else {
+          // 调用 useLayoutEffect 的清除函数，同步执行的
+          // 其实就是直接调用destroy();
+          safelyCallDestroy(current, destroy);
+        }
+        effect = effect.next;
+      } while (effect !== firstEffect);
+      return;
+    }
+    case ClassComponent: {
+      // 直接调用类组件的 componentWillUnmount() 生命周期方法，同步执行
+      safelyCallComponentWillUnmount(current, instance);
+      return;
+    }
+  }
+}
+</code></pre>
+<h4>commitLayoutEffects</h4>
+<p>当执行到这个函数，此时 <code>useLayoutEffect</code> 的清除函数已经全部执行完成。
+准备调用<code>useLayoutEffect</code> 监听函数或者执行声明周期方法</p>
+<p>通过commitLifeCycles 调用不同组件的方法</p>
+<p>如果是函数组件调用commitHookEffectListMount</p>
+<ul>
+<li>调用函数组件的 <code>useLayoutEffect</code> 监听函数，同步执行
+<ul>
+<li>通过commitHookEffectListMount执行</li>
+</ul>
+</li>
+<li>将函数组件的 <code>useEffect</code> 监听函数放入异步队列，异步执行</li>
+</ul>
+<p>类组件则</p>
+<ul>
+<li>执行类组件的 <code>componentDidMount</code> 生命周期方法，同步执行</li>
+<li>执行类组件的 <code>componentDidUpdate</code> 生命周期方法，同步执行</li>
+<li>执行类组件 <code>this.setState(arg, callback)</code> 中的 <code>callback</code> 回调，同步执行</li>
+</ul>
+<pre><code class="language-js">function commitLayoutEffects(root, committedLanes) {
+  // 此时所有的 `useLayoutEffect` 的清除函数已经执行完成，在commitMutationEffects阶段执行的
+  while (nextEffect !== null) {
+    commitLifeCycles(root, current, nextEffect);
+    nextEffect = nextEffect.nextEffect;
+  }
+}
+function commitLifeCycles(finishedRoot, current, finishedWork, committedLanes) {
+  switch (finishedWork.tag) {
+    case FunctionComponent: {
+      // 同步执行 useLayoutEffect 的监听函数
+      commitHookEffectListMount(Layout | HasEffect, finishedWork);
+      // 将 useEffect 的监听函数放入异步队列等待执行
+      schedulePassiveEffects(finishedWork);
+      return;
+    }
+    case ClassComponent: {
+      // 第一次挂载的时候执行类组件的componentDidMount生命周期方法
+      instance.componentDidMount();
+      // 组件更新的时候执行类组件的 componentDidUpdate 生命周期方法
+      instance.componentDidUpdate(prevProps, prevState, snapshotBeforeUpdate);
+      // 调用类组件 this.setState(arg, callback) 的callback回调
+      commitUpdateQueue(finishedWork, updateQueue, instance);
+      return;
+    }
+  }
+}
+
+</code></pre>
+<hr>
+<p>使用commitHookEffectListMount执行useLayoutEffect的监听函数</p>
+<pre><code class="language-js">// 执行useLayoutEffect监听函数
+function commitHookEffectListMount(tag, finishedWork) {
+  do {
+    if ((effect.tag &amp; tag) === tag) {
+      // Mount
+      var create = effect.create;
+      effect.destroy = create();
+    }
+    effect = effect.next;
+  } while (effect !== firstEffect);
+}
+</code></pre>
+<h3>flushPassiveEffectsImpl</h3>
+<p>useEffect 的清除函数和监听函数执行的地方。在这个函数的入口处打个断点，观察清除函数和监听函数的执行时机。当 JS 主线程执行完毕，浏览器绘制页面完成后，这个函数才会异步执行</p>
+<pre><code class="language-js">function flushPassiveEffectsImpl() {
+  var unmountEffects = pendingPassiveHookEffectsUnmount;
+  pendingPassiveHookEffectsUnmount = [];
+
+  // 首先要一次性执行完所有的清除函数
+  for (var i = 0; i &lt; unmountEffects.length; i += 2) {
+    var _effect = unmountEffects[i];
+    var fiber = unmountEffects[i + 1];
+    var destroy = _effect.destroy;
+    _effect.destroy = undefined;
+
+    if (typeof destroy === &quot;function&quot;) {
+      destroy();
+    }
+  }
+  // 其次，一次性执行完所有的监听函数
+  var mountEffects = pendingPassiveHookEffectsMount;
+  pendingPassiveHookEffectsMount = [];
+
+  for (var _i = 0; _i &lt; mountEffects.length; _i += 2) {
+    var _effect2 = mountEffects[_i];
+    var _fiber = mountEffects[_i + 1];
+    var create = _effect2.create;
+    _effect2.destroy = create();
+  }
+
+  return true;
+}
+</code></pre>
+<p>从这个函数的执行中也可以看出，useEffect 的 <code>监听函数</code> 和 <code>清除函数</code> 在同一个调用栈中是同步执行的。</p>
+
+<h1>单节点dom-diff算法</h1><h3>单节点 DOM Diff 算法介绍</h3>
+<p>当新的 react element 子元素只有一个节点时，React 会遍历旧的 fiber 列表，并比较 key 和 type，如果 key 和 type 都相同，则复用旧的 fiber 节点，并删掉其余的旧 fiber 节点。</p>
+<p>如果 key 或者 type 不同，则创建新的 fiber 节点，并将旧的子 fiber 节点全部删除。</p>
+<ul>
+<li>key 和 type 都相同，则可以复用当前的 fiber 节点
+<ul>
+<li>首先调用 deleteRemainingChildren 将当前 fiber 后面的兄弟元素全部标记为删除，并添加到父节点的副作用链表中</li>
+<li>调用 useFiber 复用当前的 fiber 节点</li>
+</ul>
+</li>
+<li>如果 key 相同，type 不同，就不需要再进行比较了，调用 deleteRemainingChildren 将当前 fiber 节点以及它后面的所有兄弟节点都标记为删除</li>
+<li>如果 key 不同，则调用 deleteChild 将当前的 fiber 节点标记为删除，并继续比较下一个 fiber 节点</li>
+<li>如果遍历完所有的子 fiber 列表都没找到 key 相同的 fiber 节点，则为新的 element 元素创建新的 fiber 节点。旧的子 fiber 节点此时已经全部被标记为删除</li>
+</ul>
+<h4>性能不好的写法：没有给元素添加 key 属性</h4>
+<p>考虑下面的代码</p>
+<pre><code class="language-js">// 更新前
+&lt;div&gt;
+  &lt;span&gt;1&lt;/span&gt;
+  &lt;h1&gt;1&lt;/h1&gt;
+  &lt;h3&gt;2&lt;/h3&gt;
+&lt;/div&gt;
+// 更新后
+&lt;div&gt;
+  &lt;h1&gt;2&lt;/h1&gt;
+&lt;/div&gt;
+</code></pre>
+<p>理论上，中间的<code>h1</code>节点是可以复用的，但是由于<code>h1</code>节点都没有<code>key</code>属性，在协调过程中，首先开始将<code>span</code>和新的 element 元素 <code>h1</code> 对比，发现这两个 <code>key</code> 相同(都是 null)，但是<code>type</code>不同，无法复用。同时无需再继续比较其余的 fiber 节点。</p>
+<p>因此，在本例中，React 会将所有的子 fiber 节点标记为删除，并添加到父节点的副作用链表中，然后为 h1 创建新的 fiber 节点</p>
+<p><strong>综上，如果是多节点变单节点的场景，建议还是加上 key 属性</strong></p>
+<h3>单节点 DOM Diff 主要源码</h3>
+<p>Dom Diff 协调从 <code>reconcileChildFibers</code> 函数开始，
+如果新的element节点，即newChild是一个对象，则说明这是单一节点，调用reconcileSingleElement进行协调</p>
+<pre><code class="language-js">function reconcileChildFibers(returnFiber, currentFirstChild, newChild, lanes) {
+  var isObject = typeof newChild === &quot;object&quot; &amp;&amp; newChild !== null;
+  if (isObject) {
+    switch (newChild.$$typeof) {
+      case REACT_ELEMENT_TYPE:
+        return placeSingleChild(
+          reconcileSingleElement(
+            returnFiber,
+            currentFirstChild,
+            newChild,
+            lanes
+          )
+        );
+    }
+  }
+}
+
+</code></pre>
+<h4>reconcileSingleElement</h4>
+<p>单节点 DOM Diff 算法都在 <code>reconcileSingleElement</code> 函数中</p>
+<pre><code class="language-js">//reconcileSingleElement负责协调单一节点场景
+function reconcileSingleElement(
+  returnFiber,
+  currentFirstChild,
+  element,
+  lanes
+) {
+  var key = element.key;
+  var child = currentFirstChild;
+
+  while (child !== null) {
+    if (child.key === key) {
+      switch (child.tag) {
+        default: {
+          if (child.elementType === element.type) {
+            // key和type都相同，则可以复用
+            // 首先调用deleteRemainingChildren将当前fiber后面的兄弟元素全部标记为删除
+            deleteRemainingChildren(returnFiber, child.sibling);
+            // 重用当前旧的子fiber节点
+            var _existing3 = useFiber(child, element.props);
+            _existing3.return = returnFiber;
+            return _existing3;
+          }
+
+          break;
+        }
+      }
+      // 如果key相同，type不同，就不需要再进行比较了，将当前旧的子fiber节点以及它后面的所有兄弟节点都标记为删除
+      deleteRemainingChildren(returnFiber, child);
+      break;
+    } else {
+      // 如果key不同，则调用deleteChild将当前的子fiber节点标记为删除
+      deleteChild(returnFiber, child);
+    }
+    // 如果key不同，则继续比较下一个子fiber节点
+    child = child.sibling;
+  }
+  // 如果遍历完当前所有的子fiber节点都没有找到key和type相同的节点，则为新的element元素创建新的fiber节点
+  var _created4 = createFiberFromElement(element, returnFiber.mode, lanes);
+  _created4.return = returnFiber;
+  return _created4;
+}
+// 将fiber节点标记为删除，并添加到父节点的副作用链表中
+function deleteChild(returnFiber, childToDelete) {
+  var last = returnFiber.lastEffect;
+  if (last !== null) {
+    last.nextEffect = childToDelete;
+    returnFiber.lastEffect = childToDelete;
+  } else {
+    returnFiber.firstEffect = returnFiber.lastEffect = childToDelete;
+  }
+  childToDelete.nextEffect = null;
+  childToDelete.flags = Deletion;
+}
+// 删除其余的fiber节点
+function deleteRemainingChildren(returnFiber, currentFirstChild) {
+  var childToDelete = currentFirstChild;
+  while (childToDelete !== null) {
+    deleteChild(returnFiber, childToDelete);
+    childToDelete = childToDelete.sibling;
+  }
+
+  return null;
+}
+</code></pre>
+
+<h1>彻底搞懂函数组件hook链表</h1><blockquote>
+<p>hook 链表保存在 fiber 节点的 memoizedState 属性上。</p>
+</blockquote>
+<h2>概述</h2>
+<ul>
+<li>每一个 hook 函数都有对应的 hook 对象保存状态信息</li>
+<li><code>useContext</code>是唯一一个不需要添加到 hook 链表的 hook 函数</li>
+<li>只有 useEffect、useLayoutEffect 以及 useImperativeHandle 这三个 hook 具有副作用，在 render 阶段需要给函数组件 fiber 添加对应的副作用标记。同时这三个 hook 都有对应的 effect 对象保存其状态信息</li>
+<li>每次渲染都是重新构建 hook 链表以及 收集 effect list(fiber.updateQueue)</li>
+<li>初次渲染调用 mountWorkInProgressHook 构建 hook 链表。更新渲染调用 updateWorkInProgressHook 构建 hook 链表并复用上一次的 hook 状态信息</li>
+</ul>
+<h2>fiber</h2>
+<p>React 在初次渲染或者更新过程中，都会在 render 阶段创建新的或者复用旧的 fiber 节点。每一个函数组件，都有对应的 fiber 节点。</p>
+<p>fiber 的主要属性如下：</p>
+<pre><code class="language-js">var fiber = {
+  alternate,
+  child,
+  elementType: () =&gt; {},
+  memoizedProps: null,
+  memoizedState: null, // 在函数组件中，memoizedState用于保存hook链表
+  pendingProps: {},
+  return,
+  sibling,
+  stateNode,
+  tag, // fiber的类型，函数组件对应的tag为2
+  type: () =&gt; {}
+  updateQueue: null,
+}
+</code></pre>
+<hr>
+<p>在函数组件的 fiber 中，有两个属性和 hook 有关：<code>memoizedState</code> 和<code>updateQueue</code> 属性。</p>
+<ul>
+<li>memoizedState 属性用于保存 hook 链表，hook 链表是单向链表。</li>
+<li>updateQueue 属性用于保存<code>useEffect</code>、<code>useLayoutEffect</code>、<code>useImperativeHandle</code>这三个 hook 的 effect 信息，是一个环状链表，其中 updateQueue.lastEffect 指向最后一个 effect 对象。effect 描述了 hook 的信息，比如<code>useLayoutEffect</code> 的 effect 对象保存了监听函数，清除函数，依赖等。</li>
+</ul>
+<h2>hook 链表</h2>
+<p>React 为我们提供的以<code>use</code>开头的函数就是 hook，本质上函数在执行完成后，就会被销毁，然后状态丢失。
+React 能记住这些函数的状态信息的根本原因是，在函数组件执行过程中，React 会为每个 hook 函数创建对应的 hook 对象，然后将状态信息保存在 hook 对象中，在下一次更新渲染时，会从这些 hook 对象中获取上一次的状态信息。</p>
+<hr>
+<p>在函数组件执行的过程中，比如上例中，当执行 <code>Home()</code> 函数组件时，React 会为组件内每个 hook 函数创建对应的 hook 对象，这些 hook 对象保存 hook 函数的信息以及状态，然后将这些 hook 对象连成一个链表。
+上例中，第一个执行的是<code>useState</code> hook，React 为其创建一个 hook：stateHook。第二个执行的是<code>useRef</code> hook，同样为其创建一个 hook：refHook，然后将 stateHook.next 指向 refHook：stateHook.next = refHook。同理，refHook.next = effectHook，...</p>
+<hr>
+<p>需要注意：</p>
+<ul>
+<li><strong><code>useContext</code>是唯一一个不会出现在 hook 链表中的 hook。</strong></li>
+<li>useState 是 useReducer 的语法糖，因此这里只需要用 useState 举例就好。</li>
+<li><code>useEffect</code>、<code>useLayoutEffect</code>、<code>useImperativeHandle</code>这三个 hook 都是属于 effect 类型的 hook，他们的 effect 对象都需要被添加到函数组件 fiber 的 updateQueue 中，以便在 commit 阶段执行。</li>
+</ul>
+<h2>hook 对象及其属性介绍</h2>
+<p>函数组件内部的每一个 hook 函数，都有对应的 hook 对象用来保存 hook 函数的状态信息，hook 对象的属性如下：</p>
+<pre><code class="language-js">var hook = {
+  memoizedState,,
+  baseState,
+  baseQueue,
+  queue,
+  next,
+};
+</code></pre>
+<p>注意，hook 对象中的<code>memoizedState</code>属性和 fiber 的<code>memoizedState</code>属性含义不同。
+<code>next</code> 指向下一个 hook 对象，函数组件中的 hook 就是通过 next 指针连成链表</p>
+<h2>不同的 hook</h2>
+<p>同时，不同的 hook 中，memoizedState 的含义不同，下面详细介绍各类型 hook 对象的属性含义</p>
+<h3>useState Hook 对象</h3>
+<ul>
+<li>hook.memoizedState 保存的是 useState 的 state 值。
+<ul>
+<li>比如 <code>const [count, setCount] = useState(0)</code>中，memoizedState 保存的就是 state 的值。</li>
+</ul>
+</li>
+<li>hook.queue 保存的是更新队列，是个环状链表。queue 的属性如下：</li>
+</ul>
+<pre><code class="language-js">hook.queue = {
+  pending: null,
+  dispatch: null,
+  lastRenderedReducer: basicStateReducer,
+  lastRenderedState: initialState,
+};
+</code></pre>
+<p>比如我们在 onClick 中多次调用<code>setCount</code>：
+每次调用<code>setCount</code>，都会创建一个新的 update 对象，并添加进 hook.queue 中，update 对象属性如下：</p>
+<pre><code class="language-js">var update = {
+  lane: lane,
+  action: action, // setCount的参数
+  eagerReducer: null,
+  eagerState: null,
+  next: null,
+};
+</code></pre>
+<p>queue.pending 指向最后一个更新对象。
+在 render 阶段，会遍历 hook.queue，计算最终的 state 值，并存入 hook.memoizedState 中</p>
+<h3>useRef Hook</h3>
+<ul>
+<li>hook.memoizedState 保存的是 ref 的值。比如</li>
+</ul>
+<pre><code class="language-js">const myRef = useRef(null);
+</code></pre>
+<p>那么 memoizedState 保存的是 myRef 的值，即：</p>
+<pre><code class="language-js">hook.memoizedState = {
+  current,
+};
+</code></pre>
+<h3>useEffect、useLayoutEffect 以及 useImperativeHandle</h3>
+<ul>
+<li>memoizedState 保存的是一个 effect 对象，effect 对象保存的是 hook 的状态信息，比如监听函数，依赖，清除函数等，属性如下：</li>
+</ul>
+<pre><code class="language-js">var effect = {
+  tag: tag, // effect的类型，useEffect对应的tag为5，useLayoutEffect对应的tag为3
+  create: create, // useEffect或者useLayoutEffect的监听函数，即第一个参数
+  destroy: destroy, // useEffect或者useLayoutEffect的清除函数，即监听函数的返回值
+  deps: deps, // useEffect或者useLayoutEffect的依赖，第二个参数
+  // Circular
+  next: null, // 在updateQueue中使用，将所有的effect连成一个链表
+};
+</code></pre>
+<p><strong>这三个 hook 都属于 effect 类型的 hook，即具有副作用的 hook</strong></p>
+<ul>
+<li>useEffect 的副作用为：Update | Passive，即 516</li>
+<li>useLayoutEffect 和 useImperativeHandle 的副作用都是：Update，即 4</li>
+</ul>
+<h2>fiber.updateQueue 和hook.queue</h2>
+<p><strong>在函数组件中，也就只有这三个 hook (useEffect、useLayoutEffect 以及 useImperativeHandle)才具有副作用</strong>，在 hook 执行的过程中需要给 fiber 添加对应的副作用标记。然后在 commit 阶段执行对应的操作，比如调用<code>useEffect</code>的监听函数，清除函数等等。</p>
+<p>因此，React 需要将这三个 hook 函数的 effect 对象存到 fiber.updateQueue 中，以便在 commit 阶段遍历 updateQueue，执行对应的操作。updateQueue 也是一个环状链表，lastEffect 指向最后一个 effect 对象。effect 和 effect 之间通过 next 相连。</p>
+<pre><code class="language-js">const effect = {
+    create: () =&gt; { console.log(&quot;useEffect&quot;, count); },
+    deps: [0]
+    destroy: undefined,
+    tag: 5,
+}
+effect.next = effect
+fiber.updateQueue = {
+  lastEffect: effect,
+};
+</code></pre>
+<h3>useMemo</h3>
+<ul>
+<li>hook.memoizedState 保存的是 useMemo 的值和依赖。比如</li>
+</ul>
+<pre><code class="language-js">const res = useMemo(() =&gt; {
+  return count * count;
+}, [count]);
+</code></pre>
+<p>那么 memoizedState 保存的是返回值以及依赖，即</p>
+<pre><code class="language-js">hook.memoizedState = [count * count, [count]];
+</code></pre>
+<h3>useCallback</h3>
+<p>hook.memoizedState 保存的是回调函数和依赖，比如</p>
+<pre><code class="language-js">const onClick = useCallback(callback dep);
+</code></pre>
+<p>那么 memoizedState=[callback, dep]</p>
+<h2>构建 Hook 链表的源码</h2>
+<p>React 在<strong>初次渲染</strong>和<strong>更新</strong>这两个过程，构建 hook 链表的算法不一样，因此 React 对这两个过程是分开处理的：</p>
+<pre><code class="language-js">var HooksDispatcherOnMount = {
+  useCallback: mountCallback,
+  useContext: readContext,
+  useEffect: mountEffect,
+  useImperativeHandle: mountImperativeHandle,
+  useLayoutEffect: mountLayoutEffect,
+  useMemo: mountMemo,
+  useRef: mountRef,
+  useState: mountState,
+};
+var HooksDispatcherOnUpdate = {
+  useCallback: updateCallback,
+  useContext: readContext,
+  useEffect: updateEffect,
+  useImperativeHandle: updateImperativeHandle,
+  useLayoutEffect: updateLayoutEffect,
+  useMemo: updateMemo,
+  useRef: updateRef,
+  useState: updateState,
+};
+</code></pre>
+<p>如果是初次渲染，则使用<code>HooksDispatcherOnMount</code>，此时如果我们调用 useState，实际上调用的是<code>HooksDispatcherOnMount.useState</code>，执行的是<code>mountState</code>方法。</p>
+<p>如果是更新阶段，则使用<code>HooksDispatcherOnUpdate</code>，此时如果我们调用 useState，实际上调用的是<code>HooksDispatcherOnUpdate.useState</code>，执行的是<code>updateState</code></p>
+<h2><strong>初次渲染和更新渲染执行 hook 函数的区别在于：</strong></h2>
+<ul>
+<li>构建 hook 链表的算法不同。初次渲染只是简单的构建 hook 链表。而更新渲染会遍历上一次的 hook 链表，构建新的 hook 链表，并复用上一次的 hook 状态</li>
+<li>依赖的判断。初次渲染不需要判断依赖。更新渲染需要判断依赖是否变化。</li>
+<li>对于 useState 来说，更新阶段还需要遍历 queue 链表，计算最新的状态。</li>
+</ul>
+<h3>renderWithHooks 函数组件执行</h3>
+<p>不管是初次渲染还是更新渲染，函数组件的执行都是从<code>renderWithHooks</code>函数开始执行。</p>
+<pre><code class="language-js">function renderWithHooks(current, workInProgress, Component, props) {
+  currentlyRenderingFiber = workInProgress;
+  workInProgress.memoizedState = null;
+  workInProgress.updateQueue = null;
+
+  ReactCurrentDispatcher.current =
+    current === null || current.memoizedState === null
+      ? HooksDispatcherOnMount
+      : HooksDispatcherOnUpdate;
+
+  var children = Component(props, secondArg);
+
+  currentlyRenderingFiber = null;
+  currentHook = null;
+  workInProgressHook = null;
+
+  return children;
+}
+</code></pre>
+<p>renderWithHooks 的<code>Component</code>参数就是我们的函数组件，在本例中，就是<code>Home</code>函数。</p>
+<p><strong>Component 开始执行前，会重置 memoizedState 和 updateQueue 属性，因此每次渲染都是重新构建 hook 链表以及收集 effect list</strong></p>
+<p>renderWithHooks 方法初始化以下全局变量</p>
+<ul>
+<li>currentlyRenderingFiber。fiber 节点。当前正在执行的函数组件对应的 fiber 节点，这里是 Home 组件的 fiber 节点</li>
+<li>ReactCurrentDispatcher.current。负责派发 hook 函数，初次渲染时，指向 HooksDispatcherOnMount，更新渲染时指向 HooksDispatcherOnUpdate。</li>
+</ul>
+<hr>
+<p>比如我们在函数组件内部调用 useState，实际上调用的是：</p>
+<pre><code class="language-js">function useState(initialState) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useState(initialState);
+}
+function resolveDispatcher() {
+  var dispatcher = ReactCurrentDispatcher.current;
+  return dispatcher;
+}
+</code></pre>
+<p><strong>每一个 hook 函数在执行时，都会调用<code>resolveDispatcher</code>方法获取当前的<code>dispatcher</code>，然后调用<code>dispatcher</code>中对应的方法处理 mount 或者 update 逻辑。</strong></p>
+<h2>mountEffectImpl</h2>
+<p>以 useEffect 为例，在初次渲染时调用的是mountEffectImpl：</p>
+<pre><code class="language-js">function mountEffectImpl(fiberFlags, hookFlags, create, deps) {
+  var hook = mountWorkInProgressHook();
+  var nextDeps = deps === undefined ? null : deps;
+  currentlyRenderingFiber.flags |= fiberFlags;
+  hook.memoizedState = pushEffect(
+    HasEffect | hookFlags,
+    create,
+    undefined,
+    nextDeps
+  );
+}
+</code></pre>
+<p>pushEffect 方法构建一个 effect 对象并添加到 fiber.updateQueue 中，同时返回 effect 对象。</p>
+<h2>updateEffectImpl</h2>
+<p>useEffect在更新渲染时，调用的是updateEffectImpl</p>
+<pre><code class="language-js">function updateEffectImpl(fiberFlags, hookFlags, create, deps) {
+  var hook = updateWorkInProgressHook();
+  var nextDeps = deps === undefined ? null : deps;
+  var destroy = undefined;
+
+  if (currentHook !== null) {
+    var prevEffect = currentHook.memoizedState;
+    destroy = prevEffect.destroy;
+
+    if (nextDeps !== null) {
+      var prevDeps = prevEffect.deps;
+
+      if (areHookInputsEqual(nextDeps, prevDeps)) {
+        pushEffect(hookFlags, create, destroy, nextDeps);
+        return;
+      }
+    }
+  }
+
+  currentlyRenderingFiber.flags |= fiberFlags;
+  hook.memoizedState = pushEffect(
+    HasEffect | hookFlags,
+    create,
+    destroy,
+    nextDeps
+  );
+}
+</code></pre>
+<p>mountEffectImpl 方法逻辑比较简单，而 updateEffectImpl 方法还多了一个判断依赖是否变化的逻辑。</p>
+<h3>构建 hook 链表的算法</h3>
+<p><code>mountWorkInProgressHook</code>和<code>updateWorkInProgressHook</code>是用来构建函数组件执行过程中的hook链表的方法。每一个hook函数在执行过程中都会调用这两个方法。</p>
+<ul>
+<li>在初次渲染时，使用<code>mountWorkInProgressHook</code>方法，它会直接为每个hook函数创建对应的hook对象。</li>
+<li>而在更新渲染时，使用<code>updateWorkInProgressHook</code>方法。在执行每个hook函数时，同时遍历上一次的hook链表，以复用上一次hook的状态信息。这个算法稍稍复杂。</li>
+</ul>
+<p>React使用全局变量<code>workInProgressHook</code>来保存当前正在执行的hook对象。</p>
+<ul>
+<li>比如，在本例中，第一个执行的是<code>useState</code>，那么此时`workInProgressHook=stateHook</li>
+<li>第二个执行的是<code>useRef</code>，那么此时<code>workInProgressHook=refHook</code>，依此类推。</li>
+</ul>
+<p>可以将<code>workInProgressHook</code>看作链表的指针，指向当前正在执行的hook对象。</p>
+<h4>mountWorkInProgressHook 构建 hook 链表算法</h4>
+<p>可以看出，初次渲染构建 hook 链表的算法逻辑非常简单，为每一个 hook 函数创建对应的 hook 对象，然后添加到 hook 链表末尾就行</p>
+<pre><code class="language-js">function mountWorkInProgressHook() {
+  var hook = {
+    memoizedState: null,
+    baseState: null,
+    baseQueue: null,
+    queue: null,
+    next: null,
+  };
+
+  if (workInProgressHook === null) {
+    // hook链表中的第一个hook
+    currentlyRenderingFiber.memoizedState = workInProgressHook = hook;
+  } else {
+    // 添加到hook链表末尾
+    workInProgressHook = workInProgressHook.next = hook;
+  }
+
+  return workInProgressHook;
+}
+</code></pre>
+<h4>updateWorkInProgressHook 构建 hook 链表算法</h4>
+<p>更新渲染阶段构建 hook 链表的算法就比较麻烦。我们从 fiber 开始
+我们知道 React 在 render 阶段会复用 fiber 节点，假设我们第一次渲染完成的 fiber 节点如下：</p>
+<pre><code class="language-js">var firstFiber = {
+  ..., // 省略其他属性
+  alternate: null, // 由于是第一次渲染，alternate为null
+  memoizedState, // 第一次渲染构建的hook链表
+  updateQueue, // 第一次渲染收集的effect list
+};
+</code></pre>
+<p>在首次渲染完成后，会生成一个 hook 链表，其中包含一系列的 hook。</p>
+<ul>
+<li>当点击按钮触发更新时，会调用 renderWithHooks 函数，并在执行 Home 函数之前，将 workInProgressHook 和 currentHook 都设置为 null。</li>
+<li>在新的 fiber 中，memoizedState 和 updateQueue 都被重置为 null。</li>
+<li>workInProgressHook 用于构建新的 hook 链表。</li>
+<li>currentHook 用于遍历上一次渲染构建的 hook 链表，即旧的链表，或者当前显示页面对应的 hook 链表。</li>
+</ul>
+<p>综上所述，workInProgressHook 和 currentHook 在 React 的更新过程中起到了不同的作用，用于构建新的 hook 链表和遍历旧的 hook 链表。</p>
+<h2>updateWorkInProgressHook拆解</h2>
+<p>当点击按钮触发更新时，会调用 renderWithHooks 函数，并在执行 Home 函数之前，将 workInProgressHook 和 currentHook 都设置为 null。
+我们按照hook链表顺序，一步步拆解<code>updateWorkInProgressHook</code>算法的过程</p>
+<ul>
+<li>第一步 调用 useState
+由于此时 <code>currentHook</code> 为 null，因此我们需要初始化它指向旧的 hook 链表的第一个 hook 对象。</li>
+</ul>
+<pre><code class="language-js">if (currentHook === null) {
+  var current = currentlyRenderingFiber.alternate;
+
+  if (current !== null) {
+    nextCurrentHook = current.memoizedState;
+  } else {
+    nextCurrentHook = null;
+  }
+}
+
+currentHook = nextCurrentHook;
+</code></pre>
+<p>创建一个新的 hook 对象，复用上一次的 hook 对象的状态信息，并初始化 hook 链表</p>
+<pre><code class="language-js">var newHook = {
+  memoizedState: currentHook.memoizedState,
+  baseState: currentHook.baseState,
+  baseQueue: currentHook.baseQueue,
+  queue: currentHook.queue,
+  next: null, // 注意，next被重置了!!!!!
+};
+
+if (workInProgressHook === null) {
+  currentlyRenderingFiber.memoizedState = workInProgressHook = newHook;
+}
+</code></pre>
+<h2>updateWorkInProgressHook第二步</h2>
+<p>第二步 调用 useRef
+此时 currentHook 已经有值，指向第一个 hook 对象。因此将 currentHook 指向它的下一个 hook 对象，即第二个</p>
+<pre><code class="language-js">if (currentHook === null) {
+} else {
+  nextCurrentHook = currentHook.next;
+}
+currentHook = nextCurrentHook;
+</code></pre>
+<p>后面的 hook 的执行过程和 useRef 一样，都是一边遍历旧的 hook 链表，为当前 hook 函数创建新的 hook 对象，然后复用旧的 hook 对象的状态信息，然后添加到 hook 链表中</p>
+<p><strong>从更新渲染的过程也可以看出，hook 函数的执行是会遍历旧的 hook 链表并复用旧的 hook 对象的状态信息。
+这也是为什么我们不能将 hook 函数写在条件语句或者循环中的根本原因，我们必须保证 hook 函数的顺序在任何时候都要一致</strong></p>
+<h4>完整源码</h4>
+<p>最终完整的算法如下：</p>
+<pre><code class="language-js">function updateWorkInProgressHook() {
+  var nextCurrentHook;
+
+  if (currentHook === null) {
+    var current = currentlyRenderingFiber$1.alternate;
+
+    if (current !== null) {
+      nextCurrentHook = current.memoizedState;
+    } else {
+      nextCurrentHook = null;
+    }
+  } else {
+    nextCurrentHook = currentHook.next;
+  }
+
+  var nextWorkInProgressHook;
+
+  if (workInProgressHook === null) {
+    nextWorkInProgressHook = currentlyRenderingFiber$1.memoizedState;
+  } else {
+    nextWorkInProgressHook = workInProgressHook.next;
+  }
+
+  if (nextWorkInProgressHook !== null) {
+    // There's already a work-in-progress. Reuse it.
+    workInProgressHook = nextWorkInProgressHook;
+    nextWorkInProgressHook = workInProgressHook.next;
+    currentHook = nextCurrentHook;
+  } else {
+    // Clone from the current hook.
+    if (!(nextCurrentHook !== null)) {
+      {
+        throw Error(formatProdErrorMessage(310));
+      }
+    }
+
+    currentHook = nextCurrentHook;
+    var newHook = {
+      memoizedState: currentHook.memoizedState,
+      baseState: currentHook.baseState,
+      baseQueue: currentHook.baseQueue,
+      queue: currentHook.queue,
+      next: null,
+    };
+
+    if (workInProgressHook === null) {
+      // This is the first hook in the list.
+      currentlyRenderingFiber$1.memoizedState = workInProgressHook = newHook;
+    } else {
+      // Append to the end of the list.
+      workInProgressHook = workInProgressHook.next = newHook;
+    }
+  }
+
+  return workInProgressHook;
+}
+</code></pre>
