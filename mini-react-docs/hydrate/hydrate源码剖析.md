@@ -1,64 +1,5 @@
-> [深入概述 React 初次渲染及状态更新主流程](https://raw.githubusercontent.com/lizuncong/mini-react/master/docs/render/%E6%B7%B1%E5%85%A5%E6%A6%82%E8%BF%B0%20React%E5%88%9D%E6%AC%A1%E6%B8%B2%E6%9F%93%E5%8F%8A%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0%E4%B8%BB%E6%B5%81%E7%A8%8B.md)一文中介绍过 React 渲染过程，即`ReactDOM.render`执行过程分为两个大的阶段：`render` 阶段以及 `commit` 阶段。`React.hydrate`渲染过程和`ReactDOM.render`差不多，两者之间最大的区别就是，`ReactDOM.hydrate` 在 `render` 阶段，会尝试复用(hydrate)浏览器现有的 dom 节点，并相互关联 dom 实例和 fiber，以及找出 dom 属性和 fiber 属性之间的差异。
 
-## Demo
-
-这里，我们在 `index.html` 中直接返回一段 html，以模拟服务端渲染生成的 html
-
-```js
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Mini React</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  </head>
-  <body>
-    <div id="root"><div id="root"><div id="container"><h1 id="A">1<div id="A2">A2</div></h1><p id="B"><span id="B1">B1</span></p><span id="C">C</span></div></div></div>
-  </body>
-</html>
-```
-
-注意，`root` 里面的内容不能换行，不然客户端`hydrate`的时候会提示服务端和客户端的模版不一致。
-
-新建 index.jsx：
-
-```js
-import React from "react";
-import ReactDOM from "react-dom";
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      count: 1,
-    };
-  }
-
-  render() {
-    const { count } = this.state;
-    return (
-      <div id="container">
-        <div id="A">
-          {count}
-          <div id="A2">A2</div>
-        </div>
-        <p id="B">
-          <span id="B1">B1</span>
-        </p>
-      </div>
-    );
-  }
-}
-
-ReactDOM.hydrate(<Home />, document.getElementById("root"));
-```
-
-对比服务端和客户端的内容可知，服务端`h1#A`和客户端的`div#A`不同，同时服务端比客户端多了一个`span#C`
-
-在客户端开始执行之前，即 `ReactDOM.hydrate` 开始执行前，由于服务端已经返回了 html 内容，浏览器会立马显示内容。对应的真实 DOM 树如下：
-
-![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hydrate-01.jpg)
-
-注意，这不是 fiber 树！！
+`React.hydrate`渲染过程和`ReactDOM.render`差不多，两者之间最大的区别就是，`ReactDOM.hydrate` 在 `render` 阶段，会尝试复用(hydrate)浏览器现有的 dom 节点，并相互关联 dom 实例和 fiber，以及找出 dom 属性和 fiber 属性之间的差异。
 
 ## ReactDOM.render
 
@@ -72,10 +13,13 @@ ReactDOM.hydrate(<Home />, document.getElementById("root"));
   - commitMutationEffects
   - commitLayoutEffects
 
+
+
+---
 React 在 render 阶段会根据新的 element tree 构建 workInProgress 树，收集具有副作用的 fiber 节点，构建副作用链表。
+特别是，当我们调用`ReactDOM.render`函数在客户端进行第一次渲染时
 
-特别是，当我们调用`ReactDOM.render`函数在客户端进行第一次渲染时，`render`阶段的`completeUnitOfWork`函数针对`HostComponent`以及`HostText`类型的 fiber 执行以下 dom 相关的操作：
-
+`render`阶段的`completeUnitOfWork`函数针对`HostComponent`以及`HostText`类型的 fiber 执行以下 dom 相关的操作：
 - 1. 调用`document.createElement`为`HostComponent`类型的 fiber 节点创建真实的 DOM 实例。或者调用`document.createTextNode`为`HostText`类型的 fiber 节点创建真实的 DOM 实例
 - 2. 将 fiber 节点关联到真实 dom 的`__reactFiber$rsdw3t27flk`(后面是随机数)属性上。
 - 3. 将 fiber 节点的`pendingProps` 属性关联到真实 dom 的`__reactProps$rsdw3t27flk`(后面是随机数)属性上
@@ -83,12 +27,9 @@ React 在 render 阶段会根据新的 element tree 构建 workInProgress 树，
 - 5. 遍历 `pendingProps`，给真实的`dom`设置属性，比如设置 id、textContent 等
 
 **React 渲染更新完成后，React 会为每个真实的 dom 实例挂载两个私有的属性：`__reactFiber$`和`__reactProps$`**，以`div#container`为例：
-
-![image](https://raw.githubusercontent.com/lizuncong/mini-react/master/imgs/hydrate-02.jpg)
-
 ## ReactDOM.hydrate
-
-`hydrate`中文意思是`水合物`，这样理解有点抽象。根据源码，我更乐意将`hydrate`的过程描述为：React 在 render 阶段，构造 workInProgress 树时，同时**按相同的顺序**遍历真实的 DOM 树，判断当前的 workInProgress fiber 节点和同一位置的 dom 实例是否满足`hydrate`的条件，如果满足，则直接复用当前位置的 DOM 实例，并相互关联 workInProgress fiber 节点和真实的 dom 实例，比如：
+`hydrate`中文意思是`水合物`，这样理解有点抽象。
+React 在 render 阶段，构造 workInProgress 树时，同时**按相同的顺序**遍历真实的 DOM 树，判断当前的 workInProgress fiber 节点和同一位置的 dom 实例是否满足`hydrate`的条件，如果满足，则直接复用当前位置的 DOM 实例，并相互关联 workInProgress fiber 节点和真实的 dom 实例，比如：
 
 ```js
 fiber.stateNode = dom;
@@ -100,38 +41,36 @@ dom.__reactFiber$ = fiber;
 
 遍历真实 DOM 树的顺序和构建 workInProgress 树的顺序是一致的。都是深度优先遍历，先遍历当前节点的子节点，子节点都遍历完了以后，再遍历当前节点的兄弟节点。因为只有按相同的顺序，fiber 树同一位置的 fiber 节点和 dom 树同一位置的 dom 节点才能保持一致
 
+
+---
 只有类型为`HostComponent`或者`HostText`类型的 fiber 节点才能`hydrate`。这一点也很好理解，React 在 commit 阶段，也就只有这两个类型的 fiber 节点才需要执行 dom 操作。
 
 fiber 节点和 dom 实例是否满足`hydrate`的条件：
-
 - 对于类型为`HostComponent`的 fiber 节点，如果当前位置对应的 DOM 实例`nodeType`为`ELEMENT_NODE`，并且`fiber.type === dom.nodeName`，那么当前的 fiber 可以混合(hydrate)
-
 - 对于类型为`HostText`的 fiber 节点，如果当前位置对应的 DOM 实例`nodeType`为`TEXT_NODE`，同时`fiber.pendingProps`不为空，那么当前的 fiber 可以混合(hydrate)
 
 **`hydrate`的终极目标就是，在构造 workInProgress 树的过程中，尽可能的复用当前浏览器已经存在的 DOM 实例以及 DOM 上的属性，这样就无需再为 fiber 节点创建 DOM 实例，同时对比现有的 DOM 的`attribute`以及 fiber 的`pendingProps`，找出差异的属性。然后将 dom 实例和 fiber 节点相互关联(通过 dom 实例的`__reactFiber$`以及`__reactProps$`，fiber 的 stateNode 相互关联)**
 
 ### hydrate 过程
 
-React 在 render 阶段构造`HostComponent`或者`HostText`类型的 fiber 节点时，会首先调用` tryToClaimNextHydratableInstance(workInProgress)` 方法尝试给当前 fiber 混合(hydrate)DOM 实例。如果当前 fiber 不能被混合，那当前节点的所有子节点在后续的 render 过程中都不再进行`hydrate`，而是直接创建 dom 实例。等到当前节点所有子节点都调用`completeUnitOfWork`完成工作后，又会从当前节点的兄弟节点开始尝试混合。
+React 在 render 阶段构造`HostComponent`或者`HostText`类型的 fiber 节点时，会首先调用` tryToClaimNextHydratableInstance(workInProgress)` 方法尝试给当前 fiber 混合(hydrate)DOM 实例。
+- 如果当前 fiber 不能被混合，那当前节点的所有子节点在后续的 render 过程中都不再进行`hydrate`，而是直接创建 dom 实例。
+- 等到当前节点所有子节点都调用`completeUnitOfWork`完成工作后，又会从当前节点的兄弟节点开始尝试混合。
 
-以下面的 demo 为例
-
+---
 ```js
 // 服务端返回的DOM结构，这里为了直观，我格式化了一下，按理服务端返回的内容，是不允许换行或者有空字符串的
-<body>
-  <div id="root">
-    <div id="container">
-      <h1 id="A">
-        1
-        <div id="A2">A2</div>
-      </h1>
-      <p id="B">
-        <span id="B1">B1</span>
-      </p>
-      <span id="C">C</span>
-    </div>
-  </div>
-</body>
+
+<div id="container">
+  <h1 id="A">
+	1
+	<div id="A2">A2</div>
+  </h1>
+  <p id="B">
+	<span id="B1">B1</span>
+  </p>
+  <span id="C">C</span>
+</div>
 // 客户端生成的内容
 <div id="container">
   <div id="A">

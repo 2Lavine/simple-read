@@ -8,24 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "7d45faf81db236de",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "md/2023-09-28.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "76215c76f5f0d14b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "mini-react-docs/异常/React错误边界.md",
                 "mode": "source",
                 "source": false
               }
@@ -37,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mini-react-docs/ref/ref基础用法.md",
+                "file": "done/ref基础用法.md",
                 "mode": "source",
                 "source": false
               }
@@ -87,7 +75,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/2023-09-28.md"
+                "file": "mini-react-docs/异常/React错误边界.md"
               }
             }
           },
@@ -119,7 +107,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/2023-09-28.md",
+                "file": "mini-react-docs/异常/React错误边界.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -136,7 +124,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/2023-09-28.md",
+                "file": "mini-react-docs/异常/React错误边界.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -190,45 +178,46 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "7d45faf81db236de",
+  "active": "76215c76f5f0d14b",
   "lastOpenFiles": [
-    "md/2023-09-27.md",
-    "md/leetcode.md",
-    "Untitled.md",
-    "readme.md",
-    "mini-react-docs/ref/ref基础用法.md",
+    "mini-react-docs/合成事件/react合成事件与原生事件执行顺序.md",
+    "mini-react-docs/合成事件/mouseenter_delegate.md",
+    "mini-react-docs/schedule/scheduler用法详解.md",
+    "mini-react-docs/schedule/schedule核心源码精讲.md",
+    "mini-react-docs/render/render和commit阶段主要函数.md",
+    "done/ref原理及源码.md",
+    "md/ref.current 属性赋值.md",
+    "Untitled",
     "mini-react-docs/reconciler/构建副作用链表算法.md",
-    "mini-react-docs/reconciler/单节点dom-diff算法.md",
-    "mini-react-docs/reconciler/dom-diff所有场景.md",
+    "mini-react-docs/reconciler/多节点dom-diff算法.md",
+    "done/单节点dom-diff算法.md",
+    "done/dom-diff算法简介.md",
+    "mini-react-docs/how_to_debug_react_source_code.md",
+    "mini-react-docs/react基础.md",
+    "mini-react-docs/React17与React18源码之间的差异.md",
+    "mini-react-docs/合成事件/React源码中合成事件的实现过程.md",
+    "mini-react-docs/合成事件/合成事件源码中浏览器兼容相关的API.md",
+    "mini-react-docs/合成事件/从0到1模拟合成事件.md",
+    "done/JavaScript事件基础.md",
+    "done/ref基础用法.md",
+    "done/dom-diff所有场景.md",
     "mini-react-docs/ReactContext/context源码解析.md",
-    "mini-react-docs/ReactContext/react.context基础知识.md",
-    "mini-react-docs/hooks/彻底搞懂函数组件hook链表.md",
-    "mini-react-docs/hydrate/hydrate源码剖析.md",
-    "done/从源码的角度理解useEffect以及useLayoutEffect的区别.md",
-    "md/2023-09-28.md",
-    "python3 leet.md",
-    "leetc.md",
-    "done/how_useReducer_work.md",
-    "done/how_batchedUpdates_work.md",
-    "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
-    "md/为什么别人的 hooks 里面有那么多的 ref.md",
-    "_resources/e129d47721bdd09835a2cec6f75d56c5_MD5.jpg",
-    "_resources/f8af18c389fc1894fc1377b33ac98d83_MD5.jpg",
-    "_resources/d8c74f038de090a92b1c5db1f44aba4a_MD5.jpg",
-    "_resources/d4ded57bd3529597307b6c72e95d1cd8_MD5.jpg",
-    "_resources/d41aeb242b0ab73fb346c0d00b7c762f_MD5.jpg",
-    "_resources/c41350294a14159d545a02cd40713dbd_MD5.jpg",
-    "_resources/a6d5691e4dffb36269eafc6d6135ea72_MD5.jpg",
-    "_resources/94860e80d78d14bbd96e724c068cc40d_MD5.jpg",
-    "_resources/8d1b652b9022b920d4d5199ec59b92b6_MD5.jpg",
-    "_resources/847acff7854f272fcd612d92c892e4ff_MD5.jpg",
-    "done/2023-09-25.md",
+    "mini-react-docs/lane模型/lane.md",
+    "mini-react-docs/render/深入概述 React初次渲染及状态更新主流程.md",
+    "done/react.context基础知识.md",
+    "mini-react-docs/lane模型/lane模型流程梳理.md",
+    "mini-react-docs/lane模型/【TODO】源码笔记.md",
+    "_resources/5ab72b71e72a8a6f314369add6259491_MD5.webp",
+    "_resources/5d1875e3327541e101b8025cd4d3501b_MD5.webp",
+    "_resources/392bb97e8eab99ac1f084257d5a8d0c1_MD5.webp",
+    "_resources/e5d2923a0e84fb9d3f9b6f3464a29249_MD5.webp",
+    "_resources/b629fc7e9c25fa8c07fb09b5e27a0d1b_MD5.webp",
+    "_resources/8a106517d8c77dd49c9139500d4b10bb_MD5.webp",
+    "_resources/c804e0665be134595f18a7fc9831a429_MD5.webp",
+    "_resources/fb4a256ef2b57eb02e4e8a08d2193cc4_MD5.webp",
+    "_resources/50fe5bc4010c9ffbb26b9cd911ed060a_MD5.webp",
+    "_resources/8363ddd9ad0f386bffc7ba9076760db2_MD5.webp",
     "output/2023-9-26 22-49-28.html",
-    "achieve/你知道 Ajax、Fetch、Axios 三者的区别吗？.md",
-    "achieve/深入浅出 Fetch API.md",
-    "achieve/从 ajax 到 fetch、axios.md",
-    "achieve/从 Fetch 到 Streams —— 以流的角度处理网络请求.md",
-    "achieve/一文读懂 TypeScript 泛型及应用（ 7.8K 字）.md",
     "S-ARCHSS Project Assignment v2.0.pdf",
     "S-ARCHSS Project Assignment (Case Study Templates Exercise 2) v2.0.docx",
     "S-ARCHSS Project Assignment (Case Study Templates Exercise 1) v2.0.docx",
@@ -237,7 +226,6 @@
     "output/2023-9-17 22-51-25.html",
     "output/2023-9-17 22-46-11.html",
     "output/2023-9-17 22-38-55.html",
-    "output/2023-9-17 22-38-43.html",
     "未命名.canvas"
   ]
 }

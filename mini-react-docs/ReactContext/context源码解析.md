@@ -1,5 +1,3 @@
-> 这篇文章介绍了 react 中 context 的实现原理，以及 context 变化时，React 如何查找所有订阅了 context 的组件并跳过 shouldComponentUpdate 强制更新。可以让我们更加充分认识到 context 的性能瓶颈并能够合理设计全局状态管理。
-
 ## 学习目标
 
 - React Context 的实现原理
@@ -11,7 +9,6 @@
 ## 前言
 
 先来简单回顾一下，React 的渲染分为两大阶段，五小阶段：
-
 - render 阶段
   - beginWork
   - completeUnitOfWork

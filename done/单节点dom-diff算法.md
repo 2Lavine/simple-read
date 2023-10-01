@@ -1,42 +1,16 @@
-> Dom Diff 就是 React ReconcileChildren(协调子元素) 的过程，这个过程比较的是当前子 fiber 节点和新的 React Element 节点。本节介绍的是新的 React Element 只有一个子节点的场景，即单节点 Dom Diff。在 Dom Diff 的过程中，首先比较 key，然后比较 type，如果 key 和 type 都相同，则可以复用当前的 fiber 节点
 
 ### 单节点 DOM Diff 算法介绍
 
 当新的 react element 子元素只有一个节点时，React 会遍历旧的 fiber 列表，并比较 key 和 type，如果 key 和 type 都相同，则复用旧的 fiber 节点，并删掉其余的旧 fiber 节点。
 
 如果 key 或者 type 不同，则创建新的 fiber 节点，并将旧的子 fiber 节点全部删除。
-
 - key 和 type 都相同，则可以复用当前的 fiber 节点
   - 首先调用 deleteRemainingChildren 将当前 fiber 后面的兄弟元素全部标记为删除，并添加到父节点的副作用链表中
   - 调用 useFiber 复用当前的 fiber 节点
 - 如果 key 相同，type 不同，就不需要再进行比较了，调用 deleteRemainingChildren 将当前 fiber 节点以及它后面的所有兄弟节点都标记为删除
 - 如果 key 不同，则调用 deleteChild 将当前的 fiber 节点标记为删除，并继续比较下一个 fiber 节点
 - 如果遍历完所有的子 fiber 列表都没找到 key 相同的 fiber 节点，则为新的 element 元素创建新的 fiber 节点。旧的子 fiber 节点此时已经全部被标记为删除
-  单节点 DOM Diff 算法都在 `reconcileSingleElement` 函数中
-
-#### 多节点变单节点的场景
-
-```js
-// 更新前
-<div>
-  <span>1</span>
-  <h1 key="h1">1</h1>
-  <h3>2</h3>
-</div>
-// 更新后
-<div>
-  <h1 key="h1">2</h1>
-</div>
-```
-
-上例中，新的 react element 元素只有 `h1`，属于单节点 Dom Diff 场景。React 调用 reconcileSingleElement 开始协调。协调过程按照以下顺序进行：
-
-- 将当前的`span` fiber 和新的 `h1` element 对比，发现`key`不同，则调用 `deleteChild` 将`span`fiber 标记为删除并添加到父节点的副作用链表中
-- 继续比较下一个节点，即当前的 `h1` fiber 和新的`h1` element 对比，发现`key`和`type`都相同，则可以调用`useFiber`复用当前的`h1`fiber
-- 调用`deleteRemainingChildren`将剩下的 fiber 节点都标记为删除并添加到父节点的副作用链表中
-
 #### 性能不好的写法：没有给元素添加 key 属性
-
 考虑下面的代码
 
 ```js
@@ -60,7 +34,9 @@
 
 ### 单节点 DOM Diff 主要源码
 
-Dom Diff 协调从 `reconcileChildFibers` 函数开始，而单节点的协调算法在`reconcileSingleElement`函数中
+Dom Diff 协调从 `reconcileChildFibers` 函数开始，
+如果新的element节点，即newChild是一个对象，则说明这是单一节点，调用reconcileSingleElement进行协调
+
 
 ```js
 function reconcileChildFibers(returnFiber, currentFirstChild, newChild, lanes) {
@@ -68,7 +44,6 @@ function reconcileChildFibers(returnFiber, currentFirstChild, newChild, lanes) {
   if (isObject) {
     switch (newChild.$$typeof) {
       case REACT_ELEMENT_TYPE:
-        // 如果新的element节点，即newChild是一个对象，则说明这是单一节点，调用reconcileSingleElement进行协调
         return placeSingleChild(
           reconcileSingleElement(
             returnFiber,
@@ -80,6 +55,12 @@ function reconcileChildFibers(returnFiber, currentFirstChild, newChild, lanes) {
     }
   }
 }
+
+```
+
+#### reconcileSingleElement
+单节点 DOM Diff 算法都在 `reconcileSingleElement` 函数中
+```js
 //reconcileSingleElement负责协调单一节点场景
 function reconcileSingleElement(
   returnFiber,
