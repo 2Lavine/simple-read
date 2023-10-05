@@ -91,10 +91,6 @@ for word in words\[1:\]:
 用 chr 把 ASCII码转成字符
 
 
----
-=======move to md line=====
-
-
 ## Python中的 set
 #python/set
 直接用 newset=set(arr1)就可以
@@ -125,3 +121,41 @@ print(nums)  # 输出：[1, 2, -3, -4, 5]
 ```
 
 需要注意的是，sort()方法只适用于可排序的元素类型，例如数字、字符串等。对于自定义的对象，可以通过在对象类中实现__lt__方法来定义排序规则，然后使用sort()方法进行排序。
+
+---
+=======move to md line=====
+
+
+## Python中的数组方法
+
+删除前后空白
+s = s.strip()
+反转整个字符串
+s = s[::-1]
+列表转成字符串
+"-".join(sequence)
+sequence表示要连接的串行，可以是列表、元组、字符串等。
+
+
+---
+join()函数只能用于字符串之间的连接，如果串行中包含非字符串类型的元素，需要先将其转换为字符串才能进行连接。例如：
+
+numbers = [1, 2, 3]
+result = '-'.join(str(num) for num in numbers)
+print(result)
+
+注意 py 的join 和js 的 join 相反
+## Python 生成器
+range 是一个很常用的内置生成器。它接受以下输入值：
+“start”（包括数字本身，默认为0）
+“stop”（不包括数字本身）
+“step”（默认为1）
+### 生成器理解
+Python提供了一个轻便的用一行代码定义简单生成器的语法；这种表达式叫做生成器理解（generator comprehension）
+gene=(\[n, l\] for n in nums for l in letters if n!=1 and l!=2)for可以一直叠
+相当于 js 中的generator，带有 next 和 value
+可以用for i in gene遍历
+
+### 生成器理解
+是一种创建列表的语法
+把生成器改成方括号

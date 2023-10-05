@@ -106,28 +106,30 @@ aliases: []
 
 双指针法基本都是应用在数组，字符串与链表的题目上
 
-[数组：27.移除元素](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0027.移除元素.md)
-[字符串：344.反转字符串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0344.反转字符串.md)
-[字符串：替换空格](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/剑指Offer05.替换空格.md)
-[字符串：151.翻转字符串里的单词](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0151.翻转字符串里的单词.md)
-[链表：206.翻转链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0206.翻转链表.md)
-[链表：19.删除链表的倒数第 N 个结点](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0019.删除链表的倒数第N个节点.md)
-[链表：链表相交](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/面试题02.07.链表相交.md)
-[链表：142.环形链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0142.环形链表II.md)
-[双指针：15.三数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0015.三数之和.md)
-[双指针：18.四数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0018.四数之和.md)
-[双指针：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/双指针总结.md)
+- [x] [数组：27.移除元素](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0027.移除元素.md)
+- [x] [字符串：344.反转字符串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0344.反转字符串.md)
+- [x] [字符串：替换空格](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/剑指Offer05.替换空格.md)
+- [x] [字符串：151.翻转字符串里的单词](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0151.翻转字符串里的单词.md)
+- [ ] [链表：206.翻转链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0206.翻转链表.md)
+- [ ] [链表：19.删除链表的倒数第 N 个结点](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0019.删除链表的倒数第N个节点.md)
+- [ ] [链表：链表相交](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/面试题02.07.链表相交.md)
+- [ ] [链表：142.环形链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0142.环形链表II.md)
+- [ ] [双指针：15.三数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0015.三数之和.md)
+- [ ] [双指针：18.四数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0018.四数之和.md)
+- [ ] [双指针：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/双指针总结.md)
 
 ## 栈与队列
 
 [栈与队列：理论基础](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/栈与队列理论基础.md)
-[栈与队列：232.用栈实现队列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0232.用栈实现队列.md)
-[栈与队列：225.用队列实现栈](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0225.用队列实现栈.md)
-[栈与队列：20.有效的括号](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0020.有效的括号.md)
-[栈与队列：1047.删除字符串中的所有相邻重复项](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1047.删除字符串中的所有相邻重复项.md)
-[栈与队列：150.逆波兰表达式求值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0150.逆波兰表达式求值.md)
-[栈与队列：239.滑动窗口最大值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0239.滑动窗口最大值.md)
-[栈与队列：347.前K个高频元素](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0347.前K个高频元素.md)
+- [x] [栈与队列：232.用栈实现队列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0232.用栈实现队列.md)
+	- [ ] out栈的顺序和队列是一样的
+- [x] [栈与队列：225.用队列实现栈](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0225.用队列实现栈.md)
+	- [ ] 一个队列。 自己 pop 自己 push 直到循环到最后一个（也就是栈的第一个）
+- [ ] [栈与队列：20.有效的括号](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0020.有效的括号.md)
+- [ ] [栈与队列：1047.删除字符串中的所有相邻重复项](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1047.删除字符串中的所有相邻重复项.md)
+- [ ] [栈与队列：150.逆波兰表达式求值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0150.逆波兰表达式求值.md)
+- [ ] [栈与队列：239.滑动窗口最大值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0239.滑动窗口最大值.md)
+- [ ] [栈与队列：347.前K个高频元素](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0347.前K个高频元素.md)
 [栈与队列：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/栈与队列总结.md)
 
 ## 二叉树 

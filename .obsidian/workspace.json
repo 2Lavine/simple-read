@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
+                "file": "md/leetcode.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "reverse",
                 "matchingCase": false,
                 "explainSearch": true,
                 "collapseAll": true,
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md"
+                "file": "md/leetcode.md"
               }
             }
           },
@@ -79,7 +79,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 333.5
+    "width": 242.50390243530273
   },
   "right": {
     "id": "c998dc817f697143",
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
+                "file": "md/leetcode.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
+                "file": "md/leetcode.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -168,45 +168,45 @@
   },
   "active": "d744b5904b1b140a",
   "lastOpenFiles": [
-    "md/为什么你可以删除 90% 的 useMemo 和 useCallback.md",
-    "md/2023-10-03.md",
-    "md/ref.current 属性赋值.md",
-    "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
-    "md/2023-10-01.md",
-    "md/leetcode.md",
     "python3 leet.md",
-    "md/2023-10-04.md",
+    "md/2023-10-05.md",
+    "done/2023-10-04.md",
+    "mini-react-docs/译文/in-depth_overview_of_the_new_reconciliation_algorithm.md",
+    "node_modules/lru-cache/README.md",
+    "node_modules/yallist/README.md",
+    "node_modules/semver/README.md",
+    "cur useless/Decoding \"Autonomous\" - by Chao Wang - Future Mosaic.md",
+    "done/Python set sort dic.md",
+    "md/leetcode.md",
+    "done/ref.current 属性赋值.md",
+    "done/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
+    "done/2023-10-01.md",
+    "done/Python 字典.md",
+    "done/2023-10-03.md",
+    "done/2023-10-02.md",
+    "done/为什么你可以删除 90% 的 useMemo 和 useCallback.md",
+    "_resources/e5d2923a0e84fb9d3f9b6f3464a29249_MD5.webp",
+    "_resources/5d1875e3327541e101b8025cd4d3501b_MD5.webp",
+    "_resources/b629fc7e9c25fa8c07fb09b5e27a0d1b_MD5.webp",
+    "_resources/392bb97e8eab99ac1f084257d5a8d0c1_MD5.webp",
+    "_resources/8a106517d8c77dd49c9139500d4b10bb_MD5.webp",
     "leetc.md",
-    "md/Python 字典.md",
     "achieve/2023-09-27.md",
     "cur useless/最详细的 K8S 学习笔记总结（2021 最新版）.md",
     "node_modules/node-addon-api/README.md",
     "achieve/2023-09-14.md",
     "星标.md",
-    "md/2023-10-02.md",
     "achieve/day03_designModel.md",
     "achieve/EPAT.md",
     "readme.md",
     "_resources/Pasted image 20231002172533.png",
     "output/2023-10-1 21-34-17.html",
-    "achieve/03第三部分 逻辑判断考点强化.md",
-    "done/03第三部分 逻辑判断考点强化.md",
     "output/2023-10-1 21-20-06.html",
     "_resources/fb4a256ef2b57eb02e4e8a08d2193cc4_MD5.jpg",
     "_resources/eaeb1bfa296f436caa3d14e5c3c6ece9_MD5.jpg",
     "_resources/c804e0665be134595f18a7fc9831a429_MD5.jpg",
     "_resources/e5d2923a0e84fb9d3f9b6f3464a29249_MD5.jpg",
-    "_resources/b629fc7e9c25fa8c07fb09b5e27a0d1b_MD5.jpg",
-    "_resources/8a106517d8c77dd49c9139500d4b10bb_MD5.jpg",
-    "_resources/8363ddd9ad0f386bffc7ba9076760db2_MD5.jpg",
-    "_resources/7fd95459c88f06ef5d051635da4db713_MD5.jpg",
-    "_resources/5ab72b71e72a8a6f314369add6259491_MD5.jpg",
     "output/2023-10-1 21-11-43.html",
-    "achieve/彻底搞懂函数组件hook链表.md",
-    "achieve/单节点dom-diff算法.md",
-    "achieve/为什么别人的 hooks 里面有那么多的 ref.md",
-    "achieve/从源码的角度理解useEffect以及useLayoutEffect的区别.md",
-    "achieve/ref基础用法.md",
     "output/2023-10-1 21-09-43.html",
     "Untitled",
     "output/2023-9-26 22-49-28.html",
