@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "b5f535a3d43abea1",
+        "id": "8931bbc3ef498c5f",
         "type": "tabs",
         "children": [
           {
-            "id": "76215c76f5f0d14b",
+            "id": "d744b5904b1b140a",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,12 +48,12 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "抽象工厂",
+                "query": "",
                 "matchingCase": false,
-                "explainSearch": false,
+                "explainSearch": true,
                 "collapseAll": true,
-                "extraContext": false,
-                "sortOrder": "alphabetical"
+                "extraContext": true,
+                "sortOrder": "byCreatedTime"
               }
             }
           },
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/leetcode.md"
+                "file": "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md"
               }
             }
           },
@@ -79,7 +79,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 338.5
+    "width": 333.5
   },
   "right": {
     "id": "c998dc817f697143",
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -148,7 +148,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
@@ -166,9 +166,32 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "d744b5904b1b140a",
   "lastOpenFiles": [
+    "md/为什么你可以删除 90% 的 useMemo 和 useCallback.md",
+    "md/2023-10-03.md",
+    "md/ref.current 属性赋值.md",
+    "md/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
+    "md/2023-10-01.md",
+    "md/leetcode.md",
+    "python3 leet.md",
+    "md/2023-10-04.md",
+    "leetc.md",
+    "md/Python 字典.md",
+    "achieve/2023-09-27.md",
+    "cur useless/最详细的 K8S 学习笔记总结（2021 最新版）.md",
+    "node_modules/node-addon-api/README.md",
+    "achieve/2023-09-14.md",
+    "星标.md",
+    "md/2023-10-02.md",
+    "achieve/day03_designModel.md",
+    "achieve/EPAT.md",
+    "readme.md",
+    "_resources/Pasted image 20231002172533.png",
+    "output/2023-10-1 21-34-17.html",
+    "achieve/03第三部分 逻辑判断考点强化.md",
     "done/03第三部分 逻辑判断考点强化.md",
+    "output/2023-10-1 21-20-06.html",
     "_resources/fb4a256ef2b57eb02e4e8a08d2193cc4_MD5.jpg",
     "_resources/eaeb1bfa296f436caa3d14e5c3c6ece9_MD5.jpg",
     "_resources/c804e0665be134595f18a7fc9831a429_MD5.jpg",
@@ -178,33 +201,12 @@
     "_resources/8363ddd9ad0f386bffc7ba9076760db2_MD5.jpg",
     "_resources/7fd95459c88f06ef5d051635da4db713_MD5.jpg",
     "_resources/5ab72b71e72a8a6f314369add6259491_MD5.jpg",
-    "_resources/5d1875e3327541e101b8025cd4d3501b_MD5.jpg",
     "output/2023-10-1 21-11-43.html",
     "achieve/彻底搞懂函数组件hook链表.md",
     "achieve/单节点dom-diff算法.md",
     "achieve/为什么别人的 hooks 里面有那么多的 ref.md",
     "achieve/从源码的角度理解useEffect以及useLayoutEffect的区别.md",
     "achieve/ref基础用法.md",
-    "achieve/ref原理及源码.md",
-    "achieve/react.context基础知识.md",
-    "achieve/how_useReducer_work.md",
-    "achieve/how_batchedUpdates_work.md",
-    "achieve/dom-diff算法简介.md",
-    "achieve/dom-diff所有场景.md",
-    "achieve/JavaScript事件基础.md",
-    "achieve/2023-09-29.md",
-    "achieve/2023-09-28.md",
-    "achieve/2023-09-27.md",
-    "mini-react-docs/异常/React错误边界.md",
-    "done/彻底搞懂函数组件hook链表.md",
-    "done/单节点dom-diff算法.md",
-    "done/从源码的角度理解useEffect以及useLayoutEffect的区别.md",
-    "done/为什么别人的 hooks 里面有那么多的 ref.md",
-    "done/ref基础用法.md",
-    "done/ref原理及源码.md",
-    "done/react.context基础知识.md",
-    "md/leetcode.md",
-    "done/how_useReducer_work.md",
     "output/2023-10-1 21-09-43.html",
     "Untitled",
     "output/2023-9-26 22-49-28.html",
@@ -212,8 +214,6 @@
     "S-ARCHSS Project Assignment (Case Study Templates Exercise 2) v2.0.docx",
     "S-ARCHSS Project Assignment (Case Study Templates Exercise 1) v2.0.docx",
     "03. Architect the Solution Architecture (Method) v3.0.pdf",
-    "done",
-    "output/2023-9-17 22-51-25.html",
     "未命名.canvas"
   ]
 }

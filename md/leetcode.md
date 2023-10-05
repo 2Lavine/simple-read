@@ -59,8 +59,8 @@ aliases: []
 	- [ ] cur 可以成为孤岛，因为已经有一个 cur 指向了这个节点
 	- [ ] 由于是一次移动多个节点，所以要判断 cur.next是否为空要先判断cur是否为空
 - [x] [链表：19.删除链表的倒数第 N 个结点](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0019.删除链表的倒数第N个节点.md)
-	- [ ] 可能对第一个节点做操作时就考虑使用dummy节点
-	- [ ] dummy 节点的next指向是不能更改的
+	- [ ] 想要移动到最后一个节点或者不遍历最后一个节点： while cur.next:
+	- [ ] 想要遍历完最后一个节点:     while cur:
 - [x] [链表：链表相交](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/面试题02.07.链表相交.md)
 - [x] [链表：142.环形链表](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0142.环形链表II.md)
 - [ ] [链表：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/链表总结篇.md)
@@ -69,28 +69,38 @@ aliases: []
 ## 哈希表
 
 - [ ] [关于哈希表，你该了解这些！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/哈希表理论基础.md)
-- [ ] [哈希表：242.有效的字母异位词](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0242.有效的字母异位词.md)
-- [ ] [哈希表：1002.查找常用字符](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1002.查找常用字符.md)
-- [ ] [哈希表：349.两个数组的交集](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0349.两个数组的交集.md)
-- [ ] [哈希表：202.快乐数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0202.快乐数.md)
-- [ ] [哈希表：1.两数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0001.两数之和.md)
-- [ ] [哈希表：454.四数相加II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0454.四数相加II.md)
-- [ ] [哈希表：383.赎金信](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0383.赎金信.md)
+- [x] [哈希表：242.有效的字母异位词](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0242.有效的字母异位词.md)
+- [x] [哈希表：1002.查找常用字符](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1002.查找常用字符.md)
+- [x] [哈希表：349.两个数组的交集](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0349.两个数组的交集.md)
+- [x] [哈希表：202.快乐数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0202.快乐数.md)
+- [x] [哈希表：1.两数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0001.两数之和.md)
+- [x] [哈希表：454.四数相加II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0454.四数相加II.md)
+	- [ ] 重点在于遇到符合的要把所用情况相加
+	- [ ] count += hashmap\[key\]而不是+1
+- [x] [哈希表：383.赎金信](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0383.赎金信.md)
 - [ ] [哈希表：15.三数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0015.三数之和.md)
-- [ ] [双指针法：18.四数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0018.四数之和.md)
+	- [ ] 双指针法
+	- [ ] 当取到等号的时候要收缩两边的指针： 只收缩一边显然是不符合范围的
+	- [ ] 收缩的时候要注意去重
+	- [ ] 收缩的时候要注意范围
+	- [ ] 同样调整 first 的时候注意范围
+- [x] [双指针法：18.四数之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0018.四数之和.md)
+	- [ ] 同三树之和
+	- [ ] 前两个一次循环，然后后两个不断收缩确定
+	- [ ] 前两个O(n^2) 收缩的是 O(n) 所以一共是 O(n^3)
 - [ ] [哈希表：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/哈希表总结.md)
 
 
 ## 字符串
 
-[字符串：344.反转字符串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0344.反转字符串.md)
-[字符串：541.反转字符串II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0541.反转字符串II.md)
-[字符串：替换空格](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/剑指Offer05.替换空格.md)
-[字符串：151.翻转字符串里的单词](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0151.翻转字符串里的单词.md)
-[字符串：左旋转字符串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/剑指Offer58-II.左旋转字符串.md)
-[帮你把KMP算法学个通透](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0028.实现strStr.md)
-[字符串：459.重复的子字符串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0459.重复的子字符串.md)
-[字符串：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/字符串总结.md)
+- [ ] [字符串：344.反转字符串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0344.反转字符串.md)
+- [ ] [字符串：541.反转字符串II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0541.反转字符串II.md)
+- [ ] [字符串：替换空格](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/剑指Offer05.替换空格.md)
+- [ ] [字符串：151.翻转字符串里的单词](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0151.翻转字符串里的单词.md)
+- [ ] [字符串：左旋转字符串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/剑指Offer58-II.左旋转字符串.md)
+- [ ] [帮你把KMP算法学个通透](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0028.实现strStr.md)
+- [ ] [字符串：459.重复的子字符串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0459.重复的子字符串.md)
+- [ ] [字符串：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/字符串总结.md)
 
 ## 双指针法 
 
