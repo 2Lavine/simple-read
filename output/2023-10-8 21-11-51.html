@@ -1,0 +1,351 @@
+<h1>React 技术揭秘</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://react.iamkasong.com/preparation/oldConstructure.html#react15%E6%9E%B6%E6%9E%84%E7%9A%84%E7%BC%BA%E7%82%B9">react.iamkasong.com</a></p>
+</blockquote>
+<h3>递归更新的缺点</h3>
+<p>由于递归执行，所以更新一旦开始，中途就无法中断。当层级很深时，递归更新时间超过了 16ms，用户交互就会卡顿。
+在上一节中，我们已经提出了解决办法——用<strong>可中断的异步更新</strong>代替<strong>同步的更新</strong>。</p>
+<hr>
+<p>那么 React15 的架构支持异步更新么？让我们看一个例子：
+初始化时<code>state.count = 1</code>，每次点击按钮<code>state.count++</code>
+列表中 3 个元素的值分别为 1，2，3 乘以<code>state.count</code>的结果
+<img src="https://react.iamkasong.com/img/v15.png" alt="">
+中间的是更新步骤
+我们可以看到，<strong>Reconciler</strong> 和 <strong>Renderer</strong> 是交替工作的，当第一个<code>li</code>在页面上已经变化后，第二个<code>li</code>再进入 <strong>Reconciler</strong>。
+由于整个过程都是同步的，所以在用户看来所有 DOM 是同时更新的。</p>
+<p>如果中途中断更新会怎么样？
+注意以下是我们模拟中断的情况，实际上<code>React15</code>并不会中断进行中的更新
+<img src="https://react.iamkasong.com/img/dist.png" alt=""></p>
+<p>当第一个<code>li</code>完成更新时中断更新，即步骤 3 完成后中断更新，此时后面的步骤都还未执行。
+用户本来期望<code>123</code>变为<code>246</code>。实际却看见更新不完全的 DOM！（即<code>223</code>）
+基于这个原因，<code>React</code>决定重写整个架构。</p>
+
+<h1>TS 中 interface 和 type 究竟有什么区别？</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7063521133340917773?searchId=202310041542346C9FB55729D8C80F4D74">juejin.cn</a></p>
+</blockquote>
+<p>那interface 和 type 是不同的东西，一个叫<strong>接口</strong>，一个叫<strong>类型别名</strong>。
+只是有时候两者都能实现同样的功能，才会经常被混淆。</p>
+<h2>interface</h2>
+<p>interface（接口） 是 TS 设计出来用于定义对象类型的，可以对对象的形状进行描述。</p>
+<pre><code>interface Person {
+    name: string
+    age: number
+}
+const person: Person = {
+    name: 'lin',
+    age: 18
+}
+</code></pre>
+<h2>type</h2>
+<p>type (类型别名)，顾名思义，类型别名只是给类型起一个新名字。<strong>它并不是一个类型，只是一个别名而已</strong>
+就像 NBA 球员 扬尼斯 - 阿德托昆博，名字太长难记，我们叫他<code>字母哥</code>。
+就像我们项目中配置 <code>alias</code>，不用写相对路径就能很方便地引入文件</p>
+<pre><code>import componentA from '../../../../components/componentA/index.vue'
+变成
+import componentA from '@/components/componentA/index.vue
+</code></pre>
+<hr>
+<p>有了 type，我们书写 TS 的时候可以更加方便简洁。
+比如下面这个例子，<code>getName</code> 这个函数接收的参数可能是字符串，可能是函数，就可以这么写。</p>
+<pre><code>type Name = string
+type NameResolver = () =&gt; string
+type NameOrResolver = Name | NameResolver          // 联合类型
+function getName(n: NameOrResolver): Name {
+    if (typeof n === 'string') {
+        return n
+    }
+    else {
+        return n()
+    }
+}
+</code></pre>
+<p>这样调用时传字符串和函数都可以。</p>
+<pre><code>getName('lin')
+getName(() =&gt; 'lin')
+</code></pre>
+<h3>interfaceh和 type如何定义一个对象或函数</h3>
+<p>定义对象前面已经说了，我们来看一下如何定义函数。</p>
+<pre><code>type addType = (num1:number,num2:number) =&gt; number
+
+interface addType {
+    (num1:number,num2:number):number
+}
+这两种写法都可以定义函数类型
+</code></pre>
+<pre><code>const add:addType = (num1, num2) =&gt; {
+    return num1 + num2
+}
+</code></pre>
+<h3>interfaceh和 type如何继承（extends）</h3>
+<p>我们定义一个 Person 类型和 Student 类型，<strong>Student 继承自 Person</strong>，可以有下面四种方式</p>
+<ol>
+<li>interface 继承 interface: 直接 extends</li>
+<li>interface 继承 type： 可以直接 extends</li>
+<li>type 继承 type: 用交叉类型即 用&amp;</li>
+<li>type 继承 interface：用交叉类型</li>
+</ol>
+<h4>interface 继承 interface</h4>
+<p>直接 extends</p>
+<pre><code>interface Person { 
+  name: string 
+}
+interface Student extends Person { 
+  grade: number 
+}
+</code></pre>
+<h4>type 继承 type</h4>
+<pre><code>type Person = { 
+  name: string 
+}
+type Student = Person &amp; { grade: number  }    用交叉类型
+</code></pre>
+<h4>interface 继承 type</h4>
+<pre><code>type Person = { 
+  name: string 
+}
+
+interface Student extends Person { 
+  grade: number 
+}
+</code></pre>
+<h4>type 继承 interface</h4>
+<pre><code>interface Person { 
+  name: string 
+}
+
+type Student = Person &amp; { grade: number  }    用交叉类型
+</code></pre>
+<p>interface 使用 extends 实现继承， type 使用交叉类型实现继承</p>
+<h2>两者不同点</h2>
+<p>type 可以声明基本类型、联合类型、交叉类型、元组。但interface不行
+Interface 可以合并重复声明，Type 不行</p>
+<h4>Type声明基本类型、联合类型、交叉类型、元组</h4>
+<pre><code>type Name = string                              // 基本类型
+type arrItem = number | string                  // 联合类型
+const arr: arrItem[] = [1,'2', 3]
+type Person = { 
+  name: Name 
+}
+type Student = Person &amp; { grade: number  }       // 交叉类型
+type Teacher = Person &amp; { major: string  } 
+type StudentAndTeacherList = [Student, Teacher]  // 元组类型
+const list:StudentAndTeacherList = [
+  { name: 'lin', grade: 100 }, 
+  { name: 'liu', major: 'Chinese' }
+]
+</code></pre>
+<h3>interface 可以合并重复声明</h3>
+<pre><code>interface Person {
+    name: string
+}
+
+interface Person {         // 重复声明 interface，就合并了
+    age: number
+}
+
+const person: Person = {
+    name: 'lin',
+    age: 18
+}
+</code></pre>
+<p>重复声明 type ，就报错了</p>
+<pre><code>type Person = {
+    name: string
+}
+
+type Person = {     // Duplicate identifier 'Person'
+    age: number
+}
+
+const person: Person = {
+    name: 'lin',
+    age: 18
+}
+</code></pre>
+
+<h1>javascript - Web 安全之 CSRF 实例解析 - 前端小码农 - SegmentFault 思否</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://segmentfault.com/a/1190000022842875">segmentfault.com</a></p>
+</blockquote>
+<h2>CSRF</h2>
+<p>跨站请求伪造（Cross Site Request Forgery），是指黑客诱导用户打开黑客的网站，在黑客的网站中，利用用户的登陆状态发起的跨站请求。
+CSRF 攻击就是利用了用户的登陆状态，并通过第三方的站点来做一个坏事。
+#cs/security/csrf</p>
+<hr>
+<p>要完成一次 CSRF 攻击, 受害者依次完成两个步骤:</p>
+<ol>
+<li>登录受信任网站 A，并在本地生成 Cookie</li>
+<li>在不登出 A 的情况，访问危险网站 B</li>
+</ol>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/25751f9e43ccecbad94105f36feaf639_MD5.png" /></p>
+<p>下面会通过一个例子来讲解 CSRF 攻击的表现是什么样子的。<br>
+实现的例子：<br>
+在前后端同域的情况下，前后端的域名都为 <code>http://127.0.0.1:3200</code>, 第三方网站的域名为 <code>http://127.0.0.1:3100</code>，钓鱼网站页面为 <code>http://127.0.0.1:3100/bad.html</code>。</p>
+<h3>自动发起 Get 请求</h3>
+<p>在上面的 bad.html 中，我们把代码改成下面这样</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;img src=&quot;http://127.0.0.1:3200/payMoney?money=1000&quot;&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre>
+<p>当用户访问含有这个 img 的页面后，浏览器会自动向自动发起 img 的资源请求，如果服务器没有对该请求做判断的话，那么会认为这是一个正常的链接。</p>
+<h3>自动发起 POST 请求</h3>
+<p>上面例子中演示的就是这种情况。</p>
+<pre><code>&lt;body&gt;
+    &lt;div&gt;
+        哈哈，小样儿，哪有赚大钱的方法，还是踏实努力工作吧！
+        &lt;!-- form 表单的提交会伴随着跳转到action中指定 的url 链接，为了阻止这一行为，可以通过设置一个隐藏的iframe 页面，并将form 的target 属性指向这个iframe，当前页面iframe则不会刷新页面 --&gt;
+        &lt;form action=&quot;http://127.0.0.1:3200/pay&quot; method=&quot;POST&quot; class=&quot;form&quot; target=&quot;targetIfr&quot;&gt;
+            &lt;input type=&quot;text&quot; &gt;
+            &lt;input type=&quot;text&quot; &gt;
+        &lt;/form&gt;
+        &lt;iframe &gt;&lt;/iframe&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;script&gt;
+    document.querySelector('.form').submit();
+&lt;/script&gt;
+
+</code></pre>
+<p>上面这段代码中构建了一个隐藏的表单，表单的内容就是自动发起支付的接口请求。当用户打开该页面时，这个表单会被自动执行提交。当表单被提交之后，服务器就会执行转账操作。因此使用构建自动提交表单这种方式，就可以自动实现跨站点 POST 数据提交。</p>
+<h3>引导用户点击链接</h3>
+<p>诱惑用户点击链接跳转到黑客自己的网站，示例代码如图所示</p>
+<pre><code>&lt;a href=&quot;http://127.0.0.1:3100/bad.html&quot;&gt;听说点击这个链接的人都赚大钱了，你还不来看一下么&lt;/a&gt;
+
+</code></pre>
+<p>用户点击这个地址就会跳到黑客的网站，黑客的网站可能会自动发送一些请求，比如上面提到的自动发起 Get 或 Post 请求。</p>
+<h2>如何防御 CSRF</h2>
+<p>利用 cookie 的 SameSite
+验证请求的来源点
+CSRF Token</p>
+<h3>防御 CSRF之利用 cookie 的 SameSite</h3>
+<p>SameSite 有 3 个值： Strict, Lax 和 None</p>
+<ol>
+<li>Strict。浏览器会完全禁止第三方 cookie。比如 a.com 的页面中访问 b.com 的资源，那么 a.com 中的 cookie 不会被发送到 b.com 服务器，只有从 b.com 的站点去请求 b.com 的资源，才会带上这些 Cookie</li>
+<li>Lax。相对宽松一些，在跨站点的情况下，从第三方站点链接打开和从第三方站点提交 Get 方式的表单这两种方式都会携带 Cookie。但如果在第三方站点中使用 POST 方法或者通过 img、Iframe 等标签加载的 URL，这些场景都不会携带 Cookie。</li>
+<li>None。任何情况下都会发送 Cookie 数据
+#cs/security/cookie/SameSite #cs/security/csrf</li>
+</ol>
+<h2>#cs/security/cookie/SameSite/例子</h2>
+<p>假设你在 a.com 登录后，该网站会种下一个名为 session 的 Cookie，用于标识你的登录状态。然后你在 a.com 上浏览其他页面，这些页面会发送 GET 请求来获取一些数据，此时浏览器会自动带上 session Cookie。</p>
+<p>现在，假设有一个恶意网站 b.com，它想利用 CSRF 攻击来伪造请求并盗取你的数据。在 b.com 上，有一个图片标签 &lt;img src=&quot;http://a.com/api/delete-account&quot;&gt; ，它会向 a.com 发送一个请求来删除你的账户。</p>
+<p>在没有 SameSite 属性的情况下，浏览器会自动带上 session Cookie，导致这个请求被 a.com 接受并执行删除账户的操作，而你并不知情。</p>
+<p>但是，如果 session Cookie 设置了 SameSite 属性为 Strict 或 Lax，浏览器在跨站点请求中不会自动发送 Cookie。在这种情况下，b.com 发送的请求将不会携带 session Cookie，a.com 会拒绝该请求，从而防止了 CSRF 攻击。</p>
+<h2>#cs/security/cookie/SameSite/代码</h2>
+<p>response.setHeader('Set-Cookie', 'session=abc123; SameSite=Strict');</p>
+<h3>验证请求的来源点</h3>
+<p>由于 CSRF 攻击大多来自第三方站点，可以在服务器端验证请求来源的站点，禁止第三方站点的请求。<br>
+可以通过 HTTP 请求头中的 Referer 和 Origin 属性。
+但是这种 Referer 和 Origin 属性是可以被伪造的，碰上黑客高手，这种判断就是不安全的了。</p>
+<h3>CSRF Token</h3>
+<ol>
+<li>最开始浏览器向服务器发起请求时如登录，或者 GetHTML 页面，服务器生成一个 CSRF Token。
+<ol>
+<li>CSRF Token 其实就是服务器生成的字符串，</li>
+</ol>
+</li>
+<li>然后将该字符串用 js 放到表单当中。如 form 表单的input 的一个值里面</li>
+<li>浏览器之后准备提交表单时，需要带上之前获取的 <code>CSRF Token</code>, 然后服务器会验证该 Token 是否合法。第三方网站发出去的请求是无法获取到用户会话中的 CSRF Token</li>
+</ol>
+<h3>1. 第三方 cookie</h3>
+<p>Cookie 是种在服务端的域名下的，比如客户端域名是 a.com，服务端的域名是 b.com， Cookie 是种在 b.com 域名下的，在 Chrome 的 Application 下是看到的是 a.com 下面的 Cookie，是没有的，之后，在 a.com 下发送 b.com 的接口请求会自动带上 Cookie(因为 Cookie 是种在 b.com 下的)</p>
+<h3>第三方cookie 如何工作的</h3>
+<p>假设你在浏览器中打开一个新闻网站，该网站使用了广告服务提供商的服务，属于另外一个域名。当你访问该网站时，广告服务提供商的服务器会在你的浏览器中设置一个第三方cookie（也就是广告服务域名下的 cookie）。
+由于这个cookie包含一个唯一的标识符，用于标识你的浏览器。广告服务提供商可以通过从哪些网站发出的请求分析出用户喜欢逛哪些网站。</p>
+<h3>3. Fetch 的 credentials 参数</h3>
+<p>如果没有配置 credential 这个参数，fetch 是不会发送 Cookie 的
+credential 的参数如下</p>
+<ul>
+<li>include：不论是不是跨域的请求，总是发送请求资源域在本地的 Cookies、HTTP Basic anthentication 等验证信息</li>
+<li>same-origin：只有当 URL 与响应脚本同源才发送 cookies、 HTTP Basic authentication 等验证信息</li>
+<li>omit： 从不发送 cookies.
+平常写一些简单的例子，从很多细节问题上也能补充自己的一些知识盲点。</li>
+</ul>
+<h3>origin 和 referer 头</h3>
+<p>Origin 头和 Referer 头在不同情况下会被携带：</p>
+<ol>
+<li>
+<p>Origin 头：Origin 头通常在跨域请求中被携带。当浏览器发送跨域请求时，会自动在请求头中添加 Origin 字段，指示请求的源（协议+域名+端口）。例如，从 <code>a.com</code> 发送请求到 <code>b.com</code>，请求头中会包含 <code>Origin: http://a.com</code>。服务器可以通过检查 Origin 头来判断请求的来源，并根据需要进行跨域资源共享（CORS）的处理。</p>
+</li>
+<li>
+<p>Referer 头：Referer 头通常在同域请求中被携带。当浏览器发送请求时，会自动在请求头中添加 Referer 字段，指示该请求的来源页面的 URL。例如，从页面 <code>http://a.com/page1</code> 发送请求到 <code>http://a.com/page2</code>，请求头中会包含 <code>Referer: http://a.com/page1</code>。服务器可以通过检查 Referer 头来获取请求的来源页面信息，用于统计、日志记录等目的。</p>
+</li>
+</ol>
+<p>需要注意的是，浏览器在发送请求时会自动添加 Origin 头和 Referer 头，并且可以通过在服务器端设置相应的响应头来控制是否允许或限制这些头的携带。在某些情况下，例如隐私保护的考虑，可能会限制或删除这些头的携带。</p>
+
+<h1>type 和 interface 傻傻分不清楚？</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7098491203443752974?searchId=202310041542346C9FB55729D8C80F4D74">juejin.cn</a></p>
+</blockquote>
+<p>#cs/ts/type #cs/ts/interface</p>
+<p>类型别名 type 可以用来给一个类型起个新名字，当命名基本类型或联合类型等非对象类型时非常有用：
+类型别名也支持泛型。我们工作中常用的 Partial、Required、Pick、Record 和 Exclude 等工具类型都是以 type 方式来定义的。
+接口 interface 只能用于定义对象类型</p>
+<pre><code>// packages/runtime-core/src/apiCreateApp.ts
+export interface App&lt;HostElement = any&gt; {
+  version: string
+  config: AppConfig
+  use(plugin: Plugin, ...options: any[]): this
+  mixin(mixin: ComponentOptions): this
+  component(name: string): Component | undefined // Getter
+  component(name: string, component: Component): this // Setter
+  directive(name: string): Directive | undefined
+  directive(name: string, directive: Directive): this
+}
+</code></pre>
+<p>由以上代码可知，在定义接口时，我们可以同时声明对象类型上的属性和方法。了解 type 和 interface 的作用之后，我们先来介绍一下它们的相似之处。</p>
+<h2>Partial、Required、Pick、Record 和 Exclude 的实现</h2>
+<pre><code>// lib.es5.d.ts
+type Partial&lt;T&gt; = {
+    [P in keyof T]?: T[P];
+};
+​T[P] 表示类型 T 中属性 P 的类型。
+这个表示循环T中的属性
+
+type Required&lt;T&gt; = {
+    [P in keyof T]-?: T[P];
+};
+​
+type Pick&lt;T, K extends keyof T&gt; = {
+    [P in K]: T[P];
+};
+​
+type Record&lt;K extends keyof any, T&gt; = {
+    [P in K]: T;
+};
+作用是创建一个新的类型，其中属性名来自于类型 K 的属性，而属性值都是类型 T
+如type Keys = 'name' | 'age' | 'address';
+type Person = Record&lt;Keys, string&gt;;
+​
+type Exclude&lt;T, U&gt; = T extends U ? never : T;
+如果T 表示一个联合类型，它可以是多个类型的组合，例如 number | string | boolean。当使用 Exclude&lt;T, U&gt; 时，T 会被分解为联合类型中的每个单独的类型，并逐个进行判断。
+</code></pre>
+<h3>类型别名和接口都可以用来描述对象或函数</h3>
+<pre><code>type Point = {
+  x: number;
+  y: number;
+};
+type SetPoint = (x: number, y: number) =&gt; void;
+interface Point {
+  x: number;
+  y: number;
+}
+​
+interface SetPoint {
+  (x: number, y: number): void;
+}
+</code></pre>
+<h2>总结一下类型别名和接口的一些使用场景。</h2>
+<p>使用类型别名的场景：</p>
+<ul>
+<li>定义基本类型的别名时，使用 type</li>
+<li>定义元组类型时，使用 type</li>
+<li>定义函数类型时，使用 type</li>
+<li>定义联合类型时，使用 type</li>
+<li>定义映射类型时，使用 type</li>
+</ul>
+<p>使用接口的场景：</p>
+<ul>
+<li>需要利用接口自动合并特性的时候，使用 interface</li>
+<li>定义对象类型且无需使用 type 的时候，使用 interface</li>
+</ul>

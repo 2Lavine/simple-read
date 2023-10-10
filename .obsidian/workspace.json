@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "8931bbc3ef498c5f",
+        "id": "5cb4c98b06802b4a",
         "type": "tabs",
         "children": [
           {
-            "id": "d744b5904b1b140a",
+            "id": "3e1de418b8fbaa57",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "md/2023-10-10.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,8 +48,8 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "reverse",
-                "matchingCase": false,
+                "query": "tag:#python/",
+                "matchingCase": true,
                 "explainSearch": true,
                 "collapseAll": true,
                 "extraContext": true,
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/leetcode.md"
+                "file": "md/2023-10-10.md"
               }
             }
           },
@@ -75,11 +75,12 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 242.50390243530273
+    "width": 296.50390243530273
   },
   "right": {
     "id": "c998dc817f697143",
@@ -95,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "md/2023-10-10.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "md/2023-10-10.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -163,57 +164,59 @@
       "command-palette:Open command palette": false,
       "workspaces:Manage workspace layouts": false,
       "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
+      "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false,
+      "obsidian-excalidraw-plugin:Create new drawing": false,
+      "obsidian-memos:Memos": false
     }
   },
-  "active": "d744b5904b1b140a",
+  "active": "3e1de418b8fbaa57",
   "lastOpenFiles": [
+    "md/2023-10-09.md",
+    "md/2023-10-10.md",
+    "md/leetcode.md",
     "python3 leet.md",
+    "WuCai/23-10-09-国外免费云服务器  Google Search-H82H2H5.md",
+    "md/2023-10-08.md",
+    "Excalidraw/Architecture.excalidraw.md",
+    "achieve/2023-10-04.md",
+    "Excalidraw",
+    "achieve/2023-09-27.md",
+    "_resources/Pasted image 20231009113615.png",
+    "WuCai/23-10-09-No Title-H82HH78.md",
+    "output/2023-10-8 21-11-51.html",
+    "achieve/type 和 interface 傻傻分不清楚？.md",
+    "achieve/javascript - Web 安全之 CSRF 实例解析 - 前端小码农 - SegmentFault 思否.md",
+    "achieve/TS 中 interface 和 type 究竟有什么区别？.md",
+    "achieve/React 技术揭秘.md",
+    "achieve/Python 字典.md",
+    "Untitled.md",
+    "done/type 和 interface 傻傻分不清楚？.md",
+    "done/javascript - Web 安全之 CSRF 实例解析 - 前端小码农 - SegmentFault 思否.md",
+    "_resources/25751f9e43ccecbad94105f36feaf639_MD5.png",
+    "_resources/07b04a9bffacba97ba2e4990ae30c770_MD5.png",
+    "cur useless/Vue3 + Fabricjs 定制国庆专属头像🌈.md",
+    "done/React 技术揭秘.md",
+    "done/TS 中 interface 和 type 究竟有什么区别？.md",
+    "md/How to useMemo and useCallback: you can remove most of them.md",
+    "achieve/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
     "md/2023-10-05.md",
     "done/2023-10-04.md",
     "mini-react-docs/译文/in-depth_overview_of_the_new_reconciliation_algorithm.md",
-    "node_modules/lru-cache/README.md",
-    "node_modules/yallist/README.md",
-    "node_modules/semver/README.md",
-    "cur useless/Decoding \"Autonomous\" - by Chao Wang - Future Mosaic.md",
-    "done/Python set sort dic.md",
-    "md/leetcode.md",
-    "done/ref.current 属性赋值.md",
-    "done/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
-    "done/2023-10-01.md",
-    "done/Python 字典.md",
-    "done/2023-10-03.md",
-    "done/2023-10-02.md",
-    "done/为什么你可以删除 90% 的 useMemo 和 useCallback.md",
     "_resources/e5d2923a0e84fb9d3f9b6f3464a29249_MD5.webp",
     "_resources/5d1875e3327541e101b8025cd4d3501b_MD5.webp",
     "_resources/b629fc7e9c25fa8c07fb09b5e27a0d1b_MD5.webp",
     "_resources/392bb97e8eab99ac1f084257d5a8d0c1_MD5.webp",
     "_resources/8a106517d8c77dd49c9139500d4b10bb_MD5.webp",
-    "leetc.md",
-    "achieve/2023-09-27.md",
-    "cur useless/最详细的 K8S 学习笔记总结（2021 最新版）.md",
-    "node_modules/node-addon-api/README.md",
-    "achieve/2023-09-14.md",
-    "星标.md",
-    "achieve/day03_designModel.md",
-    "achieve/EPAT.md",
-    "readme.md",
     "_resources/Pasted image 20231002172533.png",
     "output/2023-10-1 21-34-17.html",
     "output/2023-10-1 21-20-06.html",
     "_resources/fb4a256ef2b57eb02e4e8a08d2193cc4_MD5.jpg",
-    "_resources/eaeb1bfa296f436caa3d14e5c3c6ece9_MD5.jpg",
-    "_resources/c804e0665be134595f18a7fc9831a429_MD5.jpg",
-    "_resources/e5d2923a0e84fb9d3f9b6f3464a29249_MD5.jpg",
     "output/2023-10-1 21-11-43.html",
     "output/2023-10-1 21-09-43.html",
     "Untitled",
     "output/2023-9-26 22-49-28.html",
     "S-ARCHSS Project Assignment v2.0.pdf",
     "S-ARCHSS Project Assignment (Case Study Templates Exercise 2) v2.0.docx",
-    "S-ARCHSS Project Assignment (Case Study Templates Exercise 1) v2.0.docx",
-    "03. Architect the Solution Architecture (Method) v3.0.pdf",
     "未命名.canvas"
   ]
 }

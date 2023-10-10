@@ -122,12 +122,9 @@ print(nums)  # 输出：[1, 2, -3, -4, 5]
 
 需要注意的是，sort()方法只适用于可排序的元素类型，例如数字、字符串等。对于自定义的对象，可以通过在对象类中实现__lt__方法来定义排序规则，然后使用sort()方法进行排序。
 
----
-=======move to md line=====
-
 
 ## Python中的数组方法
-
+#python/array 
 删除前后空白
 s = s.strip()
 反转整个字符串
@@ -146,6 +143,7 @@ print(result)
 
 注意 py 的join 和js 的 join 相反
 ## Python 生成器
+#python/generator 
 range 是一个很常用的内置生成器。它接受以下输入值：
 “start”（包括数字本身，默认为0）
 “stop”（不包括数字本身）
@@ -159,3 +157,82 @@ gene=(\[n, l\] for n in nums for l in letters if n!=1 and l!=2)for可以一直�
 ### 生成器理解
 是一种创建列表的语法
 把生成器改成方括号
+
+## python中的遍历
+if letter in obj:
+If letter in obj.keys():
+这两个是等价的
+
+
+
+#python/array 
+用 stack[-1] 来获取 top元素
+
+#python/除法
+a//b 结果向下取整
+int(number) 结果值保留整数部分
+math.ceil, math.floor
+
+#python/deque 
+deque是一个双端队列
+导入方法from collections import deque
+append(x): 在deque的右侧添加元素x。
+appendleft(x): 在deque的左侧添加元素x。
+pop(): 移除并返回deque的最右侧的元素。
+popleft(): 移除并返回deque的最左侧的元素。
+rotate(n): 将deque中的元素向右循环移动n步（如果n是负数，则向左循环移动）。
+
+#python/heapq
+heapq 库是Python标准库之Lib，提供了构建小顶堆的方法
+直接 import heapq 不用 from
+
+
+在Python中，`deque`是`collections`模块中的一个类，而`heapq`是Python标准库中的一个模块。它们的导入方式略有不同,使用方式也不同。
+
+   ```python
+   from collections import deque
+   d = deque()
+   ```
+
+2. `heapq`是Python标准库中的一个模块，用于实现堆（heap）数据结构。在导入时，只需要使用`import heapq`的方式即可。
+3. 我们可以使用`heapq`模块中提供的函数来进行堆相关的操作。
+
+   ```python
+   import heapq
+   heap = []
+   heapq.heappush(heap, 1)
+   ```
+
+#python/heapq 使用方法
+---
+要创建堆，请使用初始化为[]的列表，或者您可以通过函数heapify()将填充列表转换为堆。
+堆元素可以为元组。这样在第一个值（被比较的值）旁边添一个你实际要排序额值
+```python
+pri_que = [] #小顶堆
+#用固定大小为k的小顶堆，扫描所有频率的数值
+for key, freq in map_.items():
+	heapq.heappush(pri_que, (freq, key))
+	#堆元素可以为元组。这样在第一个值（被比较的值）旁边添一个你实际要排序额值
+	if len(pri_que) > k: 
+	#如果堆的大小大于了K，则队列弹出，保证堆的大小一直为k
+		heapq.heappop(pri_que)
+取出来值只要用queItem[1]
+```
+
+
+
+---
+=======move to md line=====
+
+
+# todo python实现大根堆
+# todo heapq的方法
+# todo Python List 排序比较函数
+
+#python/math 
+module 'math' has no attribute 'max'
+直接用 max,min,abs
+
+#python/类型转换 
+可以用 str() 把 int 类型转成 字符串类型
+用 chr( ) 把 ASCII 码转成字母

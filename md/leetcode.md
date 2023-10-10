@@ -125,7 +125,10 @@ aliases: []
 	- [ ] out栈的顺序和队列是一样的
 - [x] [栈与队列：225.用队列实现栈](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0225.用队列实现栈.md)
 	- [ ] 一个队列。 自己 pop 自己 push 直到循环到最后一个（也就是栈的第一个）
-- [ ] [栈与队列：20.有效的括号](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0020.有效的括号.md)
+- [x] [栈与队列：20.有效的括号](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0020.有效的括号.md)
+	- [ ] 主要考虑极端情况
+	- [ ] 最后如果不为空则是 False
+	- [ ] POP之前要考虑是否会为空
 - [ ] [栈与队列：1047.删除字符串中的所有相邻重复项](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1047.删除字符串中的所有相邻重复项.md)
 - [ ] [栈与队列：150.逆波兰表达式求值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0150.逆波兰表达式求值.md)
 - [ ] [栈与队列：239.滑动窗口最大值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0239.滑动窗口最大值.md)
@@ -135,40 +138,49 @@ aliases: []
 ## 二叉树 
 
 [关于二叉树，你该了解这些！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树理论基础.md)
+- [x] 94中序 
+- [x] 144前序 
+- [x] 145后序
 [二叉树：二叉树的递归遍历](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树的递归遍历.md)
 [二叉树：二叉树的迭代遍历](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树的迭代遍历.md)
-[二叉树：二叉树的统一迭代法](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树的统一迭代法.md)
-[二叉树：二叉树的层序遍历](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0102.二叉树的层序遍历.md) 
-[二叉树：226.翻转二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0226.翻转二叉树.md) 
-[本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20200927二叉树周末总结.md)
-[二叉树：101.对称二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0101.对称二叉树.md)
-[二叉树：104.二叉树的最大深度](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0104.二叉树的最大深度.md)
-[二叉树：111.二叉树的最小深度](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0111.二叉树的最小深度.md)
-[二叉树：222.完全二叉树的节点个数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0222.完全二叉树的节点个数.md)
-[二叉树：110.平衡二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0110.平衡二叉树.md)
-[二叉树：257.二叉树的所有路径](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0257.二叉树的所有路径.md)
-[本周总结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201003二叉树周末总结.md)
-[二叉树：二叉树中递归带着回溯](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树中递归带着回溯.md)
-[二叉树：404.左叶子之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0404.左叶子之和.md)
-[二叉树：513.找树左下角的值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0513.找树左下角的值.md)
-[二叉树：112.路径总和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0112.路径总和.md)
-[二叉树：106.构造二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0106.从中序与后序遍历序列构造二叉树.md)
-[二叉树：654.最大二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0654.最大二叉树.md)
-[本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201010二叉树周末总结.md) 
-[二叉树：617.合并两个二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0617.合并二叉树.md)
-[二叉树：700.二叉搜索树登场！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0700.二叉搜索树中的搜索.md)
-[二叉树：98.验证二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0098.验证二叉搜索树.md)
-[二叉树：530.搜索树的最小绝对差](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0530.二叉搜索树的最小绝对差.md)
-[二叉树：501.二叉搜索树中的众数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0501.二叉搜索树中的众数.md)
-[二叉树：236.公共祖先问题](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0236.二叉树的最近公共祖先.md)
-[本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201017二叉树周末总结.md)
-[二叉树：235.搜索树的最近公共祖先](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0235.二叉搜索树的最近公共祖先.md)
-[二叉树：701.搜索树中的插入操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0701.二叉搜索树中的插入操作.md)
-[二叉树：450.搜索树中的删除操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0450.删除二叉搜索树中的节点.md)
-[二叉树：669.修剪二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0669.修剪二叉搜索树.md)
-[二叉树：108.将有序数组转换为二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0108.将有序数组转换为二叉搜索树.md)
-[二叉树：538.把二叉搜索树转换为累加树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0538.把二叉搜索树转换为累加树.md)
-[二叉树：总结篇！（需要掌握的二叉树技能都在这里了）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树总结篇.md)
+- [ ] 中序迭代遍历
+- [ ] [二叉树：二叉树的统一迭代法](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树的统一迭代法.md)
+- [x] [二叉树：二叉树的层序遍历](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0102.二叉树的层序遍历.md) 
+- [x] [二叉树：226.翻转二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0226.翻转二叉树.md) 
+- [ ] [本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20200927二叉树周末总结.md)
+- [ ] [二叉树：101.对称二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0101.对称二叉树.md)
+- [x] [二叉树：104.二叉树的最大深度](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0104.二叉树的最大深度.md)
+- [x] [二叉树：111.二叉树的最小深度](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0111.二叉树的最小深度.md)
+- [ ] [二叉树：222.完全二叉树的节点个数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0222.完全二叉树的节点个数.md)
+	- [ ] logN x logN 的复杂度
+- [ ] [二叉树：110.平衡二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0110.平衡二叉树.md)
+	- [ ] 同计算高度，但是对于不平衡的情况额外返回-1
+- [x] [二叉树：257.二叉树的所有路径](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0257.二叉树的所有路径.md)
+- [ ] [本周总结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201003二叉树周末总结.md)
+---
+- [ ] [二叉树：二叉树中递归带着回溯](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树中递归带着回溯.md)
+- [ ] [二叉树：404.左叶子之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0404.左叶子之和.md)
+- [ ] [二叉树：513.找树左下角的值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0513.找树左下角的值.md)
+- [ ] [二叉树：112.路径总和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0112.路径总和.md)
+- [ ] [二叉树：106.构造二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0106.从中序与后序遍历序列构造二叉树.md)
+- [ ] [二叉树：654.最大二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0654.最大二叉树.md)
+- [ ] [本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201010二叉树周末总结.md) 
+- [ ] [二叉树：617.合并两个二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0617.合并二叉树.md)
+- [ ] [二叉树：700.二叉搜索树登场！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0700.二叉搜索树中的搜索.md)
+- [ ] [二叉树：98.验证二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0098.验证二叉搜索树.md)
+- [ ] [二叉树：530.搜索树的最小绝对差](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0530.二叉搜索树的最小绝对差.md)
+- [ ] [二叉树：501.二叉搜索树中的众数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0501.二叉搜索树中的众数.md)
+- [ ] [二叉树：236.公共祖先问题](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0236.二叉树的最近公共祖先.md)
+- [ ] [本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201017二叉树周末总结.md)
+
+---
+- [ ] [二叉树：235.搜索树的最近公共祖先](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0235.二叉搜索树的最近公共祖先.md)
+- [ ] [二叉树：701.搜索树中的插入操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0701.二叉搜索树中的插入操作.md)
+- [ ] [二叉树：450.搜索树中的删除操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0450.删除二叉搜索树中的节点.md)
+- [ ] [二叉树：669.修剪二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0669.修剪二叉搜索树.md)
+- [ ] [二叉树：108.将有序数组转换为二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0108.将有序数组转换为二叉搜索树.md)
+- [ ] [二叉树：538.把二叉搜索树转换为累加树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0538.把二叉搜索树转换为累加树.md)
+- [ ] [二叉树：总结篇！（需要掌握的二叉树技能都在这里了）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树总结篇.md)
 
 ## 回溯算法 
 
