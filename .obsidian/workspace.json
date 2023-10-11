@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/2023-10-10.md",
+                "file": "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,8 +48,8 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#python/",
-                "matchingCase": true,
+                "query": "#eng",
+                "matchingCase": false,
                 "explainSearch": true,
                 "collapseAll": true,
                 "extraContext": true,
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/2023-10-10.md"
+                "file": "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md"
               }
             }
           },
@@ -75,8 +75,7 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -96,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/2023-10-10.md",
+                "file": "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/2023-10-10.md",
+                "file": "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -171,37 +170,39 @@
   },
   "active": "3e1de418b8fbaa57",
   "lastOpenFiles": [
-    "md/2023-10-09.md",
-    "md/2023-10-10.md",
-    "md/leetcode.md",
-    "python3 leet.md",
-    "WuCai/23-10-09-国外免费云服务器  Google Search-H82H2H5.md",
-    "md/2023-10-08.md",
+    "md/2023-10-11.md",
+    "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md",
+    "cur useless/🤮是时候放弃 useState 了，🚀这么写 React 更丝滑🚀.md",
     "Excalidraw/Architecture.excalidraw.md",
-    "achieve/2023-10-04.md",
-    "Excalidraw",
-    "achieve/2023-09-27.md",
-    "_resources/Pasted image 20231009113615.png",
-    "WuCai/23-10-09-No Title-H82HH78.md",
-    "output/2023-10-8 21-11-51.html",
+    "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md",
+    "done/Handling Events – React.md",
+    "done",
+    "md/leetcode.md",
+    "md/2023-10-10.md",
+    "python3 leet.md",
+    "_resources/Pasted image 20231010122134.png",
+    "achieve/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
+    "achieve/为什么你可以删除 90% 的 useMemo 和 useCallback.md",
     "achieve/type 和 interface 傻傻分不清楚？.md",
+    "achieve/ref.current 属性赋值.md",
     "achieve/javascript - Web 安全之 CSRF 实例解析 - 前端小码农 - SegmentFault 思否.md",
     "achieve/TS 中 interface 和 type 究竟有什么区别？.md",
     "achieve/React 技术揭秘.md",
     "achieve/Python 字典.md",
-    "Untitled.md",
-    "done/type 和 interface 傻傻分不清楚？.md",
-    "done/javascript - Web 安全之 CSRF 实例解析 - 前端小码农 - SegmentFault 思否.md",
+    "achieve/Python set sort dic.md",
+    "achieve/2023-10-05.md",
+    "achieve/2023-10-04.md",
+    "achieve/2023-10-03.md",
+    "achieve/2023-10-02.md",
+    "achieve/2023-10-01.md",
+    "_resources/Pasted image 20231009113615.png",
     "_resources/25751f9e43ccecbad94105f36feaf639_MD5.png",
     "_resources/07b04a9bffacba97ba2e4990ae30c770_MD5.png",
-    "cur useless/Vue3 + Fabricjs 定制国庆专属头像🌈.md",
-    "done/React 技术揭秘.md",
-    "done/TS 中 interface 和 type 究竟有什么区别？.md",
-    "md/How to useMemo and useCallback: you can remove most of them.md",
-    "achieve/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
-    "md/2023-10-05.md",
-    "done/2023-10-04.md",
-    "mini-react-docs/译文/in-depth_overview_of_the_new_reconciliation_algorithm.md",
+    "WuCai/23-10-09-国外免费云服务器  Google Search-H82H2H5.md",
+    "WuCai/23-10-09-No Title-H82HH78.md",
+    "Untitled.md",
+    "Excalidraw",
+    "output/2023-10-8 21-11-51.html",
     "_resources/e5d2923a0e84fb9d3f9b6f3464a29249_MD5.webp",
     "_resources/5d1875e3327541e101b8025cd4d3501b_MD5.webp",
     "_resources/b629fc7e9c25fa8c07fb09b5e27a0d1b_MD5.webp",
@@ -210,13 +211,11 @@
     "_resources/Pasted image 20231002172533.png",
     "output/2023-10-1 21-34-17.html",
     "output/2023-10-1 21-20-06.html",
-    "_resources/fb4a256ef2b57eb02e4e8a08d2193cc4_MD5.jpg",
     "output/2023-10-1 21-11-43.html",
     "output/2023-10-1 21-09-43.html",
     "Untitled",
     "output/2023-9-26 22-49-28.html",
     "S-ARCHSS Project Assignment v2.0.pdf",
-    "S-ARCHSS Project Assignment (Case Study Templates Exercise 2) v2.0.docx",
     "未命名.canvas"
   ]
 }

@@ -144,6 +144,8 @@ aliases: []
 [二叉树：二叉树的递归遍历](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树的递归遍历.md)
 [二叉树：二叉树的迭代遍历](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树的迭代遍历.md)
 - [ ] 中序迭代遍历
+	- [ ] 中序遍历必然结束再最右边的一个点
+	- [ ] 最右边的一个点的右侧必然为空
 - [ ] [二叉树：二叉树的统一迭代法](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树的统一迭代法.md)
 - [x] [二叉树：二叉树的层序遍历](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0102.二叉树的层序遍历.md) 
 - [x] [二叉树：226.翻转二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0226.翻转二叉树.md) 
@@ -159,12 +161,14 @@ aliases: []
 - [ ] [本周总结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201003二叉树周末总结.md)
 ---
 - [ ] [二叉树：二叉树中递归带着回溯](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树中递归带着回溯.md)
-- [ ] [二叉树：404.左叶子之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0404.左叶子之和.md)
-- [ ] [二叉树：513.找树左下角的值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0513.找树左下角的值.md)
-- [ ] [二叉树：112.路径总和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0112.路径总和.md)
+- [ ] [二叉树：404.左叶子之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0404.左叶子之和.md) not 迭代
+- [x] [二叉树：513.找树左下角的值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0513.找树左下角的值.md)
+- [x] [二叉树：112.路径总和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0112.路径总和.md)
 - [ ] [二叉树：106.构造二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0106.从中序与后序遍历序列构造二叉树.md)
 - [ ] [二叉树：654.最大二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0654.最大二叉树.md)
+	- [ ] 106和 654 的重点是不构造数组，直接有左右边界替代
 - [ ] [本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201010二叉树周末总结.md) 
+---
 - [ ] [二叉树：617.合并两个二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0617.合并二叉树.md)
 - [ ] [二叉树：700.二叉搜索树登场！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0700.二叉搜索树中的搜索.md)
 - [ ] [二叉树：98.验证二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0098.验证二叉搜索树.md)
@@ -308,7 +312,6 @@ aliases: []
 [单调栈：503.下一个更大元素II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0503.下一个更大元素II.md)
 [单调栈：42.接雨水](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0042.接雨水.md)
 [单调栈：84.柱状图中最大的矩形](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0084.柱状图中最大的矩形.md)
-
 
 
 ### 图论 深搜广搜  

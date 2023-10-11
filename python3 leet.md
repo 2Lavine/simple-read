@@ -230,9 +230,22 @@ for key, freq in map_.items():
 # todo Python List 排序比较函数
 
 #python/math 
+---
 module 'math' has no attribute 'max'
 直接用 max,min,abs
 
 #python/类型转换 
+---
 可以用 str() 把 int 类型转成 字符串类型
 用 chr( ) 把 ASCII 码转成字母
+
+
+#python/nonlocal
+---
+在Python中，如果你想在嵌套函数中修改嵌套作用域外的变量，你需要使用nonlocal关键字。
+
+你的代码中，ans是在sumOfLeftLeaves函数的作用域中定义的，但是在dfs函数中被修改。这是不允许的，除非你在dfs函数中使用nonlocal ans来声明你想要修改的是外部作用域的ans。
+
+#python/type
+树节点定义class TreeNode:
+链表节点定义 class ListNode

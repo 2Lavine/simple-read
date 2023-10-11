@@ -1,417 +1,193 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [www.frontendinterviewhandbook.com](https://www.frontendinterviewhandbook.com/javascript-questions/)
-
-> Front End Interview Handbook is now part of GreatFrontEnd! We are working to migrate the content over......
-
-We are now part of GreatFrontEnd!
-
-Front End Interview Handbook is now part of [GreatFrontEnd](https://www.greatfrontend.com/)! We are working to migrate the content over and you may find the latest version of this page on [GreatFrontEnd](https://www.greatfrontend.com/front-end-interview-guidebook/quiz).
-
-Answers to [Front-end Job Interview Questions - JS Questions](https://github.com/h5bp/Front-end-Developer-Interview-Questions/blob/master/src/questions/javascript-questions.md). Pull requests for suggestions and corrections are welcome!
-
-*   [Explain event delegation](#explain-event-delegation)
-*   [Explain how `this` works in JavaScript](#explain-how-this-works-in-javascript)
-*   [Explain how prototypal inheritance works](#explain-how-prototypal-inheritance-works)
-*   [What do you think of AMD vs CommonJS?](#what-do-you-think-of-amd-vs-commonjs)
-*   [Explain why the following doesn't work as an IIFE: `function foo(){ }();`. What needs to be changed to properly make it an IIFE?](#explain-why-the-following-doesnt-work-as-an-iife-function-foo--what-needs-to-be-changed-to-properly-make-it-an-iife)
-*   [What's the difference between a variable that is: `null`, `undefined` or undeclared? How would you go about checking for any of these states?](#whats-the-difference-between-a-variable-that-is-null-undefined-or-undeclared-how-would-you-go-about-checking-for-any-of-these-states)
-*   [What is a closure, and how/why would you use one?](#what-is-a-closure-and-howwhy-would-you-use-one)
-*   [Can you describe the main difference between a `.forEach` loop and a `.map()` loop and why you would pick one versus the other?](#can-you-describe-the-main-difference-between-a-foreach-loop-and-a-map-loop-and-why-you-would-pick-one-versus-the-other)
-*   [What's a typical use case for anonymous functions?](#whats-a-typical-use-case-for-anonymous-functions)
-*   [How do you organize your code? (module pattern, classical inheritance?)](#how-do-you-organize-your-code-module-pattern-classical-inheritance)
-*   [What's the difference between host objects and native objects?](#whats-the-difference-between-host-objects-and-native-objects)
-*   [Difference between: `function Person(){}`, `var person = Person()`, and `var person = new Person()`?](#difference-between-function-person-var-person--person-and-var-person--new-person)
-*   [What's the difference between `.call` and `.apply`?](#whats-the-difference-between-call-and-apply)
-*   [Explain `Function.prototype.bind`.](#explain-functionprototypebind)
-*   [When would you use `document.write()`?](#when-would-you-use-documentwrite)
-*   [What's the difference between feature detection, feature inference, and using the UA string?](#whats-the-difference-between-feature-detection-feature-inference-and-using-the-ua-string)
-*   [Explain Ajax in as much detail as possible.](#explain-ajax-in-as-much-detail-as-possible)
-*   [What are the advantages and disadvantages of using Ajax?](#what-are-the-advantages-and-disadvantages-of-using-ajax)
-*   [Explain how JSONP works (and how it's not really Ajax).](#explain-how-jsonp-works-and-how-its-not-really-ajax)
-*   [Have you ever used JavaScript templating? If so, what libraries have you used?](#have-you-ever-used-javascript-templating-if-so-what-libraries-have-you-used)
-*   [Explain "hoisting".](#explain-hoisting)
-*   [Describe event bubbling.](#describe-event-bubbling)
-*   [What's the difference between an"attribute"and a"property"?](#whats-the-difference-between-an-attribute-and-a-property)
-*   [Why is extending built-in JavaScript objects not a good idea?](#why-is-extending-built-in-javascript-objects-not-a-good-idea)
-*   [Difference between document `load` event and document `DOMContentLoaded` event?](#difference-between-document-load-event-and-document-domcontentloaded-event)
-*   [What is the difference between `==` and `===`?](#what-is-the-difference-between--and-)
-*   [Explain the same-origin policy with regards to JavaScript.](#explain-the-same-origin-policy-with-regards-to-javascript)
-*   [Make this work:](#make-this-work)
-*   [Why is it called a Ternary expression, what does the word "Ternary" indicate?](#why-is-it-called-a-ternary-expression-what-does-the-word-ternary-indicate)
-*   [What is `"use strict";`? What are the advantages and disadvantages to using it?](#what-is-use-strict-what-are-the-advantages-and-disadvantages-to-using-it)
-*   [Create a for loop that iterates up to `100` while outputting **"fizz"** at multiples of `3`, **"buzz"** at multiples of `5` and **"fizzbuzz"** at multiples of `3` and `5`.](#create-a-for-loop-that-iterates-up-to-100-while-outputting-fizz-at-multiples-of-3-buzz-at-multiples-of-5-and-fizzbuzz-at-multiples-of-3-and-5)
-*   [Why is it, in general, a good idea to leave the global scope of a website as-is and never touch it?](#why-is-it-in-general-a-good-idea-to-leave-the-global-scope-of-a-website-as-is-and-never-touch-it)
-*   [Why would you use something like the `load` event? Does this event have disadvantages? Do you know any alternatives, and why would you use those?](#why-would-you-use-something-like-the-load-event-does-this-event-have-disadvantages-do-you-know-any-alternatives-and-why-would-you-use-those)
-*   [Explain what a single page app is and how to make one SEO-friendly.](#explain-what-a-single-page-app-is-and-how-to-make-one-seo-friendly)
-*   [What is the extent of your experience with Promises and/or their polyfills?](#what-is-the-extent-of-your-experience-with-promises-andor-their-polyfills)
-*   [What are the pros and cons of using Promises instead of callbacks?](#what-are-the-pros-and-cons-of-using-promises-instead-of-callbacks)
-*   [What are some of the advantages/disadvantages of writing JavaScript code in a language that compiles to JavaScript?](#what-are-some-of-the-advantagesdisadvantages-of-writing-javascript-code-in-a-language-that-compiles-to-javascript)
-*   [What tools and techniques do you use for debugging JavaScript code?](#what-tools-and-techniques-do-you-use-for-debugging-javascript-code)
-*   [What language constructions do you use for iterating over object properties and array items?](#what-language-constructions-do-you-use-for-iterating-over-object-properties-and-array-items)
-*   [Explain the difference between mutable and immutable objects.](#explain-the-difference-between-mutable-and-immutable-objects)
-*   [Explain the difference between synchronous and asynchronous functions.](#explain-the-difference-between-synchronous-and-asynchronous-functions)
-*   [What is event loop? What is the difference between call stack and task queue?](#what-is-event-loop-what-is-the-difference-between-call-stack-and-task-queue)
-*   [Explain the differences on the usage of `foo` between `function foo() {}` and `var foo = function() {}`](#explain-the-differences-on-the-usage-of-foo-between-function-foo--and-var-foo--function-)
-*   [What are the differences between variables created using `let`, `var` or `const`?](#what-are-the-differences-between-variables-created-using-let-var-or-const)
-*   [What are the differences between ES6 class and ES5 function constructors?](#what-are-the-differences-between-es6-class-and-es5-function-constructors)
-*   [Can you offer a use case for the new arrow => function syntax? How does this new syntax differ from other functions?](#can-you-offer-a-use-case-for-the-new-arrow--function-syntax-how-does-this-new-syntax-differ-from-other-functions)
-*   [What advantage is there for using the arrow syntax for a method in a constructor?](#what-advantage-is-there-for-using-the-arrow-syntax-for-a-method-in-a-constructor)
-*   [What is the definition of a higher-order function?](#what-is-the-definition-of-a-higher-order-function)
-*   [Can you give an example for destructuring an object or an array?](#can-you-give-an-example-for-destructuring-an-object-or-an-array)
-*   [ES6 Template Literals offer a lot of flexibility in generating strings, can you give an example?](#es6-template-literals-offer-a-lot-of-flexibility-in-generating-strings-can-you-give-an-example)
-*   [Can you give an example of a curry function and why this syntax offers an advantage?](#can-you-give-an-example-of-a-curry-function-and-why-this-syntax-offers-an-advantage)
-*   [What are the benefits of using spread syntax and how is it different from rest syntax?](#what-are-the-benefits-of-using-spread-syntax-and-how-is-it-different-from-rest-syntax)
-*   [How can you share code between files?](#how-can-you-share-code-between-files)
-*   [Why you might want to create static class members?](#why-you-might-want-to-create-static-class-members)
-*   [Other Answers](#other-answers)
-
 ### Explain event delegation[​](#explain-event-delegation "Direct link to Explain event delegation")
 
-Event delegation is a technique involving adding event listeners to a parent element instead of adding them to the descendant elements. The listener will fire whenever the event is triggered on the descendant elements due to event bubbling up the DOM. The benefits of this technique are:
+Event delegation is a technique involving 
+- adding event listeners to a parent element 
+- instead of adding them to the descendant elements. 
+The listener will fire whenever the event is triggered on the descendant elements due to event bubbling up the DOM.  
+(use target to detect the element ;CurrentTarget is parent element)
 
-*   Memory footprint goes down because only one single handler is needed on the parent element, rather than having to attach event handlers on each descendant.
+The benefits of this technique are:
+*   Memory footprint goes down because only one single handler is needed on the parent element
 *   There is no need to unbind the handler from elements that are removed and to bind the event for new elements.
-
-###### References[​](#references "Direct link to References")
-
-*   [https://davidwalsh.name/event-delegate](https://davidwalsh.name/event-delegate)
-*   [https://stackoverflow.com/questions/1687296/what-is-dom-event-delegation](https://stackoverflow.com/questions/1687296/what-is-dom-event-delegation)
 
 ### Explain how `this` works in JavaScript[​](#explain-how-this-works-in-javascript "Direct link to explain-how-this-works-in-javascript")
 
-There's no simple explanation for `this`; it is one of the most confusing concepts in JavaScript. A hand-wavey explanation is that the value of `this` depends on how the function is called. I have read many explanations on `this` online, and I found [Arnav Aggrawal](https://medium.com/@arnav_aggarwal)'s explanation to be the clearest. The following rules are applied:
-
-1.  If the `new` keyword is used when calling the function, `this` inside the function is a brand new object.
-2.  If `apply`, `call`, or `bind` are used to call/create a function, `this` inside the function is the object that is passed in as the argument.
-3.  If a function is called as a method, such as `obj.method()` — `this` is the object that the function is a property of.
-4.  If a function is invoked as a free function invocation, meaning it was invoked without any of the conditions present above, `this` is the global object. In a browser, it is the `window` object. If in strict mode (`'use strict'`), `this` will be `undefined` instead of the global object.
-5.  If multiple of the above rules apply, the rule that is higher wins and will set the `this` value.
-6.  If the function is an ES2015 arrow function, it ignores all the rules above and receives the `this` value of its surrounding scope at the time it is created.
-
-For an in-depth explanation, do check out his [article on Medium](https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3).
-
-#### Can you give an example of one of the ways that working with this has changed in ES6?[​](#can-you-give-an-example-of-one-of-the-ways-that-working-with-this-has-changed-in-es6 "Direct link to Can you give an example of one of the ways that working with this has changed in ES6?")
-
-ES6 allows you to use [arrow functions](http://2ality.com/2017/12/alternate-this.html#arrow-functions) which uses the [enclosing lexical scope](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#No_separate_this). This is usually convenient, but does prevent the caller from controlling context via `.call` or `.apply`—the consequences being that a library such as `jQuery` will not properly bind `this` in your event handler functions. Thus, it's important to keep this in mind when refactoring large legacy applications.
-
-###### References[​](#references-1 "Direct link to References")
-
-*   [https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3](https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3)
-*   [https://stackoverflow.com/a/3127440/1751946](https://stackoverflow.com/a/3127440/1751946)
-
-### Explain how prototypal inheritance works[​](#explain-how-prototypal-inheritance-works "Direct link to Explain how prototypal inheritance works")
-
-This is an extremely common JavaScript interview question. All JavaScript objects have a `__proto__` property with the exception of objects created with `Object.create(null)`, that is a reference to another object, which is called the object's"prototype". When a property is accessed on an object and if the property is not found on that object, the JavaScript engine looks at the object's `__proto__`, and the `__proto__`'s `__proto__` and so on, until it finds the property defined on one of the `__proto__`s or until it reaches the end of the prototype chain. This behavior simulates classical inheritance, but it is really more of [delegation than inheritance](https://davidwalsh.name/javascript-objects).
-
-#### Example of Prototypal Inheritance[​](#example-of-prototypal-inheritance "Direct link to Example of Prototypal Inheritance")
-
+depondes on context
+1. global context: get windows or global(node)
+2. function context:
+	1. dependon how call, obj call, this refered to obj
+	2. arrow function is different, its this 被永久绑定到了它外层函数的 this。
+		1. not decided this
+		2. this dont change
+3. contructor context:  refer to newly created obj
+4. eventlistener context: refer to DOM element that trigger event
+### Arrow `this` not change
+例子如下
+如果是普通函数
 ```
-function Parent() {  this.name = 'Parent';}Parent.prototype.greet = function () {  console.log('Hello from ' + this.name);};const child = Object.create(Parent.prototype);child.cry = function () {  console.log('waaaaaahhhh!');};child.cry();// waaaaaahhhh!child.greet();// hello from Parentchild.constructor;// ƒ Parent() {//   this.name = 'Parent';// }child.constructor.name;// 'Parent'
-```
-
-Things to note are:
-
-*   `.greet` is not defined on the _child_, so the engine goes up the prototype chain and finds `.greet` off the inherited from _Parent_.
-    
-*   We need to call `Object.create` in one of following ways for the prototype methods to be inherited:
-    
-    *   Object.create(Parent.prototype);
-    *   Object.create(new Parent(null));
-    *   Object.create(objLiteral);
-*   Currently, `child.constructor` is pointing to the `Parent`. If we'd like to correct this, one option would be to do:
-    
-
-```
-function Parent() {  this.name = 'Parent';}Parent.prototype.greet = function () {  console.log('Hello from ' + this.name);};function Child() {  Parent.call(this);  this.name = 'Child';}Child.prototype = Object.create(Parent.prototype);Child.prototype.constructor = Child;const child = new Child();child.greet();// hello from Childchild.constructor.name;// 'Child'
+class person{
+  age=0
+  grow=()=>{
+    this.age++
+    return this.age
+  }
+}
+p1 = new person()
+let obj={
+  age:-100,
+}
+obj.grow=p1.grow
+console.log(p1.grow())1   
+console.log(obj.grow())2  普通函数：-99
+console.log(obj.grow())3  普通函数：-98
+console.log(obj.grow())4
 ```
 
-###### References[​](#references-2 "Direct link to References")
 
-*   [http://dmitrysoshnikov.com/ecmascript/javascript-the-core/](http://dmitrysoshnikov.com/ecmascript/javascript-the-core/)
-*   [https://www.quora.com/What-is-prototypal-inheritance/answer/Kyle-Simpson](https://www.quora.com/What-is-prototypal-inheritance/answer/Kyle-Simpson)
-*   [https://davidwalsh.name/javascript-objects](https://davidwalsh.name/javascript-objects)
-*   [https://crockford.com/javascript/prototypal.html](https://crockford.com/javascript/prototypal.html)
-*   [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
+### Arrow `this` problems
 
-### What do you think of AMD vs CommonJS?[​](#what-do-you-think-of-amd-vs-commonjs "Direct link to What do you think of AMD vs CommonJS?")
+since arrow function prevent the caller from controlling context via `.call` or `.apply`—
+the consequences being that a library such as `jQuery` will not properly bind `this` in your event handler functions. 
+Thus, it's important to keep this in mind when refactoring large legacy applications.
 
-Both are ways to implement a module system, which was not natively present in JavaScript until ES2015 came along. CommonJS is synchronous while AMD (Asynchronous Module Definition) is obviously asynchronous. CommonJS is designed with server-side development in mind while AMD, with its support for asynchronous loading of modules, is more intended for browsers.
+### Explain how prototypal inheritance works
 
-I find AMD syntax to be quite verbose and CommonJS is closer to the style you would write import statements in other languages. Most of the time, I find AMD unnecessary, because if you served all your JavaScript into one concatenated bundle file, you wouldn't benefit from the async loading properties. Also, CommonJS syntax is closer to Node style of writing modules and there is less context-switching overhead when switching between client side and server side JavaScript development.
+### 函数的`prototype`和对象的`prototype`是不同的。
+1. 函数的`prototype`：每个函数都有一个`prototype`属性，它是一个对象。他是用于给通过该构造函数创建的实例对象添加共享的属性和方法。
+2. 对象的`prototype`：每个对象都有一个`__proto__`（或者ES6中的`[[Prototype]]`）属性，它指向该对象的原型（也就是另外一个对象）
 
-I'm glad that with ES2015 modules, that has support for both synchronous and asynchronous loading, we can finally just stick to one approach. Although it hasn't been fully rolled out in browsers and in Node, we can always use transpilers to convert our code.
+- 函数的`prototype`属性是一个对象，
+- 对象的`__proto__`属性是一个指向该对象的原型的引用，通过原型链的机制，对象可以访问和继承原型对象上的属性和方法。
 
-###### References[​](#references-3 "Direct link to References")
 
-*   [https://auth0.com/blog/javascript-module-systems-showdown/](https://auth0.com/blog/javascript-module-systems-showdown/)
-*   [https://stackoverflow.com/questions/16521471/relation-between-commonjs-amd-and-requirejs](https://stackoverflow.com/questions/16521471/relation-between-commonjs-amd-and-requirejs)
+---
+	通过函数的`prototype`，我们可以给所有通过该构造函数创建的对象添加共享的属性和方法。
+示例：
+```javascript
+function Person(name) {
+  this.name = name;
+}
 
-### Explain why the following doesn't work as an IIFE: `function foo(){ }();`. What needs to be changed to properly make it an IIFE?[​](#explain-why-the-following-doesnt-work-as-an-iife-function-foo--what-needs-to-be-changed-to-properly-make-it-an-iife "Direct link to explain-why-the-following-doesnt-work-as-an-iife-function-foo--what-needs-to-be-changed-to-properly-make-it-an-iife")
+Person.prototype.sayHello = function() {
+  console.log(`Hello, my name is ${this.name}`);
+};
 
-IIFE stands for Immediately Invoked Function Expressions. The JavaScript parser reads `function foo(){ }();` as `function foo(){ }` and `();`, where the former is a _function declaration_ and the latter (a pair of parentheses) is an attempt at calling a function but there is no name specified, hence it throws `Uncaught SyntaxError: Unexpected token )`.
-
-Here are two ways to fix it that involves adding more parentheses: `(function foo(){ })()` and `(function foo(){ }())`. Statements that begin with `function` are considered to be _function declarations_; by wrapping this function within `()`, it becomes a _function expression_ which can then be executed with the subsequent `()`. These functions are not exposed in the global scope and you can even omit its name if you do not need to reference itself within the body.
-
-You might also use `void` operator: `void function foo(){ }();`. Unfortunately, there is one issue with such approach. The evaluation of given expression is always `undefined`, so if your IIFE function returns anything, you can't use it. An example:
-
+const person1 = new Person('John');
+person1.sayHello(); // 输出: Hello, my name is John
 ```
-const foo = void (function bar() {  return 'foo';})();console.log(foo); // undefined
+![[Pasted image 20231010122134.png]]
+
+---
+2. 对象的`prototype`：每个对象都有一个`__proto__`（或者ES6中的`[[Prototype]]`）属性，它指向该对象的原型（也就是另外一个对象）
+	通过原型链的机制，我们可以访问和继承原型对象上的属性和方法。
+```javascript
+const parent = {
+  name: 'John',
+  age: 40
+};
+
+const child = Object.create(parent);
+console.log(child.__proto__ \=\== parent); // 输出: true
+console.log(child.name); // 输出: John
 ```
-
-###### References[​](#references-4 "Direct link to References")
-
-*   [http://lucybain.com/blog/2014/immediately-invoked-function-expression/](http://lucybain.com/blog/2014/immediately-invoked-function-expression/)
-*   [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void)
-
-### What's the difference between a variable that is: `null`, `undefined` or undeclared? How would you go about checking for any of these states?[​](#whats-the-difference-between-a-variable-that-is-null-undefined-or-undeclared-how-would-you-go-about-checking-for-any-of-these-states "Direct link to whats-the-difference-between-a-variable-that-is-null-undefined-or-undeclared-how-would-you-go-about-checking-for-any-of-these-states")
-
-**Undeclared** variables are created when you assign a value to an identifier that is not previously created using `var`, `let` or `const`. Undeclared variables will be defined globally, outside of the current scope. In strict mode, a `ReferenceError` will be thrown when you try to assign to an undeclared variable. Undeclared variables are bad just like how global variables are bad. Avoid them at all cost! To check for them, wrap its usage in a `try`/`catch` block.
-
+在这个例子中，`child`对象的原型`__proto__`指向`parent`对象，因此`child`对象可以访问和继承`parent`对象上的属性。
+### Object.create 实现
+要实现一个类似于`Object.create()`的函数，可以按照以下步骤进行：
+```javascript
+function createObject(proto) {
+  // 创建一个空对象
+  const obj = {};
+  // 将空对象的原型指向传入的proto对象
+  obj.__proto__ = proto;
+  
+  // ES6 方法
+  const obj = Object.create(null);
+  // 将空对象的原型设置为传入的proto对象
+  Object.setPrototypeOf(obj, proto);
+  return obj;
+}
 ```
-function foo() {  x = 1; // Throws a ReferenceError in strict mode}foo();console.log(x); // 1
-```
+这个自定义的`createObject()`函数接受一个参数`proto`，表示要设置为新对象的原型对象。它执行以下操作：
 
-A variable that is `undefined` is a variable that has been declared, but not assigned a value. It is of type `undefined`. If a function does not return any value as the result of executing it is assigned to a variable, the variable also has the value of `undefined`. To check for it, compare using the strict equality (`===`) operator or `typeof` which will give the `'undefined'` string. Note that you should not be using the abstract equality operator to check, as it will also return `true` if the value is `null`.
+1. 创建一个空对象`obj`。
+2. 将`obj`的`__proto__`属性设置为传入的`proto`对象，从而将新对象的原型指向`proto`对象。
+3. 返回新创建的对象`obj`。
+注意尽管__proto__属性在大多数现代浏览器中都被支持，但它是非标准的属性。在ES6中，推荐使用Object.getPrototypeOf()和Object.setPrototypeOf()来访问和设置对象的原型。
+因此可以把上面的改写
 
-```
-var foo;console.log(foo); // undefinedconsole.log(foo === undefined); // trueconsole.log(typeof foo === 'undefined'); // trueconsole.log(foo == null); // true. Wrong, don't use this to check!function bar() {}var baz = bar();console.log(baz); // undefined
-```
 
-A variable that is `null` will have been explicitly assigned to the `null` value. It represents no value and is different from `undefined` in the sense that it has been explicitly assigned. To check for `null,` simply compare using the strict equality operator. Note that like the above, you should not be using the abstract equality operator (`==`) to check, as it will also return `true` if the value is `undefined`.
+### What do you think of ES moudle vs CommonJS?[​](#what-do-you-think-of-amd-vs-commonjs "Direct link to What do you think of AMD vs CommonJS?")
+加载方式：
+- ES模块是在编译时加载，也就是在脚本开始执行之前加载所有模块。
+	- 这意味着它可以进行静态分析，并且可以在编译时进行优化。
+- CommonJS是在运行时加载，也就是在代码执行过程中动态加载模块。
+导入和导出的特性：
+- ES模块的导入和导出是静态的，意味着导入和导出的模块路径必须是字符串常量，不能使用变量。
+- CommonJS的导入和导出是动态的，可以使用变量作为模块路径。
 
-```
-var foo = null;console.log(foo === null); // trueconsole.log(typeof foo === 'object'); // trueconsole.log(foo == undefined); // true. Wrong, don't use this to check!
-```
 
-As a personal habit, I never leave my variables undeclared or unassigned. I will explicitly assign `null` to them after declaring if I don't intend to use it yet. If you use a linter in your workflow, it will usually also be able to check that you are not referencing undeclared variables.
-
-###### References[​](#references-5 "Direct link to References")
-
-*   [https://stackoverflow.com/questions/15985875/effect-of-declared-and-undeclared-variables](https://stackoverflow.com/questions/15985875/effect-of-declared-and-undeclared-variables)
-*   [https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/undefined](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/undefined)
 
 ### What is a closure, and how/why would you use one?[​](#what-is-a-closure-and-howwhy-would-you-use-one "Direct link to What is a closure, and how/why would you use one?")
 
-A closure is the combination of a function and the lexical environment within which that function was declared. The word "lexical" refers to the fact that lexical scoping uses the location where a variable is declared within the source code to determine where that variable is available. Closures are functions that have access to the outer (enclosing) function's variables—scope chain even after the outer function has returned.
+A closure is the combination of a function and the lexical environment within which that function was declared. 
+Closures are functions that have access to the outer (enclosing) function's variables—scope chain even after the outer function has returned.
 
 **Why would you use one?**
-
 *   Data privacy / emulating private methods with closures. Commonly used in the [module pattern](https://addyosmani.com/resources/essentialjsdesignpatterns/book/#modulepatternjavascript).
 *   [Partial applications or currying](https://medium.com/javascript-scene/curry-or-partial-application-8150044c78b8#.l4b6l1i3x).
 
-###### References[​](#references-6 "Direct link to References")
 
-*   [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)
-*   [https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36)
 
-### Can you describe the main difference between a `.forEach` loop and a `.map()` loop and why you would pick one versus the other?[​](#can-you-describe-the-main-difference-between-a-foreach-loop-and-a-map-loop-and-why-you-would-pick-one-versus-the-other "Direct link to can-you-describe-the-main-difference-between-a-foreach-loop-and-a-map-loop-and-why-you-would-pick-one-versus-the-other")
-
-To understand the differences between the two, let's look at what each function does.
-
-**`forEach`**
-
-*   Iterates through the elements in an array.
-*   Executes a callback for each element.
-*   Does not return a value.
-
-```
-const a = [1, 2, 3];const doubled = a.forEach((num, index) => {  // Do something with num and/or index.});// doubled = undefined
-```
-
-**`map`**
-
-*   Iterates through the elements in an array.
-*   "Maps" each element to a new element by calling the function on each element, creating a new array as a result.
-
-```
-const a = [1, 2, 3];const doubled = a.map((num) => {  return num * 2;});// doubled = [2, 4, 6]
-```
-
-The main difference between `.forEach` and `.map()` is that `.map()` returns a new array. If you need the result, but do not wish to mutate the original array, `.map()` is the clear choice. If you simply need to iterate over an array, `forEach` is a fine choice.
-
-###### References[​](#references-7 "Direct link to References")
-
-*   [https://codeburst.io/javascript-map-vs-foreach-f38111822c0f](https://codeburst.io/javascript-map-vs-foreach-f38111822c0f)
-
-### What's a typical use case for anonymous functions?[​](#whats-a-typical-use-case-for-anonymous-functions "Direct link to What's a typical use case for anonymous functions?")
-
-They can be used in IIFEs to encapsulate some code within a local scope so that variables declared in it do not leak to the global scope.
-
-As a callback that is used once and does not need to be used anywhere else. The code will seem more self-contained and readable when handlers are defined right inside the code calling them, rather than having to search elsewhere to find the function body.
-
-```
-(function () {  // Some code here.})();
-```
-
-Arguments to functional programming constructs or Lodash (similar to callbacks).
-
-```
-setTimeout(function () {  console.log('Hello world!');}, 1000);
-```
-
-###### References[​](#references-8 "Direct link to References")
-
-*   [https://www.quora.com/What-is-a-typical-usecase-for-anonymous-functions](https://www.quora.com/What-is-a-typical-usecase-for-anonymous-functions)
-*   [https://stackoverflow.com/questions/10273185/what-are-the-benefits-to-using-anonymous-functions-instead-of-named-functions-fo](https://stackoverflow.com/questions/10273185/what-are-the-benefits-to-using-anonymous-functions-instead-of-named-functions-fo)
-
-### How do you organize your code? (module pattern, classical inheritance?)[​](#how-do-you-organize-your-code-module-pattern-classical-inheritance "Direct link to How do you organize your code? (module pattern, classical inheritance?)")
-
-In the past, I've used Backbone for my models which encourages a more OOP approach, creating Backbone models and attaching methods to them.
-
-The module pattern is still great, but these days, I use React/Redux which utilize a single-directional data flow based on Flux architecture. I would represent my app's models using plain objects and write utility pure functions to manipulate these objects. State is manipulated using actions and reducers like in any other Redux application.
-
-I avoid using classical inheritance where possible. When and if I do, I stick to [these rules](https://medium.com/@dan_abramov/how-to-use-classes-and-sleep-at-night-9af8de78ccb4).
 
 ### What's the difference between host objects and native objects?[​](#whats-the-difference-between-host-objects-and-native-objects "Direct link to What's the difference between host objects and native objects?")
 
 Native objects are objects that are part of the JavaScript language defined by the ECMAScript specification, such as `String`, `Math`, `RegExp`, `Object`, `Function`, etc.
-
 Host objects are provided by the runtime environment (browser or Node), such as `window`, `XMLHTTPRequest`, etc.
-
-###### References[​](#references-9 "Direct link to References")
-
-*   [https://stackoverflow.com/questions/7614317/what-is-the-difference-between-native-objects-and-host-objects](https://stackoverflow.com/questions/7614317/what-is-the-difference-between-native-objects-and-host-objects)
-
 ### Difference between: `function Person(){}`, `var person = Person()`, and `var person = new Person()`?[​](#difference-between-function-person-var-person--person-and-var-person--new-person "Direct link to difference-between-function-person-var-person--person-and-var-person--new-person")
-
-This question is pretty vague. My best guess at its intention is that it is asking about constructors in JavaScript. Technically speaking, `function Person(){}` is just a normal function declaration. The convention is to use PascalCase for functions that are intended to be used as constructors.
 
 `var person = Person()` invokes the `Person` as a function, and not as a constructor. Invoking as such is a common mistake if the function is intended to be used as a constructor. Typically, the constructor does not return anything, hence invoking the constructor like a normal function will return `undefined` and that gets assigned to the variable intended as the instance.
 
 `var person = new Person()` creates an instance of the `Person` object using the `new` operator, which inherits from `Person.prototype`. An alternative would be to use `Object.create`, such as: `Object.create(Person.prototype)`.
 
-```
-const arr = [1, 2, 3];const double = arr.map(function (el) {  return el * 2;});console.log(double); // [2, 4, 6]
-```
-
-###### References[​](#references-10 "Direct link to References")
-
-*   [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/new)
-
 ### What's the difference between `.call` and `.apply`?[​](#whats-the-difference-between-call-and-apply "Direct link to whats-the-difference-between-call-and-apply")
 
-Both `.call` and `.apply` are used to invoke functions and the first parameter will be used as the value of `this` within the function. However, `.call` takes in comma-separated arguments as the next arguments while `.apply` takes in an array of arguments as the next argument. An easy way to remember this is C for `call` and comma-separated and A for `apply` and an array of arguments.
-
-```
-function Person(name) {  this.name = name;}var person = Person('John');console.log(person); // undefinedconsole.log(person.name); // Uncaught TypeError: Cannot read property 'name' of undefinedvar person = new Person('John');console.log(person); // Person { name: "John" }console.log(person.name); // "john"
-```
-
-### Explain `Function.prototype.bind`.[​](#explain-functionprototypebind "Direct link to explain-functionprototypebind")
-
-Taken word-for-word from [MDN](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind):
-
-> The `bind()` method creates a new function that, when called, has its `this` keyword set to the provided value, with a given sequence of arguments preceding any provided when the new function is called.
-
-In my experience, it is most useful for binding the value of `this` in methods of classes that you want to pass into other functions. This is frequently done in React components.
-
-###### References[​](#references-11 "Direct link to References")
-
-*   [https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind)
+An easy way to remember this is C for `call` and comma-separated and A for `apply` and an array of arguments.
 
 ### When would you use `document.write()`?[​](#when-would-you-use-documentwrite "Direct link to when-would-you-use-documentwrite")
 
-`document.write()` writes a string of text to a document stream opened by `document.open()`. When `document.write()` is executed after the page has loaded, it will call `document.open` which clears the whole document (`<head>` and `<body>` removed!) and replaces the contents with the given parameter value. Hence it is usually considered dangerous and prone to misuse.
+`document.write()` writes a string of text to a document stream opened by `document.open()`. 
+When `document.write()` is executed after the page has loaded, it will call `document.open` which clears the whole document (`<head>` and `<body>` removed!) and replaces the contents with the given parameter value. Hence it is usually considered dangerous and prone to misuse.
 
-There are some answers online that explain `document.write()` is being used in analytics code or [when you want to include styles that should only work if JavaScript is enabled](https://www.quirksmode.org/blog/archives/2005/06/three_javascrip_1.html). It is even being used in HTML5 boilerplate to [load scripts in parallel and preserve execution order](https://github.com/paulirish/html5-boilerplate/wiki/Script-Loading-Techniques#documentwrite-script-tag)! However, I suspect those reasons might be outdated and in the modern day, they can be achieved without using `document.write()`. Please do correct me if I'm wrong about this.
+#interview
+Please do correct me if I'm wrong about this.
 
-###### References[​](#references-12 "Direct link to References")
-
-*   [https://www.quirksmode.org/blog/archives/2005/06/three_javascrip_1.html](https://www.quirksmode.org/blog/archives/2005/06/three_javascrip_1.html)
-*   [https://github.com/h5bp/html5-boilerplate/wiki/Script-Loading-Techniques#documentwrite-script-tag](https://github.com/h5bp/html5-boilerplate/wiki/Script-Loading-Techniques#documentwrite-script-tag)
-
-### What's the difference between feature detection, feature inference, and using the UA string?[​](#whats-the-difference-between-feature-detection-feature-inference-and-using-the-ua-string "Direct link to What's the difference between feature detection, feature inference, and using the UA string?")
+### What's the difference between feature detection, feature inference,?[​](#whats-the-difference-between-feature-detection-feature-inference-and-using-the-ua-string "Direct link to What's the difference between feature detection, feature inference, and using the UA string?")
 
 **Feature Detection**
-
-Feature detection involves working out whether a browser supports a certain block of code, and running different code depending on whether it does (or doesn't), so that the browser can always provide a working experience rather crashing/erroring in some browsers. For example:
-
-```
-function add(a, b) {  return a + b;}console.log(add.call(null, 1, 2)); // 3console.log(add.apply(null, [1, 2])); // 3
-```
-
-[Modernizr](https://modernizr.com/) is a great library to handle feature detection.
-
+Feature detection involves 
+working out whether a browser supports a certain block of code, and running different code depending on whether it does (or doesn't),
 **Feature Inference**
-
-Feature inference checks for a feature just like feature detection, but uses another function because it assumes it will also exist, e.g.:
-
+Feature inference checks for a feature just like feature detection, but uses another function because it assumes it will also exist
+This is not really recommended. Feature detection is more fool proof.
 ```
-if ('geolocation' in navigator) {  // Can use navigator.geolocation} else {  // Handle lack of feature}
+if ('geolocation' in navigator) {  
+// Can use navigator.geolocation} 
+else {  // Handle lack of feature}
 ```
 
-This is not really recommended. Feature detection is more foolproof.
-
-**UA String**
+### UA String
 
 This is a browser-reported string that allows the network protocol peers to identify the application type, operating system, software vendor or software version of the requesting software user agent. It can be accessed via `navigator.userAgent`. However, the string is tricky to parse and can be spoofed. For example, Chrome reports both as Chrome and Safari. So to detect Safari you have to check for the Safari string and the absence of the Chrome string. Avoid this method.
 
-###### References[​](#references-13 "Direct link to References")
-
-*   [https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Cross_browser_testing/Feature_detection](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Cross_browser_testing/Feature_detection)
-*   [https://stackoverflow.com/questions/20104930/whats-the-difference-between-feature-detection-feature-inference-and-using-th](https://stackoverflow.com/questions/20104930/whats-the-difference-between-feature-detection-feature-inference-and-using-th)
-*   [https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent)
-
-### Explain Ajax in as much detail as possible.[​](#explain-ajax-in-as-much-detail-as-possible "Direct link to Explain Ajax in as much detail as possible.")
-
-Ajax (asynchronous JavaScript and XML) is a set of web development techniques using many web technologies on the client side to create asynchronous web applications. With Ajax, web applications can send data to and retrieve from a server asynchronously (in the background) without interfering with the display and behavior of the existing page. By decoupling the data interchange layer from the presentation layer, Ajax allows for web pages, and by extension web applications, to change content dynamically without the need to reload the entire page. In practice, modern implementations commonly use JSON instead of XML, due to the advantages of JSON being native to JavaScript.
-
-The `XMLHttpRequest` API is frequently used for the asynchronous communication or these days, the `fetch` API.
-
-###### References[​](#references-14 "Direct link to References")
-
-*   [https://en.wikipedia.org/wiki/Ajax_(programming)](https://en.wikipedia.org/wiki/Ajax_(programming))
-*   [https://developer.mozilla.org/en-US/docs/AJAX](https://developer.mozilla.org/en-US/docs/AJAX)
-
 ### What are the advantages and disadvantages of using Ajax?[​](#what-are-the-advantages-and-disadvantages-of-using-ajax "Direct link to What are the advantages and disadvantages of using Ajax?")
-
 **Advantages**
-
-*   Better interactivity. New content from the server can be changed dynamically without the need to reload the entire page.
+*   Better interactivity. enables real-time updates and interactions on web pages,
 *   Reduce connections to the server since scripts and stylesheets only have to be requested once.
-*   State can be maintained on a page. JavaScript variables and DOM state will persist because the main container page was not reloaded.
 *   Basically most of the advantages of an SPA.
-
 **Disadvantages**
-
-*   Dynamic webpages are harder to bookmark.
-*   Does not work if JavaScript has been disabled in the browser.
-*   Some webcrawlers do not execute JavaScript and would not see content that has been loaded by JavaScript.
-*   Webpages using Ajax to fetch data will likely have to combine the fetched remote data with client-side templates to update the DOM. For this to happen, JavaScript will have to be parsed and executed on the browser, and low-end mobile devices might struggle with this.
-*   Basically most of the disadvantages of an SPA.
-
-### Explain how JSONP works (and how it's not really Ajax).[​](#explain-how-jsonp-works-and-how-its-not-really-ajax "Direct link to Explain how JSONP works (and how it's not really Ajax).")
-
-JSONP (JSON with Padding) is a method commonly used to bypass the cross-domain policies in web browsers because Ajax requests from the current page to a cross-origin domain is not allowed.
-
-JSONP works by making a request to a cross-origin domain via a `<script>` tag and usually with a `callback` query parameter, for example: `https://example.com?callback=printData`. The server will then wrap the data within a function called `printData` and return it to the client.
-
-```
-if (document.getElementsByTagName) {  element = document.getElementById(id);}
-```
-
-```
-<!-- https://mydomain.com --><script>  function printData(data) {    console.log(`My name is ${data.name}!`);  }</script><script src="https://example.com?callback=printData"></script>
-```
-
-The client has to have the `printData` function in its global scope and the function will be executed by the client when the response from the cross-origin domain is received.
-
-JSONP can be unsafe and has some security implications. As JSONP is really JavaScript, it can do everything else JavaScript can do, so you need to trust the provider of the JSONP data.
-
-These days, [CORS](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing) is the recommended approach and JSONP is seen as a hack.
-
-###### References[​](#references-15 "Direct link to References")
-
-*   [https://stackoverflow.com/a/2067584/1751946](https://stackoverflow.com/a/2067584/1751946)
-
-### Have you ever used JavaScript templating? If so, what libraries have you used?[​](#have-you-ever-used-javascript-templating-if-so-what-libraries-have-you-used "Direct link to Have you ever used JavaScript templating? If so, what libraries have you used?")
-
-Yes. Handlebars, Underscore, Lodash, AngularJS, and JSX. I disliked templating in AngularJS because it made heavy use of strings in the directives and typos would go uncaught. JSX is my new favorite as it is closer to JavaScript and there is barely any syntax to learn. Nowadays, you can even use ES2015 template string literals as a quick way for creating templates without relying on third-party code.
-
-```
-// File loaded from https://example.com?callback=printDataprintData({name: 'Yang Shun'});
-```
-
-However, do be aware of a potential XSS in the above approach as the contents are not escaped for you, unlike in templating libraries.
-
+*   Some webcrawlers do not execute JavaScript  hard SEO
+*  low-end mobile devices might struggle with this.
 ### Explain "hoisting".[​](#explain-hoisting "Direct link to Explain "hoisting".")
 
 Hoisting is a term used to explain the behavior of variable declarations in your code. Variables declared or initialized with the `var` keyword will have their declaration "moved" up to the top of their module/function-level scope, which we refer to as hoisting. However, only the declaration is hoisted, the assignment (if there is one), will stay where it is.
@@ -482,18 +258,18 @@ The `DOMContentLoaded` event is fired when the initial HTML document has been co
 *   [https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded](https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded)
 *   [https://developer.mozilla.org/en-US/docs/Web/Events/load](https://developer.mozilla.org/en-US/docs/Web/Events/load)
 
-### What is the difference between `==` and `===`?[​](#what-is-the-difference-between--and- "Direct link to what-is-the-difference-between--and-")
+### What is the difference between\=\= and \=\=\=?[​](#what-is-the-difference-between--and- "Direct link to what-is-the-difference-between--and-")
 
-`==` is the abstract equality operator while `===` is the strict equality operator. The `==` operator will compare for equality after doing any necessary type conversions. The `===` operator will not do type conversion, so if two values are not the same type `===` will simply return `false`. When using `==`, funky things can happen, such as:
+\=\= is the abstract equality operator while \=\=\= is the strict equality operator. The\=\= operator will compare for equality after doing any necessary type conversions. The \=\=\= operator will not do type conversion, so if two values are not the same type \=\=\= will simply return `false`. When using\=\=, funky things can happen, such as:
 
 ```
 console.log(input.getAttribute('value')); // Helloconsole.log(input.value); // Hello World!
 ```
 
-My advice is never to use the `==` operator, except for convenience when comparing against `null` or `undefined`, where `a == null` will return `true` if `a` is `null` or `undefined`.
+My advice is never to use the\=\= operator, except for convenience when comparing against `null` or `undefined`, where `a \=\= null` will return `true` if `a` is `null` or `undefined`.
 
 ```
-1 == '1'; // true1 == [1]; // true1 == true; // true0 == ''; // true0 == '0'; // true0 == false; // true
+1 \=\= '1'; // true1 \=\= [1]; // true1 \=\= true; // true0 \=\= ''; // true0 \=\= '0'; // true0 \=\= false; // true
 ```
 
 ###### References[​](#references-20 "Direct link to References")
@@ -511,7 +287,7 @@ The same-origin policy prevents JavaScript from making requests across domain bo
 ### Make this work:[​](#make-this-work "Direct link to Make this work:")
 
 ```
-var a = null;console.log(a == null); // trueconsole.log(a == undefined); // true
+var a = null;console.log(a \=\= null); // trueconsole.log(a \=\= undefined); // true
 ```
 
 ```
@@ -711,7 +487,7 @@ Most of the time, I would prefer the `.forEach` method, but it really depends on
 Also, when using the `for-of` loop, if you need to access both the index and value of each array element, you can do so with the ES6 Array `entries()` method and destructuring:
 
 ```
-for (let i = 1; i <= 100; i++) {  let f = i % 3 == 0,    b = i % 5 == 0;  console.log(f ? (b ? 'FizzBuzz' : 'Fizz') : b ? 'Buzz' : i);}
+for (let i = 1; i <= 100; i++) {  let f = i % 3 \=\= 0,    b = i % 5 \=\= 0;  console.log(f ? (b ? 'FizzBuzz' : 'Fizz') : b ? 'Buzz' : i);}
 ```
 
 ###### References[​](#references-31 "Direct link to References")
@@ -1040,7 +816,7 @@ const person = {name: 'Tyler', age: 28};document.body.innerHTML = `  <div>    <p
 ES6's spread syntax is very useful when coding in a functional paradigm as we can easily create copies of arrays or objects without resorting to `Object.create`, `slice`, or a library function. This language feature is used often in Redux and RxJS projects.
 
 ```
-function curry(fn) {  if (fn.length === 0) {    return fn;  }  function _curried(depth, args) {    return function (newArgument) {      if (depth - 1 === 0) {        return fn(...args, newArgument);      }      return _curried(depth - 1, [...args, newArgument]);    };  }  return _curried(fn.length, []);}function add(a, b) {  return a + b;}var curriedAdd = curry(add);var addFive = curriedAdd(5);var result = [0, 1, 2, 3, 4, 5].map(addFive); // [5, 6, 7, 8, 9, 10]
+function curry(fn) {  if (fn.length \=\== 0) {    return fn;  }  function _curried(depth, args) {    return function (newArgument) {      if (depth - 1 \=\== 0) {        return fn(...args, newArgument);      }      return _curried(depth - 1, [...args, newArgument]);    };  }  return _curried(fn.length, []);}function add(a, b) {  return a + b;}var curriedAdd = curry(add);var addFive = curriedAdd(5);var result = [0, 1, 2, 3, 4, 5].map(addFive); // [5, 6, 7, 8, 9, 10]
 ```
 
 ES6's rest syntax offers a shorthand for including an arbitrary number of arguments to be passed to a function. It is like an inverse of the spread syntax, taking data and stuffing it into an array rather than unpacking an array of data, and it works in function arguments, as well as in array and object destructuring assignments.
