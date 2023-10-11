@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md",
+                "file": "md/🔥「深入本质」你真的理解 undefined 和 null 吗.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "#eng",
+                "query": "#Engl",
                 "matchingCase": false,
                 "explainSearch": true,
                 "collapseAll": true,
@@ -63,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md"
+                "file": "md/🔥「深入本质」你真的理解 undefined 和 null 吗.md"
               }
             }
           },
@@ -95,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md",
+                "file": "md/🔥「深入本质」你真的理解 undefined 和 null 吗.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md",
+                "file": "md/🔥「深入本质」你真的理解 undefined 和 null 吗.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -171,36 +171,36 @@
   "active": "3e1de418b8fbaa57",
   "lastOpenFiles": [
     "md/2023-10-11.md",
-    "md/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md",
+    "done/2023-10-08.md",
+    "done/JavaScript trivia questions in front end interviews | Front End Interview Handbook.md",
+    "achieve/JavaScript 三种迭代方式.md",
+    "md/🤮是时候放弃 useState 了，🚀这么写 React 更丝滑🚀.md",
+    "md/🔥「深入本质」你真的理解 undefined 和 null 吗.md",
+    "md/聊聊什么是 CommonJs 和 Es Module 及它们的区别.md",
+    "md/浅谈 JavaScript 变量提升.md",
+    "md/彻底解决 JS 变量提升 | 一题一图，超详细包教包会😉.md",
+    "md/小白之浅学 JS 中 document.write() 的用法以及注意点.md",
+    "md/因为说 let 没有变量提升，我被嘲笑了.md",
+    "md/使用 Next.js + Docker 打造一个属于你的私人博客.md",
+    "md/为什么要避免使用 document.write，尤其是脚本注入.md",
+    "md/「万字进阶」深入浅出 Commonjs 和 Es Module.md",
+    "md/Handling Events – React.md",
     "cur useless/🤮是时候放弃 useState 了，🚀这么写 React 更丝滑🚀.md",
     "Excalidraw/Architecture.excalidraw.md",
     "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md",
     "done/Handling Events – React.md",
     "done",
     "md/leetcode.md",
-    "md/2023-10-10.md",
+    "done/2023-10-10.md",
     "python3 leet.md",
     "_resources/Pasted image 20231010122134.png",
     "achieve/强制缓存这么暴力，为什么不使用协商缓存😡😡😡.md",
     "achieve/为什么你可以删除 90% 的 useMemo 和 useCallback.md",
     "achieve/type 和 interface 傻傻分不清楚？.md",
     "achieve/ref.current 属性赋值.md",
-    "achieve/javascript - Web 安全之 CSRF 实例解析 - 前端小码农 - SegmentFault 思否.md",
-    "achieve/TS 中 interface 和 type 究竟有什么区别？.md",
-    "achieve/React 技术揭秘.md",
-    "achieve/Python 字典.md",
-    "achieve/Python set sort dic.md",
-    "achieve/2023-10-05.md",
-    "achieve/2023-10-04.md",
-    "achieve/2023-10-03.md",
-    "achieve/2023-10-02.md",
-    "achieve/2023-10-01.md",
     "_resources/Pasted image 20231009113615.png",
     "_resources/25751f9e43ccecbad94105f36feaf639_MD5.png",
     "_resources/07b04a9bffacba97ba2e4990ae30c770_MD5.png",
-    "WuCai/23-10-09-国外免费云服务器  Google Search-H82H2H5.md",
-    "WuCai/23-10-09-No Title-H82HH78.md",
-    "Untitled.md",
     "Excalidraw",
     "output/2023-10-8 21-11-51.html",
     "_resources/e5d2923a0e84fb9d3f9b6f3464a29249_MD5.webp",
