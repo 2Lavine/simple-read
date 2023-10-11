@@ -221,13 +221,6 @@ for key, freq in map_.items():
 
 
 
----
-=======move to md line=====
-
-
-# todo python实现大根堆
-# todo heapq的方法
-# todo Python List 排序比较函数
 
 #python/math 
 ---
@@ -247,5 +240,20 @@ module 'math' has no attribute 'max'
 你的代码中，ans是在sumOfLeftLeaves函数的作用域中定义的，但是在dfs函数中被修改。这是不允许的，除非你在dfs函数中使用nonlocal ans来声明你想要修改的是外部作用域的ans。
 
 #python/type
+---
 树节点定义class TreeNode:
 链表节点定义 class ListNode
+
+
+#leetcode/tree/search_tree 
+---
+搜索二叉树是不能取等号的
+
+
+---
+=======move to md line=====
+
+
+# todo python实现大根堆
+# todo heapq的方法
+# todo Python List 排序比较函数

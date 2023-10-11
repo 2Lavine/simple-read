@@ -146,6 +146,7 @@ aliases: []
 - [ ] 中序迭代遍历
 	- [ ] 中序遍历必然结束再最右边的一个点
 	- [ ] 最右边的一个点的右侧必然为空
+	- [ ] 因为在处理二叉树的问题时，我们常常需要将当前节点的右子节点压入栈中，但是在这个问题中，我们需要对右子节点进行处理,s所以不是压入栈中而是直接处理
 - [ ] [二叉树：二叉树的统一迭代法](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树的统一迭代法.md)
 - [x] [二叉树：二叉树的层序遍历](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0102.二叉树的层序遍历.md) 
 - [x] [二叉树：226.翻转二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0226.翻转二叉树.md) 
@@ -169,12 +170,13 @@ aliases: []
 	- [ ] 106和 654 的重点是不构造数组，直接有左右边界替代
 - [ ] [本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201010二叉树周末总结.md) 
 ---
-- [ ] [二叉树：617.合并两个二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0617.合并二叉树.md)
-- [ ] [二叉树：700.二叉搜索树登场！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0700.二叉搜索树中的搜索.md)
+- [x] [二叉树：617.合并两个二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0617.合并二叉树.md)
+- [x] [二叉树：700.二叉搜索树登场！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0700.二叉搜索树中的搜索.md)
 - [ ] [二叉树：98.验证二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0098.验证二叉搜索树.md)
-- [ ] [二叉树：530.搜索树的最小绝对差](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0530.二叉搜索树的最小绝对差.md)
+- [x] [二叉树：530.搜索树的最小绝对差](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0530.二叉搜索树的最小绝对差.md)
 - [ ] [二叉树：501.二叉搜索树中的众数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0501.二叉搜索树中的众数.md)
 - [ ] [二叉树：236.公共祖先问题](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0236.二叉树的最近公共祖先.md)
+	- [ ] 递归 最后的基础点的处理
 - [ ] [本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201017二叉树周末总结.md)
 
 ---
