@@ -1,0 +1,1074 @@
+<h1>JS 变量提升</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6933377315573497864?searchId=202310111103016E8274A0BA870F4C7E11">juejin.cn</a></p>
+</blockquote>
+<h2>变量提升机制</h2>
+<p>在变量提升阶段：带 <code>var</code> 的只声明还没有被定义，带 <code>function</code> 的已经声明和定义。
+带 var 和带 function 重名条件下的变量提升优先级，函数先执行。</p>
+<h3>变量提升提升在哪里</h3>
+<p>如这里，当运行到<code>log(a)</code> 的时候，它上面显然没有声明任何变量。
+部分语言中，此时的值可能是 12
+但由于在这个作用域中，存在 var a声明，因此此时他的值为 undefined</p>
+<pre><code class="language-js">var a =12
+function x(){
+  console.log(a)
+  var a =13
+}
+x()
+</code></pre>
+<h2>二. 带 var 和不带 var 的区别</h2>
+<ul>
+<li>全局作用域中不带<code>var</code>声明变量虽然也可以但是建议带上 <code>var</code>声明变量，不带 <code>var</code> 的相当于给 window 对象设置一个属性罢了。</li>
+<li>私有作用域 (函数作用域)，带 <code>var</code> 的是私有变量。不带 <code>var</code> 的是会向上级作用域查找，如果上级作用域也没有那么就一直找到 window 为止，这个查找过程叫<code>作用域链</code>。</li>
+<li>全局作用域中使用 <code>var</code> 申明的变量会映射到 window 下成为属性。</li>
+</ul>
+<pre><code>a = 12  // == window.a
+console.log(a)  // 12
+console.log(window.a) // 12
+
+var a = b =12   // 这里的 b 也是不带 var 的。
+/* 相当于*/
+var a = 12;
+b = 12
+</code></pre>
+<h2>函数内声明提升到 windows</h2>
+<p>问题 3，再来看一道，问下面答案是什么？</p>
+<pre><code>function x(){
+  b =13
+}
+x()
+console.log(b)
+</code></pre>
+<p>思路：这是比较简单的一道题，需要注意的是函数内的 b 没有带 <code>var</code>，b 会一直向上查找到 window 下，发现 window 下也没有就直接给 window 设置了一个属性 <code>window.b = '林一一'</code>，同理全局下的 <code>a</code> 也一样。**</p>
+<hr>
+<p>问题 4，问下面答案是什么
+```</p>
+<pre><code>    function foo(){
+        console.log(a)
+        a =12;
+        b = '林一一'
+        console.log('b' in window)
+        console.log(a, b)
+    }
+    foo()
+    /* 输出
+        Uncaught ReferenceError: a is not defined
+    /
+</code></pre>
+<p>思路：问题 4 和问题 3 的主要区别在于第一个 <code>console.log(a)</code> 处，因为 <code>a</code> 不在函数作用域内，就会向上找 <code>window</code> 下的作用域，发现也没有就会直接抛出引用错误 ReferenceError**</p>
+<h2>三. 等号左边下的变量提升</h2>
+<pre><code>print()
+var print = function() {
+    console.log('林一一')
+}
+print()
+/*输出
+    Uncaught TypeError: print is not a function
+/
+</code></pre>
+<blockquote>
+<p><strong>思路：同样由于变量提升机制带 <code>var</code> 的 print 是一开始值是 <code>undefined</code>，所以 print() 这时还不是一个函数，所以报出 类型错误 TypeError</strong></p>
+</blockquote>
+<h2>腾讯的一道变量提升的面试题</h2>
+<pre><code>var a=2;
+function a() {
+	console.log(3);
+}
+console.log(typeof a);
+
+/* 输出
+ * number
+ /
+</code></pre>
+<blockquote>
+<p><strong>思路：这是一道比较简单的变量提升题，JS 代码自上而下执行时，<code>a</code> 被赋值成 2，输出就是 <code>number</code> 型</strong></p>
+</blockquote>
+
+<h1>Vue 性能提升之 Object.freeze()</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903922469961741?searchId=2023101114215534CBE9FA814D5B82147F">juejin.cn</a></p>
+</blockquote>
+<p>Object.freeze() 是 “浅冻结”
+要完全冻结具有嵌套属性的对象，您可以编写自己的库或使用已有的库来冻结对象，如 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fsubstack%2Fdeep-freeze" title="https://github.com/substack/deep-freeze">Deepfreeze</a> 或 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fimmutable-js%2Fimmutable-js" title="https://github.com/immutable-js/immutable-js">immutable-js</a></p>
+<h2>但是在写业务逻辑的时候很少用的知识点 <code>Object.getOwnPropertyNames(obj)</code> 。我们都知道在 JS 的 Object 中存在原型链属性，通过这个方法可以获取所有的非原型链属性。
+利用<code>Object.freeze()</code>提升性能</h2>
+<p>除了组件上的优化，我们还可以对 vue 的依赖改造入手。
+初始化时，vue 会对 data 做 getter、setter 改造，在现代浏览器里，这个过程实际上挺快的，但仍然有优化空间。</p>
+<p>但 Vue 在遇到像 <code>Object.freeze()</code> 这样被设置为不可配置之后的对象属性时，不会为对象加上 setter getter 等数据劫持的方法。[**
+<img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/8/23/16cbdd104a327a4e~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg" alt=""></p>
+<h2>Object.freeze()`应用场景</h2>
+<p>由于 <code>Object.freeze()</code>会把对象冻结，所以比较适合展示类的场景，如果你的数据属性需要改变，可以重新替换成一个新的 <code>Object.freeze()</code>的对象。</p>
+<h2>Javascript 对象解冻</h2>
+<p>修改 React props React 生成的对象是不能修改 props 的, 但实践中遇到需要修改 props 的情况. 如果直接修改, js 代码将报错, 原因是 props 对象被冻结了, 可以用 Object.isFrozen() 来检测, 其结果是 true. 说明该对象的属性是只读的.</p>
+<p>那么, 有方法将 props 对象解冻, 从而进行修改吗?</p>
+<p>事实上, 在 javascript 中, 对象冻结后, 没有办法再解冻, 只能通过克隆一个具有相同属性的新对象, 通过修改新对象的属性来达到目的.</p>
+<p>可以这样:</p>
+<pre><code>ES6: Object.assign({}, frozenObject);
+lodash: _.assign({}, frozenObject);
+</code></pre>
+<p>来看实际代码:</p>
+<pre><code>function modifyProps(component) {
+  let condictioin = this.props.condictioin,
+    newComponent = Object.assign({}, component),
+    newProps = Object.assign({}, component.props)
+  
+  if (condictioin) {
+    if (condictioin.add) newProps.add = true
+    if (condictioin.del) newProps.del = true
+  }
+  newComponent.props = newProps
+  
+  return newComponent
+}
+</code></pre>
+<h3>锁定对象的方法</h3>
+<ul>
+<li>Object.preventExtensions()</li>
+</ul>
+<p>no new properties or methods can be added to the project 对象不可扩展, 即不可以新增属性或方法, 但可以修改 / 删除</p>
+<ul>
+<li>Object.seal()</li>
+</ul>
+<p>same as prevent extension, plus prevents existing properties and methods from being deleted 在上面的基础上，对象属性不可删除, 但可以修改</p>
+<ul>
+<li>Object.freeze()</li>
+</ul>
+<p>same as seal, plus prevent existing properties and methods from being modified 在上面的基础上，对象所有属性只读, 不可修改</p>
+<p>以上三个方法分别可用 Object.isExtensible(), Object.isSealed(), Object.isFrozen() 来检测</p>
+
+<h1>「万字进阶」深入浅出 Commonjs 和 Es Module</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6994224541312483336?searchId=2023101012253277002476EAD2ECAD31D4">juejin.cn</a></p>
+</blockquote>
+<h2>二 模块化</h2>
+<p>早期 JavaScript 开发很容易存在<strong>全局污染</strong>和<strong>依赖管理</strong>混乱问题。
+所以需要模块化。</p>
+<h2>三 Commonjs</h2>
+<p><code>Commonjs</code> 的提出，弥补 Javascript 对于模块化，没有统一标准的缺陷。
+目前 <code>commonjs</code> 广泛应用于以下几个场景：</p>
+<ul>
+<li><code>Node</code> 是 CommonJS 在服务器端一个具有代表性的实现；</li>
+<li><code>Browserify</code> 是 CommonJS 在浏览器中的一种实现；</li>
+<li><code.jpgack</code> 打包工具对 CommonJS 的支持和转换；也就是前端应用也可以在编译之前，尽情使用 CommonJS 进行开发。</li>
+</ul>
+<h3>1 commonjs 使用与原理</h3>
+<p>在使用 规范下，有几个显著的特点。</p>
+<ul>
+<li>在 <code>commonjs</code> 中每一个 js 文件都是一个单独的模块，我们可以称之为 module；</li>
+<li>该模块中，包含 CommonJS 规范的核心变量: exports、module.exports、require；</li>
+<li>exports 和 module.exports 可以负责对模块中的内容进行导出；</li>
+<li>require 函数可以帮助我们导入其他模块（自定义模块、系统模块、第三方库模块）中的内容；
+在 nodejs 中还存在 <code>__filename</code> 和 <code>__dirname</code> 变量。</li>
+</ul>
+<h4>commonjs 实现原理</h4>
+<p>首先从上述得知每个模块文件上存在 <code>module</code>，<code>exports</code>，<code>require</code>三个变量，然而这三个变量是没有被定义的，但是我们可以在 Commonjs 规范下每一个 js 模块上直接使用它们。</p>
+<p>在编译的过程中，实际 Commonjs 对 js 的代码块进行了首尾包装，
+在 Commonjs 规范下模块中，会形成一个包装函数，我们写的代码将作为包装函数的执行上下文，使用的 <code>require</code> ，<code>exports</code> ，<code>module</code> 本质上是通过形参的方式传递到包装函数中的。</p>
+<pre><code>(function(exports,require,module,__filename,__dirname){
+   const sayName = require('./hello.js')
+    module.exports = function say(){
+        return {
+            name:sayName(),
+            author:'我不是外星人'
+        }
+    }
+})
+</code></pre>
+<h4>Commonjs 的包装函数</h4>
+<p>那么包装函数本质上是什么样子的呢？</p>
+<pre><code>function wrapper (script) {
+    return '(function (exports, require, module, __filename, __dirname) {' + 
+        script +
+     '\n})'
+}
+</code></pre>
+<ul>
+<li>如上模拟了一个包装函数功能， script 为我们在 js 模块中写的内容，最后返回的就是如上包装之后的函数。</li>
+<li>一个问题是wrapper 返回的是一个字符串，因此运行的时候需要特殊处理</li>
+</ul>
+<pre><code class="language-js">runInThisContext(modulefunction)(module.exports, require, module, __filename, __dirname)
+</code></pre>
+<ul>
+<li>在模块加载的时候，会通过 runInThisContext (可以理解成 eval) 执行 <code>modulefunction</code> ，传入<code>require</code> ，<code>exports</code> ，<code>module</code> 等参数。</li>
+<li>最终我们写的 nodejs 文件就这么执行了。</li>
+</ul>
+<h3>2 require 文件加载流程</h3>
+<h4>require 加载标识符原则</h4>
+<p>首先我们看一下 <code>nodejs</code> 中对标识符的处理原则。</p>
+<pre><code>const fs =      require('fs') 
+</code></pre>
+<ul>
+<li>首先像 fs ，http ，path 等标识符，会被作为 nodejs 的<strong>核心模块</strong>。</li>
+<li><code>./</code> 和 <code>../</code> 作为相对路径的<strong>文件模块</strong>， <code>/</code> 作为绝对路径的<strong>文件模块</strong>。</li>
+<li>非路径形式也非核心模块的模块，将作为<strong>自定义模块</strong>。</li>
+</ul>
+<p>当 require 方法执行的时候，接收的唯一参数作为一个<strong>标识符</strong> ，Commonjs 下对不同的标识符，处理流程不同，但是<strong>目的相同，都是找到对应的模块</strong>。</p>
+<p><strong>核心模块的处理：</strong>
+核心模块的优先级仅次于缓存加载，在 <code>Node</code> 源码编译中，已被编译成二进制代码，所以加载核心模块，加载过程中速度最快。
+<strong>路径形式的文件模块处理：</strong>
+已 <code>./</code> ，<code>../</code> 和 <code>/</code> 开始的标识符，会被当作文件模块处理。<code>require()</code> 方法会将路径转换成真实路径，并以真实路径作为索引，将编译后的结果缓存起来，第二次加载的时候会更快。至于<strong>怎么缓存</strong>的？我们稍后会讲到。</p>
+<h2>自定义模块处理</h2>
+<p><strong>自定义模块处理：</strong> 自定义模块，一般指的是非核心的模块，它可能是一个文件或者一个包，它的查找会遵循以下原则：</p>
+<ul>
+<li>在当前目录下的 <code>node_modules</code> 目录查找。</li>
+<li>如果没有，在父级目录的 <code>node_modules</code> 查找，如果没有在父级目录的父级目录的 <code>node_modules</code> 中查找。</li>
+<li>沿着路径向上递归，直到根目录下的 <code>node_modules</code> 目录。</li>
+<li>在查找过程中，会找 <code>package.json</code> 下 main 属性指向的文件，如果没有 <code>package.json</code> ，在 node 环境下会以此查找 <code>index.js</code> ，<code>index.json</code> ，<code>index.node</code>。</li>
+</ul>
+<p>查找流程图如下所示：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/b49d1dd0eb728f7755335ae3a76c59d9_MD5.jpg" /></p>
+<h3>3 require 模块引入与处理</h3>
+<p>CommonJS 模块同步加载并执行模块文件，CommonJS 模块在执行阶段分析模块依赖，采用<strong>深度优先遍历</strong>（depth-first traversal），执行顺序是父 -&gt; 子 -&gt; 父；
+为了搞清除 require 文件引入流程。我们接下来再举一个例子，这里注意一下细节：</p>
+<ul>
+<li><code>a.js文件</code></li>
+</ul>
+<pre><code>const getMes = require('./b')
+console.log('我是 a 文件')
+exports.say = function(){
+    const message = getMes()
+    console.log(message)
+}
+</code></pre>
+<ul>
+<li><code>b.js</code>文件</li>
+</ul>
+<pre><code>const say = require('./a')
+const  object = {
+   name:'《React进阶实践指南》',
+   author:'我不是外星人'
+}
+console.log('我是 b 文件')
+module.exports = function(){
+    return object
+}
+</code></pre>
+<ul>
+<li>主文件<code>main.js</code></li>
+</ul>
+<pre><code>const a = require('./a')
+const b = require('./b')
+console.log('node 入口文件')
+</code></pre>
+<p>接下来终端输入 <code>node main.js</code> 运行 <code>main.js</code>，效果如下：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/2cd5a60b2410fdf5fd1bccf25e958015_MD5.jpg" /></p>
+<p>从上面的运行结果可以得出以下结论：</p>
+<ul>
+<li><code>main.js</code> 和 <code>a.js</code> 模块都引用了 <code>b.js</code> 模块，但是 <code>b.js</code> 模块只执行了一次。</li>
+<li><code>a.js</code> 模块 和 <code>b.js</code> 模块互相引用，但是没有造成循环引用的情况。</li>
+<li>执行顺序是父 -&gt; 子 -&gt; 父；</li>
+</ul>
+<h4>require 加载原理</h4>
+<p>我们要明白两个感念，那就是 <code>module</code> 和 <code>Module</code>。</p>
+<p><strong><code>module</code></strong> ：在 Node 中每一个 js 文件都是一个 module ，module 上保存了 exports 等信息之外，还有一个 <strong><code>loaded</code></strong> 表示该模块是否被加载。</p>
+<ul>
+<li>为 <code>false</code> 表示还没有加载；</li>
+<li>为 <code>true</code> 表示已经加载</li>
+</ul>
+<p><strong><code>Module</code></strong> ：以 nodejs 为例，整个系统运行之后，会用 <code>Module</code> 缓存每一个模块加载的信息。</p>
+<h2><code>require</code> 大致流程</h2>
+<p><code>require</code> 大致流程是这样的；</p>
+<ul>
+<li>require 会接收一个参数——文件标识符，然后分析定位文件，会从 Module 上查找有没有缓存，如果有缓存，那么直接返回缓存的内容。</li>
+<li>如果没有缓存，会创建一个 module 对象，缓存到 Module 上，然后执行文件，加载完文件，将 loaded 属性设置为 true ，然后返回 module.exports 对象。借此完成模块加载流程。</li>
+<li>模块导出就是 return 这个变量的其实跟 a = b 赋值一样， 基本类型导出的是值， 引用类型导出的是引用地址。</li>
+<li>exports 和 module.exports 持有相同引用，因为最后导出的是 module.exports， 所以对 exports 进行赋值会导致 exports 操作的不再是 module.exports 的引用。</li>
+</ul>
+<pre><code class="language-js">// id 为路径标识符
+function require(id) {
+   /* 查找  Module 上有没有已经加载的 js  对象*/
+   const  cachedModule = Module._cache[id]
+   
+   /* 如果已经加载了那么直接取走缓存的 exports 对象  */
+  if(cachedModule){
+    return cachedModule.exports
+  }
+ 
+  /* 创建当前模块的 module  */
+  const module = { exports: {} ,loaded: false , ...}
+
+  /* 将 module 缓存到  Module 的缓存属性中，路径标识符作为 id */  
+  Module._cache[id] = module
+  /* 加载文件 */
+  runInThisContext(wrapper('module.exports = &quot;123&quot;'))(module.exports, require, module, __filename, __dirname)
+  /* 加载完成 *//
+  module.loaded = true 
+  /* 返回值 */
+  return module.exports
+}
+</code></pre>
+<h4>require 避免重复加载</h4>
+<p>从上面我们可以直接得出，require 如何避免重复加载的，首先加载之后的文件的 <code>module</code> 会被缓存到 <code>Module</code> 上，比如一个模块已经 require 引入了 a 模块，如果另外一个模块再次引用 a ，那么会直接读取缓存值 module ，所以无需再次执行模块。</p>
+<p>对应 demo 片段中，首先 <code>main.js</code> 引用了 <code>a.js</code> ，<code>a.js</code> 中 require 了 <code>b.js</code> 此时 <code>b.js</code> 的 module 放入缓存 <code>Module</code> 中，接下来 <code>main.js</code> 再次引用 <code>b.js</code> ，那么直接走的缓存逻辑。
+所以 b.js 只会执行一次，也就是在 a.js 引入的时候。</p>
+<h4>require 避免循环引用</h4>
+<p>那么接下来这个循环引用问题，也就很容易解决了。为了让大家更清晰明白，那么我们接下来一起分析整个流程。</p>
+<ul>
+<li>① 首先执行 <code>node main.js</code> ，那么开始执行第一行 <code>require(a.js)</code>；</li>
+<li>② 那么首先判断 <code>a.js</code> 有没有缓存，因为没有缓存，先加入缓存，然后执行文件 a.js （<strong>需要注意 是先加入缓存， 后执行模块内容</strong>）;</li>
+<li>③ a.js 中执行第一行，引用 b.js。</li>
+<li>④ 那么判断 <code>b.js</code> 有没有缓存，因为没有缓存，所以加入缓存，然后执行 b.js 文件。</li>
+<li>⑤ b.js 执行第一行，再一次循环引用 <code>require(a.js)</code> 此时的 a.js 已经加入缓存，直接读取值。接下来打印 <code>console.log('我是 b 文件')</code>，导出方法。</li>
+<li>⑥ b.js 执行完毕，回到 a.js 文件，打印 <code>console.log('我是 a 文件')</code>，导出方法。</li>
+<li>⑦ 最后回到 <code>main.js</code>，打印 <code>console.log('node 入口文件')</code> 完成这个流程。</li>
+</ul>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/ba09946db244f43ca7c0ab03d2951240_MD5.jpg" /></p>
+<hr>
+<p>有个问题是当执行 b.js 模块的时候，因为 a.js 还没有导出 <code>say</code> 方法，所以 b.js 同步上下文中，获取不到 say。
+为了进一步验证上面所说的，我们改造一下 <code>b.js</code> 如下:</p>
+<pre><code>const say = require('./a')
+const  object = {
+   name:'《React进阶实践指南》',
+   author:'我不是外星人'
+}
+console.log('我是 b 文件')
+console.log('打印 a 模块' , say)
+
+setTimeout(()=&gt;{
+    console.log('异步打印 a 模块' , say)
+},0)
+
+module.exports = function(){
+    return object
+}
+</code></pre>
+<p>打印结果：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/2faa054f2f91544ea78d74e54164d953_MD5.jpg" /></p>
+<ul>
+<li>第一次打印 say 为空对象。</li>
+<li>第二次打印 say 才看到 b.js 导出的方法。
+那么如何获取到 say 呢，有两种办法：</li>
+<li>一是用动态加载 a.js 的方法</li>
+<li>二个就是如上放在异步中加载。</li>
+</ul>
+<p>我们注意到 a.js 是用 <code>exports.say</code> 方式导出的，如果 a.js 用 module.exports 结果会有所不同。</p>
+<h3>4 require 动态加载</h3>
+<p><code>commonjs</code> 规范下的 require 的另外一个特性——<strong>动态加载</strong>。
+require 可以在任意的上下文，动态加载模块。我对上述 a.js 修改。
+<code>a.js</code>：</p>
+<pre><code>console.log('我是 a 文件')
+exports.say = function(){
+    const getMes = require('./b')
+    const message = getMes()
+    console.log(message)
+}
+</code></pre>
+<p><code>main.js</code>：</p>
+<pre><code>const a = require('./a')
+a.say()
+</code></pre>
+<ul>
+<li>如上在 a.js 模块的 say 函数中，用 require 动态加载 b.js 模块。然后执行在 main.js 中执行 a.js 模块的 say 方法。
+打印结果如下：</li>
+</ul>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/2a2ad400a41ac12ef05d1db7b7f04d7e_MD5.jpg" />
+require 本质上就是一个函数，那么函数可以在任意上下文中执行，来自由地加载其他模块的属性方法。</p>
+<h3>5 exports 和 module.exports</h3>
+<h4>exports 使用</h4>
+<p><strong>第一种方式：exports</strong> <code>a.js</code></p>
+<pre><code>exports.name = `《React进阶实践指南》`
+exports.author = `我不是外星人`
+exports.say = function (){
+    console.log(666)
+}
+</code></pre>
+<p><strong>引用</strong></p>
+<pre><code>const a = require('./a')
+console.log(a)
+</code></pre>
+<p><strong>打印结果：</strong></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/73a3f4678e3f753867109c0672435814_MD5.jpg" /></p>
+<ul>
+<li>exports 就是传入到当前模块内的一个对象，本质上就是 <code>module.exports</code>。</li>
+</ul>
+<h2>exports为什么不能直接赋值对象</h2>
+<p><strong>问题：为什么 exports={} 直接赋值一个对象就不可以呢？</strong> 比如我们将如上 <code>a.js</code> 修改一下：</p>
+<pre><code>exports={
+    name:'《React进阶实践指南》',
+    author:'我不是外星人',
+    say(){
+        console.log(666)
+    }
+}
+</code></pre>
+<p><strong>打印结果：</strong></p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/20bbd5bfe5e9ae28e37fa407e3f4eaaa_MD5.jpg" /></p>
+<p>通常我们是通过 <code>exports.a = xxx</code> 属性导出的，
+但是为什么直接导出一个对象不行？实际这个是 js 本身的特性决定的。
+因为 exports ， module 和 require 作为形参的方式传入到 js 模块中。我们直接 <code>exports = {}</code> 修改 exports ，等于重新赋值了形参，那么会重新赋值一份，但是不会在引用原来的形参。举一个简单的例子</p>
+<p>相等于内部重新声明一份 <code>myExports</code> 而和外界的 myExports 断绝了关系。所以解释了为什么不能 <code>exports={...}</code> 直接赋值。</p>
+<p>那么解决上述也容易，只需要函数中像 exports.name 这么写就可以了。</p>
+<pre><code>function wrap (myExports){
+    myExports.name='我不是外星人'
+}
+</code></pre>
+<h4>module.exports 使用</h4>
+<p>module.exports 本质上就是 exports ，</p>
+<ul>
+<li>前面我们说到我们不能直接给 exports 赋值一个对象，因为会被覆盖</li>
+<li>所以给了我们一个 exports 的引用，用来更方便的导出一个函数</li>
+</ul>
+<pre><code>module.exports ={
+    name:'《React进阶实践指南》',
+    author:'我不是外星人',
+    say(){
+        console.log(666)
+    }
+}
+</code></pre>
+<p>module.exports 也可以单独导出一个函数或者一个类。比如如下：</p>
+<pre><code>module.exports = function (){
+    // ...
+}
+</code></pre>
+<p>注意 在一个文件中，我们最好选择 <code>exports</code> 和 <code>module.exports</code> 两者之一，如果两者同时存在，很可能会造成覆盖的情况发生。比如如下情况 exports.name 无效，会被 <code>module.exports</code> 覆盖。</p>
+<pre><code>exports.name = 'alien' // 此时 exports.name 是无效的
+module.exports ={
+    name:'《React进阶实践指南》',
+    author:'我不是外星人',
+    say(){
+        console.log(666)
+    }
+}
+</code></pre>
+<h4>与 <code>exports</code> 相比，<code>module.exports</code> 有什么缺陷 ？</h4>
+<p>答：<code>module.exports</code> 当导出一些函数等非对象属性的时候，也有一些风险，就比如循环引用的情况下。对象会保留相同的内存地址，就算一些属性是后绑定的，也能间接通过异步形式访问到。但是如果 module.exports 为一个非对象其他属性类型，在循环引用的时候，就容易造成属性丢失的情况发生了。</p>
+<h2>四 Es Module</h2>
+<p>Es Module 的产生有很多优势，比如:</p>
+<ul>
+<li>借助 <code>Es Module</code> 的静态导入导出的优势，实现了 <code>tree shaking</code>。</li>
+<li><code>Es Module</code> 还可以 <code>import()</code> 懒加载方式实现代码分割。</li>
+</ul>
+<p>在 <code>Es Module</code> 中用 <code>export</code> 用来导出模块，<code>import</code> 用来导入模块。但是 <code>export</code> 配合 <code>import</code> 会有很多种组合情况，接下来我们逐一分析一下。</p>
+<h4>ES Module import 方法</h4>
+<p>正常 import 的时候 名字要和export完全匹配
+default import 的时候名字可以是任意的</p>
+<h3>正常 export ,import方法</h3>
+<p>所有通过 export 导出的属性，在 import 中可以通过解构的方式获取</p>
+<ul>
+<li>这种情况下 import {} 内部的变量名称，要与 export {} 完全匹配。</li>
+</ul>
+<pre><code>const name = '《React进阶实践指南》' 
+const author = '我不是外星人'
+export { name, author }
+export const say = function (){
+    console.log('hello , world')
+}
+</code></pre>
+<p>导入模块：<code>main.js</code></p>
+<pre><code>// name , author , say 对应 a.js 中的  name , author , say
+import { name , author , say } from './a.js'
+</code></pre>
+<ul>
+<li>export { }， 与变量名绑定，命名导出。</li>
+<li>import { } from 'module'， 导入 <code>module</code> 的命名导出 ，module 为如上的 <code>./a.js</code></li>
+</ul>
+<h2>默认导出 export default</h2>
+<ul>
+<li><code>export default anything</code> 导入 module 的默认导出。 <code>anything</code> 可以是函数，属性方法，或者对象。</li>
+<li>对于引入默认导出的模块，<code>import anyName from 'module'</code>， anyName 可以是自定义名称。
+导出模块：<code>a.js</code></li>
+</ul>
+<pre><code>const name = '《React进阶实践指南》'
+const author = '我不是外星人'
+const say = function (){
+    console.log('hello , world')
+}
+export default {
+    name,
+    author,
+    say
+}
+</code></pre>
+<p>导入模块：<code>main.js</code></p>
+<pre><code>import mes from './a.js'
+console.log(mes) //{ name: '《React进阶实践指南》',author:'我不是外星人', say:Function }
+</code></pre>
+<h4>混合导入｜导出</h4>
+<p>ES6 module 可以使用 export default 和 export 导入多个属性。</p>
+<pre><code>import theSay , { name, author as  bookAuthor } from './a.js'
+</code></pre>
+<h4>import 所有：*语法</h4>
+<pre><code>export const name = '《React进阶实践指南》'
+export const author = '我不是外星人'
+
+export default  function say (){
+    console.log('hello , world')
+}
+</code></pre>
+<pre><code>import theSay, * as mes from './a'
+console.log(
+    theSay, // ƒ say() { console.log('hello , world') }
+    mes // { name:'《React进阶实践指南》' , author: &quot;我不是外星人&quot; ，default:  ƒ say() { console.log('hello , world') } }
+)
+</code></pre>
+<ul>
+<li>导出的属性被合并到 <code>mes</code> 属性上， <code>export</code> 被导入到对应的属性上，<code>export default</code> 导出内容被绑定到 <code>default</code> 属性上。 <code>theSay</code> 也可以作为被 <code>export default</code> 导出属性。</li>
+</ul>
+<h3>正常import的重命名</h3>
+<pre><code>import {  name as bookName , say,  author as bookAuthor  } from 'module'
+console.log( bookName , bookAuthor , say ) //《React进阶实践指南》 我不是外星人
+</code></pre>
+<ul>
+<li>从 module 模块中引入 name ，并重命名为 bookName ，从 module 模块中引入 author ，并重命名为 bookAuthor。 然后在当前模块下，使用被重命名的名字。</li>
+</ul>
+<h4><strong>重定向导出</strong></h4>
+<p>可以把当前模块作为一个中转站，一方面引入 module 内的属性，然后把属性再给导出去。</p>
+<pre><code>export {   name as bookName ,  author as bookAuthor , ..., say } from 'module' //第三种方式
+</code></pre>
+<h4>只运行模块和动态导入</h4>
+<pre><code>import 'module'
+</code></pre>
+<ul>
+<li>执行 module 不导出值 多次调用 <code>module</code> 只运行一次。</li>
+</ul>
+<p>动态导入</p>
+<pre><code>const promise = import('module')
+</code></pre>
+<ul>
+<li><code>import('module')</code> ，动态导入返回一个 <code>Promise</code>。为了支持这种方式，需要在.jpgack 中做相应的配置处理。</li>
+</ul>
+<h3>ES6 module 特性</h3>
+<p>接下来我们重点分析一下 ES6 module 一些重要特性。</p>
+<h4>1 静态语法</h4>
+<p>ES6 module 的引入和导出是静态的，他会在编译的时候执行，而不是运行的时候执行。</p>
+<ol>
+<li>因此<code>import</code> 会就像是提升到代码的顶层 。
+<ol>
+<li><code>import</code> , <code>export</code> 不能放在块级作用域或条件语句中。因为条件语句并不能限制</li>
+<li>mport 的导入名不能为字符串或在判断语句。因为必须编译时就知道，不能运行时才知道</li>
+</ol>
+</li>
+<li>这种静态语法，在编译过程中确定了导入和导出的关系，所以更方便去查找依赖，更方便去 <code>tree shaking</code> (摇树) ， 可以使用 lint 工具对模块依赖进行检查，可以对导入导出加上类型信息进行静态的类型检查。</li>
+</ol>
+<p>import 的导入名不能为字符串或在判断语句，下面代码是错误的
+🙅错误写法三：</p>
+<pre><code>import 'defaultExport' from 'module'
+
+let name = 'Export'
+import 'default' + name from 'module'
+</code></pre>
+<h4>2 执行特性</h4>
+<p>ES6 module 和 Common.js 一样，对于相同的 js 文件，会保存静态属性。
+但是与 Common.js 不同的是 ，
+<code>CommonJS</code> 模块同步加载并执行模块文件，
+ES6 模块</p>
+<ul>
+<li>在预处理阶段分析模块依赖，</li>
+<li>在执行阶段执行模块，</li>
+<li>两个阶段都采用深度优先遍历，执行顺序是子 -&gt; 父。</li>
+</ul>
+<p><strong><code>main.js</code></strong></p>
+<pre><code>console.log('main.js开始执行')
+import say from './a'
+import say1 from './b'
+console.log('main.js执行完毕')
+</code></pre>
+<p><strong><code>a.js</code></strong></p>
+<pre><code>import b from './b'
+console.log('a模块加载')
+export default  function say (){
+    console.log('hello , world')
+}
+</code></pre>
+<p><strong><code>b.js</code></strong></p>
+<pre><code>console.log('b模块加载')
+export default function sayhello(){
+    console.log('hello,world')
+}
+</code></pre>
+<ul>
+<li><code>main.js</code> 和 <code>a.js</code> 都引用了 <code>b.js</code> 模块，但是 b 模块也只加载了一次。</li>
+<li>执行顺序是子 -&gt; 父</li>
+</ul>
+<p>效果如下：</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/06b49a9eeb1a29a1a92a583a3001d41c_MD5.jpg" /></p>
+<h4>3 ES module 的导出绑定</h4>
+<ol>
+<li><strong>不能修改 import 导入的属性</strong></li>
+</ol>
+<pre><code>import {  num , addNumber } from './a'
+num = 2
+</code></pre>
+<p>但我们可以借助导出的方法对 import 进行改变</p>
+<h2>import 属性总结</h2>
+<p>import 属性作出总结：</p>
+<ul>
+<li>使用 import 被导入的模块运行在严格模式下。</li>
+<li>使用 import 被导入的变量是只读的，可以理解默认为 const 装饰，无法被赋值</li>
+<li>使用 import 被导入的变量是与原变量绑定 / 引用的，可以理解为 import 导入的变量无论是否为基本类型都是引用传递。</li>
+</ul>
+<h3>import() 动态引入</h3>
+<p><code>import()</code> 返回一个 <code>Promise</code> 对象， 返回的 <code>Promise</code> 的 then 成功回调中，可以获取模块的加载成功信息。我们来简单看一下 <code>import()</code> 是如何使用的。</p>
+<p><code>main.js</code></p>
+<pre><code>setTimeout(() =&gt; {
+    const result  = import('./b')
+    result.then(res=&gt;{
+        console.log(res)
+    })
+}, 0);
+</code></pre>
+<p><code>b.js</code></p>
+<pre><code>export const name ='alien'
+export default function sayhello(){
+    console.log('hello,world')
+}
+</code></pre>
+<p>成功回调 then 中可以获取模块对应的信息。
+<code>name</code> 对应 name 属性，
+<code>default</code> 代表 <code>export default</code> 。
+<code>__esModule</code> 为 es module 的标识。</p>
+<h4>import() 可以做一些什么</h4>
+<p><strong>动态加载</strong></p>
+<ul>
+<li>首先 <code>import()</code> 动态加载一些内容，可以放在条件语句或者函数执行上下文中。</li>
+</ul>
+<pre><code>if(isRequire){
+    const result  = import('./b')
+}
+</code></pre>
+<p><strong>懒加载</strong></p>
+<ul>
+<li><code>import()</code> 可以实现懒加载，举个例子 vue 中的路由懒加载；</li>
+</ul>
+<pre><code>[
+   {
+        path: 'home',
+        name: '首页',
+        component: ()=&gt; import('./home') ,
+   },
+]
+</code></pre>
+<h4>动态Import的使用例子:<strong>React 中动态加载</strong></h4>
+<pre><code>const LazyComponent =  React.lazy(()=&gt;import('./text'))
+class index extends React.Component{   
+    render(){
+        return 
+        &lt;React.Suspense fallback={ &lt;div class&gt;&lt;SyncOutlinespin/&gt;&lt;/div&gt; } &gt;
+               &lt;LazyComponent /&gt;
+           &lt;/React.Suspense&gt;
+    }
+</code></pre>
+<p><code>React.lazy</code> 和 <code>Suspense</code> 配合一起用，能够有动态加载组件的效果。
+<code>React.lazy</code> 接受一个函数，这个函数需要动态调用 <code>import()</code> 。
+<code>import()</code> 这种加载效果，可以很轻松的实现<strong>代码分割</strong>。避免一次性加载大量 js 文件，造成首次加载白屏时间过长的情况。</p>
+<h3>tree shaking 实现</h3>
+<p>Tree Shaking 是用来尽可能的删除没有被使用过的代码，一些被 import 了但其实没有被使用的代码。比如以下场景：
+<code>a.js</code>：</p>
+<pre><code>export let num = 1
+export const addNumber = ()=&gt;{
+    num++
+}
+export const delNumber = ()=&gt;{
+    num--
+}
+</code></pre>
+<p><code>main.js</code>：</p>
+<pre><code>import {  addNumber } from './a'
+addNumber()
+</code></pre>
+<ul>
+<li>如上 <code>a.js</code> 中暴露两个方法，<code>addNumber</code>和 <code>delNumber</code>，但是整个应用中，只用到了 <code>addNumber</code>，那么构建打包的时候，<code>delNumber</code>将作为没有引用的方法，不被打包进来。</li>
+</ul>
+<h3>Commonjs 总结</h3>
+<p><code>Commonjs</code> 的特性如下：</p>
+<ul>
+<li>CommonJS 模块由 JS 运行时实现。</li>
+<li>CommonJs 是单个值导出，本质上导出的就是 exports 属性。</li>
+<li>CommonJS 是可以动态加载的，对每一个加载都存在缓存，可以有效的解决循环引用问题。</li>
+<li>CommonJS 模块同步加载并执行模块文件。</li>
+</ul>
+<h3>es module 总结</h3>
+<p><code>Es module</code> 的特性如下：</p>
+<ul>
+<li>ES6 Module 静态的，不能放在块级作用域内，代码发生在编译时。</li>
+<li>ES6 Module 的值是动态绑定的，可以通过导出方法修改，可以直接访问修改结果。</li>
+<li>ES6 Module 可以导出多个属性和方法，可以单个导入导出，混合导入导出。</li>
+<li>ES6 模块提前加载并执行模块文件，</li>
+<li>ES6 Module 导入模块在严格模式下。</li>
+<li>ES6 Module 的特性可以很容易实现 Tree Shaking 和 Code Splitting。</li>
+</ul>
+
+<h1>为什么要避免使用 document.write，尤其是脚本注入</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6924939429362532360?searchId=2023101110252673D9E36F2A841044F394">juejin.cn</a></p>
+</blockquote>
+<h2>Chrome 将不再执行通过 document.write 注入的脚本</h2>
+<p>Chrome 将很快干预 document.write 指令，并因此禁止通过该指令注入脚本。
+只有在同时满足以下条件时才会阻塞：</p>
+<ul>
+<li>用户的网络连接非常糟糕，</li>
+<li>脚本是阻塞解析器的（既没有 async 也没有 defer 属性）并且不在浏览器缓存里，</li>
+<li>该指令被加在顶级的 document 里（也就是说 iframe 不受影响），</li>
+</ul>
+<h4>document.write 问题 1 注入脚本</h4>
+<p>当你用下面的 JavaScript 命令注入一段脚本时：</p>
+<pre><code>_document.write('&lt;script src=&quot;&quot;https://example.com/script.js&quot;&quot;&gt;&lt;/script&gt;');_
+</code></pre>
+<p>浏览器无法继续解析 HTML。web 浏览器被强制等待资源加载后才执行。
+情况可能会变得更糟，因为如果第一段脚本还注入其他脚本的话，浏览器会停止工作！</p>
+<h4>document 问题 2 强制刷新</h4>
+<p>如果 DOM 已经创建好了，使用 document.write 会强制浏览器再创建一次…… 可惜了性能！（document.write 会写入文档流，在已经加载完毕的文档里调用 document.write 会重置当前的文档。）</p>
+<h2>如何避免 document.write</h2>
+<p>通常来说，</p>
+<ol>
+<li>你应该避免使用阻塞的 JavaScript。“Defer” 和 “async” 属性会让你异步地调用外部脚本。然而要小心脚本的执行顺序，因为在异步加载的情况下不能保证它们的顺序！</li>
+<li>如果 document.write 涉及到第三方服务，你需要看看你的提供商是否能提供异步加载的版本。如果没有，考虑替代方案。</li>
+<li>为了在网页里插入内容，考虑使用 DOM 操作而不是 document.write。这里有个脚本示例：</li>
+</ol>
+<pre><code>_var sNew = document.createElement(&quot;&quot;script&quot;&quot;);
+sNew.async = true;
+sNew.src = &quot;&quot;https://example.com/script.min.js&quot;&quot;;
+var s0 = document.getElementsByTagName('script')[0];
+s0.parentNode.insertBefore(sNew, s0);_
+</code></pre>
+
+<h1>你学 BFF 和 Serverless 了吗</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844904185427673095?searchId=202310112321308327B15ADF8DF7D46EDD">juejin.cn</a></p>
+</blockquote>
+<h4>2.7 Serverless 的缺点</h4>
+<ul>
+<li>云厂商强绑定：它们常常会和厂商的其他云产品相绑定，如对象存储、消息队列等，意味你需要同时开通其他的服务，迁移成本高，如果想迁移基本原有的逻辑不可服用，kennel 需要重构</li>
+<li>不适合长时间任务：云函数平台会限制函数执行时间，如阿里云 Function Compute 最大执行时长为 10 min</li>
+<li>冷启动时间：函数运行时，执行容器和环境需要一定的时间，对 HTTP 请求来讲，可能会带来响应时延的增加</li>
+<li>调试与测试：开发者需要不断调整代码，打印日志，并提交到函数平台运行测试，会带来开发成本和产生费用</li>
+</ul>
+<h4>2.8 Serverless 的应用场景</h4>
+<ul>
+<li>场景 1: 负载有波峰波谷</li>
+</ul>
+<p>波峰波谷时，机器资源要按照峰值需求预，比如医院挂号这需求，假设在每天 10 点放号预约，那 10 点就会有峰值的出现，为了这个峰值并发的考虑，准备了相对应性能（固定）的服务器，然而在波谷时机器利用率又明显下降，不能进行资源复用导致浪费，而 serverless 不用为了波峰去做准备，不用留住水位，支持弹性缩扩容，在你高峰时再在进行动态扩容</p>
+<ul>
+<li>场景 2: 定时任务（报表统计等）</li>
+</ul>
+<p>服务空闲时间来处理批量数据，来生成数据报表，通过 Serverless 方式，不用额外购买利用率并不高的处理资源，比如每日的凌晨，分析前一天收集的数据并生成报告</p>
+<ul>
+<li>场景 3: 小程序开发（云开发）</li>
+</ul>
+<p>比如微信小程序开发 m 在实际开发中，如果我们不用云开发的 openid 获取流程，而用传统的方式，你就知道 openid 的获取是非常繁琐的一个过程，前端需要通过 wx.login 获取一个 code 值（具有时效性）再通过 code 值去后台用 appsecret 去调取 openid。</p>
+
+<h1>再谈 load 与 DOMContentLoaded</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903623583891469?searchId=202310111123315FDEED241D604A6A6DA2">juejin.cn</a></p>
+</blockquote>
+<h2>解析</h2>
+<p>首先浏览器会对这个 html 文件进行编译，转化成节点树结构
+浏览器会对转化后的数据结构自上而下进行分析：
+首先开启下载线程，对所有的资源进行优先级排序下载（注意，这里仅仅是下载）。
+同时主线程会对文档进行解析：</p>
+<ul>
+<li>遇到 script 标签时，首先阻塞后续内容的解析，同时检查该 script 是否已经下载下来，如果已下载，便执行代码。</li>
+<li>遇到 link 标签时，不会阻塞后续内容的解析（比如 DOM 构建），检查 link 资源是否已下载，如果已下载，则构建 cssom。</li>
+<li>遇到 DOM 标签时，执行 DOM 构建，将该 DOM 元素添加到文档树中。</li>
+</ul>
+<blockquote>
+<p>有一点要注意的是，在 body 中第一个 script 资源下载完成之前，浏览器会进行首次渲染，将该 script 标签前面的 DOM 树和 CSSOM 合并成一棵 Render 树，渲染到页面中。<strong>这是页面从白屏到首次渲染的时间节点，比较关键</strong>。</p>
+</blockquote>
+<h4>DOM 构建</h4>
+<p>DOM 构建的意思是，将文档中的所有 DOM 元素构建成一个树型结构。</p>
+<blockquote>
+<p>注意，DOM 构建是自上而下进行构建的，会受到 js 执行的干扰。</p>
+</blockquote>
+<h4>CSS 构建</h4>
+<p>将文档中的所有 css 资源合并。</p>
+<h4>render 树</h4>
+<p>将 DOM 树和 CSS 合并成一棵渲染树，render 树在合适的时机会被渲染到页面中。（比如遇到 script 时, 该 script 还没有下载到本地时）。</p>
+<h3>HTML 文档的加载与页面的首次渲染</h3>
+<p>当我们输入一个页面地址时，发生了哪些事情呢？</p>
+<p>1、浏览器首先下载该地址所对应的 html 页面。
+2、浏览器解析 html 页面的 DOM 结构。
+3、开启下载线程对文档中的所有资源按优先级排序下载。
+4、主线程继续解析文档，到达 head 节点 ，head 里的外部资源无非是外链样式表和外链 js。
+发现有外链 css 或者外链 js，如果是外链 js ，则停止解析后续内容，等待该资源下载，下载完后立刻执行。如果是外链 css，继续解析后续内容。
+5、解析到 body
+6、文档解析完毕，页面重新渲染。当页面引用的所有 js 同步代码执行完毕，触发 DOMContentLoaded 事件。
+7、html 文档中的图片资源，js 代码中有异步加载的 css、js 、图片资源都加载完毕之后，load 事件触发。</p>
+<h2>解析 body</h2>
+<p>body 里的情况比较多，body 里可能只有 DOM 元素，可能既有 DOM、也有 css、js 等资源，js 资源又有可能异步加载 图片、css、js 等。DOM 结构不同，浏览器的解析机制也不同，我们分开来讨论。</p>
+<ul>
+<li>只有 DOM 元素
+<ul>
+<li>这种情况比较简单了，DOM 树构建完，页面首次渲染。</li>
+</ul>
+</li>
+<li>有 DOM 元素、外链 js。
+<ul>
+<li>当解析到外链 js 的时候，该 js 尚未下载到本地，则 js 之前的 DOM 会被渲染到页面上，同时 js 会阻止后面 DOM 的构建，即后面的 DOM 节点并不会添加到文档的 DOM 树中。所以，js 执行完之前，我们在页面上看不到该 js 后面的 DOM 元素。</li>
+</ul>
+</li>
+<li>有 DOM 元素、外链 css
+<ul>
+<li>外链 css 不会影响 css 后面的 DOM 构建，但是会阻碍渲染。简单点说，外链 css 加载完之前，页面还是白屏。</li>
+</ul>
+</li>
+<li>有 DOM 元素、外链 js、外链 css
+<ul>
+<li>外链 js 和外链 css 的顺序会影响页面渲染，这点尤为重要。当 body 中 js 之前的外链 css 未加载完之前，页面是不会被渲染的。</li>
+<li>当 body 中 js 之前的 外链 css 加载完之后，js 之前的 DOM 树和 css 合并渲染树，页面渲染出该 js 之前的 DOM 结构。</li>
+</ul>
+</li>
+</ul>
+<h3>head 中资源的加载</h3>
+<ul>
+<li>head 中 js 资源加载都会停止后面 DOM 的构建，但是不影响后面资源的下载。</li>
+<li>css 资源不会阻碍后面 DOM 的构建，但是会阻碍页面的首次渲染。</li>
+</ul>
+<h3>body 中资源的加载</h3>
+<ul>
+<li>body 中 js 资源加载都会停止后面 DOM 的构建，但是不影响后面资源的下载。</li>
+<li>css 资源不会阻碍后面 DOM 的构建，但是会阻碍页面的首次渲染。</li>
+</ul>
+<h3>DomContentLoaded 事件的触发</h3>
+<p>上面只是讲了 html 文档的加载与渲染，并没有讲 DOMContentLoaded 事件的触发时机。直截了当地结论是，DOMContentLoaded 事件在 <strong>html 文档加载完毕，并且 html 所引用的内联 js、以及外链 js 的同步代码都执行完毕后触发</strong>。</p>
+<p>大家可以自己写一下测试代码，分别引用内联 js 和外链 js 进行测试。</p>
+<h3>load 事件的触发</h3>
+<p>当页面 DOM 结构中的 js、css、图片，以及 js 异步加载的 js、css 、图片都加载完成之后，才会触发 load 事件。</p>
+<p>注意：</p>
+<ul>
+<li>页面中引用的 js 代码如果有异步加载的 js、css、图片，是会影响 load 事件触发的。</li>
+<li>video、audio、flash 不会影响 load 事件触发。</li>
+</ul>
+<p>大家可以在 chrome 中试一下。</p>
+<h3>浏览器对同一域名下的资源并发下载线程数，chrome 为 6 个。</h3>
+<ul>
+<li>浏览器对<strong>同一域名</strong>下的下载并发不超过 6 个。超过 6 个的话，剩余的将会在队列中等待，这就是为什么我们要将资源收敛到不同的域名下，也是为了充分利用该机制，最大程度的并发下载所需资源，尽快的完成页面的渲染。</li>
+</ul>
+<blockquote>
+<p>这里要注意关键词：<strong>同一域名</strong>。如果 n 个不同域名的话，在浏览器设置的最大并发上限以内 (默认是 10 个)，是可以达到 n * 6 个的最大并发的下载的。</p>
+</blockquote>
+
+<h1>因为说 let 没有变量提升，我被嘲笑了</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6983702070293430303?searchId=202310111103016E8274A0BA870F4C7E11">juejin.cn</a></p>
+</blockquote>
+<h3>证明 var 声明存在变量提升</h3>
+<p>通常我们是这样子来证明 var 存在变量提升的。</p>
+<pre><code>function fn(){
+    console.log(a) // undefined
+    var a = 12
+}
+fn()
+</code></pre>
+<p>为什么这段代码会输出 undefined，而不是报错呢？
+原因就是 js 在创建执行上下文时，会检查代码，找出变量声明和函数声明，并将函数声明完全存储在环境中，而将通过 var 声明的变量设定为 undefined，这就是所谓的变量提升。
+从字面上理解就是变量和函数声明会被移动到函数或者全局代码的开头位置。</p>
+<h3>证明 let 声明存在变量提升</h3>
+<p>我们再举一个例子：</p>
+<pre><code>var x = 'parent value';
+(function() {
+  console.log(x); // parent value
+}())
+</code></pre>
+<p>代码会输出 parent value，原因很简单，涉及到了<strong>作用域链</strong>的知识。在匿名函数作用域中没有找到 x 变量，便会沿着作用域链，找到父级作用域，然后便再父级作用域中找到了 x 变量，并输出。</p>
+<p>接着我们在匿名函数中，加入 let 进行变量声明，此时结果会是如何呢？</p>
+<pre><code>var x = 'parent value';
+(function() {
+  console.log(x); // Uncaught ReferenceError: x is not defined
+  let x = 'child value'
+}())
+</code></pre>
+<p>此时的代码又会报错了，从这里其实可以看出 let 也是存在<strong>变量提升</strong>的，这也就是所谓的 let 和 const 的<strong>暂时性死区</strong>。
+暂时性死区只是在变量提升这一层额外加上了禁止访问。</p>
+<ul>
+<li>即读写变量都会导致 ReferenceError 的报错</li>
+</ul>
+
+<h1>文档流和 document.write</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7095014044125364237?searchId=2023101110252673D9E36F2A841044F394">juejin.cn</a></p>
+</blockquote>
+<h2>document.write(exp1,exp2,exp3,....)</h2>
+<p>可以输入多个参数</p>
+<h3>文档流</h3>
+<p>文档流：元素排版布局过程中，元素会自动从左往右，从上往下地遵守这种流式排列方式。
+当浏览器渲染 html 文档时，从顶部开始开始渲染，为元素分配所需要的空间，每一个块级元素单独占一行，行内元素则按照顺序被水平渲染直到在当前行遇到了边界，然后换到下一行的起点继续渲染。那么此时就不得不说一下块级元素和行内元素。</p>
+<h3>文档流和 document.write</h3>
+<p>页面第一次打开时，</p>
+<ul>
+<li>浏览器会自上而下读取页面内容（第一次页面内容以及 js 里默认执行的 document.write 内容），这时候文档流没有关闭。<code>document.write()</code>方法中的内容会拼接到文档流中产生刚开始的界面显示的情况。
+之后继续加载时事件定义，文档流关闭。
+<code>document.write()</code>执行时如果文档流关闭，会调用<code>document.open()</code>创建一个新的文档流，这时候会覆盖原来的内容，</li>
+</ul>
+<p>一般这种事件情况下，通常使用<code>document.append</code>来添加内容从而不会创建新的文档流</p>
+
+<h1>浅谈 JavaScript 变量提升</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7007224479218663455?searchId=202310111103016E8274A0BA870F4C7E11">juejin.cn</a></p>
+</blockquote>
+<h3>1. 函数变量提升</h3>
+<pre><code>fn()
+var fn = function () {
+	console.log(1)  
+}
+// 输出结果：Uncaught TypeError: fn is not a function
+
+foo()
+function foo () {
+	console.log(2)
+}
+// 输出结果：2
+</code></pre>
+<p>可以看到，使用变量形式声明 fn 并在其前面执行时，会报错 fn 不是一个函数，因为此时 fn 只是一个变量，还没有赋值为一个函数，所以是不能执行 fn 方法的。</p>
+<h3>使用变量提升:提高性能</h3>
+<p>在 JS 代码执行之前，会进行语法检查和预编译，并且这一操作只进行一次。这么做就是为了提高性能，如果没有这一步，那么每次执行代码前都必须重新解析一遍该变量（函数），这是没有必要的，因为变量（函数）的代码并不会改变，解析一遍就够了。
+在解析的过程中，还会为函数生成预编译代码。在预编译时，会统计声明了哪些变量、创建了哪些函数，并对函数的代码进行压缩，去除注释、不必要的空白等。这样做的好处就是每次执行函数时都可以直接为该函数分配栈空间（不需要再解析一遍去获取代码中声明了哪些变量，创建了哪些函数），并且因为代码压缩的原因，代码执行也更快了。</p>
+<h3>使用变量提升:容错性更好</h3>
+<p>变量提升可以在一定程度上提高 JS 的容错性，
+不大容易出 bug，就是程序不一定能用</p>
+<h3>变量提升导致变量被覆盖</h3>
+<p>来看下面的代码：</p>
+<pre><code>var name = &quot;JavaScript&quot;
+function showName(){
+  console.log(name);
+  if(0){
+   var name = &quot;CSS&quot;
+  }
+}
+showName()
+</code></pre>
+<p>这里会输出 undefined，而并没有输出 “JavaScript”，为什么呢？</p>
+<p>首先，当刚执行 showName 函数调用时，会创建 showName 函数的执行上下文。之后，JavaScript 引擎便开始执行 showName 函数内部的代码。</p>
+<h3>变量提升导致变量没有被销毁</h3>
+<pre><code>function foo(){
+  for (var i = 0; i &lt; 5; i++) {
+  }
+  console.log(i); 
+}
+foo()
+</code></pre>
+<p>使用其他的大部分语言实现类似代码时，在 for 循环结束之后，i 就已经被销毁了，但是在 JavaScript 代码中，i 的值并未被销毁，所以最后打印出来的是 5。这也是由变量提升而导致的，在创建执行上下文阶段，变量 i 就已经被提升了，所以当 for 循环结束之后，变量 i 并没有被销毁。</p>
+
+<h1>聊聊什么是 CommonJs 和 Es Module 及它们的区别</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6938581764432461854?searchId=2023101012253277002476EAD2ECAD31D4">juejin.cn</a></p>
+</blockquote>
+<h2>CommonJs 基本语法</h2>
+<h3>module导出</h3>
+<p><code>CommonJs</code>中使用<code>module.exports</code>导出变量及函数，也可以导出任意类型的值，看如下案例。</p>
+<pre><code>// 导出一个对象
+module.exports = {
+    name: &quot;蛙人&quot;,
+    age: 24,
+    sex: &quot;male&quot;
+}
+
+// 导出任意值
+module.exports.name = &quot;蛙人&quot;
+module.exports.sex = null
+module.exports.age = undefined
+</code></pre>
+<h2>无 module直接导出</h2>
+<p>导出也可以省略<code>module</code>关键字，直接写 exports 导出也可以，看如下案例。</p>
+<pre><code>exports.name = &quot;蛙人&quot;
+exports.sex = &quot;male&quot;
+</code></pre>
+<p>无 module 不能导出对象，因为他不是真实的导出值。只是的导出值是 module.exports</p>
+<h3>重复导入</h3>
+<p>不管是<code>CommonJs</code>还是<code>Es Module</code>都不会重复导入，就是只要该文件内加载过一次这个文件了，我再次导入一次是不会生效的。</p>
+<pre><code>let data = require(&quot;./index.js&quot;)
+let data = require(&quot;./index.js&quot;) // 不会在执行了
+</code></pre>
+<h3>动态导入</h3>
+<p><code>CommonJs</code>支持动态导入，什么意思呢，就是可以在语句中，使用<code>require</code>语法，来看如下案例。</p>
+<pre><code>let lists = [&quot;./index.js&quot;, &quot;./config.js&quot;]
+lists.forEach((url) =&gt; require(url)) // 动态导入
+
+if (lists.length) {
+    require(lists[0]) // 动态导入
+}
+</code></pre>
+<h3>导入值的变化</h3>
+<p><code>CommonJs</code>导入的值是拷贝的，所以可以修改拷贝值，但这会引起变量污染，一不小心就重名。</p>
+<pre><code>// index.js
+let num = 0;
+module.exports = {
+    num,
+    add() {
+       ++ num 
+    }
+}
+
+let { num, add } = require(&quot;./index.js&quot;)
+console.log(num) // 0
+add()
+console.log(num) // 0
+num = 10
+</code></pre>
+<p>上面 example 中，可以看到<code>exports</code>导出的值是值的拷贝，更改完<code>++ num</code>值没有发生变化，并且导入的<code>num</code>的值我们也可以进行修改</p>
+<h3>ES 混合导入</h3>
+<p>混合导入，<code>import</code>语句必须先是默认导出，后面再是单个导出，顺序一定要正确否则报错。</p>
+<pre><code>// index,js
+export const name = &quot;蛙人&quot;
+export const age = 24
+export default {
+    msg: &quot;蛙人&quot;
+}
+
+import msg, { name, age } from './index.js'
+console.log(msg) // { msg: &quot;蛙人&quot; }
+</code></pre>
+<h3>导入值的变化</h3>
+<p><code>export</code>导出的值是值的引用，并且内部有映射关系，这是<code>export</code>关键字的作用。
+导入的值，不能进行修改也就是只读状态。
+但我们可以通过导入的函数进行修改</p>
+<pre><code>// index.js
+export let num = 0;
+export function add() {
+    ++ num
+}
+
+import { num, add } from &quot;./index.js&quot;
+console.log(num) // 0
+add()
+console.log(num) // 1
+num = 10 // 抛出错误
+</code></pre>
+
+<h1>🔥「深入本质」你真的理解 undefined 和 null 吗</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6943055278212382750?searchId=20231010143625473ADCACAD0D98B9DFA3">juejin.cn</a></p>
+</blockquote>
+<p>首先，<code>undefined</code>和<code>null</code>都是假值（falsy），在<strong>绝大多数情况下两者在使用上没有区别</strong>
+甚至连官方都 **“很贴心” 的让 null 和 undefined 判定为相等 **</p>
+<pre><code>console.log(null==undefined); //true
+</code></pre>
+<h1>重新认识 undefined</h1>
+<h2>什么时候出现 undefined</h2>
+<p>总结一下，<code>undefined</code>会出现的场景有五种</p>
+<ul>
+<li>真的是没定义（ typeof 对没定义的会返回 Undefined）</li>
+<li>定义了但没赋值</li>
+<li>直接赋值 undefined</li>
+<li>函数空 return 或者干脆没有 return</li>
+<li>对象没有对应属性</li>
+</ul>
+<h2>null 是什么？——主动选择为空</h2>
+<p><strong><code>null</code>是一个普通值，需要主动使用</strong>，和 12、'abc'、false 没多大区别</p>
+<ul>
+<li>只有主动使用时，<code>null</code>才会出现</li>
+<li>没有声明<code>null</code>不会自己蹦出来</li>
+</ul>
+<h3>null 本质上是个零，undefined 本质上是个特殊对象</h3>
+<p>当然，我猜肯定有人会说——“不对啊，Blue，null 的 type 才是 Object 啊”，这个简单，因为 <strong>js 里充满了作者的主观规定，仅此而已</strong></p>
+<pre><code>//null的类型是object，没错
+typeof null; //&quot;object&quot;
+</code></pre>
+<p>但除此之外的运算他都表现的像个0</p>
+<pre><code>Number(null); //0
+Number(undefined); //NaN
+
+12+null; //12
+12+undefined; //NaN
+
+
+//跟数字比较会更加明显
+-5&lt;null; //true——null是0，-5&lt;0
+
+-5&lt;undefined;  //false
+-5&gt;undefined;  //false
+-5==undefined; //false
+//undefined就不是数字，跟数字没有可比性
+</code></pre>
+<h2>默认参数与 undefined、null</h2>
+<pre><code>//age参数有默认值——也就是说，不传就是18
+function blue(age=18){
+  console.log(age);
+}
+
+
+//传个undefined跟没传一样，系统认为“没有”和undefined等价
+blue(undefined);  //18
+
+//传null就是有了，不会触发默认值
+blue(null);  //null
+</code></pre>

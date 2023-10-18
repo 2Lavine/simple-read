@@ -1,35 +1,21 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [machnicki.medium.com](https://machnicki.medium.com/handle-events-in-react-with-arrow-functions-ede88184bbb)
 
-> I like using ESLint and JSCS with Airbnb preset, so code needs to be strict. Sometimes this is painfu......
-
-[
-
-![](https://miro.medium.com/v2/resize:fill:88:88/1*7aYrcppGUIZMNgY3AqCoNw.jpeg)
-
-](https://machnicki.medium.com/?source=post_page-----ede88184bbb--------------------------------)
-
-I like using **ESLint and JSCS with Airbnb preset**, so code needs to be strict. Sometimes this is painful, but I definitely agree, that this kind of work keeps code more cleaner and helps cooperate with programmers, which very often have different coding styles.
-
-If you don’t use ESLint, lets try and install also Airbnb package: [https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb)
-
 Event handlers in React
 -----------------------
-
-If you work on component in React you probably need to create some custom events, callback functions. Popular convention in React is to name handler method similar as
-
+If you work on component in React you probably need to create some custom events, callback functions. 
+Popular convention in React is to name handler method similar as
 ```
 handleChange() {...}
 ```
-
 when your component looks similar as
-
 ```
 render() {
    return(<MyInput onChange={...} />)
 }
 ```
 
-and you want to handle onChange callback. Now all what you need is to pass your method into _onChange_ property. Simply _onChange={this.handleChange}_ won’t work because you need to bind **this** value from function to our class (each function creates own environment).
+and you want to handle onChange callback. 
+Now all what you need is to pass your method into _onChange_ property. Simply _onChange={this.handleChange}_ won’t work because you need to bind **this** value from function to our class (each function creates own environment).
 
 We could use some tricks, as assignment **that = this** or use **lodash** method _.bind(), but thankfully most of browser support native **.bind()** method.
 

@@ -181,6 +181,8 @@ aliases: []
 
 ---
 - [ ] [二叉树：235.搜索树的最近公共祖先](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0235.二叉搜索树的最近公共祖先.md)
+	- [ ] 如果我在左子树中找不到p或q，我就返回右子树的结果，反之亦然。
+	- [ ] 如果我在左右子树中都找到了p或q，我就返回root，因为root就是p和q的最低公共祖先
 - [ ] [二叉树：701.搜索树中的插入操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0701.二叉搜索树中的插入操作.md)
 - [ ] [二叉树：450.搜索树中的删除操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0450.删除二叉搜索树中的节点.md)
 - [ ] [二叉树：669.修剪二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0669.修剪二叉搜索树.md)

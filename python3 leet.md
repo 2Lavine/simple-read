@@ -113,7 +113,8 @@ nums.sort(reverse=True)
 print(nums)  # 输出：[5, 4, 3, 2, 1]
 ```
 
-如果要对列表中的元素进行自定义排序，可以使用sort()方法的key参数来指定排序的依据。key参数接收一个函数，该函数将对列表中的每个元素进行处理，并返回一个用于排序的值。例如，按照元素的绝对值进行排序：
+如果要对列表中的元素进行自定义排序，可以使用sort()方法的key参数来指定排序的依据。
+key参数接收一个函数，该函数将对列表中的每个元素进行处理，并返回一个用于排序的值。例如，按照元素的绝对值进行排序：
 ```python
 nums = [-3, 1, -4, 2, 5]
 nums.sort(key=abs)
@@ -257,3 +258,31 @@ module 'math' has no attribute 'max'
 # todo python实现大根堆
 # todo heapq的方法
 # todo Python List 排序比较函数
+
+key参数接收一个函数，它接收列表中的单个元素，然后返回一个值。
+返回的值会用于 sort 比较
+该函数将对列表中的每个元素进行处理，根据返回的值进行排序
+```js
+students = [('John', 20), ('Amy', 18), ('Bob', 22), ('Tom', 19)]
+students.sort(key=lambda x: x[1])
+或者
+def getSecond(n):
+	return n[1]
+print(students)  
+# 输出：[('Amy', 18), ('Tom', 19), ('John', 20), ('Bob', 22)]
+```
+
+基于多个键排序
+如果你想基于多个键进行排序，可以返回一个包含这些键值的元组，如下所示：
+```python
+python
+Copy code
+data = [
+    {'name': 'John', 'age': 25, 'score': 90},
+    {'name': 'Jane', 'age': 25, 'score': 95},
+    {'name': 'Dave', 'age': 23, 'score': 90}
+# 首先按年龄排序，然后按分数排序
+sorted_data = sorted(data, key=lambda x: (x['age'], x['score']))
+```
+print(sorted_data)
+这将首先根据“age”键的值进行排序，然后在年龄相同的情况下，根据“score”键的值进行排序。
