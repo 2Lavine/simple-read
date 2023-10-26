@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "interview_front_nus10.27.md.md",
+                "file": "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md",
                 "mode": "source",
                 "source": false
               }
@@ -61,7 +61,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "数组",
+                "query": "file:+",
                 "matchingCase": false,
                 "explainSearch": true,
                 "collapseAll": true,
@@ -76,7 +76,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "interview_front_nus10.27.md.md"
+                "file": "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md"
               }
             }
           },
@@ -88,7 +88,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -108,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "interview_front_nus10.27.md.md",
+                "file": "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -125,7 +126,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "interview_front_nus10.27.md.md",
+                "file": "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -181,10 +182,22 @@
       "obsidian-memos:Memos": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "f94ecbe97ead28b7",
   "lastOpenFiles": [
-    "系统架构师.md",
+    "achieve/fetch简介新一代 Ajax API.md",
     "interview_front_nus10.27.md.md",
+    "md/生活的平衡.md",
+    "md/二十分钟掌握 React 核心理念，老鸟快速入门指南.md",
+    "md/leetcode-master/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04/leetcode-master.md",
+    "md/leetcode-master/problems/0078. 子集. md at master · youngyangyang04/leetcode-master.md",
+    "md/leetcode-master/problems/0070. 爬楼梯. md at master · youngyangyang04/leetcode-master.md",
+    "md/leetcode-master/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04",
+    "md/leetcode-master/problems/0078. 子集. md at master · youngyangyang04",
+    "md/leetcode-master/problems/0070. 爬楼梯. md at master · youngyangyang04",
+    "md/leetcode-master/problems ",
+    "md/leetcode-master/problems",
+    "md/leetcode-master",
+    "系统架构师.md",
     "md/2023-10-25.md",
     "_resources/Pasted image 20231025235133.png",
     "md/leetcode.md",
@@ -214,21 +227,9 @@
     "achieve/浅谈 JavaScript 变量提升.md",
     "achieve/文档流和 document.write.md",
     "achieve/因为说 let 没有变量提升，我被嘲笑了.md",
-    "achieve/再谈 load 与 DOMContentLoaded.md",
-    "achieve/你学 BFF 和 Serverless 了吗.md",
-    "achieve/为什么要避免使用 document.write，尤其是脚本注入.md",
-    "achieve/「万字进阶」深入浅出 Commonjs 和 Es Module.md",
-    "achieve/Vue 性能提升之 Object.freeze().md",
-    "achieve/JS 变量提升.md",
     "output/2023-10-11 20-34-46.html",
     "done",
     "Excalidraw",
-    "output/2023-10-8 21-11-51.html",
-    "output/2023-10-1 21-34-17.html",
-    "output/2023-10-1 21-20-06.html",
-    "output/2023-10-1 21-11-43.html",
-    "output/2023-10-1 21-09-43.html",
-    "Untitled",
     "未命名.canvas"
   ]
 }
