@@ -8,7 +8,7 @@
   "refreshNotes": false,
   "notesToRefresh": [],
   "reimportShowConfirmation": true,
-  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6MTIyODY3OSwibG5pIjowLCJja1BLSUQiOjAsImNrTklEIjowLCJja1QiOjE2OTU3OTgwODAsInMiOjE2OTY4MjExMjY5NjExMTF9",
+  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6MTIyODY3OSwibG5pIjowLCJja1BLSUQiOjAsImNrTklEIjowLCJja1QiOjE2OTU3OTgwODAsInMiOjE2OTc2Mzk0OTY1ODA5NTV9",
   "dataVersion": 0,
   "notePaths": {
     "H8A6H72": "WuCai/LearnVim_zh_cnch01_starting_vim.md at master · wsdjegLearnVim_zh_cn · GitHub-H8A6H72.md",
@@ -114,7 +114,10 @@
     "H8KHCB2": "WuCai/23-08-31-leetcodemasterproblems0142.环形链表II.md at master · youngyangyang04leetcodemaster-H8KHCB2.md",
     "H8KKFKC": "WuCai/23-09-06-工厂方法设计模式-H8KKFKC.md",
     "H82HH78": "WuCai/23-10-09-No Title-H82HH78.md",
-    "H82H2H5": "WuCai/23-10-09-国外免费云服务器  Google Search-H82H2H5.md"
+    "H82H2H5": "WuCai/23-10-09-国外免费云服务器  Google Search-H82H2H5.md",
+    "H8233DF": "WuCai/23-10-18-S01. 重入攻击  WTF Academy-H8233DF.md",
+    "H823K8C": "WuCai/23-10-18-Using Minikube to Create a Cluster  Kubernetes-H823K8C.md",
+    "H823K8D": "WuCai/23-10-18-Using kubectl to Create a Deployment  Kubernetes-H823K8D.md"
   },
   "exportConfig": {
     "titleFormat": 5,

@@ -286,3 +286,58 @@ sorted_data = sorted(data, key=lambda x: (x['age'], x['score']))
 ```
 print(sorted_data)
 这将首先根据“age”键的值进行排序，然后在年龄相同的情况下，根据“score”键的值进行排序。
+
+
+## enumerat用法
+#python/enumerat 
+在Python中，`enumerate`是一个内置函数，用于将一个可迭代对象（如列表、元组或字符串）组合为一个索引序列，同时返回索引和元素。
+
+`enumerate`的语法如下：
+
+```python
+enumerate(iterable, start=0)
+```
+
+参数说明：
+- `iterable`：要迭代的可迭代对象，如列表、元组、字符串等。
+- `start`：可选参数，指定索引的起始值，默认为0。
+
+下面是一些使用`enumerate`的示例：
+
+```python
+# 示例1：遍历列表，并打印每个元素及其索引
+fruits = ['apple', 'banana', 'orange']
+for index, fruit in enumerate(fruits):
+    print(index, fruit)
+
+# 示例2：使用指定的起始索引值
+fruits = ['apple', 'banana', 'orange']
+for index, fruit in enumerate(fruits, start=1):
+    print(index, fruit)
+
+# 示例3：将可迭代对象转换为字典
+fruits = ['apple', 'banana', 'orange']
+fruit_dict = dict(enumerate(fruits))
+print(fruit_dict)
+```
+
+输出结果：
+```
+0 apple
+1 banana
+2 orange
+
+1 apple
+2 banana
+3 orange
+
+{0: 'apple', 1: 'banana', 2: 'orange'}
+```
+
+以上是`enumerate`函数的基本用法，它可以在循环中同时获取元素和索引，或者将可迭代对象转换为字典。
+
+#python/insert 
+result.insert(item[1],item)
+#python/sort 
+多种排序
+people.sort(key=lambda item:(-item[0],item[1]))

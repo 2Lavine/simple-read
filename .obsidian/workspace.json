@@ -4,22 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "10f4194a8c48b4b1",
+        "id": "5fadd28621d9f3a4",
         "type": "tabs",
         "children": [
           {
-            "id": "73d42edb57405e7b",
+            "id": "384a0c3b58340beb",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "系统架构师.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "f94ecbe97ead28b7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "interview_front_nus10.27.md.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -48,7 +61,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "## Python 中的 sort",
+                "query": "数组",
                 "matchingCase": false,
                 "explainSearch": true,
                 "collapseAll": true,
@@ -63,7 +76,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/leetcode.md"
+                "file": "interview_front_nus10.27.md.md"
               }
             }
           },
@@ -95,7 +108,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "interview_front_nus10.27.md.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +125,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/leetcode.md",
+                "file": "interview_front_nus10.27.md.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -168,8 +181,25 @@
       "obsidian-memos:Memos": false
     }
   },
-  "active": "73d42edb57405e7b",
+  "active": "7c656948499aebb2",
   "lastOpenFiles": [
+    "系统架构师.md",
+    "interview_front_nus10.27.md.md",
+    "md/2023-10-25.md",
+    "_resources/Pasted image 20231025235133.png",
+    "md/leetcode.md",
+    "md/2023-10-23.md",
+    "achieve/RESTful、共用接口接口约定的实践.md",
+    "Excalidraw/Architecture.excalidraw.md",
+    "done/PARA 中「项目」的魔力：用输出对抗信息焦虑.md",
+    "python3 leet.md",
+    "md/2023-10-19.md",
+    "_resources/Pasted image 20231019141202.png",
+    "done/2023-10-12.md",
+    "WuCai/23-10-18-Using kubectl to Create a Deployment  Kubernetes-H823K8D.md",
+    "WuCai/23-10-18-Using Minikube to Create a Cluster  Kubernetes-H823K8C.md",
+    "WuCai/23-10-18-S01. 重入攻击  WTF Academy-H8233DF.md",
+    "Excalidraw/Drawing 2023-10-12 15.47.02.excalidraw.md",
     "_resources/d1f76e4c2d9d1ed0fea27c6c152aa4cb_MD5.jpg",
     "_resources/ba09946db244f43ca7c0ab03d2951240_MD5.jpg",
     "_resources/b49d1dd0eb728f7755335ae3a76c59d9_MD5.jpg",
@@ -178,9 +208,6 @@
     "_resources/53f153f4303694d5fadd01821167e678_MD5.jpg",
     "_resources/2faa054f2f91544ea78d74e54164d953_MD5.jpg",
     "_resources/2cd5a60b2410fdf5fd1bccf25e958015_MD5.jpg",
-    "_resources/40cd2d0c41e5d182b9ff237329d238fe_MD5.jpg",
-    "_resources/20bbd5bfe5e9ae28e37fa407e3f4eaaa_MD5.jpg",
-    "_resources/019534cc0cb5af81a6bd533981e1cf5a_MD5.jpg",
     "output/2023-10-18 13-04-43.html",
     "achieve/🔥「深入本质」你真的理解 undefined 和 null 吗.md",
     "achieve/聊聊什么是 CommonJs 和 Es Module 及它们的区别.md",
@@ -193,20 +220,6 @@
     "achieve/「万字进阶」深入浅出 Commonjs 和 Es Module.md",
     "achieve/Vue 性能提升之 Object.freeze().md",
     "achieve/JS 变量提升.md",
-    "done/为什么要避免使用 document.write，尤其是脚本注入.md",
-    "done/再谈 load 与 DOMContentLoaded.md",
-    "done/你学 BFF 和 Serverless 了吗.md",
-    "md/node.js BFF 开发 8 个月的心路历程.md",
-    "done/Vue 性能提升之 Object.freeze().md",
-    "cur useless/Handle events by arrow functions in React app | by Miron Machnicki | Medium.md",
-    "cur useless/怎样花两年时间去面试一个人 – 刘未鹏 | Mind Hacks.md",
-    "done/🔥「深入本质」你真的理解 undefined 和 null 吗.md",
-    "done/聊聊什么是 CommonJs 和 Es Module 及它们的区别.md",
-    "done/浅谈 JavaScript 变量提升.md",
-    "done/JS 变量提升.md",
-    "done/文档流和 document.write.md",
-    "done/因为说 let 没有变量提升，我被嘲笑了.md",
-    "python3 leet.md",
     "output/2023-10-11 20-34-46.html",
     "done",
     "Excalidraw",
