@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md",
+                "file": "interview_front_nus10.27.md.md",
                 "mode": "source",
                 "source": false
               }
@@ -76,7 +76,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md"
+                "file": "interview_front_nus10.27.md.md"
               }
             }
           },
@@ -88,8 +88,7 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -109,7 +108,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md",
+                "file": "interview_front_nus10.27.md.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -126,7 +125,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md",
+                "file": "interview_front_nus10.27.md.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -184,6 +183,7 @@
   },
   "active": "f94ecbe97ead28b7",
   "lastOpenFiles": [
+    "cur useless/使用 Next.js + Docker 打造一个属于你的私人博客.md",
     "achieve/fetch简介新一代 Ajax API.md",
     "interview_front_nus10.27.md.md",
     "md/生活的平衡.md",
@@ -226,7 +226,6 @@
     "achieve/聊聊什么是 CommonJs 和 Es Module 及它们的区别.md",
     "achieve/浅谈 JavaScript 变量提升.md",
     "achieve/文档流和 document.write.md",
-    "achieve/因为说 let 没有变量提升，我被嘲笑了.md",
     "output/2023-10-11 20-34-46.html",
     "done",
     "Excalidraw",
