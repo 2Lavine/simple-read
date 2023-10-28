@@ -1,108 +1,70 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7218942994467389498)
 
-_**本文正在参加[「金石计划」](https://juejin.cn/post/7207698564641996856/ "https://juejin.cn/post/7207698564641996856/")**_
-
-> **flag**：每月至少产出三篇高质量文章~
-
-最近前 `leader` 找到我，让我帮他面试一个前端开发的岗位（**react 技术栈，3 年 +**），在整理面试题的时候，想到几年前跳槽的时候面阿里高德时被问到的一个 “刁钻” 面试题：
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b500715d75df4dbb9319122ecf640b47~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
-> **注意！** 是 **`【componentWillMount】`**，不是 **`componentDidMount`**、**`componentDidUpdate`**、**`componentWillUnmount`**。大家可以先不看下文，自己考虑一下，会怎么回答这个问题。
-
-这个之所以让我印象这么深刻，是因为当时我被这个问题问懵了。常规的 `React` 面试题可能会问你怎么实现 `componentDidMount`、`componentDidUpdate`、`componentWillUnmount` 之类的，而这个问题却并不按常理出牌，让你实现一个在之前 `class component` 时代都不怎么常用的生命周期 —— `componentWillMount`。
-
-> 个人觉得这个问题虽然角度 “刁钻”，但是不失为一道挺有水平的面试题，是因为：
-> 
-> 1.  需要面试者对 `React` 类组件的生命周期和 `v16.8` 以后的函数组件中官方提供的 `React Hooks` 执行时机有足够深入的了解才能比较好地回答这个问题；
-> 2.  如果是在 `React Hooks` 时代才入坑 React 的新晋选手恐怕会难以理解这个问题的本质；
-> 3.  即便是经验丰富的 `React` 选手，由于疏于对 `componentWillMount` 的使用（这个钩子确实用得也少），也可能翻车，需要有比较丰富、扎实的 React 基础知识；
-
-**那接下来，我们就尝试怎么比较好地回答这个问题吧~ 阅读此文，你将对新旧版本的 React 的生命周期以及 `React Hooks` 的执行时机有更深刻的理解。**
-
+面试题 用hooks实现componentWillMount
+这个之所以让我印象这么深刻，是因为当时我被这个问题问懵了。
+常规的 `React` 面试题可能会问你怎么实现 `componentDidMount`、`componentDidUpdate`、`componentWillUnmount` 之类的，而这个问题却并不按常理出牌，让你实现一个在之前 `class component` 时代都不怎么常用的生命周期 —— `componentWillMount`。
 一、Class Component 时代的生命周期
 =========================
-
 为了回答好上述面试题，我们首先得对 `componentWillMount` 这个生命周期及其执行时机有足够的了解。所以，先来回顾一下 `class component` 的生命周期。
-
-我想很多人应该对下面两张图挺熟悉的吧，来自 [wojtekmaj](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fwojtekmaj%2Freact-lifecycle-methods-diagram "https://github.com/wojtekmaj/react-lifecycle-methods-diagram") 的项目：[react-lifecycle-methods-diagram](https://link.juejin.cn?target=https%3A%2F%2Fprojects.wojtekmaj.pl%2Freact-lifecycle-methods-diagram%2F "https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/")。
-
-*   react v16.3
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3aaea0622b5e4e9882d2214b387941f2~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
-
-*   react v16.4
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/464c13dc858a4209831a6ca150f737b1~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
-
-> *   注意：`componentWillReceiveProps()` 在 `v16.4` 已经被标记为不建议使用，官方建议使用新的`getDerivedStateFromProps()`方法代替。
-> *   还有一个细微的更新是： `setState` 和 `forceUpdate` 的调用也会触发 `getDerivedStateFromProps`。可能会引发一些让人疑惑的 bug，比如这个：[getDerivedStatefromProps in react 16.4 results in no state changes](https://link.juejin.cn?target=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F50752055%2Fgetderivedstatefromprops-in-react-16-4-results-in-no-state-changes "https://stackoverflow.com/questions/50752055/getderivedstatefromprops-in-react-16-4-results-in-no-state-changes")
+ *   注意：`componentWillReceiveProps()` 在 `v16.4` 已经被标记为不建议使用，官方建议使用新的`getDerivedStateFromProps()`方法代替。
+ *   还有一个细微的更新是： `setState` 和 `forceUpdate` 的调用也会触发 `getDerivedStateFromProps`。
 
 React class 组件在其生命周期中经历三个阶段：**挂载**、**更新**和**卸载**。
-
 1.  **挂载阶段**是在创建新组件并将其插入 DOM 时，或者换句话说，在组件生命周期开始时。这只会发生一次，通常称为 “初始渲染”。
 2.  **更新阶段**是组件更新或重新渲染的时候。当道具更新或状态更新时，会触发此反应。这个阶段可以发生多次，这就是 React 的意义所在。
 3.  组件生命周期的最后一个阶段是**卸载阶段**，当组件从 DOM 中移除时。
-
 以下是每个生命周期函数的详细描述和执行时机：
 
 1、挂载阶段
 ------
-
-这个阶段发生在组件被创建并插入到 DOM 中的时候。按照上图，这个阶段会执行这几个钩子函数：`constructor`、`static getDerivedStateFromProps`、`componentWillMount/UNSAVE_componentWillMount`，`render`和`componentDidMount`。
+这个阶段发生在组件被创建并插入到 DOM 中的时候。按照上图，
+这个阶段会执行这几个钩子函数：
+- `constructor`
+- `static getDerivedStateFromProps`
+- `componentWillMount/UNSAVE_componentWillMount`
+- `render`
+- `componentDidMount`。
 
 ### constructor()
-
 构造函数，在组件创建时调用，用于初始化状态和绑定方法。
-
-> 需要注意：如果你使用了 `constructor` 函数，你需要首先调用 `super(props)` 才能使用 this 关键字。
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cf0ec83b99114f5cb2c30d6eb2f4e574~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
 ### static getDerivedStateFromProps()
+需要注意的是: `props` 和 `state` 是完全不同的概念，一个成熟的 React 开发者最基本的是要知道组件的数据从哪里来，要往哪里去。
+顾名思义，`getDerivedStateFromProps` 的字面意思就是：从 `props` 获取 `衍生state`。
+在许多情况下，你的组件的 `state` 实际上是其 `props` 的衍生品。
+这个方法允许你用 `任何props值` 来修改 `state 值`。
 
-> 需要注意的是: `props` 和 `state` 是完全不同的概念，一个成熟的 React 开发者最基本的是要知道组件的数据从哪里来，要往哪里去。
-
-顾名思义，`getDerivedStateFromProps` 的字面意思就是：从 `props` 获取 `衍生state`。但在许多情况下，你的组件的 `state` 实际上是其 `props` 的衍生品。这个方法允许你用 `任何props值` 来修改 `state 值`。
-
-这个方法在组件挂载前调用，并且在组件每次更新时也会被调用。它的作用是根据 `props` 的改变来更新 `state`，返回一个 `新的state`。如果不需要更新 `state`，返回 `null` 即可。
-
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bdf29709779a4bfea7c148fccb705b14~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
+这个方法在组件挂载前调用，并且在组件每次更新时也会被调用。
+它的作用是根据 `props` 的改变来更新 `state`，返回一个 `新的state`。
+如果不需要更新 `state`，返回 `null` 即可。
 ### componentWillMount/UNSAVE_componentWillMount
-
-> `React v16.3` 版本中将 `componentWillMount`, `componentWillReceiveProps` `以及componentWillUpdate` 加上了 `UNSAFE_` 前缀，这些钩子将在 `React 17.0` 废除，如果你确实选择继续使用它，你应该使用 `UNSAFE_componentWillMount()`。
-
-这个生命周期函数在 `render` 之前调用，在此生命周期中使用 `setState` 不会触发额外渲染，因为你不可能在创建的时候把数据渲染出来。只能在 `componentDidMount` 中使用 `setState` 把数据塞回去，通过更新界面来展示数据。所以一般建议把网络请求的逻辑放在 `componentDidMount`，而不是 `componentWillMount` 中。
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/67f33d7777614ff39059347c5101d51f~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
+这个生命周期函数在 `render` 之前调用，在此生命周期中使用 `setState` 不会触发额外渲染，因为你不可能在创建的时候把数据渲染出来。
+只能在 `componentDidMount` 中使用 `setState` 把数据塞回去，通过更新界面来展示数据。
+所以一般建议把网络请求的逻辑放在 `componentDidMount`，而不是 `componentWillMount` 中。
 ### render()
 
 `render()` 方法是唯一必须的钩子函数，它在 `getDerivedStateFromProps` 方法之后被调用，用于渲染组件的 UI。
 
 > 注意：不要在 `render()` 方法中改变 `state`，否则会陷入死循环，导致程序崩溃。
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d373b42b8ac4c44bc77e0b2d0b82b22~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
 ### componentDidMount()
 
 `componentDidMount` 是在挂载阶段调用的最后一个生命周期方法，组件被挂载后调用，这个方法可以用于发起网络请求或者设置定时器等异步操作。它可能在组件被渲染或挂载到 DOM 之后被调用。
 
-> 这个方法中，你可以添加副作用，如发送网络请求或更新组件的状态，`componentDidMount` 中还可以订阅 `Redux store`。你也可以立即调用 `this.setState` 方法；但这将导致重新渲染，因为它启动了更新阶段，因为状态已经改变。
-> 
-> 所以，你需要小心使用 `componentDidMount`，因为它可能导致不必要的重新渲染。
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/427cc1675ba349a990a2c61b978072e3~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
+这个方法中，你可以添加副作用，如发送网络请求或更新组件的状态，`componentDidMount` 中还可以订阅 `Redux store`。你也可以立即调用 `this.setState` 方法；但这将导致重新渲染，因为它启动了更新阶段，因为状态已经改变。
+所以，你需要小心使用 `componentDidMount`，因为它可能导致不必要的重新渲染。
 
 2、更新阶段
 ------
-
-当组件的 `props 或 state` 改变时，组件会被重新渲染，此时就会进入到更新阶段。这个阶段会执行这几个钩子函数：`static getDerivedFromProps`、`shouldComponentUpdate`、`render`、`getSnapshotBeforeUpdate` 和 `componentDidUpdate`。
+当组件的 `props 或 state` 改变时，组件会被重新渲染，此时就会进入到更新阶段。
+这个阶段会执行这几个钩子函数：
+`static getDerivedFromProps`
+`shouldComponentUpdate`
+`render`
+`getSnapshotBeforeUpdate` 
+`componentDidUpdate`。
 
 ### static getDerivedStateFromProps()
-
-在更新阶段，第一个调用的生命周期方法是 `getDerivedStateFromProps`。在组件更新前被调用，和挂载阶段的作用相同，但是尽量不要在这个方法中执行副作用操作，因为这个方法会在每次更新时都被调用。
+在更新阶段，第一个调用的生命周期方法是 `getDerivedStateFromProps`。
+在组件更新前被调用，和挂载阶段的作用相同，但是尽量不要在这个方法中执行副作用操作，因为这个方法会在每次更新时都被调用。
 
 > 例如，一个组件的状态可能取决于其 `props` 的值。通过 `getDerivedStateFromProps`，在组件被重新渲染之前，它的 `state` 可以反映这些变化，并且可以显示在新更新的组件中。
 
@@ -111,26 +73,23 @@ React class 组件在其生命周期中经历三个阶段：**挂载**、**更�
 `shouldComponentUpdate` 是专门用于性能优化的， 通常来说，只有 `props` 或 `state` 变化时才需要再重新渲染。这个方法接受两个参数：nextProps 和 nextState，可以用于控制组件是否需要重新渲染，如果返回 false，组件将不会重新渲染，默认返回 true。
 
 > 注意，当调用 `forceUpdate()` 时，`shouldComponentUpdate` 方法被忽略。
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fb7ce71d573b498482c737b8863a237a~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
 ### render()
 
 `render()` 方法会根据 `最新的props和state` 来重新渲染组件的 UI，在挂载阶段已经说明，这里就不赘述了。
 
 ### getSnapshotBeforeUpdate
 
-`getSnapshotBeforeUpdate` 方法让你可以访问组件更新前的 `props` 和 `state`。这使你能够处理或检查 `props` 和 `state` 的先前值。这是一个很少使用的方法。
+`getSnapshotBeforeUpdate` 方法让你可以访问组件更新前的 `props` 和 `state`。
+这使你能够处理或检查 `props` 和 `state` 的先前值。这是一个很少使用的方法。
 
 > 例如，这个方法的一个很好的使用场景是处理 `聊天APP` 中的滚动位置。当用户在查看旧的信息时有一条新的信息进来，它不应该把旧的信息推到视野之外。
 
-`getSnapshotBeforeUpdate` 在渲染方法之后，组件 `DidUpdate` 之前被调用。如果 `getSnapshotBeforeUpdate` 方法返回任何东西，它将被传递给 `componentDidUpdate` 方法作为参数：
-
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b3b7b98fd65f4e2a89a9b899d1dce6f6~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
+`getSnapshotBeforeUpdate` 在渲染方法之后，组件 `DidUpdate` 之前被调用。
+如果 `getSnapshotBeforeUpdate` 方法返回任何东西，它将被传递给 `componentDidUpdate` 方法作为参数：
 ### componentDidUpdate()
 
-`componentDidUpdate` 方法是在更新阶段调用的最后一个生命周期方法。组件更新后被调用，可以用于处理 `DOM的更新` 或者 `发起网络请求` 等异步操作。
+`componentDidUpdate` 方法是在更新阶段调用的最后一个生命周期方法。
+组件更新后被调用，可以用于处理 `DOM的更新` 或者 `发起网络请求` 等异步操作。
 
 这个方法最多可以接受三个参数：`prevProps`、`prevState` 和 `snapshot`（如果你调用了 `getSnapshotBeforeUpdate` 方法）。
 
