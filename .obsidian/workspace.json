@@ -4,35 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "5fadd28621d9f3a4",
+        "id": "e2ee1a98b0a1dcfa",
         "type": "tabs",
         "children": [
           {
-            "id": "384a0c3b58340beb",
+            "id": "835cd2fd965e0a56",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "系统架构师.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "f94ecbe97ead28b7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "md/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md",
+                "file": "md/2023-11-01.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -61,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "file:+",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": true,
                 "collapseAll": true,
@@ -76,7 +63,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md"
+                "file": "md/2023-11-01.md"
               }
             }
           },
@@ -108,7 +95,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md",
+                "file": "md/2023-11-01.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -125,7 +112,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md",
+                "file": "md/2023-11-01.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -181,35 +168,36 @@
       "obsidian-memos:Memos": false
     }
   },
-  "active": "f94ecbe97ead28b7",
+  "active": "835cd2fd965e0a56",
   "lastOpenFiles": [
+    "md/2023-10-31.md",
+    "md/2023-11-01.md",
+    "md/2023-10-30.md",
+    "achieve/2023-09-24.md",
+    "achieve/2023-09-25.md",
+    "achieve/2023-09-28.md",
+    "cur useless/不要用 JWT 替代 session 管理（上）：全面了解 Token,JWT,OAuth,SAML,SSO.md",
+    "achieve/Nginx 从入门到实践，万字详解！.md",
+    "achieve/【云计算】历史的选择 - 基础设施即代码 IaC.md",
+    "node_modules/linkify-it/README.md",
+    "achieve/EPAT.md",
+    "achieve/2023-09-11.md",
+    "系统架构师.md",
+    "md/生活的平衡.md",
+    "done/2023-10-28.md",
+    "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
+    "md/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md",
+    "md/leetcode.md",
+    "done/2023-10-25.md",
+    "done/2023-10-23.md",
+    "done/2023-10-19.md",
+    "done/2023-10-29.md",
+    "interview_front_nus10.27.md.md",
+    "python3 leet.md",
     "nips_doc/2023-10-28 12-30-03.html",
     "nips_doc/nips",
     "nips_doc/nips_achieve/16.md",
     "nips_doc/nips_achieve/99.md",
-    "nips_doc/nips_achieve/98.md",
-    "nips_doc/nips_achieve/94.md",
-    "nips_doc/nips_achieve/89.md",
-    "nips_doc/nips_achieve/78.md",
-    "nips_doc/nips_achieve/75.md",
-    "nips_doc/nips_achieve/72.md",
-    "nips_doc/nips_achieve/65.md",
-    "nips_doc/nips_achieve/58.md",
-    "nips_doc/nips_achieve/57.md",
-    "nips_doc/nips_achieve/56.md",
-    "nips_doc/nips_achieve/53.md",
-    "nips_doc/nips_achieve/52.md",
-    "nips_doc/nips_achieve/51.md",
-    "nips_doc/nips_achieve/50.md",
-    "nips_doc/nips_achieve/48.md",
-    "nips_doc/nips_achieve/47.md",
-    "nips_doc/nips_achieve/46.md",
-    "nips_doc/nips_achieve/45.md",
-    "nips_doc/nips_achieve/42.md",
-    "nips_doc/nips_achieve/40.md",
-    "nips_doc/nips_achieve/39.md",
-    "nips_doc/nips_achieve/38.md",
-    "nips_doc/nips_achieve/36.md",
     "nips_doc/nips_achieve",
     "nips_doc",
     "untitled folder",
@@ -218,7 +206,6 @@
     "nips_achieve/pack-88891e462f37f65224377a4524e74dbf6b1b1c53.rev",
     "nips_achieve/pack-88891e462f37f65224377a4524e74dbf6b1b1c53.pack",
     "nips_achieve/pack-88891e462f37f65224377a4524e74dbf6b1b1c53.idx",
-    "nips_achieve/exclude",
     "_resources/Pasted image 20231025235133.png",
     "_resources/Pasted image 20231019141202.png",
     "_resources/d1f76e4c2d9d1ed0fea27c6c152aa4cb_MD5.jpg",
