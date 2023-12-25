@@ -8,7 +8,7 @@
   "refreshNotes": false,
   "notesToRefresh": [],
   "reimportShowConfirmation": true,
-  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6MTIyODY3OSwibG5pIjowLCJja1BLSUQiOjAsImNrTklEIjowLCJja1QiOjE2OTU3OTgwODAsInMiOjE2OTc2Mzk0OTY1ODA5NTV9",
+  "lastCursor": "eyJsYXN0SGlnaGxpZ2h0UEtJRCI6MTIyODY3OSwibG5pIjowLCJja1BLSUQiOjAsImNrTklEIjowLCJja1QiOjE2OTU3OTgwODAsInMiOjE3MDA3OTc3NTE5MDc3NzB9",
   "dataVersion": 0,
   "notePaths": {
     "H8A6H72": "WuCai/LearnVim_zh_cnch01_starting_vim.md at master · wsdjegLearnVim_zh_cn · GitHub-H8A6H72.md",
@@ -117,7 +117,17 @@
     "H82H2H5": "WuCai/23-10-09-国外免费云服务器  Google Search-H82H2H5.md",
     "H8233DF": "WuCai/23-10-18-S01. 重入攻击  WTF Academy-H8233DF.md",
     "H823K8C": "WuCai/23-10-18-Using Minikube to Create a Cluster  Kubernetes-H823K8C.md",
-    "H823K8D": "WuCai/23-10-18-Using kubectl to Create a Deployment  Kubernetes-H823K8D.md"
+    "H823K8D": "WuCai/23-10-18-Using kubectl to Create a Deployment  Kubernetes-H823K8D.md",
+    "H8HM5H5": "WuCai/23-11-12-How To Build A Simple Cryptocurrency Blockchain In Node.js — Smashing Magazine-H8HM5H5.md",
+    "H8HKAB7": "WuCai/23-11-17-Chrome Extensions 101  Chrome for Developers-H8HKAB7.md",
+    "H8HKAKE": "WuCai/23-11-17-Chrome Extensions Tutorial Reading time  Chrome for Developers-H8HKAKE.md",
+    "H8HKA5D": "WuCai/23-11-17-Chrome Extensions Tutorial Manage tabs  Chrome for Developers-H8HKA5D.md",
+    "H8HKC86": "WuCai/23-11-17-Chrome extension service worker tutorial.  Chrome for Developers-H8HKC86.md",
+    "H8HKFBK": "WuCai/23-11-18-Introduction  Ordinal Theory Handbook-H8HKFBK.md",
+    "H8HKFBB": "WuCai/23-11-18-Digital Artifacts  Ordinal Theory Handbook  数字制品  序数理论手册-H8HKFBB.md",
+    "H8HKFB5": "WuCai/23-11-18-Inscriptions  Ordinal Theory Handbook  铭文  序数理论手册-H8HKFB5.md",
+    "H8HKFK5": "WuCai/23-11-18-Metadata  Ordinal Theory Handbook-H8HKFK5.md",
+    "H8MEM35": "WuCai/23-11-24-4 sciencebacked ways to build your own mental gym-H8MEM35.md"
   },
   "exportConfig": {
     "titleFormat": 5,
@@ -132,7 +142,7 @@
     "obTemplateVer": 0,
     "pageMirrorStyle": 1,
     "truncateTile255": 0,
-    "pageMirrorExcludeTag": "",
-    "pageMirrorOnlyTag": ""
+    "IgnoreEmptyNote": 1,
+    "obQuery": ""
   }
 }

@@ -153,31 +153,33 @@ aliases: []
 - [x] [二叉树：二叉树的层序遍历](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0102.二叉树的层序遍历.md) 
 - [x] [二叉树：226.翻转二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0226.翻转二叉树.md) 
 - [ ] [本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20200927二叉树周末总结.md)
-- [ ] [二叉树：101.对称二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0101.对称二叉树.md)
+- [x] [二叉树：101.对称二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0101.对称二叉树.md)
 - [x] [二叉树：104.二叉树的最大深度](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0104.二叉树的最大深度.md)
 - [x] [二叉树：111.二叉树的最小深度](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0111.二叉树的最小深度.md)
-- [ ] [二叉树：222.完全二叉树的节点个数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0222.完全二叉树的节点个数.md)
+- [x] [二叉树：222.完全二叉树的节点个数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0222.完全二叉树的节点个数.md)
 	- [ ] logN x logN 的复杂度
+	- [ ] 如果左子树和右子树的高度相同，则左子树是一个满二叉树.
+	- [ ] 如果不同，则右子树是一个满二叉树
 - [ ] [二叉树：110.平衡二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0110.平衡二叉树.md)
 	- [ ] 同计算高度，但是对于不平衡的情况额外返回-1
 - [x] [二叉树：257.二叉树的所有路径](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0257.二叉树的所有路径.md)
 - [ ] [本周总结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201003二叉树周末总结.md)
 ---
 - [ ] [二叉树：二叉树中递归带着回溯](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/二叉树中递归带着回溯.md)
-- [ ] [二叉树：404.左叶子之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0404.左叶子之和.md) not 迭代
+- [x] [二叉树：404.左叶子之和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0404.左叶子之和.md) not 迭代
 - [x] [二叉树：513.找树左下角的值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0513.找树左下角的值.md)
 - [x] [二叉树：112.路径总和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0112.路径总和.md)
-- [ ] [二叉树：106.构造二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0106.从中序与后序遍历序列构造二叉树.md)
-- [ ] [二叉树：654.最大二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0654.最大二叉树.md)
+- [x] [二叉树：106.构造二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0106.从中序与后序遍历序列构造二叉树.md)
+- [x] [二叉树：654.最大二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0654.最大二叉树.md)
 	- [ ] 106和 654 的重点是不构造数组，直接有左右边界替代
 - [ ] [本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201010二叉树周末总结.md) 
 ---
 - [x] [二叉树：617.合并两个二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0617.合并二叉树.md)
 - [x] [二叉树：700.二叉搜索树登场！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0700.二叉搜索树中的搜索.md)
-- [ ] [二叉树：98.验证二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0098.验证二叉搜索树.md)
+- [x] [二叉树：98.验证二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0098.验证二叉搜索树.md)
 - [x] [二叉树：530.搜索树的最小绝对差](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0530.二叉搜索树的最小绝对差.md)
 - [ ] [二叉树：501.二叉搜索树中的众数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0501.二叉搜索树中的众数.md)
-- [ ] [二叉树：236.公共祖先问题](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0236.二叉树的最近公共祖先.md)
+- [x] [二叉树：236.公共祖先问题](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0236.二叉树的最近公共祖先.md)
 	- [ ] 递归 最后的基础点的处理
 - [ ] [本周小结！（二叉树）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201017二叉树周末总结.md)
 
@@ -185,7 +187,7 @@ aliases: []
 - [ ] [二叉树：235.搜索树的最近公共祖先](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0235.二叉搜索树的最近公共祖先.md)
 	- [ ] 如果我在左子树中找不到p或q，我就返回右子树的结果，反之亦然。
 	- [ ] 如果我在左右子树中都找到了p或q，我就返回root，因为root就是p和q的最低公共祖先
-- [ ] [二叉树：701.搜索树中的插入操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0701.二叉搜索树中的插入操作.md)
+- [x] [二叉树：701.搜索树中的插入操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0701.二叉搜索树中的插入操作.md)
 	- [ ] 返回节点，用父子树来接
 - [ ] [二叉树：450.搜索树中的删除操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0450.删除二叉搜索树中的节点.md)
 	- [ ] 方法 1： 找到右边最小的节点并且替换
@@ -201,28 +203,31 @@ aliases: []
 ## 回溯算法 
 
 - [ ] [关于回溯算法，你该了解这些！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/回溯算法理论基础.md)
-- [ ] [回溯算法：77.组合](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0077.组合.md)
+- [x] [回溯算法：77.组合](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0077.组合.md)
 - [ ] [回溯算法：77.组合优化](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0077.组合优化.md)
 - [x] [回溯算法：216.组合总和III](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0216.组合总和III.md)
-- [ ] [回溯算法：17.电话号码的字母组合](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0017.电话号码的字母组合.md)
+- [x] [回溯算法：17.电话号码的字母组合](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0017.电话号码的字母组合.md)
 - [ ] [本周小结！（回溯算法系列一）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201030回溯周末总结.md)
-- [ ] [回溯算法：39.组合总和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0039.组合总和.md)
+- [x] [回溯算法：39.组合总和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0039.组合总和.md)
 - [ ] [回溯算法：40.组合总和II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0040.组合总和II.md)
-- [ ] [回溯算法：131.分割回文串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0131.分割回文串.md)
+- [x] [回溯算法：131.分割回文串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0131.分割回文串.md)
 - [x] [回溯算法：93.复原IP地址](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0093.复原IP地址.md)
 - [x] [回溯算法：78.子集](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0078.子集.md)
 - [ ] [本周小结！（回溯算法系列二）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201107回溯周末总结.md)
 - [ ] [回溯算法：90.子集II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0090.子集II.md)
 	- [ ] 去重为什么一定要排序
 	- [ ] 为了让相同元素的在同一行出现（同一次循环出现），这样可以在这一次循环内进行条件判断
-- [ ] [回溯算法：491.递增子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0491.递增子序列.md)
+- [x] [回溯算法：491.递增子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0491.递增子序列.md)
 	- [ ] 重复的处理： 
 	- [ ] 用 used 数组
-- [ ] [回溯算法：46.全排列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0046.全排列.md)
+	- [ ] 这种方法不能适用于夹在中间的类型
+- [x] [回溯算法：46.全排列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0046.全排列.md)
 	- [ ] 排列是从 0 开始循环
 	- [ ] 用 used 数组判断是否使用过
 - [ ] [回溯算法：47.全排列II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0047.全排列II.md)
 	- [ ] 三种方法去重： 排序，uset,used
+- [ ] 全排列和子集的区别
+	- [ ] 全排列问题和子集问题的处理方式不同，全排列问题关注元素的顺序，可以通过记录元素使用情况来避免重复，而子集问题不关注元素的顺序，需要通过排序和跳过相同元素来避免重复。
 - [ ] [本周小结！（回溯算法系列三）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201112回溯周末总结.md)
 - [ ] [回溯算法去重问题的另一种写法](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/回溯算法去重问题的另一种写法.md)
 - [ ] [回溯算法：332.重新安排行程](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0332.重新安排行程.md)
@@ -234,28 +239,34 @@ aliases: []
 - [ ] [关于贪心算法，你该了解这些！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/贪心算法理论基础.md)
 - [x] [贪心算法：455.分发饼干](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0455.分发饼干.md)
 - [ ] [贪心算法：376.摆动序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0376.摆动序列.md)
-- [ ] [贪心算法：53.最大子序和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0053.最大子序和.md)
+	- [ ] 只有变换的时候才会相加
+	- [ ]  使用动规来解决
+- [x] [贪心算法：53.最大子序和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0053.最大子序和.md)
 - [ ] [本周小结！（贪心算法系列一）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201126贪心周末总结.md)
-- [ ] [贪心算法：122.买卖股票的最佳时机II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0122.买卖股票的最佳时机II.md)
+- [x] [贪心算法：122.买卖股票的最佳时机II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0122.买卖股票的最佳时机II.md)
 - [x] [贪心算法：55.跳跃游戏](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0055.跳跃游戏.md)
-- [ ] [贪心算法：45.跳跃游戏II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0045.跳跃游戏II.md)
-- [ ] [贪心算法：1005.K次取反后最大化的数组和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1005.K次取反后最大化的数组和.md)
+- [x] [贪心算法：45.跳跃游戏II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0045.跳跃游戏II.md)
+	- [ ] 每次都要更新最远的距离
+- [x] [贪心算法：1005.K次取反后最大化的数组和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1005.K次取反后最大化的数组和.md)
 - [ ] [本周小结！（贪心算法系列二）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201203贪心周末总结.md)
 
-- [ ] [贪心算法：134.加油站](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0134.加油站.md)
-- [ ] [贪心算法：135.分发糖果](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0135.分发糖果.md)
+- [x] [贪心算法：134.加油站](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0134.加油站.md)
+- [x] [贪心算法：135.分发糖果](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0135.分发糖果.md)
 - [x] [贪心算法：860.柠檬水找零](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0860.柠檬水找零.md)
-- [ ] [贪心算法：406.根据身高重建队列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0406.根据身高重建队列.md)
+- [x] [贪心算法：406.根据身高重建队列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0406.根据身高重建队列.md)
 - [ ] [本周小结！（贪心算法系列三）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201217贪心周末总结.md)
 - [x] [贪心算法：406.根据身高重建队列（续集）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/根据身高重建队列（vector原理讲解）.md)
 - [x] [贪心算法：452.用最少数量的箭引爆气球](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0452.用最少数量的箭引爆气球.md)
 - [ ] [贪心算法：435.无重叠区间](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0435.无重叠区间.md)
-- [ ] [贪心算法：763.划分字母区间](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0763.划分字母区间.md)
+	- [ ] 保持区间最小无重叠
+- [x] [贪心算法：763.划分字母区间](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0763.划分字母区间.md)
 - [x] [贪心算法：56.合并区间](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0056.合并区间.md)
 - [ ] [本周小结！（贪心算法系列四）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201224贪心周末总结.md)
-- [ ] [贪心算法：738.单调递增的数字](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0738.单调递增的数字.md)
+- [x] [贪心算法：738.单调递增的数字](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0738.单调递增的数字.md)
 	- [ ] 用list(str(n))  把字符串转成链表
+	- [ ] chr(ord(list_n[i])-1)
 - [ ] [贪心算法：968.监控二叉树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0968.监控二叉树.md)
+	- [ ] 判断的顺序很重要
 - [ ] [贪心算法：总结篇！（每逢总结必经典）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/贪心算法总结篇.md)
 
 ## 动态规划
@@ -264,33 +275,35 @@ aliases: []
 - [x] [动态规划：70.爬楼梯](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0070.爬楼梯.md)
 - [x] [动态规划：746.使用最小花费爬楼梯](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0746.使用最小花费爬楼梯.md)
 - [ ] [本周小结！（动态规划系列一）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20210107动规周末总结.md)
-- [ ] [动态规划：62.不同路径](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0062.不同路径.md)
+- [x] [动态规划：62.不同路径](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0062.不同路径.md)
 - [x] [动态规划：63.不同路径II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0063.不同路径II.md)
-- [ ] [动态规划：343.整数拆分](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0343.整数拆分.md)
-- [ ] [动态规划：96.不同的二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0096.不同的二叉搜索树.md)
-	- [ ] 注意初始化
+- [x] [动态规划：343.整数拆分](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0343.整数拆分.md)
+	- [ ] j * (i - j) 是单纯的把整数拆分为两个数相乘，而j * dp[i - j]是拆分成两个以及两个以上的个数相乘。
+	- [ ] 如果定义dp[i - j] * dp[j] 也是默认将一个数强制拆成4份以及4份以上了。
+- [x] [动态规划：96.不同的二叉搜索树](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0096.不同的二叉搜索树.md)
+	- [x] 注意初始化
 - [ ] [本周小结！（动态规划系列二）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20210114动规周末总结.md)
 
 - [ ] 背包问题系列：
-- [ ] [动态规划：01背包理论基础](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/背包理论基础01背包-1.md)
-- [ ] [动态规划：01背包理论基础（滚动数组）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/背包理论基础01背包-2.md)
-- [ ] [动态规划：416.分割等和子集](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0416.分割等和子集.md)
+- [x] [动态规划：01背包理论基础](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/背包理论基础01背包-1.md)
+- [x] [动态规划：01背包理论基础（滚动数组）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/背包理论基础01背包-2.md)
+- [x] [动态规划：416.分割等和子集](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0416.分割等和子集.md)
 - [x] [动态规划：1049.最后一块石头的重量II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1049.最后一块石头的重量II.md)
 - [ ] [本周小结！（动态规划系列三）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20210121动规周末总结.md)
-- [ ] [动态规划：494.目标和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0494.目标和.md)
-- [ ] [动态规划：474.一和零](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0474.一和零.md) 
+- [x] [动态规划：494.目标和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0494.目标和.md)
+- [x] [动态规划：474.一和零](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0474.一和零.md) 
 	- [ ] 重量有多个维度的背包
 - [ ] [动态规划：完全背包总结篇](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/背包问题理论基础完全背包.md)
-- [ ] [动态规划：518.零钱兑换II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0518.零钱兑换II.md)
-	- [ ] 如果求组合数就是外层for循环遍历物品，内层for遍历背包。
-	- [ ] 如果求排列数就是外层for遍历背包，内层for循环遍历物品。
+- [x] [动态规划：518.零钱兑换II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0518.零钱兑换II.md)
+	- [ ] 如果求组合数就是外层for循环遍历物品，内层for遍历背包size。
+	- [ ] 如果求排列数就是外层for遍历背包size，内层for循环遍历物品。
 - [ ] [本周小结！（动态规划系列四）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20210128动规周末总结.md)
-- [ ] [动态规划：377.组合总和Ⅳ](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0377.组合总和Ⅳ.md)
+- [x] [动态规划：377.组合总和Ⅳ](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0377.组合总和Ⅳ.md)
 - [ ] [动态规划：70.爬楼梯（完全背包版本）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0070.爬楼梯完全背包版本.md)
 - [x] [动态规划：322.零钱兑换](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0322.零钱兑换.md)
 - [x] [动态规划：279.完全平方数](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0279.完全平方数.md)
 - [ ] [本周小结！（动态规划系列五）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20210204动规周末总结.md)
-- [ ] [动态规划：139.单词拆分](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0139.单词拆分.md)
+- [x] [动态规划：139.单词拆分](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0139.单词拆分.md)
 	- [ ] 本题其实我们求的是排列数
 - [ ] [动态规划：多重背包理论基础](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/背包问题理论基础多重背包.md)
 - [ ] [背包问题总结篇](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/背包总结篇.md)
@@ -299,11 +312,11 @@ aliases: []
 
 - [x] [动态规划：198.打家劫舍](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0198.打家劫舍.md)
 	- [ ] 初始化的特殊处理
-- [ ] [动态规划：213.打家劫舍II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0213.打家劫舍II.md)
+- [x] [动态规划：213.打家劫舍II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0213.打家劫舍II.md)
 	- [ ] 考虑两种情况，要么只算头，要么只算尾巴
 	- [ ] 实际上就是分成两个子串，然后用198 的方法算
 	- [ ] 注意临界值
-- [ ] [动态规划：337.打家劫舍III](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0337.打家劫舍III.md)
+- [x] [动态规划：337.打家劫舍III](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0337.打家劫舍III.md)
 	- [ ] 考虑用记忆化递归
 
 - [ ] 股票系列：
@@ -318,52 +331,58 @@ aliases: []
 - [ ] [动态规划：股票系列总结篇](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/动态规划-股票问题总结篇.md)
 
 - [ ] 子序列系列： 
-- [ ] [动态规划：300.最长递增子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0300.最长上升子序列.md)
+- [x] [动态规划：300.最长递增子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0300.最长上升子序列.md)
 	- [ ] 最终答案不一定是 dp 的最后一个
 - [x] [动态规划：674.最长连续递增序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0674.最长连续递增序列.md)
-- [ ] [动态规划：718.最长重复子数组](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0718.最长重复子数组.md)
+- [x] [动态规划：718.最长重复子数组](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0718.最长重复子数组.md)
 	- [ ] 初始化考虑
-- [ ] [动态规划：1143.最长公共子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1143.最长公共子序列.md)
-	- [ ] 就是分两种情况
+- [x] [动态规划：1143.最长公共子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1143.最长公共子序列.md)
+	- [ ] 公共子序列和子数组的区别
 - [x] [动态规划：1035.不相交的线](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1035.不相交的线.md)
 	- [ ] 就是最长公共子序列
 - [x] [动态规划：53.最大子序和](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0053.最大子序和（动态规划）.md)
-- [ ] [动态规划：392.判断子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0392.判断子序列.md)
+- [x] [动态规划：392.判断子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0392.判断子序列.md)
 - [ ] [动态规划：115.不同的子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0115.不同的子序列.md)
 - [x] [动态规划：583.两个字符串的删除操作](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0583.两个字符串的删除操作.md)
-- [ ] [动态规划：72.编辑距离](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0072.编辑距离.md)
+- [x] [动态规划：72.编辑距离](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0072.编辑距离.md)
 - [ ] [编辑距离总结篇](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/为了绝杀编辑距离，卡尔做了三步铺垫.md)
 - [ ] [动态规划：647.回文子串](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0647.回文子串.md)
-- [ ] [动态规划：516.最长回文子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0516.最长回文子序列.md)
+	- [ ] 用双指针更快
+- [x] [动态规划：516.最长回文子序列](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0516.最长回文子序列.md)
 - [ ] [动态规划总结篇](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/动态规划总结篇.md)
 
 
 ## 单调栈 
 
-- [ ] [单调栈：739.每日温度](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0739.每日温度.md)
+- [x] [单调栈：739.每日温度](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0739.每日温度.md)
 	- [ ] 位置一个单调递减的队列，来获取第一个最大的数
 - [x] [单调栈：496.下一个更大元素I](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0496.下一个更大元素I.md)
-- [ ] [单调栈：503.下一个更大元素II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0503.下一个更大元素II.md)
+- [x] [单调栈：503.下一个更大元素II](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0503.下一个更大元素II.md)
 - [ ] [单调栈：42.接雨水](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0042.接雨水.md)
 	- [ ] 还是分三类情况来写
+	- [ ] 如果是大于中间节点，一定要先 pop 出来
+		- [ ] 存在stack 只有1个节点的情况，此时如果大于这个节点应该更新
+		- [ ] 采用stack[-2]的写法会导致不更新此时的节点
+	- [ ] 要不断循环的往前面去找节点
+	- [ ] 
 - [ ] [单调栈：84.柱状图中最大的矩形](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0084.柱状图中最大的矩形.md)
 
 
 ### 图论 深搜广搜  
 
 - [ ] [图论：深度优先搜索理论基础](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/图论深搜理论基础.md)
-- [ ] [图论：797.所有可能的路径](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0797.所有可能的路径.md)
+- [x] [图论：797.所有可能的路径](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0797.所有可能的路径.md)
 	- [ ] 注意 深搜要做 used 标记
 - [ ] [图论：广度优先搜索理论基础](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/图论广搜理论基础.md)
-- [ ] [图论：200.岛屿数量.深搜版](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0200.岛屿数量.深搜版.md)
+- [x] [图论：200.岛屿数量.深搜版](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0200.岛屿数量.深搜版.md)
 - [x] [图论：200.岛屿数量.广搜版](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0200.岛屿数量.广搜版.md)
-- [ ] [图论：695.岛屿的最大面积](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0695.岛屿的最大面积.md)
+- [x] [图论：695.岛屿的最大面积](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0695.岛屿的最大面积.md)
 	- [ ] 广搜的核心是什么时候处理 que 里的数据
 	- [ ] 是放入 que 的时候处理还是从 que 里取出的时候处理
 - [x] [图论：1020.飞地的数量](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1020.飞地的数量.md)
-- [ ] [图论：130.被围绕的区域](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0130.被围绕的区域.md)
+- [x] [图论：130.被围绕的区域](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0130.被围绕的区域.md)
 	- [ ] 去掉之后剩下的 O 都是被 X 给围住的（因为没有和边界的 O 直接接触）
-- [ ] [图论：417.太平洋大西洋水流问题](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0417.太平洋大西洋水流问题.md)
+- [x] [图论：417.太平洋大西洋水流问题](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0417.太平洋大西洋水流问题.md)
 	- [ ] 使用抽象出来的 bfs 来减少代码 - -
 ## 十大排序
 

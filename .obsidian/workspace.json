@@ -4,22 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "e2ee1a98b0a1dcfa",
+        "id": "06ef18b9c89eaa97",
         "type": "tabs",
         "children": [
           {
-            "id": "835cd2fd965e0a56",
+            "id": "28c093b4ba9975e9",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/2023-11-01.md",
+                "file": "md/Portfolio.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "c18b2b52452f9245",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Event.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -32,6 +45,16 @@
         "id": "9b29e4b458786c00",
         "type": "tabs",
         "children": [
+          {
+            "id": "e345afbe4a3d8094",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Event.md"
+              }
+            }
+          },
           {
             "id": "7c656948499aebb2",
             "type": "leaf",
@@ -58,16 +81,6 @@
             }
           },
           {
-            "id": "e345afbe4a3d8094",
-            "type": "leaf",
-            "state": {
-              "type": "outline",
-              "state": {
-                "file": "md/2023-11-01.md"
-              }
-            }
-          },
-          {
             "id": "7ca14c88009dcc21",
             "type": "leaf",
             "state": {
@@ -75,7 +88,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -95,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/2023-11-01.md",
+                "file": "Event.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -112,7 +126,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/2023-11-01.md",
+                "file": "Event.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -161,61 +175,57 @@
       "graph:Open graph view": false,
       "daily-notes:Open today's daily note": false,
       "command-palette:Open command palette": false,
-      "workspaces:Manage workspace layouts": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false,
-      "obsidian-excalidraw-plugin:Create new drawing": false,
-      "obsidian-memos:Memos": false
+      "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "835cd2fd965e0a56",
+  "active": "c18b2b52452f9245",
   "lastOpenFiles": [
-    "md/2023-10-31.md",
-    "md/2023-11-01.md",
-    "md/2023-10-30.md",
-    "achieve/2023-09-24.md",
-    "achieve/2023-09-25.md",
-    "achieve/2023-09-28.md",
-    "cur useless/不要用 JWT 替代 session 管理（上）：全面了解 Token,JWT,OAuth,SAML,SSO.md",
-    "achieve/Nginx 从入门到实践，万字详解！.md",
-    "achieve/【云计算】历史的选择 - 基础设施即代码 IaC.md",
-    "node_modules/linkify-it/README.md",
-    "achieve/EPAT.md",
-    "achieve/2023-09-11.md",
-    "系统架构师.md",
-    "md/生活的平衡.md",
-    "done/2023-10-28.md",
-    "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
-    "md/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md",
-    "md/leetcode.md",
-    "done/2023-10-25.md",
-    "done/2023-10-23.md",
-    "done/2023-10-19.md",
-    "done/2023-10-29.md",
-    "interview_front_nus10.27.md.md",
+    "md/Portfolio.md",
+    "Event.md",
+    "md/DigitalHippo.md",
+    "_resources/Pasted image 20231224162919.png",
+    "Untitled.md",
+    "readme.md",
+    "_resources/Pasted image 20231224162300.png",
+    "_resources/Pasted image 20230814132849.png",
+    "_resources/Pasted image 20230814120443.png",
+    "_assert/Pasted image 20230612231655.png",
+    "_assert/Pasted image 20230612231921.png",
+    "md/2023-12-07.md",
     "python3 leet.md",
+    "md/leetcode.md",
+    "md/2023-11-26.md",
+    "md/2023-11-23.md",
+    "WuCai/23-11-24-4 sciencebacked ways to build your own mental gym-H8MEM35.md",
+    "md/为什么我更推荐命令式 Modal - 静かな森.md",
+    "WuCai/23-11-18-Metadata  Ordinal Theory Handbook-H8HKFK5.md",
+    "WuCai/23-11-18-Inscriptions  Ordinal Theory Handbook  铭文  序数理论手册-H8HKFB5.md",
+    "WuCai/23-11-18-Digital Artifacts  Ordinal Theory Handbook  数字制品  序数理论手册-H8HKFBB.md",
+    "WuCai/23-11-18-Introduction  Ordinal Theory Handbook-H8HKFBK.md",
+    "WuCai/23-11-17-Chrome extension service worker tutorial.  Chrome for Developers-H8HKC86.md",
+    "WuCai/23-11-17-Chrome Extensions Tutorial Manage tabs  Chrome for Developers-H8HKA5D.md",
+    "WuCai/23-11-17-Chrome Extensions Tutorial Reading time  Chrome for Developers-H8HKAKE.md",
+    "WuCai/23-11-17-Chrome Extensions 101  Chrome for Developers-H8HKAB7.md",
+    "WuCai/23-11-12-How To Build A Simple Cryptocurrency Blockchain In Node.js — Smashing Magazine-H8HM5H5.md",
+    "md/一次性弄清前端上线和生产环境地址.md",
+    "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
+    "md/2023-10-31.md",
+    "md/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md",
+    "md/原来前端部署这么简单.md",
+    "cur useless/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04",
+    "cur useless/problems ",
+    "md/leetcode-master/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04",
+    "md/leetcode-master/problems/0078. 子集. md at master · youngyangyang04",
+    "md/leetcode-master/problems/0070. 爬楼梯. md at master · youngyangyang04",
+    "md/leetcode-master/problems ",
+    "md/leetcode-master/problems",
+    "md/leetcode-master",
     "nips_doc/2023-10-28 12-30-03.html",
     "nips_doc/nips",
-    "nips_doc/nips_achieve/16.md",
-    "nips_doc/nips_achieve/99.md",
-    "nips_doc/nips_achieve",
-    "nips_doc",
-    "untitled folder",
-    "output/2023-10-28 12-30-03.html",
-    "nips_achieve/master",
-    "nips_achieve/pack-88891e462f37f65224377a4524e74dbf6b1b1c53.rev",
-    "nips_achieve/pack-88891e462f37f65224377a4524e74dbf6b1b1c53.pack",
-    "nips_achieve/pack-88891e462f37f65224377a4524e74dbf6b1b1c53.idx",
     "_resources/Pasted image 20231025235133.png",
     "_resources/Pasted image 20231019141202.png",
     "_resources/d1f76e4c2d9d1ed0fea27c6c152aa4cb_MD5.jpg",
     "_resources/ba09946db244f43ca7c0ab03d2951240_MD5.jpg",
-    "_resources/b49d1dd0eb728f7755335ae3a76c59d9_MD5.jpg",
-    "_resources/744e0548e804706102190babff0409d8_MD5.jpg",
-    "_resources/73a3f4678e3f753867109c0672435814_MD5.jpg",
-    "_resources/53f153f4303694d5fadd01821167e678_MD5.jpg",
-    "_resources/2faa054f2f91544ea78d74e54164d953_MD5.jpg",
-    "_resources/2cd5a60b2410fdf5fd1bccf25e958015_MD5.jpg",
     "未命名.canvas"
   ]
 }
