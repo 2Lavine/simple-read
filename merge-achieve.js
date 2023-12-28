@@ -8,8 +8,8 @@ const options = {
 };
 const obsidianImages = require("markdown-it-obsidian-images")(options);
 const md = require("markdown-it")({ html: true }).use(obsidianImages);
-const directoryPath = "./nips"; // 替换为目标目录的路径
-const acheievePath = "./nips_achieve";
+const directoryPath = "./done"; // 替换为目标目录的路径
+const acheievePath = "./achieve";
 const resourcesPath = "./_resources"; // 替换为目标目录的路径
 const now = new Date()
   .toLocaleString("zh-CN", {
