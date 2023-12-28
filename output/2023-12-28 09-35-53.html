@@ -1,0 +1,724 @@
+<h1>2023-10-12</h1><p>session 实现在线 t 人
+在服务器端，可以通过 session ID 获取到对应的 session 对象，并将其标记为无效。这样，当目标用户再次发送请求时，服务器会判断该 session 无效，并要求用户重新登录。
+但是 jwt 由于生命周期较短，很难实现。</p>
+
+<h1>2023-10-19</h1><p>如果我们缺乏写作的想法，可以先从下面四个类别开始：</p>
+<ol>
+<li>写下来你学习东西的总结：比如你读的书籍，博客，听过的播客，看过的视频等。</li>
+<li>写下你标准工作的流程：比如说我是怎么度过这一天，我是如何学习的，我们如何健身的。</li>
+<li>写下你解决的问题：软件 bug 的解决流程，系统性能优化的有趣故事。</li>
+<li>寻找他人问的问题，用自己的话来回答。 写新闻的诱惑力很强，但是他的半衰期很短。要选择长期有价值的话题来写作，从林迪效应中受益。</li>
+</ol>
+<p>#English
+palindrome 回文</p>
+
+<h1>2023-10-23</h1><p>在解决动态规划的背包问题时，如果使用一维数组并选择先遍历容量再遍历物品，会遇到一个主要问题：在每次迭代中，当你试图根据之前的状态更新 dp 数组时，你可能会无意中使用这一轮已经更新过的值，而不是仅仅使用上一轮物品的值。这会导致每个物品被考虑多次，从而违背了“每个物品只能用一次”的原则（这是0-1背包问题的一个基本约束）。</p>
+<p>具体来说，如果你先遍历容量（即外层循环是容量，内层循环是物品），那么在处理某一特定容量时，你可能会重复地将多个物品放入这个特定容量的背包中。因为一维 dp 数组无法区分这个容量是由哪个物品填充的，所以当你更新 dp[j] 时（假设 j 是容量），你可能已经用了当前物品，然后再用下一个物品，这违背了问题的约束。</p>
+<p>但是，如果我们先遍历物品，然后在内循环中倒序遍历容量，我们就能确保每次更新容量 j 时，都是基于上一个物品（而不是当前物品）放入一个更小容量背包的结果。这样，我们就可以确保每个物品只考虑一次，符合0-1背包的规则。</p>
+<p>这是因为倒序遍历容量确保了我们在考虑“将当前物品加入背包”这一决策时，只会用到上一物品决策时的信息（也就是 dp 数组在本轮循环之前的状态），避免了信息的错误覆盖和重复使用。</p>
+<h2>背包递归公式</h2>
+<p>求装满背包的方法 dp[size]=dp[size]+dp[size-item]
+注意初始化 dp[0]=1 其余 dp[i]=0
+求背包最大价值 max(dp[size],dp[size-size[item]]+value[item])</p>
+<h2>完全背包的顺序</h2>
+<p>如果顺序有关就是外层for循环遍历物品，内层for遍历背包。
+他先循环了物品，所以得出的物品顺序是固定的也就是组合数量
+如果顺序无关就是外层for遍历背包，内层for循环遍历物品。
+如有价值 1 和 5 的两个用品，总背包含量为 6
+循环背包容量，到背包容量为 6 时
+- dp[6]+= dp[6-1] 对应{5,1}
+- dp[6]+=dp[6-5] 对应{1,5}
+- 他会计算出该容量下所有可能得背包排列</p>
+<p><code>URL.createObjectURL</code>和<code>URL</code>是Web APIs中与处理和生成URLs相关的功能。这里，我们将分别探讨它们的用途和用法。</p>
+<h3>URL.createObjectURL</h3>
+<p><code>URL.createObjectURL</code>方法用于创建一个新的<code>object URL</code>，它是一个指向File对象或Blob对象的DOMString，表示该文件或数据的URL。这个object URL可以用于直接通过URL来访问在JavaScript中创建的Blob数据，例如可以用在<code>&lt;img&gt;</code>标签的<code>src</code>属性中来显示图片，或者用在<code>&lt;a&gt;</code>标签的<code>href</code>属性中来下载文件。</p>
+<h3>URL.createObjectURL使用方法</h3>
+<ol>
+<li>
+<p><strong>创建Blob或File对象</strong>：
+首先，你需要有一个Blob或File对象。Blob对象可以通过各种方式获取，例如使用<code>fetch</code>API从网络获取原始数据并使用<code>response.blob()</code>将其转换为Blob对象。</p>
+<pre><code class="language-javascript">const response = await fetch('example.png');
+const blob = await response.blob();
+</code></pre>
+</li>
+<li>
+<p><strong>创建Object URL</strong>：
+使用<code>URL.createObjectURL</code>创建一个指向Blob的URL。</p>
+<pre><code class="language-javascript">const url = URL.createObjectURL(blob);
+</code></pre>
+</li>
+<li>
+<p><strong>使用Object URL</strong>：
+你可以使用此URL在网页上用作资源的链接。例如，将其设置为img元素的src。</p>
+<pre><code class="language-javascript">const img = document.createElement('img');
+img.src = url;
+document.body.appendChild(img);
+</code></pre>
+</li>
+<li>
+<p><strong>释放Object URL</strong>：
+当你不再需要Object URL时（例如，图像已加载），请释放它以节省内存。使用<code>URL.revokeObjectURL</code>方法。</p>
+<pre><code class="language-javascript">URL.revokeObjectURL(url);
+</code></pre>
+</li>
+</ol>
+<h3>URL API</h3>
+<p><code>URL</code>接口是用于解析, 创建, 规范化和编码URLs的。它提供了一种操作URL的方法，无需借助任何辅助元素或字符串拼接。</p>
+<ol>
+<li>
+<p><strong>创建新的URL对象</strong>：
+你可以创建一个新的URL对象，需要提供URL字符串，还可以提供一个基本URL（用于解析相对URL）。</p>
+<pre><code class="language-javascript">const url = new URL('https://example.com/path');
+</code></pre>
+</li>
+<li>
+<p><strong>操作URL对象</strong>：
+一旦你有了URL对象，就可以读取和修改URL的各个部分，例如路径、查询字符串或片段标识符。</p>
+<pre><code class="language-javascript">url.pathname = '/newPath';
+url.search = '?query=value';
+</code></pre>
+</li>
+<li>
+<p><strong>解析查询字符串</strong>：
+<code>URLSearchParams</code>接口提供了一种处理URL查询字符串的便捷方法。</p>
+<pre><code class="language-javascript">const params = new URLSearchParams(url.search);
+const value = params.get('query'); // &quot;value&quot;
+</code></pre>
+</li>
+</ol>
+<p>这些接口提供了更直观和更安全的方法来处理URL和二进制数据，使得在不牺牲性能的情况下进行更为复杂的前端开发成为可能。</p>
+
+<h1>2023-10-25</h1><p>在广度优先搜索（BFS）中，你可以在将元素放入队列时处理，也可以在从队列中取出元素时处理，这主要取决于你的具体需求。</p>
+<p>如果你在将元素放入队列时处理，那么当你检查一个元素的邻居并将其放入队列时，你就可以立即处理这个邻居。这种方法的优点是你可以立即得到结果，但缺点是你可能需要额外的数据结构（例如集合）来防止多次处理同一元素。</p>
+<p>如果你在从队列中取出元素时处理，那么你会在检查一个元素的所有邻居并将其放入队列后，再处理这个元素。这种方法的优点是它不需要额外的数据结构，因为你可以在元素出队时立即处理它，保证每个元素只被处理一次。但是，这种方法的缺点是你可能需要等待一段时间才能得到结果，因为你必须等到元素出队时才处理它。</p>
+<hr>
+<p>组织信息的最佳方法是专注于正在进行的项目。当我们遇到新的信息时，想想它会如何帮助推进目前正在做的事情。
+@fortelabs
+经过十多年的实践，教授数千名学生后，开发了一种组织信息的方法 - PARA，一个简单，全面又其灵活的系统，可以用于组织任何平台上的任何类型的数字信息。PARA 方法基于一个基本的原则：我们生活中的所有信息只分为四类。</p>
+<ul>
+<li>项目（Projects）：短期正在进行的项目（工作或个人生活中的项目）</li>
+<li>领域（Areas）：希望长期关注的领域（个人的长期兴趣）</li>
+<li>资源（Resources）：将来可能用到的主题资源（例如图片、视频、模版等等）</li>
+<li>存档（Archive）：其他三个类别中的非活动项目（我们需要定期归档收藏的资源）</li>
+</ul>
+<p>我自己已经在所有的数字系统中使用这个分类法，包括桌面上的工作文件夹、收藏夹、笔记的分类，还有 Google Drive 以及电邮的分类方式。存档（Archive）分类是个十分神奇的存在，它就像“时间胶囊”，可以保留一切，我们只需用时间线索来回溯存档。因为搜索功能的增强，存档实际上是让机器来查阅的资料库，利用检索或者智能问答 来从这个资料库快速获取内容是最方便的做法，最好的分类就是无需分类。
+<img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20231025235133.png" /></p>
+<h2>情绪稳定</h2>
+<p>情绪稳定的本质，是人的容错性较高，主要体现在以下几个方面：</p>
+<p>1、超我具有灰度，不刚性，因此能够包容他人在道德上的瑕疵，以及自己在某些言行上的非正当感。
+从而减少和规避自我谴责，以及对他人的道德失望感和攻击欲。</p>
+<p>2、人格外部性的外部情绪来源多样化，不依赖于少量社交对象提供情绪支持和情绪价值。
+从而使自己的情绪在波动时，很容易低成本获得支持，也不会过于执着地对某人某事成瘾，从而闪避了因为社交变化导致的戒断性情绪崩溃。</p>
+<p>3、潜意识中，对行动结果的容错性高。这不仅需要对期望和结果要求有一定的预期控制，还需要经历一些事情，获得对于行动结果变更或崩坏的韧性高阈值，这样能避免在遇到不好结果时。产生的那种强烈自责和内耗。</p>
+<p>4、情绪回路的韧性，将情绪回路激活的外部环境变得要求很高。
+同一个性质的信息或者反馈，达不到一个烈度就无法激活情绪回路，从而防止被很多无关自身或鸡毛蒜皮的信息激活情绪，造成不稳定。</p>
+<p>5、在心理以外，资源储备丰富。比如有钱、机会多、社会地位较高且稳固，通俗来讲就是你有退路。
+这会使心理的稳定程度大增，因为资源的丰富性提供了各种容错性，会让一个人输得起。</p>
+
+<h1>2023-10-28</h1><p>脑子回忆：</p>
+<ol>
+<li>是步骤化的，一条一条</li>
+<li>一个步骤尽量可以用一句话可以复述，太长回忆的时候会有些不确定</li>
+</ol>
+
+<h1>2023-10-29</h1><p>向 0 取整 int(n1/n2)</p>
+<hr>
+<p>厚客户端：</p>
+<p>厚客户端具有较高的处理能力和功能，能够在本地执行大部分的计算和数据处理任务。
+厚客户端通常具有丰富的用户界面和交互功能，可以提供更好的用户体验。
+厚客户端需要安装和维护本地软件，因此客户端的升级和更新可能需要用户的参与。
+薄客户端：</p>
+<p>薄客户端相对于厚客户端而言，功能和处理能力较低，只能执行有限的任务。
+薄客户端主要依赖于服务器端的计算和处理能力，通过与服务器进行交互来完成大部分的计算和数据处理。
+薄客户端通常采用基于浏览器或轻量级应用程序的方式，用户可以通过网络访问应用程序和数据，而无需在本地安装和维护软件</p>
+<h2>Message Queue的用途</h2>
+<p>Asynchronous update of information
+Legacy Integration with limited technology choices
+Sending notification to customer after transaction
+Business to Business transactions</p>
+<hr>
+<p>#english
+Spaghetti意面式的</p>
+<hr>
+<p>The process of substituting a sensitive data element with a nonsensitive equivalent,  referred to as a token.</p>
+
+<h1>2023-10-30</h1><p>useRef 是一个很有趣的东西！它的作用是创建一个可以在函数组件渲染周期中保持不变的 ref 对象。当你在函数组件中使用 useRef 创建一个 ref，它会在组件的整个生命周期内保持相同的引用。</p>
+<p>关于 ref 自动绑定的问题，这其实是 React 的一种便利功能。当你将 ref 属性添加到 JSX 元素上时，React 会自动将该 ref 对象的 current 属性设置为对应的 DOM 元素。这样，你就可以通过 ref.current 来访问或操作这个 DOM 元素。</p>
+
+<h1>2023-10-31</h1><p>Referer 和 Origin 是两个在 HTTP 请求头中用于指示请求来源的属性，它们有一些区别：</p>
+<p>Referer（Referrer）属性：</p>
+<p>作用：指示请求的来源，即告诉服务器请求的发起点。
+用法：通常包含在 HTTP 请求头的 Referer 字段中。
+示例：如果用户从页面 A 跳转到页面 B，那么在页面 B 的请求头中，Referer 字段可能会包含页面 A 的 URL。
+Origin 属性：</p>
+<p>作用：表示请求的来源，但更严格和更通用。通常用于跨源请求的安全性检查。
+用法：包含在 HTTP 请求头的 Origin 字段中。
+示例：与 Referer 不同，Origin 字段不包含具体的路径和参数，只包含协议、域名和端口。例如，https://example.com。
+区别：</p>
+<p>精度：Referer 提供了更详细的信息，包含具体的路径和参数，而 Origin 只提供了协议、域名和端口。
+安全性：Origin 主要用于跨源请求的安全性控制，而 Referer 更多用于分析和日志记录。
+隐私性：Referer 可能包含更多用户访问页面的敏感信息，而 Origin 更加保护隐私。
+在实践中，根据具体的需求和场景，开发人员可能会选择使用其中一个或两者结合使用，以满足安全性和隐私性的要求。在处理跨源请求时，通常更关注 Origin，而在分析用户行为时可能会使用 Referer。</p>
+<p>Sure, let's clean up the format:</p>
+
+<h1>2023-11-01</h1><p>“If you can't measure it, you can't improve it” - Peter Drucker</p>
+
+<h1>2023-11-23</h1><p>sm:text-6xl 意味着超过小屏的宽度是 6xl</p>
+
+<h1>2023-11-26</h1><p>在 ts 当中，防止对象的属性被修改：
+添加 as const
+如 {value:&quot;not_changed&quot; as const}
+type Category = typeof PRODUCT_CATEGORIES[number];
+ts 中可以通过 typeof 自动推断出一个对象的类
+[number]是 TypeScript 中的索引类型查询（Index type query）语法。它表示从上一步获取的类型中，取出索引为 number 的属性的类型。在这种情况下，它实际上是获取了数组的索引类型，即数组中可以使用的索引的类型。</p>
+
+<h1>PARA 中「项目」的魔力：用输出对抗信息焦虑</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://sspai.com/post/83271">sspai.com</a></p>
+</blockquote>
+<h2><strong>信息释放比率</strong></h2>
+<p>Lawrence Yeo 写了<a href="https://sspai.com/link?target=https%3A%2F%2Fmoretothat.com%2Frelease-ratio%2F">一篇文章</a>，把这个改变总结为：调整你的信息释放比率（Release Ratio）。
+简单来说，想要让我们获取的信息有价值，你需要利用它们，去创造或者构建一些东西，它们可以是一个具体的产品或服务，也可以是个人习惯的改变、文化方面的输出等等，它们的共同特点是：<strong>都是过程驱动的事物。</strong></p>
+<p>不管你构建的是一个什么事物，重点在于创造它的行为，通过它释放你大脑中的知识。</p>
+<p>人们倾向于花费很多时间去消费各种信息，而不是去创造什么东西，我们总是倾向于不行动。随着分母的数字越来越大，也就是我们积压的燃料越来越多，但我们创造的东西却依然保持为 0，我们就会感到越来越焦虑。</p>
+<h2><strong>撬动改变的起点</strong></h2>
+<p>解决方案是什么呢？做出第一步的行动：<strong>让你的释放比率大于 0，无论这个数字多么小。</strong>
+无论它是 0.1 还是 0.001，都无所谓，你可以找一个每天只需要五分钟的事情，或者每三天只要五分钟的事情，都可以。
+「创造」这个词可能听起来很吓人，但实际上任何人都能做到。</p>
+<p>比如，尝试在读完某个内容之后，录制一段简单的语音笔记；或者把脑子里突然出现的想法写下来，快速画一张草图；可以是一个朋友圈，可以创建一个三五好友分享知识的微信群，还可以发个小红书。</p>
+<p>形式不重要，重要的是让信息释放比大于 0.</p>
+<h2>信息释放比大于 0的好处是：</h2>
+<p><strong>第一：开启阀门后，利用你大脑的燃料。</strong></p>
+<p>消耗一部分信息，把它们转化成创造物，会给你的大脑提供更多的呼吸空间，这会大幅度降低你的信息焦虑。模糊的、关系混乱的信息会在大脑里形成大量「待处理」的信息内容，释放出去，就可以停下思考它们而去思考新的东西。</p>
+<p><strong>第二：在无数新的信息中，找到自己最需要关注的方向。</strong></p>
+<p>群里总有人问我，PARA 分类法里，怎么找到自己的项目（Project）和领域（Area）？
+回答其实挺简单，当你去行动的时候，项目自然会浮现出来，无论是开发一个小产品，还是持续写一些东西，或是拿下一门考试，指向行动的那些自然就属于项目，而支持项目运行下去的「领域」也会逐渐浮现出来。
+没有行动，信息就永远不会聚焦。而当你开始筹划一个行动的时候，哪些信息是重要的，你自然会知道。</p>
+<p><strong>第三：燃烧的过程会持续。</strong></p>
+<p>把消耗信息创造内容比作烧燃料是很贴切的，因为一旦微小的行动有了点燃的起点，燃料就不会很快熄灭，你会通过一点行动，得到一点正反馈（也可能是负反馈），然后基于这些反馈，你会去有目标地搜集信息，越过一个阈值之后，燃烧的反应就会持续进行下去。</p>
+<p>很多事情，开始往往是最难的部分，你需要做的，就是让释放比率大于零，这是关键，做到这一点，你就已经做好准备迈向下一步了。</p>
+<p>当你的项目浮现出来，下一步就是逐步增加「烧柴火」的时间投入，随着简单笔记的积累，你的小短文可能变成一篇篇长文，你的小点子可能会变成一个实在的产品。</p>
+<p>这个阶段，你开始真正利用起自己掌握的知识，大脑中的「燃料」也会流向这个具体的项目，你的知识现在有了明确的目标。</p>
+<h2><strong>行动的艰难</strong></h2>
+<p>等我筹备这个工作的时候，发现似乎永远也筹备不完，从本来计划只有一个章节，到后来六个大篇章、几十集的规划，那时候每天脑子里都在琢磨各种困难：录不下去怎么办？不够专业怎么办？有的内容过段时间过时了怎么办？还有没有我没有搜集到的信息？
+这一切，都在正式启动录制第一集的那一刻，烟消云散。一旦行动开始，神奇的事情就发生了，我听到的、看到的、和人讨论到的，甚至是一些和知识管理完全无关的信息，都成为了我的素材，那段时间我的眼睛上像是长了一对探照灯，总能发现那些有价值的信息。</p>
+<p>后来这次输出的结构有了很大的变化，很多意外的收获和一开始计划的根本不一样，早期担心的那些困难也压根没有出现。结构的变化很大程度是在这个过程中生长出来的，录到第 60 集的时候，我很明确地知道，这件事闭环了，我完成了。</p>
+<h2>Monkey First</h2>
+<p>这看起来是我人生中一次大彻大悟的改变，实则不然。这已经是我第 19 次录制一个长视频，你现在读到的文章，也是我人生中超过几百篇公开发布的文章之一。我已经明确地知道这个思维转变的过程，但还是在每次行动开始之前，把大量时间花在对行动失败的担忧上。</p>
+<p>在 Google 最神秘的部门 Google X，有一个项目叫「登月工厂」，他们有个「Monkey First」的口头禅。意思是，<strong>如果你想让一只猴子在基座上背诵莎士比亚的名言，你应该先去训练猴子，而不是先去建造基座</strong>。</p>
+<blockquote>
+<p>想象一下，你正试图教一只猴子在基座上背诵莎士比亚。 在训练猴子和建造基座之间，你应该如何分配时间和金钱? 正确的答案，当然是不花时间去想怎样建造基座，而是去思考怎样训练猴子说话，那才是真正重要的事。</p>
+</blockquote>
+<p><img src="https://cdn.sspai.com/2023/09/27/0b792035f6e62fd60b63503f2d947a19.png" alt="">图片来源：monkeyfirst.com</p>
+<p>但很多人会花大量时间建造一个华丽的基座，并显得很忙碌。因为这样一方面可以逃避真正的「项目」，也可以安慰自己没有浪费青春。知易行难呀。</p>
+<h2><strong>让项目成为长久的驱动</strong></h2>
+<p>但无论如何，我的人生经验告诉自己，找到明确的目标开始行动，也就是「拥有一个项目」，就是有这样神奇的作用。</p>
+<p>它能让你通过项目的视角去看待世界。这时候你会很自然地把花费的时间从每天十几分钟提高到几个小时，甚至不工作的时候都在关注与它相关的信息，你的大脑中燃料的燃烧速度变得更快，随着一个项目的结束，燃料被清空，你的大脑有了更多的空间，留给新的想法和信息，而不是老的信息不断积压下去。</p>
+<p>这一切的起点，就是先让信息释放比率大于 0。</p>
+<h2>释放比可以大于 1</h2>
+<p>那么这个释放比的上限是不是 1 呢？并不是。
+释放比率小于 1，意味着消费的内容总是大于创造的内容。每天花两个小时读东西，然后花一个小时创造，在不考虑损耗的前提下，释放比率大约就是 0.5。</p>
+<p>随着创造的行为的增加，你吸收的知识会在某个时刻供应不上输出，比如你每天花 5 个小时来创造，大概率不会再花 10 个小时去阅读。</p>
+<p>创造的内容比消费的内容多，这并不是罕见的现象。比如作家、艺术家、企业家都是这样。</p>
+<p>你可以短时间内把信息释放比推到大于 1，甚至可以推到 10，但这种时刻是对过去认知的透支，总有一天你会感到「没灵感」、「没想法」，背后的原因就是燃料不足了。
+并且，当你深入到一个领域之后，会发现有用的信息根本不是太多，而是太少，大多数的知识对你来说都会逐渐成为垃圾，你会期待某几位作者快点出新作品来滋养你。
+这就是为什么作家、艺术家和企业家都会花时间闭关阅读和思考的原因，因为除了极少数的天才，大多数人很难持续创造自己没有听过、没有加过的东西。
+不过，如果你还没有开始，最好先不去担心这件事，因为到那个时候，尽管你还会陷入焦虑，但那和你在出发前无目的的焦虑是不一样的。你会知道自己欠缺什么，而且如果你释放给世界的信息足够有价值，那时候会有很多人来帮助你——比如读者的鼓励、用户的买单，甚至你可能会有自己的助理和员工。</p>
+<h2>每天 1000 字</h2>
+<p>我们接触到的信息一直是单向输入，打破这个单向循环的最佳方式，就是去尝试创造一点东西。</p>
+<p>如果你还没出发，那就先做到一点吧：从小事做起，一篇微博、一篇笔记、一段精心编排的朋友圈、一篇日记、一个产品的 Demo，保持你的释放比例大于 0。</p>
+<p>随后的几年，他出版了 3 本书、大量的博客文章，文字也让他认识了更多优秀的人，拓宽了的业务。 他说：他每天写 1000 字是我职业生涯中一切美好事物的催化剂。</p>
+<p>每天 1000 字，大体上是几十条微信的长度，并不算特别难，难就在于找到自己的领域和项目，持续不断地写。受到 Nathan 影响的 YouTuber <a href="https://sspai.com/link?target=https%3A%2F%2Faliabdaal.com%2F">Ali Abdaal</a> 也分享到：</p>
+<blockquote>
+<p>每天写 1000 字绝对会改变游戏规则，我写得越多，我可以分享的东西就越多。因为写作不仅仅是输出的机制，也是思考的机制。我写得越多，这些想法就越成熟，我就能把更好的东西放进书、视频、播客和其他我做的事情里。</p>
+</blockquote>
+
+<h1>Portfolio</h1><h2>Layout</h2>
+<p>#tailwind
+!开头 表示!important
+scroll-behavior: smooth; 来让滚动更流畅（通常情况下auto 会直接的跳转过去）</p>
+<p>#tailwind/dark
+dark 样式的编写： 直接在 className里面写 “dark:bg-color” 加上dark前缀
+在tailwind.config 里面添加 darkmode:class 这样我们在html里面的 className 添加&quot;dark&quot; 会自动选在 dark 前缀的样式</p>
+<h1>Context</h1>
+<ol>
+<li>该文档下的文件用来提供 context.Provider 给组件
+步骤：</li>
+<li>在组件外 createContext</li>
+<li>在组件内使用 Provider 包裹 children</li>
+<li>在 Provider 内侧使用 Value ，表示你要传给 children 的值</li>
+</ol>
+<pre><code class="language-jsx">    &lt;ThemeContext.Provider
+      value={{
+        theme,
+      }}
+    &gt;
+      {children}
+    &lt;/ThemeContext.Provider&gt;
+</code></pre>
+<h2>theme-switch</h2>
+<p>伪类
+link：表示链接在正常情况下（即页面刚加载完成时）显示的颜色。
+visited：表示链接被点击后显示的颜色。
+hover：表示鼠标悬停时显示的颜色。
+focus：表示元素获得光标焦点时使用的颜色，主要用于文本框输入文字时使用（鼠标松开时显示的
+active：表示当所指元素处于激活状态（鼠标在元素上按下还没有松开）时所显示的颜色。</p>
+<h2>Header</h2>
+<p>用inset-0 和 absolute  快速给 背景上颜色
+inset-0表示上、右、下和左边界都定位在距离其最近的非静态（非默认）定位的祖先元素的边界为 0 的位置，</p>
+<p>Frame motion 用来 Nav 的切换：
+在layoutId 属性被设置为 &quot;activeSection&quot;，这样在相同的 activeSection 之间切换，frame motion 会自动实现切换效果</p>
+<p>Scroll-margin-top:
+将scroll 的区域添加 margin 的长度。
+即当跳转到#hash的对应 section 时，会在上方留出这段长度</p>
+<p>#图片
+展示图片
+父元素用 div 或者其他弄好形状
+图片使用object-cover 或者其他来填充
+#tailwind/line-height
+leading 表示 lineheight</p>
+<p>#html/a/下载文件
+使用download 属性来下载文件
+&lt;a href=&quot;example.pdf&quot; download=&quot;custom-filename.pdf&quot;&gt;下载自定义文档名&lt;/a&gt;</p>
+<p>#html/a
+target=&quot;_blank&quot; 意味着链接将在新的浏览器窗口或标签页中打开</p>
+<h1>frame motion</h1>
+<p>type sping 弹簧
+可以通过custom 给 variant 传参</p>
+<h1>projects</h1>
+<p>从常量数组中读取类型
+type ProjectProps = (typeof projectsData)[number];</p>
+<p>如何在 project 组件中判断出现的个数来分配样式：：
+使用 在 project 组件加上group
+通过 group-even来判断</p>
+<p>小写 uppercase
+text-transform: uppercase;
+tracking-normal 控制字母间距
+letter-spacing:</p>
+<p>当中的 project 宽度
+42rem （672px）</p>
+<h1>Server action</h1>
+<p>FormData 读取数据要用方法
+Formdata.get(&quot;keyName&quot;)</p>
+<h1>Form 的 submit btn</h1>
+<p>useFormStatus 来获取 form 的状态</p>
+<p><img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20231224162300.png" /></p>
+
+<h1>leetcode-master 1</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0078.%E5%AD%90%E9%9B%86.md">github.com</a></p>
+</blockquote>
+<p>如果把 子集问题、组合问题、分割问题都抽象为一棵树的话，<strong>那么组合问题和分割问题都是收集树的叶子节点，而子集问题是找树的所有节点！</strong>
+其实子集也是一种组合问题，因为它的集合是无序的，子集 {1,2} 和 子集{2,1} 是一样的。
+<strong>那么既然是无序，取过的元素不会重复取，写回溯算法的时候，for 就要从 startIndex 开始，而不是从 0 开始！</strong></p>
+<p>有同学问了，什么时候 for 可以从 0 开始呢？</p>
+<p>求排列问题的时候，就要从 0 开始，因为集合是有序的，{1, 2} 和 {2, 1} 是两个集合，排列问题我们后续的文章就会讲到的。</p>
+<p>以示例中 nums = [1,2,3] 为例把求子集抽象为树型结构，如下：</p>
+
+<h1>leetcode-master</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0070.%E7%88%AC%E6%A5%BC%E6%A2%AF.md">github.com</a></p>
+</blockquote>
+<p>定义一个一维数组来记录不同楼层的状态</p>
+<ol>
+<li>确定 dp 数组以及下标的含义</li>
+<li>确定递推公式</li>
+<li>dp 数组如何初始化</li>
+<li>确定遍历顺序</li>
+<li>举例推导 dp 数组</li>
+</ol>
+
+<h1>二十分钟掌握 React 核心理念，老鸟快速入门指南</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://mp.weixin.qq.com/s/6QTdeM2l1htofCnKLZS6yw">mp.weixin.qq.com</a></p>
+</blockquote>
+<h2>理解理念：React 的野心与颠覆式创新</h2>
+<h3>核心理念</h3>
+<p>React 核心原理就是：<strong>当数据发生变化时，UI 随之更新</strong>，就是所谓的数据驱动，之所以说 React 很有野心，是因为它完全抛弃了前端熟悉的开发模式，创造出一个全新的思路，试图颠覆前端工作者的开发方式，确实这是个很伟大的尝试。</p>
+<p><img src="https://mmbiz.qpic.cn/sz_mmbiz_png/cAd6ObKOzEBcAl6LxOVx5ibEG78sicoSalNLAFjGJHUiaSbWibAhkOKuFibNzrU4RA6hAek5mLP8sXghDaiaRw6bthiaQ/640?wx_fmt=png" alt=""></p>
+<h3>实现方式</h3>
+<p>当然你说 Vue 同样是数据驱动，但不同的是 Vue 做了更上层的封装，Vue 设计了新的类似 HTML 的模板语法，通过选项属性为开发者提供编写逻辑和 state 的地方，再通过一个 viewModel，当监听到 state 变化时再去更新 view ，总结起来就是在前端现有开发习惯下，以 “糖水” 的方式 “注入” 了更多让开发变的更加容易的功能，但无疑设计上会变的非常的复杂。</p>
+<hr>
+<p>最终 React 选择了 js 中的 <strong>【函数】</strong>  去承载所有的功能，所以 React 的函数组件本质上真的就只是 js 中的<strong>普通函数</strong>而已，而非 .vue 这种专门需要复杂编译的新产物</p>
+<p>那一个简单的函数是如何实现上述这么多复杂的功能的呢：</p>
+<ol>
+<li>首先 React 将 <strong>HTML 与 js 相融合</strong>，我们可以在函数组件中直接写 DOM 语法，DOM 在 js 中成为了合法的结构，最终函数组件返回一个 DOM ，就是该函数作为一个 React 组件最终要渲染的 UI</li>
+<li>第二是<strong>逻辑</strong>，函数本身天然就是可以直接写 js 执行逻辑的，所以将业务逻辑直接写在函数中即可，无需像 Vue 一样提供各种选项 API，让开发者将不同的逻辑写进预置好的各种接口里</li>
+<li>第三是组件的<strong>状态</strong>，函数组件是一个纯函数，通过函数自身的执行去渲染页面，所以函数组件本身天然无法留存状态，所以 React 采用 hooks 的方式为组件提供状态，
+<ol>
+<li>最终实现就是：<strong>状态可以写在函数中，既不破坏纯函数的特性，又能在状态变更时使函数组件以最新的状态重新执行，更新页面</strong></li>
+</ol>
+</li>
+<li>第四是生命周期，因为现在大多传统框架架构都会引入生命周期的概念，以在组件的不同阶段去更新视图，但是 React 的函数组件完全摒弃了这一概念，它只是在特定的时机会触发整个函数组件的重新执行，自然会生成最新的视图，不需要做不同逻辑的处理。</li>
+<li>最后是渲染，函数组件本身最终返回一个 DOM 结构，可以理解它本身就是执行的一个渲染逻辑，所以只需要让函数组件在需要更新的时候反复执行自身就行了。</li>
+</ol>
+<h3>为什么会有 Class 组件</h3>
+<p>有个局限就是，函数组件内部无法留存状态，函数也更没办法设计一套生命周期，用函数作为组件有严重缺功能陷的，所以在当时选用 Class 作为组件的载体。</p>
+<p>Class 组件我现在看起来依然觉得很难接受，原因有几点：</p>
+<ol>
+<li>在现在的前端开发中，Class 真的很少被用到，尤其目前函数式编程盛行的情况下。</li>
+<li>其次 Class 最大的特性就是<strong>继承</strong>和通过 Class <strong>实例</strong>化出一个对象，但这两种特性跟 React 的组件化思想，都极其违和，完全用不到。
+<strong>可以说 Class 只是为了实现组件基本功能而用，所以最初看到 React Class 组件时，反而觉得没有 .vue 单文件组件来的优雅和直接</strong>。</li>
+</ol>
+<h3>函数式组件 + Hooks</h3>
+<p>通过 hooks 引入一个不受函数组件重复执行影响的外部变量作为函数组件内的状态，当这个状态变更时，函数组件随之重新渲染，将最新的状态渲染到页面。</p>
+<p>函数组件早期有很大的不足，<strong>就是不能留存状态与很难设计生命周期</strong>，那 Hooks 是如何解决的呢。</p>
+<h3>Hooks 设计</h3>
+<p>想象一下如果将一个纯函数作为组件，纯函数通过自身的重复执行来做到渲染与重复更新，需要在函数多次执行期间保存其中的状态，那我们肯定是需要这个函数之外的空间来存储状态，并且当这个状态被改变时，能监听到并触发函数组件的重新渲染。</p>
+<p>Hooks 就是这种方式，字面意思就是钩子，Hooks 将函数钩到一个可能会变化的数据源上，当这个数据变化时，被钩在上面的函数会重新执行，生成新的结果。</p>
+<h3>内置 useState Hooks 解决状态的问题</h3>
+<p>useState 用法很简单，如下代码，引入后会在当前函数外声明一个变量：</p>
+<ul>
+<li>该变量从声明、初始化赋值、值变更都不受当前函数组件重复执行的影响</li>
+<li>我们可以在函数组件内通过暴露的 setState 方法修改 state 的值</li>
+<li>因为当前函数钩在了这个 state 上，state 变更时就又会触发当前函数重新执行</li>
+<li>函数组件作为纯函数重新执行拿到了最新的 state 值，渲染出了最新的结果</li>
+</ul>
+<p><strong>最终复杂的视图渲染就在函数组件一遍又一遍简单的重复执行中完成了</strong>。
+而且 Hooks 虽然是将状态声明在函数外部，但写法上仍然是写在函数组件的内部的，
+这让人写起来并不会有函数组件的割裂感</p>
+<h3>内置 useEffect Hooks 解决生命周期的问题</h3>
+<ul>
+<li><strong>useEffect 和生命周期无关，他是函数组件形态下的另一种设计模式，只是说他能解决我们过去认知中的使用生命周期的一些问题</strong>。</li>
+<li><strong>useEffect 的设计是用来执行一段和当前渲染无关的副作用代码</strong>，因为每次函数组件重新执行都是因为最终的渲染结果要改变，每次重新执行意味着函数内部的逻辑要从头再执行一遍，如果有些逻辑与渲染结果无关仍然会被重新执行，这显然是不正常的，所以 React 设计了 useEffect 用来处理与渲染无关的副作用代码，</li>
+<li>如果有些逻辑既与 state 无关又与渲染结果无关，那说明这段副作用只需要执行一次，可以不传入依赖状态，则只会在组件首次渲染时触发，</li>
+<li>同时 useEffect 可以返回一个方法，该方法会在组件被销毁时执行，这样也顺便实现了类似传统生命周期中 <strong>componentDidMount</strong> 与 <strong>componentWillUnmount</strong> 的功能。</li>
+</ul>
+<h3>内置 useRef 函数组件的逃脱机制</h3>
+<p>最后还缺少一个非常重要的功能，<strong>就是在函数重复执行渲染过程中的数据共享</strong>，我们需要一个能从纯函数重复执行中逃脱，贯穿整个组件渲染的变量，
+State不能做这个因为， state 是和渲染绑定的特殊状态，有以下绑定的特性：</p>
+<ol>
+<li>state 状态一定和视图渲染有关</li>
+<li>state 值的变更会触发函数组件重新执行</li>
+<li>state 变更后有一系列复杂的逻辑，要先触发渲染，再执行副作用，在最新的函数组件执行过程中才能拿到最新的 state 的值
+所以需要在一个复杂的时机才能拿到 state 最新的值，而我们需要一个与渲染无关的数据，能贯穿重复的函数执行，变更后不需要触发函数重新渲染，并且不需要在意此时函数的渲染过程是非常有必要的</li>
+</ol>
+<h2>useRef</h2>
+<p>useRef 就实现了这个功能(在函数重复执行渲染过程中的数据共享**)，他在函数组件首次执行时创建，你可以在函数任何逻辑中直接更改 useRef 的值，它会立即同步更改，并贯穿重复的函数执行，无需任何心理负担。</p>
+<p>除了能存储函数组件重复执行过程的共享数据，<strong>useRef 在存储 DOM 节点，和清理某次渲染过程产生的闭包逻辑有非常重要的意义</strong></p>
+<pre><code class="language-js">import { useState, useRef } from &quot;react&quot;;
+export default function Timer() {
+ const [time, setTime] = useState(1)
+  const timer = useRef(null);
+  const domRef = useRef(null);
+
+  const click = function(){
+     // 需要再每次执行前清理掉之前的定时器，
+    // 如果不使用 useRef ，函数组件重复渲染后无法找到上一次函数执行产生的定时器对象
+     window.clearInterval(timer.current);
+     // 延时器对象赋值给 useRef
+      timer.current = window.setTimeout(() =&gt; {
+      setTime(time + 1);
+    }, 5000);
+  }
+  const getDOm = function(){
+    // 我们可以毫无负担的获取到domRef节点，不受函数组件重复执行的影响
+    console.log(domRef)
+  }
+
+  return (
+    &lt;div ref={domRef}&gt;
+      &lt;p&gt;{time}&lt;/p&gt;
+      &lt;button onClick={click}&gt;add&lt;/button&gt;
+      &lt;button onClick={getDOm}&gt;getDom&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<h2>自定义 Hooks 带来的逻辑复用新形态</h2>
+<p>React 带来的另外一个给我们开发方式带来巨大的转变的特性：<strong>自定义 Hooks</strong>。</p>
+<p>在以前无论是 Vue 还是 React 组件内的逻辑复用都异常艰难，通常情况我们只能封装 js 自身的对象和方法，比如封装一个函数，但组件内部的功能却是无法封装的，比如我们只能封装一个普通方法，不可能封装出一个带有响应式的方法。</p>
+<p>这个过程中 React 出现过一些组件内逻辑封装的设计模式，比如高阶组件 HOC、混入 Mixin，Vue 也曾采用过 Mixin ，但使用度很低现在也都被官方废弃了，因为他们的使用实在太过牵强</p>
+<hr>
+<p>所以我们需要一个能将组件内逻辑再次封装复用的功能，自定义 Hooks 的推出就是解决了这一点。
+比如我们要在多个组件中实现获取视口宽度的功能，</p>
+<ul>
+<li>在以前如果我们不想在每个组件中都写一套事件监听程序，那就需要在父组件中写一个监听程序，监听到变化后将视口宽度通过 props 传递给子组件，子组件才能响应式更新，</li>
+<li>而现在我们可以在自定义 Hooks 直接使用 useState 给组件返回一个响应式的 state。</li>
+</ul>
+<pre><code class="language-js">// useWindowSize.js 
+export default function useWindowSize (){
+  const [size, setSize] = useState(getSize());
+  useEffect(() =&gt; {
+  const handler = () =&gt; {
+      setSize(window.innerWidth)
+    };
+    window.addEventListener('resize', handler);
+    return () =&gt; {
+      window.removeEventListener('resize', handler);
+    };
+  }, []);
+  
+  return [size];
+};
+
+// jsx中使用
+export default function（）{
+  const [size] = useWindowSize();
+  if (size &gt;1000 ) {
+    return &lt;SmallComponent /&gt;;
+  }else{
+    return &lt;LargeComponent /&gt;;
+  }
+};```
+
+从此在 React 中，又多了一种新的封装形态，自定义 Hooks，让相同业务逻辑拆分的更清晰，降低代码的冗余，提高代码的复用程度
+
+函数式编程的意义
+--------------
+ 在函数式编程中，函数是头等对象即头等函数，这意味着一个函数，既可以作为其它函数的输入参数值，也可以从函数中返回值，被修改或者被分配给一个变量。
+ 
+比起指令式编程，函数式编程更加强调程序执行的结果而非执行的过程，倡导利用若干简单的执行单元让计算结果不断渐进，逐层推导复杂的运算，而不是设计一个复杂的执行过程。（来自维基百科）
+
+</code></pre>
+
+<h1>最强大的 CSS 布局 —— Grid 布局</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6854573220306255880?searchId=2023122313512117F1088258584568D266">juejin.cn</a>
+Grid 布局和 flex 布局</p>
+</blockquote>
+<hr>
+<p>flex 布局示例:</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/28/173945aadff842d1~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=486&amp;h=70&amp;s=5844&amp;e=png&amp;b=e6e6e6" alt=""></p>
+<p>Grid 布局示例：</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/173895918bcb5190~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=486&amp;h=70&amp;s=1126&amp;e=png" alt=""></p>
+<h2>Grid 的一些基础概念</h2>
+<pre><code>.wrapper {
+  /* 声明一个容器 */
+  display: grid;
+  /*  声明列的宽度  */
+  grid-template-columns: repeat(3, 200px);
+  /*  声明行的高度  */
+  grid-template-rows: 100px 200px;
+  /*  声明行间距和列间距  */
+  grid-gap: 20px;
+}
+</code></pre>
+<p>在元素上声明 <code>display：grid</code> 或 <code>display：inline-grid</code> 来创建一个网格容器，
+其直系子元素将成为网格项目。</p>
+<p>网格轨道：
+<code>grid-template-columns</code> 和 <code>grid-template-rows</code> 属性来定义网格中的行和列。容器内部的水平区域称为行，垂直区域称为列。</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/173895918ee0ecb6~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1240&amp;h=642&amp;s=127585&amp;e=png&amp;b=f5e2dc" alt=""></p>
+<hr>
+<p>网格线：划分网格的线，称为 &quot;网格线&quot;。应该注意的是，当我们定义网格时，我们定义的是网格轨道，而不是网格线。Grid 会为我们创建编号的网格线来让我们来定位每一个网格元素。m 列有 m + 1 根垂直的网格线，n 行有 n + 1 跟水平网格线。比如上图示例中就有 4 根垂直网格线。一般而言，是从左到右，从上到下，1，2，3 进行编号排序。当然也可以从右到左，从下到上，按照 -1，-2，-3... 顺序进行编号排序</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389591934e1560~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1240&amp;h=694&amp;s=121324&amp;e=png&amp;b=f6ded9" alt=""></p>
+<h2>容器属性介绍</h2>
+<p><code>Grid</code> 布局属性可以分为两大类，一类是容器属性，一类是项目属性。我们先来看容器属性</p>
+<h3>display 属性</h3>
+<p>设置成 <code>display: inline-grid</code> 则容器元素为行内元素</p>
+<pre><code>.wrapper-1 {
+  display: inline-grid;
+}
+</code></pre>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389591c03b6883~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1240&amp;h=219&amp;s=31574&amp;e=png&amp;b=fefefe" alt=""></p>
+<h3>grid-template-columns 属性和 grid-template-rows 属性</h3>
+<p><code>grid-template-columns</code> 属性设置列宽，<code>grid-template-rows</code> 属性设置行高，
+<strong>固定的列宽和行高</strong></p>
+<pre><code>.wrapper {
+  display: grid;
+  /*  声明了三列，宽度分别为 200px 100px 200px */
+  grid-template-columns: 200px 100px 200px;
+  /*  声明了两行，行高分别为 50px 50px  */
+  grid-template-rows: 50px 50px;
+}
+</code></pre>
+<p>以上表示固定列宽为 200px 100px 200px，行高为 50px 50px</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389591c0fc1214~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1078&amp;h=302&amp;s=27145&amp;e=png&amp;b=fbf5f4" alt=""></p>
+<h2><strong>repeat() 函数</strong></h2>
+<p><strong>repeat() 函数</strong>：可以简化重复的值。该函数接受两个参数，第一个参数是重复的次数，第二个参数是所要重复的值。比如上面行高都是一样的，我们可以这么去实现，实际效果是一模一样的</p>
+<pre><code>.wrapper-1 {
+  display: grid;
+  grid-template-columns: 200px 100px 200px;
+  /*  2行，而且行高都为 50px  */
+  grid-template-rows: repeat(2, 50px);
+}
+</code></pre>
+<h2><strong>auto-fill 关键字</strong></h2>
+<p><strong>auto-fill 关键字</strong>：表示自动填充，让一行（或者一列）中尽可能的容纳更多的单元格。
+<code>grid-template-columns: repeat(auto-fill, 200px)</code> 表示列宽是 200 px，但列的数量是不固定的，只要浏览器能够容纳得下，就可以放置元素，代码以及效果如下图所示：</p>
+<pre><code>.wrapper-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 200px);
+  grid-gap: 5px;
+  grid-auto-rows: 50px;
+}
+</code></pre>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389591c300e81a~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1056&amp;h=176&amp;s=256151&amp;e=gif&amp;f=53&amp;b=1d1e22" alt=""></p>
+<h2>fr 关键字</h2>
+<p><strong>fr 关键字</strong>：<code>fr</code> 单位代表网格容器中可用空间的一等份。<code>grid-template-columns: 200px 1fr 2fr</code> 表示第一个列宽设置为 200px，后面剩余的宽度分为两部分，宽度分别为剩余宽度的 1/3 和 2/3。代码以及效果如下图所示：</p>
+<pre><code>.wrapper-3 {
+  display: grid;
+  grid-template-columns: 200px 1fr 2fr;
+  grid-gap: 5px;
+  grid-auto-rows: 50px;
+}
+</code></pre>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389591ccc256d1~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1100&amp;h=166&amp;s=99702&amp;e=gif&amp;f=24&amp;b=fcf7f7" alt=""></p>
+<h2><strong>minmax() 函数</strong>：</h2>
+<p><strong>minmax() 函数</strong>：我们有时候想给网格元素一个最小和最大的尺寸，
+<code>minmax()</code> 接受两个参数，分别为最小值和最大值。
+<code>grid-template-columns: 1fr 1fr minmax(300px, 2fr)</code> 的意思是，第三个列宽最少也是要 300px，但是最大不能大于第一第二列宽的两倍。</p>
+<pre><code>.wrapper-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr minmax(300px, 2fr);
+  grid-gap: 5px;
+  grid-auto-rows: 50px;
+}
+</code></pre>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389591dc05edac~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1100&amp;h=166&amp;s=177897&amp;e=gif&amp;f=35&amp;b=f9e9e7" alt=""></p>
+<h2><strong>auto 关键字</strong>：</h2>
+<p>由浏览器决定长度。通过 <code>auto</code> 关键字，我们可以轻易实现三列或者两列布局。<code>grid-template-columns: 100px auto 100px</code> 表示第一第三列为 100px，中间由浏览器决定长度，代码以及效果如下：</p>
+<pre><code>.wrapper-5 {
+  display: grid;
+  grid-template-columns: 100px auto 100px;
+  grid-gap: 5px;
+  grid-auto-rows: 50px;
+}
+</code></pre>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389591f2146e1d~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1100&amp;h=166&amp;s=86599&amp;e=gif&amp;f=21&amp;b=f8edea" alt=""></p>
+<h3>grid-row-gap 属性、grid-column-gap 属性以及 grid-gap 属性</h3>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fcodepen.io%2Fgpingfeng%2Fpen%2FjOWRNeg" title="https://codepen.io/gpingfeng/pen/jOWRNeg">grid-row-gap 属性、grid-column-gap 属性以及 grid-gap 属性演示地址</a></p>
+<p><code>grid-row-gap</code> 属性、<code>grid-column-gap</code> 属性分别设置行间距和列间距。 <code>grid-gap</code> 属性是两者的简写形式。</p>
+<p><code>grid-row-gap: 10px</code> 表示行间距是 10px，<code>grid-column-gap: 20px</code> 表示列间距是 20px。<code>grid-gap: 10px 20px</code> 实现的效果是一样的</p>
+<h3>grid-template-areas 属性</h3>
+<p><code>grid-template-areas</code> 属性用于定义区域，一个区域由一个或者多个单元格组成</p>
+<p>一般这个属性跟网格元素的 <code>grid-area</code> 一起使用，我们在这里一起介绍。 <code>grid-area</code> 属性指定项目放在哪一个区域</p>
+<pre><code>.wrapper {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 120px  120px  120px;
+  grid-template-areas:
+    &quot;. header  header&quot;
+    &quot;sidebar content content&quot;;
+  background-color: #fff;
+  color: #444;
+}
+</code></pre>
+<p>上面代码表示划分出 6 个单元格，</p>
+<ul>
+<li>值得注意的是 <code>.</code> 符号代表空的单元格，也就是没有用到该单元格。</li>
+</ul>
+<pre><code>.sidebar {
+  grid-area: sidebar;
+}
+
+.content {
+  grid-area: content;
+}
+.header {
+  grid-area: header;
+}
+</code></pre>
+<p>以上代码表示将类 <code>.sidebar</code> <code>.content</code> <code>.header</code>所在的元素放在上面 <code>grid-template-areas</code> 中定义的 <code>sidebar</code> <code>content</code> <code>header</code> 区域中</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/173895920bbe824a~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=910&amp;h=442&amp;s=9335&amp;e=png" alt=""></p>
+<h3>grid-auto-flow 属性</h3>
+<p><code>grid-auto-flow</code> 属性控制着自动布局算法怎样运作，精确指定在网格中被自动布局的元素怎样排列。默认的放置顺序是 &quot;先行后列&quot;，即先填满第一行，再开始放入第二行，即下图英文数字的顺序 <code>one</code>,<code>two</code>,<code>three</code>...。这个顺序由 <code>grid-auto-flow</code> 属性决定，默认值是 <code>row</code>。</p>
+<pre><code>.wrapper {
+  display: grid;
+  grid-template-columns: 100px 200px 100px;
+  grid-auto-flow: row;
+  grid-gap: 5px;
+  grid-auto-rows: 50px;
+}
+</code></pre>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/173895921548265c~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=964&amp;h=536&amp;s=31488&amp;e=png&amp;b=ffffff" alt=""></p>
+<h2>row dense</h2>
+<p>就是第五个项目和第六个项目之间有个空白（如下图所示），这个是由于第六块的长度大于了空白处的长度，被挤到了下一行导致的。在实际应用中，我们可能想让下面长度合适的填满这个空白，这个时候可以设置 <code>grid-auto-flow: row dense</code>，表示尽可能填满表格。代码以及效果如下所示：</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389592211e1d6b~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1240&amp;h=707&amp;s=96287&amp;e=png&amp;b=ffffff" alt=""></p>
+<pre><code>.wrapper-2 {
+  display: grid;
+  grid-template-columns: 100px 200px 100px;
+  grid-auto-flow: row dense;
+  grid-gap: 5px;
+  grid-auto-rows: 50px;
+}
+</code></pre>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/173895923612a19b~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=874&amp;h=478&amp;s=30240&amp;e=png&amp;b=ffffff" alt=""></p>
+<h3>justify-items 属性、align-items 属性以及 place-items 属性</h3>
+<p><code>justify-items</code> 属性设置单元格内容的水平位置（左中右），<code>align-items</code> 属性设置单元格的垂直位置（上中下）</p>
+<p>下面以 justify-items 属性为例进行讲解，align-items 属性同理，只是方向为垂直方向。它们都有如下属性：</p>
+<pre><code>.container {
+  justify-items: start | end | center | stretch;
+  align-items: start | end | center | stretch;
+}
+</code></pre>
+<p>其代码实现以及效果如下：</p>
+<pre><code>.wrapper, .wrapper-1, .wrapper-2, .wrapper-3 {
+  display: grid;
+  grid-template-columns: 100px 200px 100px;
+  grid-gap: 5px;
+  grid-auto-rows: 50px;
+  justify-items: start;
+}
+.wrapper-1 {
+  justify-items: end;
+}
+.wrapper-2 {
+  justify-items: center;
+}
+.wrapper-3 {
+  justify-items: stretch;
+}
+</code></pre>
+<ul>
+<li>start：对齐单元格的起始边缘
+<img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/1738959244947d96~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=852&amp;h=384&amp;s=32164&amp;e=png&amp;b=fdfafa" alt=""></li>
+<li>stretch：拉伸，占满单元格的整个宽度（默认值）
+<img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/1738959270057d0c~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=854&amp;h=358&amp;s=33177&amp;e=png&amp;b=f5e6e3" alt=""></li>
+</ul>
+<h3>justify-content 属性、align-content 属性以及 place-content 属性</h3>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fcodepen.io%2Fgpingfeng%2Fpen%2FqBbwBZx%3Feditors%3D1100" title="https://codepen.io/gpingfeng/pen/qBbwBZx?editors=1100">justify-content 属性、align-content 属性演示地址</a></p>
+<p><code>justify-content</code> 属性是整个内容区域在容器里面的水平位置（左中右），<code>align-content</code> 属性是整个内容区域的垂直位置（上中下）。它们都有如下的属性值。
+<img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/173895926d20f5d6~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1216&amp;h=770&amp;s=68085&amp;e=png&amp;b=fefbfb" alt=""></p>
+<ul>
+<li>space-around - 每个项目两侧的间隔相等。所以，项目之间的间隔比项目与容器边框的间隔大一倍</li>
+<li>space-between - 项目与项目的间隔相等，项目与容器边框之间没有间隔</li>
+<li>space-evenly - 项目与项目的间隔相等，项目与容器边框之间也是同样长度的间隔</li>
+<li>stretch - 项目大小没有指定时，拉伸占据整个网格容器
+<img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/173895927ba770c4~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1240&amp;h=741&amp;s=121464&amp;e=png&amp;b=fefbfb" alt=""></li>
+</ul>
+<h3>grid-auto-columns 属性和 grid-auto-rows 属性</h3>
+<p>先来看看隐式和显示网格的概念
+<strong>隐式和显示网格</strong>：</p>
+<ul>
+<li>显式网格包含了你在 <code>grid-template-columns</code> 和 <code>grid-template-rows</code> 属性中定义的行和列。</li>
+<li>如果你在网格定义之外又放了一些东西，或者因为内容的数量而需要的更多网格轨道的时候，网格将会在隐式网格中创建行和列</li>
+</ul>
+<p>隐式网格的行高和列宽可以根据 <code>grid-auto-columns</code> 属性和 <code>grid-auto-rows</code> 属性设置。
+如果不指定这两个属性，浏览器完全根据单元格内容的大小，决定新增网格的列宽和行高</p>
+<pre><code>.wrapper {
+  display: grid;
+  grid-template-columns: 200px 100px;
+/*  只设置了两行，但实际的数量会超出两行，超出的行高会以 grid-auto-rows 算 */
+  grid-template-rows: 100px 100px;
+  grid-gap: 10px 20px;
+  grid-auto-rows: 50px;
+}
+</code></pre>
+<p><code>grid-template-columns</code> 属性和 <code>grid-template-rows</code> 属性只是指定了两行两列，
+实际有九个元素，就会产生隐式网格。
+通过 <code>grid-auto-rows</code> 可以指定隐式网格的行高为 50px</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/173895927d99af1c~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=882&amp;h=980&amp;s=54908&amp;e=png&amp;b=fcf6f6" alt=""></p>
+<h2>item属性介绍</h2>
+<h3>grid-column-start 属性、grid-column-end 属性、grid-row-start 属性以及 grid-row-end 属性</h3>
+<ul>
+<li>grid-column-start 属性：左边框所在的垂直网格线</li>
+<li>grid-column-end 属性：右边框所在的垂直网格线</li>
+<li>grid-row-start 属性：上边框所在的水平网格线</li>
+<li>grid-row-end 属性：下边框所在的水平网格线
+<img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/173895928bc7e88e~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1240&amp;h=685&amp;s=126434&amp;e=png&amp;b=f5e2dc" alt=""></li>
+</ul>
+<h3>grid-area 属性</h3>
+<p><code>grid-area</code> 属性指定项目放在哪一个区域，在上面介绍 <code>grid-template-areas</code> 的时候有提到过，</p>
+<h2>Grid 实战——实现响应式布局</h2>
+<h3>repeat + auto-fit——固定列宽，改变列数量</h3>
+<p><code>grid-template-columns: repeat(auto-fit, 200px)</code> 表示固定列宽为 200px，数量是自适应的，只要容纳得下，就会往上排列，代码以及效果实现如下：</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389592c297495a~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1056&amp;h=176&amp;s=256151&amp;e=gif&amp;f=53&amp;b=1d1e22" alt=""></p>
+<h3>repeat+auto-fit+minmax 去掉右侧空白</h3>
+<p>将 <code>grid-template-columns: repeat(auto-fit, 200px)</code> 改成 <code>grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))</code> 表示列宽至少 200px，如果还有空余则一起等分。代码以及效果如下所示：
+<img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389592cc3c2bf9~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1510&amp;h=364&amp;s=175602&amp;e=gif&amp;f=28&amp;b=fdfafa" alt=""></p>
+<h3>repeat+auto-fit+minmax-span-dense 解决空缺问题</h3>
+<p>每个网格元素的长度可能不相同，
+通过 <code>span</code> 关键字进行设置网格项目的跨度，<code>grid-column-start: span 3</code>，表示这个网格项目跨度为 3。具体的代码与效果如下所示：</p>
+<pre><code>.item-3 {
+  grid-column-start: span 3;
+}
+</code></pre>
+<p>此时会有是有一些长度太长了，放不下
+<code>grid-auto-flow: row dense</code> 表示尽可能填充，而不留空白，代码以及效果如下所示：
+<img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/26/17389593009f7fe7~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75..jpg#?w=1532&amp;h=477&amp;s=220450&amp;e=gif&amp;f=24&amp;b=fcf5f5" alt=""></p>

@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "done/Portfolio.md",
+                "file": "md/leetcode.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "done/Portfolio.md"
+                "file": "md/leetcode.md"
               }
             }
           },
@@ -96,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/Portfolio.md",
+                "file": "md/leetcode.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/Portfolio.md",
+                "file": "md/leetcode.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -165,34 +165,35 @@
       "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "7c656948499aebb2",
+  "active": "c4ce9137a8c52721",
   "lastOpenFiles": [
+    "md/一次性弄清前端上线和生产环境地址.md",
+    "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
+    "md/interview_front_nus10.27.md.md",
+    "md/面试官：能不能给 Promise 增加取消功能和进度通知功能...  我：？？？.md",
     "md/Event.md",
-    "Pasted image 20231224162300.png.md",
     "done/Portfolio.md",
+    "output/2023-12-28 09-35-53.html",
+    "achieve/最强大的 CSS 布局 —— Grid 布局.md",
+    "achieve/二十分钟掌握 React 核心理念，老鸟快速入门指南.md",
+    "achieve/leetcode-master.md",
+    "achieve/leetcode-master 1.md",
+    "achieve/Portfolio.md",
+    "achieve/PARA 中「项目」的魔力：用输出对抗信息焦虑.md",
+    "achieve/2023-11-26.md",
+    "achieve/2023-11-23.md",
+    "achieve/2023-11-01.md",
+    "achieve/2023-10-31.md",
+    "achieve/2023-10-30.md",
+    "achieve/2023-10-29.md",
+    "achieve/2023-10-28.md",
+    "achieve/2023-10-25.md",
+    "achieve/2023-10-23.md",
+    "achieve/2023-10-19.md",
+    "achieve/2023-10-12.md",
+    "Pasted image 20231224162300.png.md",
     "md/leetcode.md",
     "python3 leet.md",
-    "md/interview_front_nus10.27.md.md",
-    "md/2023-12-07.md",
-    "Untitled.md",
-    "done/二十分钟掌握 React 核心理念，老鸟快速入门指南.md",
-    "done/PARA 中「项目」的魔力：用输出对抗信息焦虑.md",
-    "md/面试官：能不能给 Promise 增加取消功能和进度通知功能...  我：？？？.md",
-    "cur useless/学会 Grid 之后，我觉得再也没有我搞不定的布局了.md",
-    "done/2023-10-31.md",
-    "done/2023-11-01.md",
-    "done/2023-10-30.md",
-    "done/2023-11-23.md",
-    "done/2023-11-26.md",
-    "done/最强大的 CSS 布局 —— Grid 布局.md",
-    "done/2023-10-25.md",
-    "done/2023-10-28.md",
-    "done/2023-10-23.md",
-    "done/2023-10-19.md",
-    "done/leetcode-master.md",
-    "done/leetcode-master 1.md",
-    "done/2023-10-12.md",
-    "md/一劳永逸的搞定 flex 布局.md",
     "_resources/Pasted image 20231224162919.png",
     "_resources/Pasted image 20231224162300.png",
     "_resources/Pasted image 20230814132849.png",
@@ -208,7 +209,6 @@
     "md/leetcode-master/problems",
     "md/leetcode-master",
     "nips_doc/2023-10-28 12-30-03.html",
-    "nips_doc/nips",
     "_resources/Pasted image 20231025235133.png",
     "_resources/Pasted image 20231019141202.png",
     "_resources/d1f76e4c2d9d1ed0fea27c6c152aa4cb_MD5.jpg",

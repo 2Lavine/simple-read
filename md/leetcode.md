@@ -231,7 +231,7 @@ aliases: []
 - [ ] [本周小结！（回溯算法系列三）](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/周总结/20201112回溯周末总结.md)
 - [ ] [回溯算法去重问题的另一种写法](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/回溯算法去重问题的另一种写法.md)
 - [ ] [回溯算法：332.重新安排行程](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0332.重新安排行程.md)
-- [ ] [回溯算法：51.N皇后](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0051.N皇后.md)
+- [x] [回溯算法：51.N皇后](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0051.N皇后.md)
 - [ ] [回溯算法：37.解数独](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0037.解数独.md)
 - [ ] [回溯算法总结篇](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/回溯总结.md)
 
