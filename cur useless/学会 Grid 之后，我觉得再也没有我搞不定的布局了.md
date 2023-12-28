@@ -1,52 +1,16 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7310423470546354239?utm_source=gold_browser_extension)
 
-说到布局很多人的感觉应该都是恐惧，为此很多人都背过一些很经典的布局方案，例如：`圣杯布局`、`双飞翼布局`等非常耳熟的名词；
-
-为了实现这些布局我们有很多种实现方案，例如：`table布局`、`float布局`、`定位布局`等，当然现在比较流行的肯定是`flex布局`；
-
-`flex布局`属于弹性布局，所谓弹性也可以理解为`响应式布局`，而同为响应式布局的还有`Grid布局`；
-
-`Grid布局`是一种二维布局，可以理解为`flex布局`的升级版，它的出现让我们在布局方面有了更多的选择，废话不多说，下面开始全程高能；
-
-> 本篇不会过多介绍`grid`的基础内容，更多的是一些布局的实现方案和一些小技巧；
-
 常见布局
 ----
-
-所谓的常见布局只是我们在日常开发中经常会遇到的布局，例如：`圣杯布局`、`双飞翼布局`这种名词我个人觉得不用太过于去在意；
-
-因为这类布局最后的解释都会变成`几行几列`，内容在哪一行哪一列，而这些就非常直观的对标了`grid`的特性；
-
-接下来我们来一起看看一些非常常见的布局，并且用`grid`来实现；
-
 ### 1. 顶部 + 内容
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9990def312ab4278836ea35d9398a53e~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=739&h=627&s=23870&e=png&b=46c1f5)
 
 ```
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
-
         body {
             display: grid;
             grid-template-rows: 60px 1fr;
             height: 100vh;
-        }
-
-        .header {
-            background-color: #039BE5;
-        }
-
-        .content {
-            background-color: #4FC3F7;
         }
 
         .header,

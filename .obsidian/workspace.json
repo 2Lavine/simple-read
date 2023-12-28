@@ -4,35 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "06ef18b9c89eaa97",
+        "id": "27cf7221c277c15e",
         "type": "tabs",
         "children": [
           {
-            "id": "28c093b4ba9975e9",
+            "id": "c4ce9137a8c52721",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/Portfolio.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "c18b2b52452f9245",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Event.md",
+                "file": "done/Portfolio.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -51,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Event.md"
+                "file": "done/Portfolio.md"
               }
             }
           },
@@ -109,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Event.md",
+                "file": "done/Portfolio.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -126,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Event.md",
+                "file": "done/Portfolio.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -178,40 +165,40 @@
       "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "c18b2b52452f9245",
+  "active": "7c656948499aebb2",
   "lastOpenFiles": [
-    "md/Portfolio.md",
-    "Event.md",
-    "md/DigitalHippo.md",
-    "_resources/Pasted image 20231224162919.png",
+    "md/Event.md",
+    "Pasted image 20231224162300.png.md",
+    "done/Portfolio.md",
+    "md/leetcode.md",
+    "python3 leet.md",
+    "md/interview_front_nus10.27.md.md",
+    "md/2023-12-07.md",
     "Untitled.md",
-    "readme.md",
+    "done/二十分钟掌握 React 核心理念，老鸟快速入门指南.md",
+    "done/PARA 中「项目」的魔力：用输出对抗信息焦虑.md",
+    "md/面试官：能不能给 Promise 增加取消功能和进度通知功能...  我：？？？.md",
+    "cur useless/学会 Grid 之后，我觉得再也没有我搞不定的布局了.md",
+    "done/2023-10-31.md",
+    "done/2023-11-01.md",
+    "done/2023-10-30.md",
+    "done/2023-11-23.md",
+    "done/2023-11-26.md",
+    "done/最强大的 CSS 布局 —— Grid 布局.md",
+    "done/2023-10-25.md",
+    "done/2023-10-28.md",
+    "done/2023-10-23.md",
+    "done/2023-10-19.md",
+    "done/leetcode-master.md",
+    "done/leetcode-master 1.md",
+    "done/2023-10-12.md",
+    "md/一劳永逸的搞定 flex 布局.md",
+    "_resources/Pasted image 20231224162919.png",
     "_resources/Pasted image 20231224162300.png",
     "_resources/Pasted image 20230814132849.png",
     "_resources/Pasted image 20230814120443.png",
     "_assert/Pasted image 20230612231655.png",
     "_assert/Pasted image 20230612231921.png",
-    "md/2023-12-07.md",
-    "python3 leet.md",
-    "md/leetcode.md",
-    "md/2023-11-26.md",
-    "md/2023-11-23.md",
-    "WuCai/23-11-24-4 sciencebacked ways to build your own mental gym-H8MEM35.md",
-    "md/为什么我更推荐命令式 Modal - 静かな森.md",
-    "WuCai/23-11-18-Metadata  Ordinal Theory Handbook-H8HKFK5.md",
-    "WuCai/23-11-18-Inscriptions  Ordinal Theory Handbook  铭文  序数理论手册-H8HKFB5.md",
-    "WuCai/23-11-18-Digital Artifacts  Ordinal Theory Handbook  数字制品  序数理论手册-H8HKFBB.md",
-    "WuCai/23-11-18-Introduction  Ordinal Theory Handbook-H8HKFBK.md",
-    "WuCai/23-11-17-Chrome extension service worker tutorial.  Chrome for Developers-H8HKC86.md",
-    "WuCai/23-11-17-Chrome Extensions Tutorial Manage tabs  Chrome for Developers-H8HKA5D.md",
-    "WuCai/23-11-17-Chrome Extensions Tutorial Reading time  Chrome for Developers-H8HKAKE.md",
-    "WuCai/23-11-17-Chrome Extensions 101  Chrome for Developers-H8HKAB7.md",
-    "WuCai/23-11-12-How To Build A Simple Cryptocurrency Blockchain In Node.js — Smashing Magazine-H8HM5H5.md",
-    "md/一次性弄清前端上线和生产环境地址.md",
-    "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
-    "md/2023-10-31.md",
-    "md/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md",
-    "md/原来前端部署这么简单.md",
     "cur useless/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04",
     "cur useless/problems ",
     "md/leetcode-master/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04",
