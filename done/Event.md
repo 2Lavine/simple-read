@@ -94,6 +94,7 @@ allows you to purge cached data on-demand for a specific path.
 	3. { title: { $regex: query, $options: 'i' } } 表示匹配 title 是 query 的类型，
 		1. option 是 i 表示忽略大小写
 	4. {$and: \[titleCondition, categoryCondition ? { category: categoryCondition._id \} : {}],}
+	5. 找到的对象不能修改，返回一个 deep clone的数据
 6. 更新
 	1. const updatedEvent = await Event.findByIdAndUpdate(
 7. 删除
@@ -117,7 +118,43 @@ movie.director.name; // 'James Cameron'
 
 If you call populate() multiple times with the same path, only the last one will take effect.
 
+## aggregate
 
+接受一个数组 an array of stages
+- A stage is an object description of how MongoDB  transform any document coming into the stage
+-  The first stage feeds documents into the second stage, and so on,
+$lookup用途类似于 左连接
+```
+    $lookup: {
+      from: "users",          // 关联的集合名称
+      localField: "userId",   // 本地集合的关联字段
+      foreignField: "_id",    // 外部集合的关联字段
+      as: "user"              // 结果中嵌套的字段名
+    }
+```
+
+unwind 的用途：数组类型的字段拆分成多个文档，可以在展开后的文档上执行各种聚合操作，例如计数、求和、平均值、分组等
+
+project 对拆分之后的文档重新分组
+```js
+  {
+	$project: {
+	  _id: 1, // 1 表示保留该选项
+	  eventTitle: '$event.title', //表示对这个重新命名
+	  buyer: {
+		$concat: ['$buyer.firstName', ' ', '$buyer.lastName'],
+		 // $concat 表示运算法，将 这两个字符串合并
+	  },
+	},
+  },
+```
+## left  join
+返回左表的所有数据，无论有匹配的有表数据（用 NULL 代替）
+```sql
+SELECT employees.ID, employees.Name, departments.DeptName
+FROM employees
+LEFT JOIN departments ON employees.DeptID = departments.DeptID;
+```
 # 删除操作
 #react/startTransition
 用途：不阻塞 UI 的情况下更新状态
@@ -141,13 +178,34 @@ window.location获取和操作当前浏览器窗口的 URL 信息
 3. const searchParams = window.location.search;
 4. 可以直接修改，然后重定向到另外的界面
 
+#ts/type 
+searchProps 的书写
+  searchParams: { \[key: string\]: string | string[] | undefined }
+
 new URLSearchParams 把 location.search 转换成一个对象
 1. get(key)  has(key) set(key,value)
 2. getAllkeys，values
 
 # Search 组件的封装
 这里我们希望可以把 Search 的结果进行URL 分享，因此
-当 Input 组件变换的时候我们应该在 Path 进行参数的相关修改，然后在 Page 页面根据不同的参数来加载不同的数据
+- 当 Input 组件变换的时候我们应该在 Path 进行参数的相关修改，然后在 Page 页面根据不同的参数来加载不同的数据
+- 实现了 input 组件和 page 页面的分离
 router直接 push
-
+1. 使用了防抖：
+	1. use Effect return 的remove timeID
 useEffect 在卸载的时候把 timeID 去掉可以直接实现Debounc的效果
+
+
+
+
+# Card 组件
+直接在 Link 里面用style={{backgroundImage: `url(${event.imageUrl})`}}
+实现背景图片
+父组件用grid-cols-3 固定实现 卡片展示
+
+### RevalidatePath
+详情见 https://www.youtube.com/watch?v=RadgkoJrhu0&t=492s
+# 亮点
+1. 使用 searchParams  实现筛选结果可以 url 分享
+2. 防抖优化 use Effect return 的remove timeID
+3. 响应式设计
