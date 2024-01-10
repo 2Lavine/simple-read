@@ -132,8 +132,8 @@ aliases: []
 - [x] [栈与队列：1047.删除字符串中的所有相邻重复项](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/1047.删除字符串中的所有相邻重复项.md)
 	- [ ] 
 - [x] [栈与队列：150.逆波兰表达式求值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0150.逆波兰表达式求值.md)
-- [ ] [栈与队列：239.滑动窗口最大值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0239.滑动窗口最大值.md)
-- [ ] [栈与队列：347.前K个高频元素](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0347.前K个高频元素.md)
+- [x] [栈与队列：239.滑动窗口最大值](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0239.滑动窗口最大值.md)
+- [x] [栈与队列：347.前K个高频元素](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/0347.前K个高频元素.md)
 	- [ ] 小根堆可以每次把最小的去掉，因此可以保持前 k 个最大的元素
 [栈与队列：总结篇！](https://github.com/youngyangyang04/leetcode-master/blob/master/problems/栈与队列总结.md)
 

@@ -4,47 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "27cf7221c277c15e",
+        "id": "6604c94d35c77d7a",
         "type": "tabs",
         "children": [
           {
-            "id": "c4ce9137a8c52721",
+            "id": "fcd145ec1d0de9d3",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "done/interview_front_nus10.27.md.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "6901f695507ab05b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "md/nuejs.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "fcba0973103d24e5",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "done/Event.md",
+                "file": "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -63,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "done/Event.md"
+                "file": "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md"
               }
             }
           },
@@ -121,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/Event.md",
+                "file": "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -138,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/Event.md",
+                "file": "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -169,7 +144,9 @@
             "state": {
               "type": "all-properties",
               "state": {
-                "sortOrder": "frequency"
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
               }
             }
           }
@@ -187,45 +164,50 @@
       "graph:Open graph view": false,
       "daily-notes:Open today's daily note": false,
       "command-palette:Open command palette": false,
-      "workspaces:Manage workspace layouts": false
+      "workspaces:Manage workspace layouts": false,
+      "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "fcba0973103d24e5",
+  "active": "fcd145ec1d0de9d3",
   "lastOpenFiles": [
+    "done/2024-01-09.md",
+    "md/Front end Prepare.md",
+    "md/为什么我更推荐命令式 Modal.md",
     "md/2023-12-29.md",
-    "Nuejs SSR.md",
-    "md/nuejs.md",
-    "done/Event.md",
-    "done/interview_front_nus10.27.md.md",
-    "done",
-    "md/leetcode.md",
-    "achieve/2023-10-19.md",
-    "achieve/2023-10-12.md",
-    "md/如何理解 React Fiber 架构？.md",
-    "done/二十分钟掌握 React 核心理念，老鸟快速入门指南.md",
-    "done/leetcode-master.md",
-    "done/leetcode-master 1.md",
-    "done/PARA 中「项目」的魔力：用输出对抗信息焦虑.md",
-    "done/2023-10-29.md",
-    "done/2023-10-28.md",
-    "done/2023-10-25.md",
-    "done/2023-10-23.md",
-    "done/2023-10-19.md",
-    "done/2023-10-12.md",
-    "Event.md",
+    "md/2024-01-02.md",
+    "done/2024-01-01.md",
+    "md/生活的平衡.md",
     "md/一次性弄清前端上线和生产环境地址.md",
+    "_resources/70fe7bf2f7fe4562aed68ed444549964~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
+    "_resources/39b3c53bfa0f4e44bb0c8fd0c1156df6~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
+    "_resources/61b32d2f664c4fa9ae4046cf08bb1327~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
+    "_resources/9dcb4fb5a1454216b376f812f783f385~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
+    "_resources/9d5c3fe6b3a44d2d8d2236126b840fe2~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
+    "_resources/a0eefab971954aafb28672e5befd1144~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
+    "md/NueKit.md",
+    "md/leetcode.md",
+    "md/nuejs.md",
+    "md/DigitalHippo.md",
     "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
-    "md/面试官：能不能给 Promise 增加取消功能和进度通知功能...  我：？？？.md",
-    "done/Portfolio.md",
+    "done/Nuejs SSR.md",
+    "done/Compile.md",
+    "系统架构师.md",
+    "python3 leet.md",
+    "Pasted image 20231224162300.png.md",
+    "done/createComponents.md",
+    "md/2023-12-07.md",
+    "done/2023-12-30.md",
+    "Excalidraw/Drawing 2024-01-01 15.59.14.excalidraw.md",
+    "md/Questions.md",
+    "md/如何理解 React Fiber 架构？.md",
+    "_resources/Pasted image 20231230171324.png",
+    "done/interview_front_nus10.27.md.md",
+    "done/Event.md",
+    "done",
     "output/2023-12-28 09-35-53.html",
-    "achieve/最强大的 CSS 布局 —— Grid 布局.md",
-    "achieve/二十分钟掌握 React 核心理念，老鸟快速入门指南.md",
     "_resources/Pasted image 20231224162919.png",
     "_resources/Pasted image 20231224162300.png",
     "_resources/Pasted image 20230814132849.png",
-    "_resources/Pasted image 20230814120443.png",
-    "_assert/Pasted image 20230612231655.png",
-    "_assert/Pasted image 20230612231921.png",
     "cur useless/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04",
     "cur useless/problems ",
     "md/leetcode-master/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04",
@@ -234,10 +216,6 @@
     "md/leetcode-master/problems ",
     "md/leetcode-master/problems",
     "md/leetcode-master",
-    "_resources/Pasted image 20231025235133.png",
-    "_resources/Pasted image 20231019141202.png",
-    "_resources/d1f76e4c2d9d1ed0fea27c6c152aa4cb_MD5.jpg",
-    "_resources/ba09946db244f43ca7c0ab03d2951240_MD5.jpg",
     "未命名.canvas"
   ]
 }
