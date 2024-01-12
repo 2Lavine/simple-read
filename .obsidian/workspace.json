@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "6604c94d35c77d7a",
+        "id": "976ce7e2e8b03ae3",
         "type": "tabs",
         "children": [
           {
-            "id": "fcd145ec1d0de9d3",
+            "id": "9c517ff88065fbe9",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
+                "file": "mini-react-docs/React17与React18源码之间的差异.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md"
+                "file": "mini-react-docs/React17与React18源码之间的差异.md"
               }
             }
           },
@@ -58,7 +58,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "给 Promise",
                 "matchingCase": false,
                 "explainSearch": true,
                 "collapseAll": true,
@@ -96,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
+                "file": "mini-react-docs/React17与React18源码之间的差异.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
+                "file": "mini-react-docs/React17与React18源码之间的差异.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -168,45 +168,46 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "fcd145ec1d0de9d3",
+  "active": "9c517ff88065fbe9",
   "lastOpenFiles": [
-    "_resources/9dcb4fb5a1454216b376f812f783f385~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg",
-    "_resources/a0eefab971954aafb28672e5befd1144~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg",
-    "_resources/39b3c53bfa0f4e44bb0c8fd0c1156df6~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg",
-    "_resources/61b32d2f664c4fa9ae4046cf08bb1327~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg",
-    "_resources/9d5c3fe6b3a44d2d8d2236126b840fe2~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg",
-    "_resources/70fe7bf2f7fe4562aed68ed444549964~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg",
+    "mini-react-docs/how_to_debug_react_source_code.md",
+    "mini-react-docs/react基础.md",
+    "2024-01-10.md",
+    "done/一次性弄清前端上线和生产环境地址.md",
+    "done/2024-01-02.md",
+    "done/2023-12-29.md",
+    "md/缓存服务器和 CDN 是一回事吗？.md",
+    "_resources/f443b657dbc39d361f68.png~tplv-t2oaga2asx-jj-mark!3024!0!0!0!q75.awebp.jpg",
+    "_resources/f66af51668554669a52ebcb2281c5e6b~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0.awebp.jpg",
+    "_resources/eaf55d94c7dd4226b033b96e64679b82~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0.awebp.jpg",
+    "_resources/e8d9a6a8dae446b98c79a9432cc482e6~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0.awebp.jpg",
+    "_resources/de1a8b1fcc7c4e81afd252e11ad66f37~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0.awebp.jpg",
+    "_resources/dcf6265f7182433ead9a6e1d22c458fd~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0.awebp.jpg",
+    "_resources/be5b7f0e022a8da60ed8.png~tplv-t2oaga2asx-jj-mark!3024!0!0!0!q75.awebp.jpg",
+    "_resources/aa86ea59d6f14a47bdc8447236a2fb36~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0.awebp.jpg",
+    "_resources/a0b56f2ab0864642a4a2b046f14c7b35~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0.awebp.jpg",
+    "_resources/900bce5ef89b469ab6d1f6f68ca4c8c3~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0.awebp.jpg",
+    "output/2024-1-12 08-56-44.html",
+    "achieve/超线性回报 [译] | 宝玉的工程技术分享.md",
+    "achieve/给 Promise 增加取消功能和进度通知功能.md",
+    "achieve/一劳永逸的搞定 flex 布局.md",
+    "achieve/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md",
+    "achieve/JavaScript 实现 Date( ) ——日期格式化的三种常用方法.md",
+    "md/如何理解 React Fiber 架构？.md",
+    "md/Vue3 硬核源码解析系列（2）Object.defineProperty VS proxy.md",
+    "md/JavaScript 简明教程 - module.md",
+    "md/2023-12-07.md",
+    "md/原来前端部署这么简单.md",
+    "done/一劳永逸的搞定 flex 布局.md",
+    "done/【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~.md",
+    "done/超线性回报 [译] | 宝玉的工程技术分享.md",
+    "md/网站前端打 API 时把密码加密，有意义吗？ - Huli's blog.md",
+    "done/给 Promise 增加取消功能和进度通知功能.md",
+    "done/JavaScript 实现 Date( ) ——日期格式化的三种常用方法.md",
+    "cur useless/生活的平衡.md",
     "output/2024-1-10 09-35-14.html",
     "achieve/interview_front_nus10.27.md.md",
     "achieve/createComponents.md",
-    "achieve/Nuejs SSR.md",
-    "achieve/Event.md",
-    "achieve/Compile.md",
-    "achieve/2024-01-09.md",
-    "achieve/2024-01-01.md",
-    "achieve/2023-12-30.md",
-    "md/Front end Prepare.md",
-    "md/2024-01-02.md",
-    "done/createComponents.md",
-    "done/Nuejs SSR.md",
-    "done/Compile.md",
-    "done/2024-01-09.md",
-    "done/2024-01-01.md",
-    "done/2023-12-30.md",
-    "_resources/a0eefab971954aafb28672e5befd1144~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
-    "_resources/Pasted image 20231230171324.png",
-    "_resources/9dcb4fb5a1454216b376f812f783f385~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
-    "_resources/9d5c3fe6b3a44d2d8d2236126b840fe2~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
-    "_resources/70fe7bf2f7fe4562aed68ed444549964~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.webp",
-    "Excalidraw/Drawing 2024-01-01 15.59.14.excalidraw.md",
-    "md/缓存服务器和 CDN 是一回事吗？.md",
-    "md/为什么我更推荐命令式 Modal - 静かな森.md",
-    "md/interview_front_nus10.27.md.md",
-    "md/Vue3 硬核源码解析系列（2）Object.defineProperty VS proxy.md",
-    "md/Proxy 是代理，Reflect 是干嘛用的？ «  张鑫旭 - 鑫空间 - 鑫生活.md",
-    "md/JavaScript 简明教程 - module.md",
-    "md/Event.md",
-    "Pasted image 20231224162300.png.md",
     "done",
     "output/2023-12-28 09-35-53.html",
     "cur useless/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04",
@@ -215,7 +216,6 @@
     "md/leetcode-master/problems/0078. 子集. md at master · youngyangyang04",
     "md/leetcode-master/problems/0070. 爬楼梯. md at master · youngyangyang04",
     "md/leetcode-master/problems ",
-    "md/leetcode-master/problems",
     "未命名.canvas"
   ]
 }

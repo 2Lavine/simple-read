@@ -1,36 +1,21 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7238199999732711481?searchId=20231223132102851DD7ACF52DA79BBC32)
 
-Date( ) 介绍
-==========
-
 Date( ) 基本使用
 ------------
-
 `Date()`日期对象是构造函数，必须使用 **new** 来调用我们的日期对象。
-
 *   若`Date()`没有参数时 返回当前时间
 *   若`Date(timer)`有参数时 返回参数设置的时间
     *   参数写法：`'2012-2-2 08:54:32'`（字符串）
-    *   返回值格式：`Sun May 28 2023 23:36:28 GMT+0800 (中国标准时间)`
-
-```
-// 无参数时
-    let dateW = new Date();
-    console.log('当前时间', dateW); // Sun May 28 2023 23:36:28 GMT+0800 (中国标准时间)
-    // 有参数时
-    let dateY = new Date('2012-2-2 08:54:32');
-    console.log('指定时间', dateY); // Thu Feb 02 2012 08:54:32 GMT+0800 (中国标准时间)
-```
+*   返回值格式：`Sun May 28 2023 23:36:28 GMT+0800 (中国标准时间)`
 
 Date() 常用 API
 -------------
-
 `Date()` 可以通过许多方法获取日期和时间的各个部分，在格式化时间时我们经常用到这些 API。
 
 ```
 let date = new Date();
     console.log(date.getFullYear()); //当前日期的年 2022
-    console.log(date.getMonth() + 1); //月份+1 由于月份是0-11计算 所以需要 +1 
+    console.log(date.getMonth() + 1); //月份+1 月份是0-11计算 所以需要 +1 
     console.log(date.getDate()); // 日
     console.log(date.getDay()); // 星期几  注意：星期日返回的是0
     console.log(date.getHours()); // 时
@@ -38,21 +23,14 @@ let date = new Date();
     console.log(date.getSeconds()); // 秒
 ```
 
-日期格式化
-=====
-
-1.1 toLocaleString（原生方法）
+1.1 日期格式化toLocaleString（原生方法）
 ------------------------
-
 Date 对象有一个 `toLocaleString` 方法，该方法可以格式化日期和时间, 同时衍生出另外两种分别获得日期和时间的方法。
-
 *   字段说明：
-    
     *   日期 + 时间: `toLocaleString()`
     *   日期: `toLocaleDateString()`
     *   时间: `toLocaleTimeString()`
 *   参数说明 **(非必填)**：
-    
     *   `'en-US', { timeZone: 'America/New_York' }`
     *   `en-US` : 地区设置 (String）
     *   `{ timeZone: 'America/New_York' }`: 日期时间格式和时区信息 (Object)
@@ -65,19 +43,14 @@ let timer = new Date()
 ```
 
 ```
-// 两个参数：（地区设置，日期时间格式和时区信息）
-    console.log(time.toLocaleString('en-US', { timeZone: 'America/New_York' }))
-    // 打印结果 5/28/2023, 11:08:39 AM
+// 两个参数：（地区设置，日期时间格式和时区信息）console.log(time.toLocaleString('en-US', { timeZone: 'America/New_York' }))
+// 打印结果 5/28/2023, 11:08:39 AM
 ```
-
 1.2 字符串方法
 ---------
-
 `string.padStart(字符串长度, 填充元素)` : 用`填充元素`填充`string`字符串，使得产生的新字符串达到所设置的长度（参数一：`字符串长度`）。
-
 *   `padStart` 从原字符串左侧开始填充
 *   `padEnd` 从原字符串右侧开始填充
-
 ```
 let str = 'str'
     str.padStart(5,'0') // "00str"
@@ -89,9 +62,7 @@ let str = 'str'
     // 原字符串长度大于设定长度时，以原字符串长度为准 不截断原字符串
     str.padStart(2); // "str"
 ```
-
 ### 1) 利用字符串进行日期格式化
-
 ```
 console.log(time.getFullYear().toString().padStart(4, '0')) // 年 2023
   console.log((time.getMonth() + 1).toString().padStart(2, '0')) // 月 05
@@ -101,9 +72,7 @@ console.log(time.getFullYear().toString().padStart(4, '0')) // 年 2023
   console.log(time.getMinutes().toString().padStart(2, '0')) // 分 19
   console.log(time.getSeconds().toString().padStart(2, '0')) // 秒 55
 ```
-
 ### 2) 格式化函数封装
-
 ```
 let time = new Date()
     // 定义格式化封装函数
@@ -127,47 +96,21 @@ let time = new Date()
     console.log(formaData(time)) // 2023-05-29 00:30:19
 ```
 
-1.3 第三方库
---------
-
-除了以上方法外，还有很多第三方库可以用来格式化日期时间，最常用的主要为 `Moment.js`。
-
-### 1) 安装 Moment.js
-
-```
-npm install moment
-```
-
-### 2) 导入 Moment.js 模块（main.js)
-
-```
-import moment from 'moment';
-    Vue.prototype.$moment = moment
-```
-
-### 3) 格式化时间
+### 1.3 第三方库momentjs 格式化时间
 
 ```
 // `this.$moment()` 输出当前时间的moment对象
 console.log(this.$moment().format('YYYY-MM-DD HH:mm:ss')); // 2023-05-29 00:30:19
 ```
 
-其他处理方法
-======
-
 2.1 时间戳
 -------
-
 date 时间戳（毫秒数）：
-
 *   获取 date 总的毫秒数，不是当前时间的毫秒数，而是距离`1970年1月1日`过了多少毫秒数。
-    
 *   获取方法：
-    
     *   valueof() 、 getTime()
     *   const timer = + new Date() `常用`
     *   Date.now( ) 低版本浏览器打不开
-    
     ```
     let date = new Date();
     // 写法一

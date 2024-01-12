@@ -1,0 +1,677 @@
+<h1>JavaScript 实现 Date( ) ——日期格式化的三种常用方法</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7238199999732711481?searchId=20231223132102851DD7ACF52DA79BBC32">juejin.cn</a></p>
+</blockquote>
+<h2>Date( ) 基本使用</h2>
+<p><code>Date()</code>日期对象是构造函数，必须使用 <strong>new</strong> 来调用我们的日期对象。</p>
+<ul>
+<li>若<code>Date()</code>没有参数时 返回当前时间</li>
+<li>若<code>Date(timer)</code>有参数时 返回参数设置的时间
+<ul>
+<li>参数写法：<code>'2012-2-2 08:54:32'</code>（字符串）</li>
+</ul>
+</li>
+<li>返回值格式：<code>Sun May 28 2023 23:36:28 GMT+0800 (中国标准时间)</code></li>
+</ul>
+<h2>Date() 常用 API</h2>
+<p><code>Date()</code> 可以通过许多方法获取日期和时间的各个部分，在格式化时间时我们经常用到这些 API。</p>
+<pre><code>let date = new Date();
+    console.log(date.getFullYear()); //当前日期的年 2022
+    console.log(date.getMonth() + 1); //月份+1 月份是0-11计算 所以需要 +1 
+    console.log(date.getDate()); // 日
+    console.log(date.getDay()); // 星期几  注意：星期日返回的是0
+    console.log(date.getHours()); // 时
+    console.log(date.getMinutes()); // 分
+    console.log(date.getSeconds()); // 秒
+</code></pre>
+<h2>1.1 日期格式化toLocaleString（原生方法）</h2>
+<p>Date 对象有一个 <code>toLocaleString</code> 方法，该方法可以格式化日期和时间, 同时衍生出另外两种分别获得日期和时间的方法。</p>
+<ul>
+<li>字段说明：
+<ul>
+<li>日期 + 时间: <code>toLocaleString()</code></li>
+<li>日期: <code>toLocaleDateString()</code></li>
+<li>时间: <code>toLocaleTimeString()</code></li>
+</ul>
+</li>
+<li>参数说明 <strong>(非必填)</strong>：
+<ul>
+<li><code>'en-US', { timeZone: 'America/New_York' }</code></li>
+<li><code>en-US</code> : 地区设置 (String）</li>
+<li><code>{ timeZone: 'America/New_York' }</code>: 日期时间格式和时区信息 (Object)</li>
+</ul>
+</li>
+</ul>
+<pre><code>let timer = new Date()
+    console.log(timer.toLocaleString()) // 日期+时间 2023/5/28 23:07:35
+    console.log(timer.toLocaleDateString()) // 日期 2023/5/28 
+    console.log(timer.toLocaleTimeString()) // 时间 23:10:31
+</code></pre>
+<pre><code>// 两个参数：（地区设置，日期时间格式和时区信息）console.log(time.toLocaleString('en-US', { timeZone: 'America/New_York' }))
+// 打印结果 5/28/2023, 11:08:39 AM
+</code></pre>
+<h2>1.2 字符串方法</h2>
+<p><code>string.padStart(字符串长度, 填充元素)</code> : 用<code>填充元素</code>填充<code>string</code>字符串，使得产生的新字符串达到所设置的长度（参数一：<code>字符串长度</code>）。</p>
+<ul>
+<li><code>padStart</code> 从原字符串左侧开始填充</li>
+<li><code>padEnd</code> 从原字符串右侧开始填充</li>
+</ul>
+<pre><code>let str = 'str'
+    str.padStart(5,'0') // &quot;00str&quot;
+    
+    // 不指定填充元素时，以空字符串填充
+    str.padStart(5) // &quot;  abc&quot; 
+    // 填充元素超出指定长度时，从左-&gt;右对填充元素截取
+    str.padStart(6,'123465'); // &quot;123str&quot;
+    // 原字符串长度大于设定长度时，以原字符串长度为准 不截断原字符串
+    str.padStart(2); // &quot;str&quot;
+</code></pre>
+<h3>1) 利用字符串进行日期格式化</h3>
+<pre><code>console.log(time.getFullYear().toString().padStart(4, '0')) // 年 2023
+  console.log((time.getMonth() + 1).toString().padStart(2, '0')) // 月 05
+  console.log(time.getDate().toString().padStart(2, '0')) // 日 29
+  console.log('星期' + (time.getDay() === 0 ? 7 : time.getDay())) // 周 星期1
+  console.log(time.getHours().toString().padStart(2, '0')) // 时 01
+  console.log(time.getMinutes().toString().padStart(2, '0')) // 分 19
+  console.log(time.getSeconds().toString().padStart(2, '0')) // 秒 55
+</code></pre>
+<h3>2) 格式化函数封装</h3>
+<pre><code>let time = new Date()
+    // 定义格式化封装函数
+    function formaData(timer) {
+        const year = timer.getFullYear()
+        const month = timer.getMonth() + 1 // 由于月份从0开始，因此需加1
+        const day = timer.getDate()
+        const hour = timer.getHours()
+        const minute = timer.getMinutes()
+        const second = timer.getSeconds()
+        return `${pad(year, 4)}-${pad(month)}-${pad(day)} ${pad(hour)}:${pad(minute)}:${pad(second)}`
+    }
+    // 定义具体处理标准
+    // timeEl 传递过来具体的数值：年月日时分秒
+    // total 字符串总长度 默认值为2
+    // str 补充元素 默认值为&quot;0&quot;
+    function pad(timeEl, total = 2, str = '0') {
+        return timeEl.toString().padStart(total, str)
+    }
+    // 调用函数
+    console.log(formaData(time)) // 2023-05-29 00:30:19
+</code></pre>
+<h3>1.3 第三方库momentjs 格式化时间</h3>
+<pre><code>// `this.$moment()` 输出当前时间的moment对象
+console.log(this.$moment().format('YYYY-MM-DD HH:mm:ss')); // 2023-05-29 00:30:19
+</code></pre>
+<h2>2.1 时间戳</h2>
+<p>date 时间戳（毫秒数）：</p>
+<ul>
+<li>获取 date 总的毫秒数，不是当前时间的毫秒数，而是距离<code>1970年1月1日</code>过了多少毫秒数。</li>
+<li>获取方法：
+<ul>
+<li>valueof() 、 getTime()</li>
+<li>const timer = + new Date() <code>常用</code></li>
+<li>Date.now( ) 低版本浏览器打不开</li>
+</ul>
+<pre><code>let date = new Date();
+// 写法一
+console.log(date.valueOf()); //现在时间距离1970.1.1的毫秒数
+console.log(date.getTime());
+
+// 写法二
+let date = +new Date(); 
+console.log(date); //返回当前总的毫秒数
+
+// 写法三
+ console.log(Date.now()); // H5新增 低版本浏览器打不开
+</code></pre>
+</li>
+</ul>
+<h3>倒计时函数封装</h3>
+<pre><code>function countDown(time) {
+        let dateNow = +new Date(); // 获取当前时间的毫秒数
+        let dateOver = +new Date(time); // 获取目标时间的毫秒数
+        let gapTime = (dateOver - dateNow) / 1000 // 由毫秒得到秒
+        let s = pad(parseInt(gapTime % 60)); // 秒数
+        let m = pad(parseInt(gapTime / 60 % 60)); // 分钟数
+        let h = pad(parseInt(gapTime / 60 / 60 % 24)); // 小时数
+        let d = pad(parseInt(cha / 60 / 60 / 24)); // 天数
+        return d + '天' + h + '小时' + m + '分钟' + s + '秒';
+    }
+    
+    // 时间标准的处理函数
+    function pad(timeEl, total = 2, str = '0') {
+        return timeEl.toString().padStart(total, str)
+    }
+    
+    // 调用函数
+    console.log(countDown('2122-5-19 8:00:00'));
+</code></pre>
+
+<h1>【面试官系列】一道曾经卡得我 “头皮发麻” 的阿里前端（React）面试题 ~</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7218942994467389498">juejin.cn</a></p>
+</blockquote>
+<h1>面试题 用hooks实现componentWillMount
+一、Class Component 时代的生命周期</h1>
+<p>先来回顾一下 <code>class component</code> 的生命周期。</p>
+<ul>
+<li><code>componentWillReceiveProps()</code> 在 <code>v16.4</code> 已经被标记为不建议使用，官方建议使用新的<code>getDerivedStateFromProps()</code>方法代替。</li>
+<li>还有一个细微的更新是： <code>setState</code> 和 <code>forceUpdate</code> 的调用也会触发 <code>getDerivedStateFromProps</code>。</li>
+</ul>
+<p>React class 组件在其生命周期中经历三个阶段：<strong>挂载</strong>、<strong>更新</strong>和<strong>卸载</strong>。</p>
+<ol>
+<li><strong>挂载阶段</strong>是在创建新组件并将其插入 DOM 时，或者换句话说，在组件生命周期开始时。这只会发生一次，通常称为 “初始渲染”。</li>
+<li><strong>更新阶段</strong>是组件更新或重新渲染的时候。当道具更新或状态更新时，会触发此反应。这个阶段可以发生多次，这就是 React 的意义所在。</li>
+<li>组件生命周期的最后一个阶段是<strong>卸载阶段</strong>，当组件从 DOM 中移除时。
+以下是每个生命周期函数的详细描述和执行时机：</li>
+</ol>
+<h2>1、挂载阶段</h2>
+<p>这个阶段发生在组件被创建并插入到 DOM 中的时候。按照上图，
+这个阶段会执行这几个钩子函数：</p>
+<ul>
+<li><code>constructor</code></li>
+<li><code>static getDerivedStateFromProps</code></li>
+<li><code>componentWillMount/UNSAVE_componentWillMount</code></li>
+<li><code>render</code></li>
+<li><code>componentDidMount</code>。</li>
+</ul>
+<h3>constructor()</h3>
+<p>构造函数，在组件创建时调用，用于初始化状态和绑定方法。</p>
+<h3>static getDerivedStateFromProps()</h3>
+<p>需要注意的是: <code>props</code> 和 <code>state</code> 是完全不同的概念，一个成熟的 React 开发者最基本的是要知道组件的数据从哪里来，要往哪里去。
+顾名思义，<code>getDerivedStateFromProps</code> 的字面意思就是：从 <code>props</code> 获取 <code>衍生state</code>。
+在许多情况下，你的组件的 <code>state</code> 实际上是其 <code>props</code> 的衍生品。
+这个方法允许你用 <code>任何props值</code> 来修改 <code>state 值</code>。</p>
+<p>这个方法在组件挂载前调用，并且在组件每次更新时也会被调用。
+它的作用是根据 <code>props</code> 的改变来更新 <code>state</code>，返回一个 <code>新的state</code>。
+如果不需要更新 <code>state</code>，返回 <code>null</code> 即可。</p>
+<h3>componentWillMount/UNSAVE_componentWillMount</h3>
+<p>这个生命周期函数在 <code>render</code> 之前调用，在此生命周期中使用 <code>setState</code> 不会触发额外渲染，因为你不可能在创建的时候把数据渲染出来。
+只能在 <code>componentDidMount</code> 中使用 <code>setState</code> 把数据塞回去，通过更新界面来展示数据。
+所以一般建议把网络请求的逻辑放在 <code>componentDidMount</code>，而不是 <code>componentWillMount</code> 中。</p>
+<h3>render()</h3>
+<p><code>render()</code> 方法是唯一必须的钩子函数，它在 <code>getDerivedStateFromProps</code> 方法之后被调用，用于渲染组件的 UI。</p>
+<blockquote>
+<p>注意：不要在 <code>render()</code> 方法中改变 <code>state</code>，否则会陷入死循环，导致程序崩溃。</p>
+</blockquote>
+<h3>componentDidMount()</h3>
+<p><code>componentDidMount</code> 是在挂载阶段调用的最后一个生命周期方法，组件被挂载后调用，这个方法可以用于发起网络请求或者设置定时器等异步操作。
+它可能在组件被渲染或挂载到 DOM 之后被调用。</p>
+<p>这个方法中，你可以添加副作用，如发送网络请求或更新组件的状态，<code>componentDidMount</code> 中还可以订阅 <code>Redux store</code>。你也可以立即调用 <code>this.setState</code> 方法；但这将导致重新渲染，因为它启动了更新阶段，因为状态已经改变。
+所以，你需要小心使用 <code>componentDidMount</code>，因为它可能导致不必要的重新渲染。</p>
+<h2>2、更新阶段</h2>
+<p>当组件的 <code>props 或 state</code> 改变时，组件会被重新渲染，此时就会进入到更新阶段。
+这个阶段会执行这几个钩子函数：
+<code>static getDerivedFromProps</code>
+<code>shouldComponentUpdate</code>
+<code>render</code>
+<code>getSnapshotBeforeUpdate</code>
+<code>componentDidUpdate</code>。</p>
+<h3>static getDerivedStateFromProps()</h3>
+<p>在更新阶段，第一个调用的生命周期方法是 <code>getDerivedStateFromProps</code>。
+在组件更新前被调用，和挂载阶段的作用相同，但是尽量不要在这个方法中执行副作用操作，因为这个方法会在每次更新时都被调用。</p>
+<blockquote>
+<p>例如，一个组件的状态可能取决于其 <code>props</code> 的值。通过 <code>getDerivedStateFromProps</code>，在组件被重新渲染之前，它的 <code>state</code> 可以反映这些变化，并且可以显示在新更新的组件中。</p>
+</blockquote>
+<h3>shouldComponentUpdate()</h3>
+<p><code>shouldComponentUpdate</code> 是专门用于性能优化的， 通常来说，只有 <code>props</code> 或 <code>state</code> 变化时才需要再重新渲染。这个方法接受两个参数：nextProps 和 nextState，可以用于控制组件是否需要重新渲染，如果返回 false，组件将不会重新渲染，默认返回 true。</p>
+<blockquote>
+<p>注意，当调用 <code>forceUpdate()</code> 时，<code>shouldComponentUpdate</code> 方法被忽略。</p>
+</blockquote>
+<h3>render()</h3>
+<p><code>render()</code> 方法会根据 <code>最新的props和state</code> 来重新渲染组件的 UI，在挂载阶段已经说明，这里就不赘述了。</p>
+<h3>getSnapshotBeforeUpdate</h3>
+<p><code>getSnapshotBeforeUpdate</code> 方法让你可以访问组件更新前的 <code>props</code> 和 <code>state</code>。
+这使你能够处理或检查 <code>props</code> 和 <code>state</code> 的先前值。这是一个很少使用的方法。</p>
+<blockquote>
+<p>例如，这个方法的一个很好的使用场景是处理 <code>聊天APP</code> 中的滚动位置。当用户在查看旧的信息时有一条新的信息进来，它不应该把旧的信息推到视野之外。</p>
+</blockquote>
+<p><code>getSnapshotBeforeUpdate</code> 在渲染方法之后，组件 <code>DidUpdate</code> 之前被调用。
+如果 <code>getSnapshotBeforeUpdate</code> 方法返回任何东西，它将被传递给 <code>componentDidUpdate</code> 方法作为参数：</p>
+<h3>componentDidUpdate()</h3>
+<p><code>componentDidUpdate</code> 方法是在更新阶段调用的最后一个生命周期方法。
+组件更新后被调用，可以用于处理 <code>DOM的更新</code> 或者 <code>发起网络请求</code> 等异步操作。
+这个方法最多可以接受三个参数：<code>prevProps</code>、<code>prevState</code> 和 <code>snapshot</code>（如果你调用了 <code>getSnapshotBeforeUpdate</code> 方法）。
+下面是一个使用 <code>componentDidUpdate</code> 方法来实现自动保存功能的例子：</p>
+<ul>
+<li>要在render()之后，因为可能涉及后端操作，需要大量时间</li>
+</ul>
+<p><img src="_resources/eaf55d94c7dd4226b033b96e64679b82~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0..jpg.jpg" alt=""></p>
+<h2>3、卸载阶段</h2>
+<p>当组件从 DOM 中移除时，就会进入到卸载阶段。
+卸载阶段只涉及一个生命周期方法：<code>componentWillUnmount</code>。</p>
+<h3>componentWillUnmount()</h3>
+<p>组件被卸载时调用，可以用于清除定时器、取消网络请求等操作。一旦这个方法执行完毕，该组件将被销毁。</p>
+<p>下面是一个使用 <code>componentWillUnmount</code> 的例子：</p>
+<p><img src="_resources/7f366eeff1b54f79a9cd2868e917a813~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0..jpg.jpg" alt=""></p>
+<h1>二、React Hooks 时代的生命周期</h1>
+<h2>3、实际的 “生命周期”</h2>
+<p>绘制下图中这样一个比较容易理解的流程：</p>
+<p><img src="_resources/f66af51668554669a52ebcb2281c5e6b~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0..jpg.jpg" alt="">
+正如上图中看到的，挂载阶段按照下面的顺序执行：</p>
+<ol>
+<li>首先 react 运行 （<a href="https://link.juejin.cn?target=https%3A%2F%2Freactjs.org%2Fdocs%2Fhooks-reference.html%23lazy-initial-state" title="https://reactjs.org/docs/hooks-reference.html#lazy-initial-state">惰性初始化程序</a>）</li>
+<li>第一次渲染</li>
+<li>React 更新 DOM</li>
+<li>运行 <code>LayoutEffects</code></li>
+<li>浏览器绘制屏幕</li>
+<li>运行 <code>Effects</code></li>
+</ol>
+<h3>更新</h3>
+<p>在每次更新时，React 都会从由 state 或 props 变化引起的重新渲染开始。现在就没有惰性的初始化调用了。</p>
+<ol>
+<li><code>render</code></li>
+<li>React 更新 DOM</li>
+<li>清除 <code>LayoutEffects</code></li>
+<li>运行 <code>LayoutEffects</code></li>
+<li>浏览器绘制屏幕</li>
+<li>清理 <code>Effects</code></li>
+<li>运行 <code>Effects</code></li>
+</ol>
+<blockquote>
+<p>注意，在渲染之后，React 清理了 <code>LayoutEffects</code>，使其紧接着运行。浏览器然后绘制屏幕，之后 React 清理 <code>Effects</code> 并紧接着运行它。</p>
+</blockquote>
+<p>挂载和更新之间的主要区别是：</p>
+<ul>
+<li>惰性初始化仅在挂载时</li>
+<li>挂载阶段不存在清理工作</li>
+</ul>
+<h3>卸载</h3>
+<p>在卸载期间，React 清理所有效果：</p>
+<ol>
+<li>清理 <code>LayoutEffects</code></li>
+<li>清理 <code>Effects</code></li>
+</ol>
+<h2>4、React Hooks 的执行时机</h2>
+<p>执行顺序</p>
+<ul>
+<li>useState</li>
+<li>useMemo</li>
+<li>render</li>
+<li>useLayoutEffect</li>
+<li>effect</li>
+</ul>
+<h1>三、实现 componentWillMount</h1>
+<p>在类组件中，<code>componentWillMount</code> 被认为是 <code>legacy</code> 的（“遗留的”），就是要被干掉的。因为它可能会运行不止一次，而且有一个替代方法 —— <code>constructor</code>。</p>
+<h2>1、基于 useState 的实现</h2>
+<p><img src="_resources/de1a8b1fcc7c4e81afd252e11ad66f37~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0..jpg.jpg" alt=""></p>
+<p>使用：</p>
+<p><img src="_resources/333bb2cbf9e04809a94c310f878824d3~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0..jpg.jpg" alt=""></p>
+<h2>2、基于 useMemo 实现</h2>
+<p>还可以使用 <code>useMemo</code> 来实现：</p>
+<blockquote>
+<p>是因为 <code>useMemo</code> 不需要实际返回一个值，你也不需要实际使用它，但是因为它根据依赖关系缓存了一个值，而这个依赖关系只运行一次（在依赖为 &quot;[]&quot; 的情况下），而且当组件挂载时，它在其他东西之前运行一次。</p>
+<p>但不建议这么做：这可能会使用当前实现，<a href="https://link.juejin.cn?target=https%3A%2F%2Freactjs.org%2Fdocs%2Fhooks-reference.html%23usememo" title="https://reactjs.org/docs/hooks-reference.html#usememo">React 文档特别说明不要这样操作</a>。你应该将 <code>useMemo</code> 作为性能优化的工具，而不是作为语义保证。</p>
+</blockquote>
+<p><img src="_resources/23a771dbed144e368f347d737bfeafb3~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0..jpg.jpg" alt=""></p>
+<h2>3、基于 useRef 实现</h2>
+<p><code>useRef</code> 是在函数组件初始渲染之前就会执行，而且它的值改变不会触发重渲染。</p>
+<p><img src="_resources/19f098756da9430e917296e34f130702~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0..jpg.jpg" alt=""></p>
+<p>甚至，我们还可以用来防止 <code>useEffect</code> 在挂载的时候执行：</p>
+<p><img src="_resources/582947b6cbd342c9962b7df7f76cc0e9~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0..jpg.jpg" alt=""></p>
+<h2>4、基于 useLayoutEffect 实现</h2>
+<p><code>useLayoutEffect</code> 在第二个依赖值为空的情况下可以实现跟 <code>componentWillMount</code> 相似的作用。<code>useLayoutEffect</code> 会在第一次页面挂载之前运行第一个函数里的回调。虽然实际上有两个更新，但在绘制到屏幕之前它们是同步的。</p>
+<p><img src="_resources/aa86ea59d6f14a47bdc8447236a2fb36~tplv-k3u1fbpfcp-zoom-in-crop-mark!1512!0!0!0..jpg.jpg" alt=""></p>
+
+<h1>一劳永逸的搞定 flex 布局</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903474774147086?searchId=2023122313485056F6DC591B90F06889B6">juejin.cn</a></p>
+</blockquote>
+<h2>寻根溯源话布局</h2>
+<p><code>text-align: center</code>、<code>verticle-align: center</code> 是否可行呢？</p>
+<ul>
+<li>答案也是否定的。这两个属性只能用于行内元素，对于块级元素的布局是无效的。</li>
+</ul>
+<p>在网页布局没有进入 CSS 的时代，排版几乎是通过 <code>table</code> 元素实现的
+CSS 标准为我们提供了 3 种布局方式：<code>标准文档流</code>、<code>浮动布局</code>和<code>定位布局</code>。</p>
+<ul>
+<li>这几种方式的搭配使用可以轻松搞定 PC 端页面的常见需求，比如实现水平居中可以使用 <code>margin: 0 auto</code>，实现水平垂直同时居中可以如下设置：</li>
+</ul>
+<h2>flex 基本概念</h2>
+<p>使用 flex 布局首先要设置父容器 <code>display: flex</code>，然后再设置 <code>justify-content: center</code> 实现水平居中，最后设置 <code>align-items: center</code> 实现垂直居中。</p>
+<pre><code>#dad {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+</code></pre>
+<h3>1. 容器</h3>
+<blockquote>
+<p>容器具有这样的特点：父容器可以统一设置子容器的排列方式，子容器也可以单独设置自身的排列方式，如果两者同时设置，以子容器的设置为准。</p>
+</blockquote>
+<p><img src="_resources/f443b657dbc39d361f68.png~tplv-t2oaga2asx-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<h4>1.1 父容器</h4>
+<ul>
+<li>设置子容器沿主轴排列：<strong>justify-content</strong>
+<code>justify-content</code> 属性用于定义如何沿着主轴方向排列子容器。</li>
+</ul>
+<p><img src="_resources/be5b7f0e022a8da60ed8.png~tplv-t2oaga2asx-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<h4>1.2 子容器</h4>
+<ul>
+<li>在主轴上如何伸缩：<strong>flex</strong>
+<img src="_resources/089d48122453e9fc372c.png~tplv-t2oaga2asx-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></li>
+</ul>
+<p>子容器是有弹性的（flex 即弹性），它们会自动填充剩余空间，子容器的伸缩比例由 <code>flex</code> 属性确定。</p>
+<p><code>flex</code> 的值可以是无单位数字（如：1, 2, 3），也可以是有单位数字（如：15px，30px，60px），还可以是 <code>none</code> 关键字。子容器会按照 <code>flex</code> 定义的尺寸比例自动伸缩，如果取值为 <code>none</code> 则不伸缩。</p>
+<p>虽然 <code>flex</code> 是多个属性的缩写，允许 1 - 3 个值连用，但通常用 1 个值就可以满足需求，它的全部写法可参考下图。</p>
+<h2>flex 进阶概念</h2>
+<p>父容器</p>
+<ul>
+<li>设置换行方式：<strong>flex-wrap</strong></li>
+</ul>
+<blockquote>
+<p><strong>nowrap</strong>：不换行
+<strong>wrap</strong>：换行</p>
+</blockquote>
+<p>子容器</p>
+<ul>
+<li>设置排列顺序：<strong>order</strong>
+改变子容器的排列顺序，覆盖 HTML 代码中的顺序，默认值为 0，可以为负值，数值越小排列越靠前。</li>
+</ul>
+
+<h1>给 Promise 增加取消功能和进度通知功能</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7312349904046735400?utm_source=gold_browser_extension">juejin.cn</a></p>
+</blockquote>
+<h2>取消功能</h2>
+<p>我们都知道 Promise 的状态是不可逆的，</p>
+<ul>
+<li>
+<p>也就是说只能从 pending -&gt; fulfilled 或 pending -&gt; rejected，这一点是毋庸置疑的。
+但现在可能会有这样的需求，在状态转换过程当中我们可能不再想让它进行下去了，也就是说让它<strong>永远停留至 pending 状态</strong>。</p>
+</li>
+<li>
+<p>方法一：不调用resolve和 reject</p>
+</li>
+</ul>
+<pre><code>const p = new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      // handler data, no resolve and reject
+    }, 1000);
+ });
+ console.log(p); // Promise {&lt;pending&gt;} 💡
+</code></pre>
+<p>但注意我们的需求条件，是<strong>在状态转换过程中</strong>，也就是说必须有调用 resolve 和 reject，只不过中间可能由于某种条件，阻止了这两个调用。</p>
+<hr>
+<p>利用 <code>Promise.race</code> 来看看：模拟一个发送请求，如果超时则提示超时错误：</p>
+<pre><code>const getData = () =&gt;
+  new Promise((resolve) =&gt; {
+    setTimeout(() =&gt; {
+      console.log(&quot;发送网络请求获取数据&quot;); // ❗
+      resolve(&quot;success get Data&quot;);
+    }, 2500);
+  });
+
+const timer = () =&gt;
+  new Promise((_, reject) =&gt; {
+    setTimeout(() =&gt; {
+      reject(&quot;timeout&quot;);
+    }, 2000);
+  });
+
+const p = Promise.race([getData(), timer()])
+  .then((res) =&gt; {
+    console.log(&quot;获取数据:&quot;, res);
+  })
+  .catch((err) =&gt; {
+    console.log(&quot;超时: &quot;, err);
+  });
+</code></pre>
+<p>问题是现在确实能够确认超时了，但 <code>race</code> 的本质是内部会遍历传入的 promise 数组对它们的结果进行判断，即使超时网络请求还会发出：</p>
+<hr>
+<p>我们直接先来看红宝书上给出的答案：</p>
+<pre><code class="language-js">      class CancelToken {
+        constructor(cancelFn) {
+          this.promise = new Promise((resolve, reject) =&gt; {
+            cancelFn(() =&gt; {
+              console.log(&quot;delay cancelled&quot;);
+              resolve();
+            });
+          });
+        }
+      }
+      const sendButton = document.querySelector(&quot;#send&quot;);
+      const cancelButton = document.querySelector(&quot;#cancel&quot;);
+
+      function cancellableDelayedResolve(delay) {
+        console.log(&quot;prepare send request&quot;);
+        return new Promise((resolve, reject) =&gt; {
+          const id = setTimeout(() =&gt; {
+            console.log(&quot;ajax get data&quot;);
+            resolve();
+          }, delay);
+          const cancelToken = new CancelToken((cancelCallback) =&gt;
+            cancelButton.addEventListener(&quot;click&quot;, cancelCallback)
+          );
+          cancelToken.promise.then(() =&gt; clearTimeout(id));
+        });
+      }
+      sendButton
+	.addEventListener(&quot;click&quot;, () =&gt; cancellableDelayedResolve(1000));
+
+</code></pre>
+<p>我就按照自己的思路封装个不一样的：</p>
+<pre><code class="language-js">const sendButton = document.querySelector(&quot;#send&quot;);
+const cancelButton = document.querySelector(&quot;#cancel&quot;);
+
+class CancelPromise {
+ // delay: 取消功能期限  request：获取数据请求(必须返回 promise)
+  constructor(delay, request) {
+    this.req = request;
+    this.delay = delay;
+    this.timer = null;
+  }
+
+  delayResolve() {
+    return new Promise((resolve, reject) =&gt; {
+      console.log(&quot;prepare request&quot;);
+      this.timer = setTimeout(() =&gt; {
+        console.log(&quot;send request&quot;);
+        this.timer = null;
+        this.req().then(
+          (res) =&gt; resolve(res),
+          (err) =&gt; reject(err)
+        );
+      }, this.delay);
+    });
+  }
+
+  cancelResolve() {
+    console.log(&quot;cancel promise&quot;);
+    this.timer &amp;&amp; clearTimeout(this.timer);
+  }
+}
+
+// 模拟网络请求
+function getData() {
+  return new Promise((resolve) =&gt; {
+    setTimeout(() =&gt; {
+      resolve(&quot;this is data&quot;);
+    }, 2000);
+  });
+}
+
+const cp = new CancelPromise(1000, getData);
+sendButton.addEventListener(&quot;click&quot;, () =&gt;
+  cp.delayResolve().then((res) =&gt; {
+    console.log(&quot;拿到数据：&quot;, res);
+  })
+);
+cancelButton.addEventListener(&quot;click&quot;, () =&gt; cp.cancelResolve());
+</code></pre>
+<h2>进度通知功能</h2>
+<p>进度通知？那不就是类似发布订阅嘛？还真是，我们来看红宝书针对这块的描述：</p>
+<blockquote>
+<p>执行中的 Promise 可能会有不少离散的 “阶段”，在最终解决之前必须依次经过。某些情况下，监控 Promise 的执行进度会很有用</p>
+</blockquote>
+<p>这个需求就比较明确了，我们直接来看红宝书的实现吧，核心思想就是扩展之前的 Promise，为其添加 <code>notify</code> 方法作为监听，并且在 executor 中增加额外的参数来让用户进行通知操作：</p>
+<pre><code>class TrackablePromise extends Promise {
+  constructor(executor) {
+    const notifyHandlers = [];
+    super((resolve, reject) =&gt; {
+      return executor(resolve, reject, (status) =&gt; {
+        notifyHandlers.map((handler) =&gt; handler(status));
+      });
+    });
+    this.notifyHandlers = notifyHandlers;
+  }
+  notify(notifyHandler) {
+    this.notifyHandlers.push(notifyHandler);
+    return this;
+  }
+}
+let p = new TrackablePromise((resolve, reject, notify) =&gt; {
+  function countdown(x) {
+    if (x &gt; 0) {
+      notify(`${20 * x}% remaining`);
+      setTimeout(() =&gt; countdown(x - 1), 1000);
+    } else {
+      resolve();
+    }
+  }
+  countdown(5);
+});
+
+p.notify((x) =&gt; setTimeout(console.log, 0, &quot;progress:&quot;, x));
+p.then(() =&gt; setTimeout(console.log, 0, &quot;completed&quot;));
+</code></pre>
+<h1>End</h1>
+<p>关于取消功能在红宝书上 TC39 委员会也曾准备增加这个特性，但相关提案最终被撤回了。
+结果 ES6 Promise 被认为是 “激进的”：只要 Promise 的逻辑开始执行，就没有办法阻止它执行到完成。
+实际上我们学了这么久的 Promise 也默认了这一点，因此这个取消功能反而就不太符合常理，而且十分鸡肋。
+比如说我们有使用 then 回调接收数据，但因为你点击了取消按钮造成 then 回调不执行，我们知道 Promise 支持链式调用，那如果还有后续操作都将会被中断，这种中断行为 debug 时也十分痛苦，更何况最麻烦的一点是你还需要传入一个 delay 来表示取消的期限，而这个期限到底要设置多少才合适呢...</p>
+
+<h1>超线性回报 [译] | 宝玉的工程技术分享</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://baoyu.io/translations/paulgraham/superlinear?continueFlag=fba7405e4e1bd93d4fa04bd20cfa71f1">baoyu.io</a></p>
+</blockquote>
+<blockquote>
+<p>在商业领域，绩效的超线性回报尤为明显。</p>
+</blockquote>
+<p>当我还是个孩子的时候，我没能理解世界上最重要的一个事实：绩效带来的回报通常是超线性的。</p>
+<p>教师和教练总是给我们灌输一种思想：回报与付出是成正比的。</p>
+<ul>
+<li>但实际情况往往并非如此。如果你的产品质量只有竞争对手的一半，你不会仅仅失去一半的客户。更可能的是，你一名客户都留不住，最后关门大吉。</li>
+</ul>
+<p>绩效的超线性回报是这个世界的一个特性，而不是我们制定规则的副产品。</p>
+<ul>
+<li>在所有这些领域，成功者往往会越来越成功。</li>
+</ul>
+<h2>指数增长和阈值。</h2>
+<p>虽然似乎有许多情况都存在超线性回报，但归根结底，它们主要源于两个因素：指数增长和阈值。</p>
+<p>超线性回报最典型的例子是指数型增长的情况，比如培养细菌。</p>
+<p>YC Combinator 倡导创始人更多关注增长率而非绝对数值。</p>
+<ul>
+<li>这不仅能防止他们在初期因为绝对数值低而气馁，还能帮助他们决定重点关注的领域：通过增长率可以指引公司的发展方向。</li>
+<li>最重要的是，专注于增长率通常意味着你能实现指数型增长。</li>
+</ul>
+<p>虽然 YC 并未直接告诉创始人，增长率与你的投入成正比，但这一说法颇有道理。</p>
+<ul>
+<li>如果增长率确实与绩效成比例，那么随着时间推移，绩效 <em>p</em> 的回报将与 <em>pt</em> 成比例。</li>
+</ul>
+<p>我们对于不自然理解的事物，通常会通过发展习俗来应对。</p>
+<ul>
+<li>但是，关于指数增长的习俗却寥寥无几，因为人类历史中很少出现这样的例子。</li>
+<li>理论上，放牧动物本可以成为一个例子：你拥有的动物越多，它们的后代就越多。但实际上，放牧地成了限制因素，没有办法实现指数级的增长。</li>
+</ul>
+<p>“赢者通吃” 这一说法揭示了另一个超线性收益的来源。</p>
+<ul>
+<li>以体育比赛为例，比赛的表现和回报之间呈现一种阶梯式关系：无论胜出的队伍优势多大或仅略胜一筹，他们都只能获得一场胜利。[<a href="#f3n">3</a>]</li>
+<li>但这种阶梯效应并非仅源于竞争本身。更关键的是结果中的 “阈值”。即使在没有竞争的情况下，比如独自证明一个定理或实现一个目标，也存在这样的阈值。</li>
+</ul>
+<p>在很多情况下，一个能带来超线性回报的因素通常伴随着另一个。</p>
+<ul>
+<li>例如，跨越某个门槛往往能引发指数级增长：在战斗中，赢的一方往往损失更少，这使他们未来更有可能获胜。</li>
+<li>同样，指数级增长也助于跨越门槛：在一个市场中，如果一个公司快速增长，就能有效排除潜在竞争对手。</li>
+<li></li>
+</ul>
+<p>名声就是一个典型例子，它结合了两种超线性收益的来源。</p>
+<ul>
+<li>名声之所以能指数级增长，是因为现有的粉丝会吸引新的粉丝。但名声集中的主要原因在于人们的注意力有限，比如大众心目中的明星名单（A-list）只有那么多位。</li>
+</ul>
+<p>学习可能是最重要的结合了这两种超线性回报的例子。</p>
+<ul>
+<li>知识以指数形式增长，但也存在一些关键门槛，比如学习骑自行车。有些门槛就像机械工具，一旦你学会阅读，其他知识就能更快掌握。但最关键的门槛是新发现。</li>
+<li>知识在某种意义上像是分形的：深入一个领域的边界时，有时会开辟一个全新领域。像牛顿、杜勒和达尔文这样的大师，正是这样开创新领域并首先探索其中的新知识。</li>
+</ul>
+<h1>复合增长的工作。</h1>
+<p>复合增长的工作有两种类型：</p>
+<ul>
+<li>一种是直接的复合增长，就是说你在上一个周期的优秀表现能让你在下一个周期做得更好。
+<ul>
+<li>这种情况通常出现在你建设基础设施或者扩大观众群和品牌影响力时。</li>
+</ul>
+</li>
+<li>另一种是通过学习实现的复合增长，毕竟学习本身就能带来复合效应。
+<ul>
+<li>你可能觉得自己做得不够好，甚至没能达成当下的目标。但如果你学到了很多，那你依然在经历着指数级的成长。</li>
+<li>也许你的公司没有像你期望的那样增长，但你个人的成长最终会带来回报。</li>
+<li>实际上，不包含学习元素的指数增长往往与学习紧密交织在一起，我们应将这视为常态而非例外</li>
+</ul>
+</li>
+</ul>
+<p><strong>永远保持学习。如果你停止了学习，那么你可能就偏离了通往超线性回报的道路。</strong></p>
+<p>但也不要过度追求优化你的学习内容。</p>
+<ul>
+<li>不要局限于只学习那些已知有价值的知识。毕竟你还在学习阶段，还不确定哪些知识将来会有价值，过于苛刻的标准可能会让你错过一些异常但有潜力的领域。</li>
+</ul>
+<p>谈到阶梯函数，我们是否也能找到像 “寻找阈值” 或“寻找竞争”这样的实用策略呢？</p>
+<ul>
+<li>这个问题比较棘手。光有阈值并不意味着参与游戏就一定值得。比如，玩一轮俄罗斯轮盘赌，虽然确实存在明显的阈值，但即使在最佳情况下，你的处境也并未改善。</li>
+<li>同理，“寻找竞争”也不总是有效；如果奖励本身就不吸引人怎么办？相比之下，快速的指数增长不仅保证了收益曲线的形态，还保证了其规模——因为增长得足够快的事物，哪怕起初微不足道，最终也会变得庞大——而阈值仅仅确保了形态。[<a href="#f4n">4</a>]</li>
+</ul>
+<p>如果能找到一种方法来发现有潜力的智力阈值就好了。我们怎样才能判断，哪些问题的背后隐藏着全新的研究领域呢？虽然我们可能永远无法完全确定地预测这一点，但鉴于潜在的巨大价值，即便是略胜于随机的预测方法也很有用，而且我们有希望找到这样的方法。我们在一定程度上可以预测哪些研究问题不太可能带来新发现：那些看似合理但却乏味的问题。而那些能够带来新发现的问题通常显得非常神秘，但可能看起来并不重要。（如果它们既神秘又显然重要，那它们就会成为众所周知的重大未解问题，吸引众多研究者的关注。）</p>
+<ul>
+<li>因此，这里的一个策略是让好奇心而非职业主义驱动自己——放任你的好奇心自由驰骋，而不是仅仅做那些 “应该” 做的工作。</li>
+</ul>
+<h2>新时代绩效</h2>
+<p>对于那些有远大志向的人来说，绩效超线性增长的前景是令人兴奋的。而且，这方面的好消息是：这一领域正在不断扩张，无论是在工作类型上，还是在回报本身上。</p>
+<p>这种变化有两个原因，尽管它们紧密相连，几乎可以看作是同一个原因：一是技术的飞速进步，二是组织重要性的日渐减弱。</p>
+<p>五十年前，想要参与宏伟的项目几乎必须加入某个组织，因为这是获取资源、结交同事、拓宽分发渠道的唯一途径。所以在 1970 年，你的声望往往取决于你所属组织的声望。这种评价方式相当准确，因为不属于任何组织的人很难取得重大成就。当然，也有一些例外，像艺术家和作家这样的独立工作者，他们用廉价的工具创作，并拥有自己的品牌。但他们仍然依赖于组织来触及更广泛的受众。
+过去，由组织主导的世界限制了绩效回报的差异。但在我这一生中，这种现象已经显著改变。现在，更多的人能享受到 20 世纪艺术家和作家所拥有的自由。
+有很多宏伟项目不再需要庞大的初始投资，同时，学习、赚钱、寻找合作伙伴和触及受众的途径也变得更加多样。</p>
+<p>尽管旧世界依然存在，但这种变化的速度在历史上是非常惊人的，特别是考虑到其深远的影响。很难想象有什么比业绩回报的变化更根本的改变。</p>
+<p>一旦摆脱了机构的限制，结果的多样性将更加显著。这并不意味着每个人都会受益：绩效出色的人会取得更大的成功，而绩效不佳的人可能遭遇更大的失败。这一点非常重要，需要牢记。冒险追求超线性的回报并不适合所有人。对大多数人来说，作为一个整体的一部分会更好。那么，谁应该追求超线性回报呢？有两类人：一类是对自己的实力充满自信，相信在一个变化更大的世界里能够取得更高净收益的人；另一类是可以承担尝试风险的人，特别是年轻人，他们愿意冒险一试，看看能否成功。[<a href="#f7n">7</a>]</p>
+<h1>利用超线性回报来提升工作效果</h1>
+<p>摆脱机构束缚的转变并不仅仅意味着当前机构成员的离去。许多新的成功者将是那些过去从未被机构接纳的人。因此，机会的民主化将比机构自行制定的任何方案更广泛、更真实。</p>
+<p>不是每个人都对这种释放雄心的转变感到满意。它挑战了一些既得利益和固有的意识形态。 [<a href="#f8n">8</a>] 但如果你是一个有抱负的个人，这无疑是个好消息。那么，你该如何抓住这个机会呢？</p>
+<p>要充分利用超线性回报来提升工作效果，最佳的方法就是做出卓越的成果。在成就曲线的顶端，多付出一点点努力就能带来巨大的回报。而且，顶端的竞争相对较少 —— 这不仅仅是因为做出卓越的事情非常困难，还因为人们对此望而却步，鲜少有人真正尝试。这意味着，不仅投入卓越工作本身是一种超值的选择，甚至仅仅是尝试去做也同样如此。</p>
+<p>影响你工作成果的因素众多，要想脱颖而出，你几乎需要在所有方面都做到极致。例如，要想把事情做到极致，你必须对它充满兴趣。单纯的勤奋是不够的。因此，在一个超线性回报的世界里，了解自己的兴趣所在并寻找机会去实现它显得尤为重要。[<a href="#f9n">9</a>] 选择适合自己当前生活环境的工作同样重要。例如，如果某种工作本质上需要大量的时间和精力，那么在你年轻、未育有子女的时候去做这类工作会更有价值。</p>
+<p>要想做出卓越的成就，技巧至关重要。这不仅仅是努力的问题。我在下面这个段落中尝试提供一个方法。</p>
+<p>选择那些你天生擅长且深度感兴趣的工作。培养独立进行个人项目的习惯，项目是什么并不重要，关键是要让你感到充满雄心壮志。尽可能地努力工作，但避免过度劳累，这最终会引领你走到知识的前沿。这些领域看似平坦，但细看却充满缝隙。努力工作，避免过度劳累，这最终会引领你走到知识的前沿。尽可能多地承担风险；如果你从未遭遇失败，那可能意味着你过于保守。寻找最优秀的合作伙伴。培养优雅的品味，向最佳范例学习。保持诚实，特别是对自己。注意运动、饮食和睡眠，远离危险药物。在犹豫不决时，跟随你的好奇心。好奇心永远不会欺骗你，它比你更清楚什么值得关注。[<a href="#f10n">10</a>]</p>
+<h2>运气</h2>
+<p>当然，还有一件至关重要的事情：运气。运气在任何时候都是一个不可忽视的因素，特别是当你独立工作，而不是作为组织一员时，它的作用更加凸显。我们常说运气是准备和机遇的结合，但实际上，还有一部分纯粹的偶然性，是我们无法控制的。解决之道在于多次尝试，这也是尽早开始冒险的另一个理由。</p>
+<p>科学领域可能是超线性回报的最典型例子。它的增长呈指数级，这种增长不仅是学习的过程，更是在知识边界——人类知识的极限上不断突破。</p>
+<p>这种现象导致科学发现的不平等程度远超过最为分化的社会中的财富不平等。可以说，牛顿的发现比他所有同时代人的总和还要伟大。[<a href="#f11n">11</a>]</p>
+<ul>
+<li>在工业革命之前，人们致富的方式通常是通过占据资源来增强自己的力量，类似于皇帝。而现在，致富可以像科学家那样，通过发现或创造独特而有价值的东西。尽管大多数致富者采用了传统和现代的结合方式，但在最发达的经济体中，过去半个世纪里这种方式已经<a href="http://paulgraham.com/richnow.html">显著转向</a>创新发</li>
+</ul>
+<p>这个观点虽然看似显而易见，但仍然值得详细说明。超线性回报就意味着不平等存在。回报曲线越陡，成果差异就越大。</p>
+<h2>超线性回报领域</h2>
+<p>超线性回报与不平等之间的联系如此紧密，以至于我们可以通过一个简单的方法来发现此类工作：</p>
+<ul>
+<li>寻找那些少数顶尖者远超其他人的领域。</li>
+<li>在大家绩效差不多的领域，往往不会出现超线性回报。</li>
+</ul>
+<p>一些显而易见的例子包括：体育、政治、艺术、音乐、表演、导演、写作、数学、科学、创业和投资。</p>
+<ul>
+<li>在体育领域，这种现象是由外部规则决定的；在比赛中，只需比其他人快那么一点点就能夺冠。</li>
+<li>在政治领域，权力的增长模式和古代皇帝时代相似。在其他一些领域（包括政治），成功往往与名声有关，名声本身也是超线性增长的一种形式。</li>
+</ul>
+<p>但如果我们排除掉体育、政治和名声的影响，就会发现一个有趣的模式：</p>
+<ul>
+<li>剩余的这些领域正是那些需要独立思考才能成功的领域 —— 在这些领域中，你的想法不仅要正确，还要有创新。[<a href="#f12n">12</a>]</li>
+<li>如果独立思维是驱动不平等的主要因素之一，那么对于那些传统思维的人来说，不喜欢不平等就不足为奇了。但问题不仅仅是他们不愿看到别人拥有自己无法拥有的东西。事实上，那些传统思维的人根本无法想象拥有创新想法是怎样的体验。所以，他们认为绩效表现的巨大差异是不自然的，在遇到这种情况时，他们往往认为这是作弊或某种恶意外部因素造成的。</li>
+</ul>
+<p>在科学界，这一点显而易见。你不能只是发表重复他人观点的论文。
+在投资领域，情况也相同。只有当大多数其他投资者不看好一家公司时，你对其看好才有意义；如果所有人都认为某公司前景光明，那么它的股价已经反映了这一预期，赚钱的机会就不复存在了。</p>
+<p>那么，我们还能从这些领域学到什么呢？</p>
+<ul>
+<li>无论在哪个领域，最初的努力都是必不可少的。超线性回报一开始看似微不足道，<em>按这个速度，</em> 你可能会想，<em>我怎么也达不到目标。</em></li>
+<li>但是，由于奖励曲线在后期急剧上升，为了达到这个目标，采取特别的措施是非常值得的。</li>
+</ul>
+<p>在创业界，这个原则被称为 “做那些不可扩展的事情”。</p>
+<ul>
+<li>如果你能对你的少数初期客户投入极大的关注，理想情况下，你就能通过口碑引发指数级增长。</li>
+<li>这个原则同样适用于任何以指数形式增长的领域，比如学习。刚开始学习新事物时，你可能会感到很茫然。但是，但为了获得一个立足点，做出最初的努力是值得的，因为随着你学得越多，过程就会变得越来越容易。</li>
+</ul>
+<p>在具有超线性回报的领域中，还有一个更深层次的教训：不要把工作等同于一份职业。在 20 世纪大部分时间里，对大多数人来说，这两者是一样的。因此，我们形成了一种习惯，即把生产力等同于拥有一份工作。即便到了现在，对大多数人而言，“你的工作” 仍然意味着他们的职业。
+但对于作家、艺术家或科学家来说，这指的是他们当前正在研究或创作的事物。对这样的人来说，他们的工作是他们从一份职业带到另一份职业的东西，即使他们根本就没有固定工作。这份工作可能是为雇主而做，但它是他们作品集的一部分。</p>
+<hr>
+<p>踏入一个领域，面对少数顶尖高手遥遥领先的情况，确实令人望而却步。有人是刻意追求这种竞争，但这并非必要之路。只要你天资聪颖，足够追寻你的好奇心，你自然而然会进入这样的领域。你的好奇心不会允许你停留在平淡无奇的问题上，而那些引人入胜的问题往往会孕育出超线性的回报，即便它们最初并不属于任何领域。</p>
+<p>超线性回报的世界并非固定不变。实际上，最巨大的回报往往源于不断扩展这个领域。因此，虽然雄心和好奇心都能引领你进入这片领域，但好奇心或许是更为强大的动力。雄心可能驱使你攀登已知的高峰，但如果你始终紧扣一个足够吸引人的问题，它可能就在你脚下逐渐崛起，成为一座巍峨的山峰。</p>
+<p>要精确划分努力、绩效和回报是有挑战的，因为在实际情况中，这些概念本身就没有明确的界限。某个人眼中的回报，可能在另一个人看来只是绩效。虽然这些概念的边界有些模糊，但它们并非毫无意义。我尽力精确地描述了这些概念，力求避免误解。</p>
