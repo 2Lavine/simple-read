@@ -145,7 +145,6 @@ Fiber 工作流程
 ### 1、创建与标记更新节点：`beginWork`
 
 1.  **判断 Fiber 节点是否要更新：**
-
 ```
 // packages/react-reconciler/src/ReactFiberBeginWork.js
 // 以下只是核心逻辑的代码，不是beginWork的完整源码
@@ -174,13 +173,9 @@ function beginWork(
         // 通过workInProgress的tag属性来确定如何处理当前的Fiber节点
         // 每一种tag对应一种不同的Fiber类型，进入不同的调和过程（reconcileChildren()）
         case IndeterminateComponent: // 尚未确定其类型的组件
-        // ……
         case LazyComponent: // 懒加载组件
-        // ……
         case FunctionComponent: // 函数组件
-        // ……
         case ClassComponent: // 类组件
-        // ……
 
         // 其它多种Fiber类型
         // case ……
@@ -225,9 +220,8 @@ export function reconcileChildren(
 **`completeUnitOfWork`** 负责遍历 Fiber 节点，同时记录了有副作用节点的关系。下面从源码上理解它的工作：
 **`completeWork`** 在 **`completeUnitOfWork`** 中被调用，下面是 **`completeWork`** 的逻辑，主要是根据 tag 进行不同的处理，真正的核心逻辑在 **`bubbleProperties`** 里面
 
-
+completeUnitOfWork
 ---
-
 completeUnitOfWork`** 负责遍历 Fiber 节点，同时记录了有副作用节点的关系。下面从源码上理解它的工作：
 ```
 // packages/react-reconciler/src/ReactFiberWorkLoop.js
@@ -1238,52 +1232,3 @@ Part Z 总结
 *   Diffing 的结果，诸如节点的删除、新增、移动，称为 effect，以 effectTag 的形式挂在节点上。
 *   completeUnitOfWork 的内部循环会自底向上收集 effect，不断把有 effectTag 的子节点和自身向上合并到父节点的 effectList 中，直至根节点。effectList 是个链表。
 *   宿主相关组件节点会把宿主实例挂到 stateNode 上，间接调用宿主方法对其完成创建、更新，由此也会产生 effectTag。
-
-![](_resources/v2-d07aa43f40c12e59a1a91fc59c719c25_l.jpg)寸志
-
-在 [http://conf.reactjs.org/](http://conf.reactjs.org/) 上，Lin Clark 通过漫画为我们介绍 Fiber，结合她的介绍，我谈谈我的理解：
-
-![](_resources/v2-d7a4541e9f9ccf34d3d3dc858e284ead_r.jpg.png)
-
-Fiber 可以提升复杂 React 应用的可响应性和性能。Fiber 即是 React 新的调度算法（reconciliation algorithm）
-
-![](_resources/v2-e5fbd24214f38824878b119a1e8bf4e0_r.jpg.png)
-
-react 即 reconsiler（调度者），react-dom 则是 renderer。调度者一直都是又 React 本身决定，而 renderer 则可以由社区控制和贡献。
-
-那新的调度算法是如何优化可响应性和性能的呢 ？
-
-![](_resources/v2-6615d1750f35f1b58ac0a8cf28c4f51a_r.jpg.png)
-
-每次有 state 的变化 React 重新计算，如果计算量过大，浏览器主线程来不及做其他的事情，比如 rerender 或者 layout，那例如动画就会出现卡顿现象。
-
-![](_resources/v2-d05d26726552a47b8d8c9aa3c306c6d9_r.jpg.png)
-
-React 制定了一种名为 Fiber 的数据结构，加上新的算法，使得大量的计算可以被拆解，异步化，浏览器主线程得以释放，保证了渲染的帧率。从而提高响应性。
-
-React 将更新分为了两个时期：
-
-![](_resources/v2-86baa2e125f73b2ae7fcd482eff4f11e_r.jpg.png)
-
-render/reconciliation
----------------------
-
-![](_resources/v2-f24c387d37d7e79692797b7e4a43eae4_r.jpg.png)
-
-可打断，React 在 workingProgressTree 上复用 current 上的 Fiber 数据结构来一步地（通过 requestIdleCallback）来构建新的 tree，标记处需要更新的节点，放入队列中。
-
-commit
-------
-
-![](_resources/v2-aea949f952367f5e149a9f05757e5df9_r.jpg.png)
-
-不可打断。在第二阶段，React 将其所有的变更一次性更新到 DOM 上。
-
-除此之外，还有更多的优化细节，可以参看 Lin Clark 的[演讲视频](http://conf.reactjs.org/speakers/lin)。
-
-  
-
-**广告时间**
---------
-
-欢迎关注 [前端外刊评论 - 知乎专栏](https://zhuanlan.zhihu.com/FrontendMagazine)，外刊君将会代码 React Conf 2017 的全部解读。也可以微信、微博搜索 FrontendMagazine 关注，期待后续。

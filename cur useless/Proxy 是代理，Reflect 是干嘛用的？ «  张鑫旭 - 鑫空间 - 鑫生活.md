@@ -2,25 +2,12 @@
 
 > 本文详细介绍 JS 中的 Reflect 对象，与 Proxy 代理之间的关系，内容详实，应该可以学到点东西。
 
-by [zhangxinxu](https://www.zhangxinxu.com/) from [https://www.zhangxinxu.com/wordpress/?p=9984](https://www.zhangxinxu.com/wordpress/?p=9984)  
-本文欢迎分享与聚合，全文转载就不必了，尊重版权，圈子就这么大，若急用可以联系授权。
-
-![](https://image.zhangxinxu.com/image/blog/202107/reflect-cover.jpg)
 
 ### 一、Reflect 有什么用？
-
-一句话，Reflect 没什么用，除了装装逼，让人看起来高大上以外，并不具有什么牛逼之处。
-
 准确讲应该是这样的，Reflect 更像是一种语法变体，其挂在的所有方法都能找到对应的原始语法，也就是 Reflect 的替代性非常强。
 
-其实从 Reflect 这个单词本身字面意思就能体会出 Reflect 的神韵，Reflect 的中文意思是 “反射”，阳光照在镜子上反射，其实光子还是那些光子，只是变化了方向。
-
-举例说明：
-
-Reflect 对象挂载了很多静态方法，所谓静态方法，就是和`Math.round()`这样，不需要 new 就可以直接使用的方法。
-
+Reflect 对象挂载了很多静态方法，
 比较常用的两个方法就是`get()`和`set()`方法：
-
 ```
 Reflect.get(target, propertyKey[, receiver])
 Reflect.set(target, propertyKey, value[, receiver])
@@ -33,41 +20,7 @@ target[propertyKey]
 target[propertyKey] = value;
 ```
 
-比方说页面上有个输入框，其 DOM 对象变量是`input`，平时我们对整个输入框赋值使用的语句多半是：
-
-```
-input.value = 'zhangxinxu'
-```
-
-就可以直接使用`Reflect.set()`方法代替：
-
-```
-Reflect.set(input, 'value', 'zhangxinxu')
-```
-
-效果是一模一样的。
-
-又例如，我们希望对`input`的`value`属性重新定义，使该输入框`value`属性发生变化的时候可以同时触发`'change'`事件，下面是使用大家普遍比较熟悉的`Object.defineProperty()`方法实现的示意：
-
-```
-const props = Object.getOwnPropertyDescriptor(input, 'value');
-Object.defineProperty(input, 'value', {
-    ...props,
-    set (v) {
-        let oldv = this.value;
-        props.set.call(this, v);
-        
-        if (oldv !== v) {
-            this.dispatchEvent(new CustomEvent('change'));
-        }
-    }
-});
-```
-
-相关介绍可以参见这篇文章：“[输入框 value 属性赋值触发 js change 事件的实现](https://www.zhangxinxu.com/wordpress/2021/05/js-value-change/)”
-
-上述代码我们完全可以使用 Reflect 对象实现，具体的 JavaScript 代码如下所示。
-
+Object.defineProperty完全可以使用 Reflect 对象实现，具体的 JavaScript 代码如下所示。
 ```
 const props = Reflect.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
 Reflect.defineProperty(input, 'value', {
@@ -82,30 +35,6 @@ Reflect.defineProperty(input, 'value', {
     }
 });
 ```
-
-我们可以测试下，假设页面 HTML 如下：
-
-```
-<input id="input">
-```
-
-测试代码为：
-
-```
-input.addEventListener('change', () => {
-  document.body.append('变化啦~');
-});
-
-input.value = 'zhangxinxu';
-```
-
-此时，就可以看到页面上出现了 “变化啦~” 文字，截图示意如下：
-
-可以在这个 JSBIN 地址体验：[https://output.jsbin.com/vugucajepa](https://output.jsbin.com/vugucajepa)
-
-![](https://image.zhangxinxu.com/image/blog/202107/2021-07-01_161934.png)
-
-//zxx: 如果你看到这段文字，说明你现在访问是体验糟糕的垃圾盗版网站，你可以访问原文获得很好的体验：https://www.zhangxinxu.com/wordpress/?p=9984（作者张鑫旭）
 
 ### 二、细微差异 - 返回值
 
@@ -159,21 +88,16 @@ console.log(Reflect.set(input, 'type', 'number'));
 
 会出现下面的 TypeError 错误：
 
-> Uncaught TypeError: Cannot assign to read only property ‘1’ of object ‘#<Object>’
+> Uncaught TypeError: Cannot assign to read only property ‘1’ of object ‘#\<Object\>’
 
 后面的语句`console.log('no log')`就没有被执行。
-
 但是如果使用 Reflect 方法，则 console 语句是可以执行的，例如：
-
 ```
 (function () {
     'use strict';
-
     var frozen = { 1: 81 };
     Object.freeze(frozen);
-
     Reflect.set(frozen, '1', 'zhangxinxu');
-
     console.log('no log');
 })();
 ```
@@ -182,7 +106,7 @@ console.log(Reflect.set(input, 'type', 'number'));
 
 ![](https://image.zhangxinxu.com/image/blog/202107/2021-07-01_190503.png)
 
-### 三、set、get 方法中的 receiver 参数
+###  三、set、get 方法中的 receiver 参数
 
 就功能而言，`Reflect.get()`和`Reflect.set()`方法和直接对象赋值没有区别，都是可以互相替代的，例如，下面两段 JS 效果都是一样的。
 

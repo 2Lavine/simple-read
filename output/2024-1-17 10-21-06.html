@@ -1,0 +1,792 @@
+<h1>2023-12-29</h1><p>const click = function(){
+// 需要再每次执行前清理掉之前的定时器，
+// 如果不使用 useRef ，函数组件重复渲染后无法找到上一次函数执行产生的定时器对象
+window.clearInterval(timer.current);
+// 延时器对象赋值给 useRef
+timer.current = window.setTimeout(() =&gt; {
+setTime(time + 1);
+}, 5000);
+}</p>
+
+<h1>2024-01-02</h1><h1>Service Design</h1>
+<h2>WHY</h2>
+<p>What is Service</p>
+<ol>
+<li>solve JTBD</li>
+<li>without owenrship of sepefic costs and risks
+<ol>
+<li>当你去餐厅用餐时，你无需担心食物的采购</li>
+</ol>
+</li>
+<li>delivering an outcome for the organisation
+<ol>
+<li>餐厅的知名度
+<ol>
+<li>company slogan</li>
+</ol>
+</li>
+<li>餐厅的利润
+What is JTBD</li>
+</ol>
+</li>
+</ol>
+<ul>
+<li>verb+object+Context</li>
+</ul>
+<p>#English
+Persuasive 说服力</p>
+
+<h1>DigitalHippo</h1><h2>cross-env的作用</h2>
+<p>windows 不支持 NODE_ENV=development 的设置方式
+cross-env 使得您可以使用单个命令，而不必担心为平台正确设置或使用环境变量
+&quot;build&quot;: &quot;cross-env NODE_ENV=production.jpgack --config build.jpgack.config.js&quot;</p>
+<h1>Next</h1>
+<h2>Page</h2>
+<p>获取传入的参数：
+page=({ searchParams })=&gt;{}</p>
+<h1>TS</h1>
+<p>限定一个对象，所有的 key 都是 string 应该怎么写
+:该索引签名表示对象可以有任意数量的属性，属性名是字符串类型，属性值可以是字符串、字符串数组或者未定义</p>
+<pre><code class="language-json">  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
+</code></pre>
+<p>#ts/type
+所有的初始 type 都是小写开头的
+如 string,number</p>
+<p>#ts/可选链操作符
+?. 的作用是避免左侧的对象是空的</p>
+
+<h1>JavaScript 简明教程 - module</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6898629098323902471">juejin.cn</a></p>
+</blockquote>
+<h2>基本概念</h2>
+<p><code>esModule</code> 有以下特点</p>
+<ul>
+<li><code>esModule</code> 不是对象</li>
+<li><code>esModule</code> 的加载是编译时加载 (静态加载)，即在编译完成时就完成了模块加载</li>
+<li><code>esModule</code> 自动采用严格模式（use strict）
+<code>esModule</code> 主要是两个命令：<code>export（输出指定代码块）</code> 和 <code>import（输入其他模块的功能）</code>
+export</li>
+</ul>
+<hr>
+<p><code>export</code> 规定对外的接口，必须与模块内部变量建立一一对应关系，直接对外输出数据会报错</p>
+<pre><code class="language-js">export m
+function f() {};
+export f;
+// 以上均错误
+</code></pre>
+<p>存在两种 exports 导出方式：</p>
+<ul>
+<li>命名导出（Named exports）
+<ul>
+<li>可以导出变量、函数或类</li>
+<li>可以使用 as 关键字重命名导出值</li>
+</ul>
+</li>
+</ul>
+<pre><code>/// 声明后立即导出
+export const firstName = 'rede';
+export const lastName = 'li';
+// 使用 as 重命名
+function v1() {}
+export { v1 as streamV1,}
+export { myFunction, myVariable }
+</code></pre>
+<h3><code>export</code> 的异常情况</h3>
+<blockquote>
+<p><code>export</code> 规定对外的接口，必须与模块内部变量建立一一对应关系，直接对外输出数据会报错</p>
+</blockquote>
+<pre><code>export 1; // SyntaxError: Unexpected token, expected
+/// 下面的写法，一样报错，因为下面的写法一样是属于直接输出数据的情况
+const m = 1;
+export m;
+...
+
+/// function 和 class 也是一样，不可直接对外输出
+function f() {};
+export f; // 报错
+</code></pre>
+<hr>
+<ul>
+<li>默认导出（export default）
+<ul>
+<li>每个模块只能包含一个默认导出</li>
+<li><code>export default</code> 本质是将后面的值，直接赋给 <code>default</code> 变量，所以它后面不能再跟变量声明语句。</li>
+</ul>
+</li>
+</ul>
+<pre><code>// 下面写法是合理的
+export default 42;
+// export default 后面不能跟变量声明，所以下面语句错误
+export default var a = 1;
+// export default 后面可以跟匿名函数
+// 下面会忽略函数名 foo
+export default function foo() {
+  console.log('foo');
+}
+</code></pre>
+<h2><code>export</code> 值的动态绑定</h2>
+<p><code>export</code> 语句输出的接口，与其值是动态绑定关系，内部变量发生变化，外部引入的值也会跟着一起改变</p>
+<pre><code>// index.js
+export let foo = 'bar';
+setTimeout(() =&gt; foo = 'baz', 500); // 0.5s 后动态修改变量值
+// main.js
+import {foo} from './index';
+console.log(foo);
+setTimeout(() =&gt; {
+   console.log(foo); 
+}, 600);
+// bar
+** 0.5s后
+// baz
+</code></pre>
+<h2><code>export</code> 必须位于模块的顶层，不能处于任何块级作用域内</h2>
+<pre><code>function foo () {
+	export default 'bar'; /// 不能处于块级作用域内
+}
+foo(); // 报错
+</code></pre>
+<h2>import</h2>
+<p>使用 <code>export</code> 定义对外接口后，其他模块就可以通过 <code>import</code> 加载这个模块引入相关内容。<code>import</code> 命令会被 JavaScript 引擎静态分析，会先于模块内的其他语句执行</p>
+<ul>
+<li>命名空间导入 (Namespace Imports) 导入整个模块的内容</li>
+</ul>
+<pre><code>/// list.js
+export const name = 'list.js';
+export const age = 18;
+/// index.js
+import * as list from './list';
+console.log(list.name, list.age);
+</code></pre>
+<ul>
+<li>命名导入 (Named Imports) 从模块导入特定接口
+<ul>
+<li>导入时可以自定义名称</li>
+</ul>
+</li>
+</ul>
+<pre><code>// list.js
+export const name = 'list.js';
+export const age = 18;
+// index.js
+import { name, age} list from './list.js';
+console.log(name, age);
+// import 时可以重新定义一个名称
+import {name as na} from './list.js';
+</code></pre>
+<ul>
+<li>默认导入 (Default Import)
+<ul>
+<li>这个是和默认导出相对应，如果对应的导出文件没有使用 <code>export default</code> ，导入的值会是 undefined</li>
+</ul>
+</li>
+<li>空导入 (Empty Import)
+<ul>
+<li>只会加载模块代码，但不创建任何新对象</li>
+</ul>
+</li>
+</ul>
+<pre><code>import './module.js';
+</code></pre>
+<h3><code>import</code> 异常情况</h3>
+<blockquote>
+<p><code>import</code> 加载的变量都是只读的，不可以进行修改</p>
+</blockquote>
+<pre><code>import {name} from './index.js';
+name = 'main.js'; // 编译到这里报错 SyntaxError: &quot;name&quot; is read-only
+</code></pre>
+<blockquote>
+<p><code>import</code> 时必须明显指明需要加载的文件，不可使用表达式或变量，因为这些只有运行时才会有结果</p>
+</blockquote>
+<pre><code>// 报错
+import { 'f' + 'oo' } from 'my_module';
+// 报错
+let module = 'my_module';
+import { foo } from module;
+
+// 报错
+if (x === 1) {
+  import { foo } from 'module1';
+} else {
+  import { foo } from 'module2';
+}
+/// 三种写法均会报错，因为在静态分析阶段这些语法根本尚未执行，无法得知需要加载的模块
+...
+
+/// 由于 import 是在编译阶段进行解析，所以如果同时载入两个同名的模块，也不会产生重复引入的情况
+import './index.js';
+import './index.js';
+...
+
+/// 如果是从同一个模块加载多个变量，最好写成一条语句
+// bad
+import {foo} from './index.js';
+import {baz} from './index.js';
+// good
+import {foo, baz} from './index.js';
+</code></pre>
+<h3>相关建议</h3>
+<blockquote>
+<p>不要使用模块的整体加载 (<code>*</code>)，需要什么功能就从指定模块加载什么功能</p>
+</blockquote>
+<pre><code>/// list.js
+export const name = 'list.js';
+export const age = 18;
+...
+
+/// index.js
+import * as list from './list';
+console.log(list.name); // 如果代码中只使用到了name，应该只导入name
+
+/// 如果改写为下面这种写法，在打包代码时还会触发 tree shaking，打包出的代码提交更小
+import {name} from './list';
+</code></pre>
+<blockquote>
+<p>不要使用 <code>export</code> 与 <code>import</code> 的复合写法</p>
+</blockquote>
+<p><code>export</code> 与 <code>import</code> 的过程都发生在编译阶段，写在一起和分开写本质上没什么区别，并不会有什么性能提升或者别的优势，分开写的话看起来语义更明显</p>
+<pre><code>// bad
+export { firstName as default } from './index';
+
+// good
+// 这样更加明晰
+import { firstName } from './index';
+
+export default firstName;
+</code></pre>
+<h2>其他</h2>
+<ul>
+<li>跨模块常量
+<ul>
+<li>这主要是一个项目管理的思路，我们可以把页面中公共变量提取到一个模块中，需要使用的这些公共变量的再按需引入，比较明显的例子就是对接口 url 的管理</li>
+</ul>
+</li>
+</ul>
+<pre><code>// urls.js
+export const link1 = '...';
+export const link2 = '...';
+...
+/// 需要使用请求的模块，通过这种方式，我们可以把所以的url存放在同一个文件下，使用时按需引入
+import {link1} from 'urls.js';
+</code></pre>
+<h3>import()</h3>
+<p><code>import()</code> 是一个提案，因为 <code>import</code> 无法进行动态加载，主要解决下面问题</p>
+<ul>
+<li>按需加载</li>
+<li>条件加载</li>
+<li>动态的模块路径</li>
+</ul>
+<p>目前借助.jpgack，可以实现前两个功能</p>
+<pre><code>if (true) { // 条件加载
+    import(/*.jpgackChunkName:&quot;main&quot; */'./main').then(item =&gt; {
+        console.log(item.main);
+    }); // 按需加载
+} else {
+    import(/*.jpgackChunkName:&quot;list&quot; */'./list').then(item =&gt; {
+    	console.log(item.list);
+    });
+}
+...
+
+/// 同时加载多个模块，可以采用下面的写法
+Promise.all([
+    import(/*.jpgackChunkName:&quot;main&quot;*/'./main'),
+    import(/*.jpgackChunkName:&quot;main1&quot;*/'./main1'),
+    import(/*.jpgackChunkName:&quot;main2&quot;*/'./main2'),
+]).then(([main, main1, main2]) =&gt; {
+    console.log(main);
+    console.log(main1);
+    console.log(main2);
+})
+</code></pre>
+<h2>Module 加载</h2>
+<h3>浏览器加载 js</h3>
+<p>网页中，浏览器通过 <code>&lt;script&gt;</code> 标签加载 JavaScript 脚本，默认情况下，浏览器是同步加载 JavaScript 脚本，渲染引擎遇到 <code>&lt;script&gt;</code> 标签就会停下来，等到执行完脚本，再继续向下渲染。如果是外链脚本，还必须等脚本加载完。
+如果脚本体积很大，下载和执行的时间就会很长，造成浏览器堵塞，用户就会感觉到浏览器<code>“卡死”</code>了，没有任何响应。
+可以在 <code>&lt;script&gt;</code> 标签上，添加 <code>defer</code> 或 <code>async</code> 属性，脚本就会异步加载。渲染引擎遇到有这两个属性的 <code>&lt;script&gt;</code> 标签就会开始下载外部脚本，然后继续执行后面的命令。</p>
+<ul>
+<li><code>defer</code> 会等到整个页面在内存中正常渲染结束 (DOM 结构完全生成，以及其他脚本执行完成)，才会执行
+<ul>
+<li><code>defer</code> 是渲染完再执行</li>
+<li>多个 <code>defer</code> 脚步也会按照它们在页面出现的顺序进行加载</li>
+</ul>
+</li>
+<li><code>async</code> 是下载完成，渲染引擎则会中断渲染，执行这个脚本，然后再继续渲染。
+<ul>
+<li><code>async</code> 是下载完就执行</li>
+<li><code>async</code> 则比较随意，不保证加载顺序</li>
+</ul>
+</li>
+</ul>
+<h3>浏览器加载 esModule</h3>
+<p>如果浏览器还不支持，可以开启浏览器的的实验性 web 平台功能，非 <code>chrome</code> 自行查找解决方案</p>
+<blockquote>
+<p>chrome://flags/#enable-experimental-web-platform-features</p>
+</blockquote>
+<pre><code>// 开启后，直接在页面中设置script的type为module
+&lt;script type=&quot;module&quot;&gt;
+    import foo from './foo.js';
+    console.log(foo);
+&lt;/script&gt;
+</code></pre>
+<ul>
+<li><code>esModule</code> 与 <code>CommonJS模块</code> 区别
+<ul>
+<li><code>CommonJS模块</code> 输出的是一个值的拷贝，<code>esModule</code> 输出的是值的引用
+<ul>
+<li><code>CommonJS模块</code> 因是值拷贝，一旦值输出，那么模块内的变化就不会影响到外部引用 ，不过这也有例外，如果输出的是一个函数，那么 <code>CommonJS</code> 一样有办法取到内部变动后的值</li>
+<li><code>esModule</code> 运行机制与 <code>CommonJS</code> 不同，<code>JS引擎</code> 对脚本进行静态分析时，如果遇到 <code>import</code> 命令，就会生成一个只读引用，只有脚本真正执行时，再根据这个只读引用，到被加载模块中取值，所以模块内部值发生变化时，外部加载值自然会跟着变动</li>
+</ul>
+</li>
+<li><code>CommonJS模块</code> 是运行时加载，<code>esModule</code> 是编译时输出</li>
+<li><code>CommonJS模块</code> 的 <code>require()</code> 是同步加载模块，<code>esModule</code> 的 import 命令是异步加载，有一个独立的模块依赖的解析阶段</li>
+</ul>
+</li>
+</ul>
+<hr>
+<blockquote>
+<p>从 Node.js v13.2 版本开始，Node.js 已经默认打开了 esModule 支持。Node.js 要求 esModule 采用 .mjs 后缀文件名。Node.js 遇到 .mjs 文件，就认为它是 ES6 模块，如果不希望将后缀名改成 .mjs，可以在项目的 package.json 文件中，指定 type 字段为 module</p>
+</blockquote>
+<pre><code>{
+   &quot;type&quot;: &quot;module&quot;
+}
+</code></pre>
+<ul>
+<li>esModule 在 Node 环境下的路径解析规则
+<ul>
+<li>如果引入模块不含路径，就会去<code>node_modules</code> 下寻找这个模块</li>
+<li><code>package.json</code> 文件有两个字段可以指定模块的入口文件：<code>main</code>、<code>exports</code>
+<ul>
+<li><code>main</code> 模块加载的入口文件
+<ul>
+<li>比如 <code>import { something } from 'es-module-package';</code> Node.js 就会到 <code>./node_modules</code> 目录下面，寻找 <code>es-module-package</code> 模块，然后根据该模块<code>package.json</code> 的 <code>main</code> 字段去执行入口文件</li>
+</ul>
+</li>
+<li><code>exports</code> 字段可以指定脚本或子目录的别名，字段的优先级高于 <code>main</code> 字段
+<ul>
+<li><code>&quot;exports&quot;: {&quot;./submodule&quot;: &quot;./src/submodule.js&quot;}</code> 指定<code>src/submodule.js</code> 别名为 <code>submodule</code>，如果引入的是 <code>import submodule from 'es-module-package/submodule';</code>，则实际加载 <code>./node_modules/es-module-package/src/submodule.js</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果引入的脚本文件不存在后缀名比如<code>import './foo'</code>
+<ul>
+<li>Node 会依次尝试按<code>.mjs</code>、<code>.js</code>、<code>.json</code>、<code>.node</code> 去尝试加载</li>
+<li>如果上面脚本都不存在 Node 就会去加载对应<code>package.json</code> 中的<code>main</code> 字段指定的脚本</li>
+<li>如果对应的文件或者字段还不存在，就会依次去尝试加载<code>./foo/index.mjs</code>、<code>./foo/index.js</code>、<code>./foo/index.json</code>、<code>./foo/index.node</code></li>
+<li>如果依然不存在，就会报错</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>esModule 在浏览器环境也可以使用，浏览器对于带有 <code>type=&quot;module&quot;</code> 的 <code>&lt;script&gt;</code>，就可以使用 esModule
+<ul>
+<li>esModule 都是异步加载，等同于打开了 <code>defer</code> 属性。</li>
+<li>如果网页有多个 <code>&lt;script type=&quot;module&quot;&gt;</code>，它们会按照在页面出现的顺序依次执行
+<ul>
+<li>如果主动设置了 <code>async</code> 属性，这时只要加载完成，渲染引擎就会中断渲染立即执行 ，不会按照在页面出现的顺序执行</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>” 裸” import 语法</h2>
+<blockquote>
+<p>type=&quot;module&quot; 模式下，不支持” 裸” import 语法（不支持 Node 路径查找方式）</p>
+</blockquote>
+<pre><code>/// 目录结构如下，本地起的服务是http://127.0.0.1:8080
+|- index.html
+|- src
+	|- script
+		|- index.js
+		
+/// index.js
+export const info = 'index.js';
+...
+
+/// index.html
+&lt;script type=&quot;module&quot;&gt;
+	/// 支持绝对路径的 URL
+  import {info} from 'http://127.0.0.1:8080/src/script/index.js';
+  console.log(info);
+&lt;/script&gt;
+
+/// 支持相对路径，必须以 &quot;/&quot;, &quot;./&quot;, or &quot;../&quot; 开头
+import {foo} from '/src/script/index.js'; // 以/开头
+import {foo} from './src/script/index.js'; // 以./开头
+import {foo} from '../bar.js'; // 以../开头
+
+// 不支持
+import {foo} from 'src/script/index.js';
+</code></pre>
+<blockquote>
+<p>使用 nomodule 属性向后兼容 (和早期的 noscript 有同种功效)</p>
+</blockquote>
+<pre><code>&lt;script type=&quot;module&quot; src=&quot;./foo.js&quot;&gt;&lt;/script&gt;
+&lt;script nomodule src=&quot;./foo.nomodule.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h2>各种 defer  情况</h2>
+<blockquote>
+<p>type=&quot;module&quot; 模式下，外链的 script 标签默认为 defer</p>
+</blockquote>
+<pre><code>&lt;script type=&quot;module&quot; src=&quot;1.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;2.js&quot;&gt;&lt;/script&gt;
+&lt;script defer src=&quot;3.js&quot;&gt;&lt;/script&gt;
+/// 3个脚本的执行顺序为2.js、1.js、3.js，另外1.js和3.js并不会阻断DOM的渲染
+</code></pre>
+<blockquote>
+<p>type=&quot;module&quot; 模式下，内联的 script 同样是 defer</p>
+</blockquote>
+<pre><code>&lt;!-- 内联 module --&gt;
+&lt;script type=&quot;module&quot;&gt;
+  addTextToBody(&quot;Inline module executed&quot;);
+&lt;/script&gt;
+
+&lt;script src=&quot;1.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- 普通的内联 script --&gt;
+&lt;script defer&gt;
+  addTextToBody(&quot;Inline script executed&quot;);
+&lt;/script&gt;
+
+&lt;script defer src=&quot;2.js&quot;&gt;&lt;/script&gt;
+
+// 执行的顺序是 1.js, 普通的内联 script, 内联 module, 2.js
+</code></pre>
+<p>普通的内联 script 会忽略 defer 属性，而 内联 module scripts 永远是 deferred 的，不管它是否有 import 行为，然后因为内联 module 先于外链的 2.js 定义，所以执行顺序在 2.js 前面</p>
+<h2>各种 async  情况</h2>
+<blockquote>
+<p>async 对 <code>外链</code> 和 <code>内联的 modules script</code> 同样适用</p>
+</blockquote>
+<pre><code>&lt;!-- 这个脚本将会在imports完成后立即执行 --&gt;
+&lt;script async type=&quot;module&quot;&gt;
+  import {addTextToBody} from './utils.js';
+
+  addTextToBody('Inline module executed.');
+&lt;/script&gt;
+
+&lt;!-- 这个脚本将会在脚本加载和imports完成后立即执行 --&gt;
+&lt;script async type=&quot;module&quot; src=&quot;1.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p><code>async</code> 属性能让 script 加载的同时并不阻碍 HTML 解析器的工作，而且在加载完成后立即执行。与普通的 内联 scripts 不同的是, async 属性在 内联 modules 脚本上也有效，执行顺序也许并不会像它们出现在 DOM 里的顺序</p>
+<blockquote>
+<p>type=&quot;module&quot; 模式下，就算多次引入也只执行一次</p>
+</blockquote>
+<pre><code>&lt;!-- 1.js 只执行一次 --&gt;
+&lt;script type=&quot;module&quot; src=&quot;1.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;1.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot;&gt;
+  import &quot;./1.js&quot;;
+&lt;/script&gt;
+
+&lt;!-- 而普通的脚本会执行多次 --&gt;
+&lt;script src=&quot;2.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;2.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h2>module script 的跨域</h2>
+<blockquote>
+<p>与普通的 script 标签不同，type=&quot;module&quot; 模式下如果加载非同域下的 js 会存在限制</p>
+</blockquote>
+<pre><code>/// 假定在 http://127.0.0.1:8080/index.html 页面，加载下面的 js
+&lt;script type=&quot;module&quot; src=&quot;http://localhost:3111/index.js&quot;&gt;&lt;/script&gt;
+/// 会提示跨域，并且告知 Access-Control-Allow-Origin 没有设置，如果这里不加 type=&quot;module&quot; ，js 会正常加载
+</code></pre>
+<p>当请求在同一域下，大多数的 CORS-based APIs 都会发送凭证信息 (cookies 等)，但 fetch() 和 module scripts 例外，除非手动声明，否则是不会发送相关凭证的。</p>
+<p>可以为其添加 crossorigin 属性，这样在请求时就可以携带相关凭证了（crossorigin=&quot;use-credentials&quot;)。需要注意的是，接收凭证的域必须返回 Access-Control-Allow-Credentials: true 的响应头，表示允许客户端携带验证信息，例如 cookie 之类的。这样客户端在发起跨域请求的时候，可以携带相关验证信息</p>
+<pre><code>&lt;!-- 有凭证信息 (cookies等) --&gt;
+&lt;script src=&quot;1.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- 没有凭证信息 --&gt;
+&lt;script type=&quot;module&quot; src=&quot;1.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- 有凭证信息 --&gt;
+&lt;script type=&quot;module&quot; crossorigin src=&quot;1.js?&quot;&gt;&lt;/script&gt;
+
+&lt;!-- 没有凭证信息 --&gt;
+&lt;script type=&quot;module&quot; crossorigin src=&quot;https://other-origin/1.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- 有凭证信息--&gt;
+&lt;script type=&quot;module&quot; crossorigin=&quot;use-credentials&quot; src=&quot;https://other-origin/1.js?&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<h1>Vue3 硬核源码解析系列</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7201334455058923580?from=search-suggest">juejin.cn</a></p>
+</blockquote>
+<h2>Object.defineProperty 的缺陷</h2>
+<ol>
+<li>object 中新增字段 没有响应性</li>
+<li>array 中指定下标的方式增加字段 没有响应性的</li>
+</ol>
+<p>Array 是可以Object.defineProperty的</p>
+<pre><code class="language-js">Object.defineProperty(arr, &quot;0&quot;, {
+  get: function () {
+    console.log(&quot;get&quot;);
+    return 1;
+  },
+});
+</code></pre>
+<h2>vue3 的解决方案</h2>
+<p><strong>object.defineproperty</strong></p>
+<ul>
+<li>代理的并非对象本身，而是对象中的属性</li>
+<li>只能监听到对象被代理的指定属性，无法监听到对象本身的修改</li>
+<li>修改对象属性的时候，是对原对象进行修改的，原有属性，则需要第三方的值来充当代理对象
+<strong>proxy</strong></li>
+<li>proxy 针对对象本身进行代理</li>
+<li>代理对象属性的变化都可以被代理到</li>
+<li>修改对象属性的时候，我们针对代理对象进行修改</li>
+</ul>
+<p>无论是逻辑的可读性，还是 API 能力上，<strong>proxy</strong> 都比 <strong>object.defineProPerty</strong> 要强很多，这也是 vue3 选择 proxy 的原因。</p>
+<h2>proxy 的好兄弟 Reflect</h2>
+<p>官方解释：<strong>Reflect</strong> 是一个内置的对象，它提供拦截 JavaScript 操作的方法。</p>
+<pre><code>let obj = { num:10 }
+obj.num // 10
+Reflect.get(obj,'num') // 10
+</code></pre>
+<p>这时候我们就要提一下 Reflect.get 的第三个参数了</p>
+<pre><code>Reflect.get(target, propertyKey, receiver]) 
+// receiver 如果target对象中指定了propertyKey，receiver则为getter调用时的this值。
+</code></pre>
+<p>第三个参数 receiver 具有强制修改 this 指向的能力，接下来我们来看一个场景</p>
+<pre><code>let data = {
+  name: '张三',
+  age: '12岁',
+  get useinfo() {
+    return this.name + this.age
+  },
+}
+
+let dataProxy = new Proxy(data, {
+  get(target, key, receiver) {
+    console.log('属性被读取')
+    return target[key]
+  },
+})
+console.log(dataProxy.useinfo)
+</code></pre>
+<p>打印情况如下</p>
+<pre><code>属性被读取
+张三12岁
+</code></pre>
+<p>​ <strong>dataProxy.useinfo</strong> 的 get 输出的值是正常的，但是 get 只被触发了一次，这是不正常的；理想情况应当是 <strong>get</strong> 被触发三次。
+为什么会出现这样的情况呢，这是因为调用 <strong>userinfo</strong> 的时候，<strong>this 指向了 data，实际执行的是 data.userinfo，此时的 this 指向 data，而不是 dataProxy</strong>，此时 get 自然是监听不到 name、age 的 get 了。</p>
+<p>​ 这时候我们就用到了 Reflect 的第三个参数，<strong>来重置 get set 的 this 指向</strong>。</p>
+<pre><code>let dataProxy = new Proxy(data, {
+  get(target, key, receiver) {
+    console.log('属性被读取')
+    return Reflect.get(target, key, receiver) // this强制指向了receiver
+    // return target[key]
+  },
+})
+</code></pre>
+<p>打印情况如下</p>
+<pre><code>属性被读取
+属性被读取
+属性被读取
+张三12岁
+</code></pre>
+<p>现在打印就正常了，<strong>get</strong> 被执行的 3 次，此时的 <strong>this</strong> 指向了 <strong>dataProxy</strong>，<strong>Reflect</strong> 很好的解决了以上的 this 指向问题。
+​ 通过以上案例，我们可以看到使用 <strong>target[key] <strong>有些情况下是不符预期的，比如案例中的被代理对象 this 指向问题，而使用</strong> Reflect</strong> 则可以更加稳定的解决这些问题，在 vue3 源码中也确实是这么用的。</p>
+<h2>补充章节（WeakMap）</h2>
+<p>​ 通过以上文章，我们了解到了 <strong>object.defineproperty</strong> 相较于 <strong>proxy</strong> 的劣势，以及搭配 <strong>proxy</strong> 同时出现的 <strong>Reflect</strong> 的原因，这是 <strong>vue3</strong> 最核心的 <strong>api</strong>。
+​ 但是仅仅知道理解 <strong>proxy+reflect</strong>，还不太够，为了尽量轻松的阅读 <strong>Vue3</strong> 源码，我们还要学习一个<strong>原生 API</strong>，那就是 <strong>WeakMap</strong>。
+​ <strong>weakMap</strong> 和 <strong>map</strong> 一样都是 <strong>key value</strong> 格式，但是他们还是存在一些差别。</p>
+<ul>
+<li><strong>weakMap</strong> 的 <strong>key</strong> 必须是对象，并且是<strong>弱引用</strong>关系</li>
+<li><strong>Map</strong> 的 <strong>key</strong> 可以是任何值（基础类型 + 对象），但是 key 所引用的对象是<strong>强引用</strong>关系
+​</li>
+</ul>
+<h2>why vue3 weakMap</h2>
+<p><strong>weakMap</strong> 可以实现的功能，<strong>Map</strong> 也是可以实现的，那为什么 <strong>Vue3</strong> 内部使用了 <strong>WeakMap</strong> 呢，问题就在<strong>引用关系</strong>上
+<strong>强引用：不会因为引用被清除而失效</strong>
+<strong>弱引用：会因为引用被清除而自动被垃圾回收</strong></p>
+<p>概念似乎还无法体现其实际作用，我们通过以下案例即可明白</p>
+<pre><code>// Map
+let obj = { name: '张三' }
+let map = new Map()
+map.set(obj, 'name')
+obj = null // obj的引用类型被垃圾回收
+console.log(map) // map中key obj依旧存在
+// WeakMap
+let obj = { name: '张三' }
+let map = new WeakMap()
+map.set(obj, 'name')
+obj = null // obj的引用类型被垃圾回收
+console.log(map) // weakMap中key为obj的键值对已经不存在
+</code></pre>
+<p>通过以上案例我们可以了解到</p>
+<ul>
+<li>弱引用在<strong>对象与 key 共存</strong>场景存在优势，<strong>作为 key 的对象被销毁的同时，WeakMap 中的 key value 也自动销毁了</strong>。</li>
+<li>弱引用也解释了为什么 <strong>weakMap</strong> 的 <strong>key</strong> 不能是基础类型，因为基础类型存在栈内存中，不存在弱引用关系；
+在 vue3 的依赖收集阶段，源码中用到了 WeakMap，具体什么作用？我们下一节进行解答。</li>
+</ul>
+
+<h1>一次性弄清前端上线和生产环境地址</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7291952951048060940?utm_source=gold_browser_extension">juejin.cn</a></p>
+</blockquote>
+<h2>一. 明确问题</h2>
+<p>平时在开发的时候一般都是使用<code>proxy</code>进行代理的，它的原理是：浏览器会先去访问本地的 node 服务器，然后 node 服务器再去代理到你要访问的后端<code>api</code>接口，但是我们可能平时没有<code>node</code>服务器的概念，因为 node 服务器在.jpgack 中，我们一般是通过下面这种方式来设置</p>
+<p><img src="_resources/9d5c3fe6b3a44d2d8d2236126b840fe2~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<p>我们一般会通过后端的<code>Nginx</code>代理来解决跨域的问题，
+但是你知道前端的生产地址配置是什么吗？如何通过 Nginx 访问后端接口呢？是直接配置的类似于<code>http://www.xxxx.com/api/aaa</code>这样的路径呢？还是直接是一个相对路径<code>/prod</code>？要想搞清楚这些，首先就要了解什么是<code>Nginx</code>。</p>
+<h2>二. 什么是 Nginx</h2>
+<p>🐻是一个开源的高性能、轻量级的 Web 服务器和反向代理服务器，它具有事件驱动，异步非阻塞的架构，被广泛应用于构建高性能的网站，应用程序和服务。</p>
+<h2><code>正向代理</code>和<code>反向代理</code></h2>
+<ol>
+<li>反向代理：服务器的 IP 是被屏蔽的，也就是说客户端不知道服务器真实的地址是哪个，客户端访问的地址或者域名是访问的 Nginx 服务器的地址。</li>
+</ol>
+<p><img src="_resources/9dcb4fb5a1454216b376f812f783f385~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<ol start="2">
+<li>正向代理：和反向代理刚好相反，这个时候服务器不知道真正的客户端是哪个，也就是相当于直接访问服务器的是 nginx 代理服务器。</li>
+</ol>
+<p><img src="_resources/61b32d2f664c4fa9ae4046cf08bb1327~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<h2>三. 前端使用 Nginx 解决跨域</h2>
+<p>跨域是指在浏览器的环境下，当一个网页的<code>JavaScript</code>代码通过<code>Ajax</code> <code>Websocket</code>或其他技术发送 HTTP 请求的目标资源位于不同的域名，端口或者协议下，就会发生跨域。</p>
+<p>Nginx 如何解决跨域</p>
+<ol>
+<li>浏览器或者客户端发送请求：<code>http:www.xxx.com:80</code></li>
+<li>Nginx 服务器对 80 端口进行监听，Nginx 服务器将请求转发到后端真实的服务器地址，这样就实现了代理。</li>
+</ol>
+<p>Nginx 基本配置项</p>
+<pre><code>server {
+  listen 80;
+  server_name yourdomain.com;
+
+  location / {     // 无论访问所有路径都返回前端静态资源dist内容
+    root /path/to/your/frontend;
+    index index.html;
+    try_files $uri $uri/ /index.html;
+  }
+
+  location /api/ {
+    proxy_pass http://backend-server-address/api/; // 真实后端api地址
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+}
+</code></pre>
+<p>当在前端代码中使用相对路径<code>/api/users</code>发起请求时候 Nginx 会将这个请求转发到真实的后端地址，不过你发现了没很多前端项目种生产环境地址都仅仅是一个<code>/api</code>类似这样的相对路径，很少直接是一个绝对路径。</p>
+<p>当你请求 yourdomain.com 时，Nginx 会将前端静态资源返回给前端。前端代码中使用的相对路径 /api 会基于当前域名 yourdomain.com 构建完整的请求 URL。因此，前端代码请求后端地址的完整 URL 将是 <a href="https://link.juejin.cn?target=http%3A%2F%2Fyourdomain.com%2Fapi%2Fxxx%2560" title="http://yourdomain.com/api/xxx%60">yourdomain.com/api/xxx</a>，其中 /xxx 表示具体的后端接口路径。</p>
+<p>Nginx 的反向代理配置中的 location /api/ 指令将匹配以 /api/ 开头的请求，并将这些请求代理到后端服务器上。因此，当前端代码发起相对路径请求 /api/xxx 时，Nginx 会将请求转发到 <a href="https://link.juejin.cn?target=http%3A%2F%2Fyourdomain.com%2Fapi%2Fxxx%2560" title="http://yourdomain.com/api/xxx%60">yourdomain.com/api/xxx</a>，实现与后端接口的通信。</p>
+<p>总结来说，前端代码中的相对路径 /api 会根据当前域名构建完整的请求 URL，而 Nginx 的反向代理配置将这些请求转发到后端服务器上的相应路径。这样，前端代码就能够与后端接口进行通信。</p>
+<h2>四. 前端生产环境配置</h2>
+<p>🥲既然 Nginx 如何代理的，以及前端打包的路径一般是什么样的我们知道了，那么我们就来唠唠作为一个前端小白该如何快速的完整的构建一个基础项目吧，其实如果基础开发的话，我们往往会使用脚手架，就以 Vue 开发的话，我们可以使用 vuecli 来快速构建项目，其实构建完之后你就可以直接<code>npm run build</code>打出的包就可以部署在后端服务器的，这个打出的包的根路径是默认的<code>/</code>，通过上面的 Nginx 的知识我们应该不难理解。</p>
+<p>🤡如果我们要自己想去修改一个路径哪？我们可以在<code>vue.config.js</code>中进行配置，配置如下</p>
+<pre><code>module.exports = {
+  publicPath: process.env.NODE_ENV === 'production' ? '/prod' : '/'
+};
+</code></pre>
+<p>👹这样打出的包的静态资源的路径就是下边这样的</p>
+<p><img src="_resources/70fe7bf2f7fe4562aed68ed444549964~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<p>🥰如果是直接使用的默认的打包路径就是如下这种</p>
+<p><img src="_resources/a0eefab971954aafb28672e5befd1144~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<h2>五. 总结</h2>
+<p>最后总结一下，前端上线打包完就是一个静态文件，是一个相对路径，后端会通过 Nginx 来监听这个资源的请求，当匹配到<code>/</code>就返回静态资源，当匹配到某个<code>/prod</code>就将请求反向代理到后端真实服务器的地址，前端打包的是一个相对路径，Nginx 会在前面拼上去具体的域名或者 ip，这样就打通了线上前端访问的基本内容。</p>
+
+<h1>网站前端打 API 时把密码加密，有意义吗？ - Huli's blog</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://blog.huli.tw/2023/01/10/security-of-encrypt-or-hash-password-in-client-side/#">blog.huli.tw</a></p>
+</blockquote>
+<p>这篇想处理的问题是：
+「已经使用了 HTTPS，在打登入 API 以前先把密码加密过或是不做任何处理，这两者的差别在哪？」
+而我们可以把回答分成两个部分：</p>
+<ol>
+<li>假设 HTTPS 被破解了，是不安全的，差别在哪？</li>
+<li>假设 HTTPS 是安全的，差别在哪？</li>
+</ol>
+<h2>假设 HTTPS 不安全，差别在哪？</h2>
+<p>怎样的状况会造成 HTTPS 不安全，攻击者掌握了系统的哪些部分？
+底下简单分为四种状况讨论：</p>
+<ol>
+<li>攻击者掌控整台计算机，信任恶意凭证
+<ol>
+<li>攻击者有其他更好的手段去取得你的密码。</li>
+</ol>
+</li>
+<li>攻击者成功执行了中间人攻击
+<ol>
+<li>只是数据包在传输的过程中被中间人攻击。</li>
+<li>没加密的情形就能直接被获取密码，而有加密的情形攻击者只能获取到加密过的密文而非明文</li>
+<li>但攻击者除了监听你的 request 以外，也能发送伪造的 response 给你，把前端用来加密密码的部分换掉。</li>
+</ol>
+</li>
+<li>攻击者可以在网络层监听 request 并使用漏洞取得明文
+<ol>
+<li>如果有把密码先加密，攻击者就无法取得密码的明文。但依然可以透过重送请求来登入你的账号（先假设没有其他机制），所以你账号还是被盗了，只是攻击者不知道你的密码明文。（避免了撞库攻击）</li>
+</ol>
+</li>
+<li>攻击者直接针对 HTTPS server 进行攻击
+<ol>
+<li>结论跟上个一样，就是加密密码会更安全。</li>
+</ol>
+</li>
+</ol>
+<p>一个是严重性（severity），另一个是可能性（possibility）
+攻击者若是可以绕过 HTTPS 拿到明文的 request，那在应用层将密码加密，确实会比较安全，但要注意的是要达成这个前提非常困难，发生的概率极低。</p>
+<h2>假设 HTTPS 是安全的</h2>
+<p>有一个现实生活中会发生，而且也确实发生过的风险，那就是 logging。</p>
+<p>身为前端工程师，在前端加装一些 error tracking 的服务是很合理的事情，若是我们直接实作一个「只要服务器回传 5xx，就把 request 记录起来」的机制，如果好巧不巧哪天登入的 API 出现这个状况，你就可以在 log 里面看到用户的明文密码。</p>
+<p>而且不只前端，后端也可能有类似的机制，碰到一些问题就把 request 整个写到 log 档去，方便以后查看以及 debug，一不小心密码就可能被写进去。</p>
+<p>在这种状况下，在 client 端先把密码加密显然是有好处的，那就是在这些错误处理的 log 中，被记录下来的密码会是密文，除非你有密钥，否则你是不会知道用户的密码的。</p>
+<h2>加密还是 hash？</h2>
+<p>文章开头我有提到 hash 的状况有些复杂，所以我先把情境设置在「对密码做非对称式加密」再传输，因为对上面我举的那些例子而言，这两种情境的差异不大。</p>
+<p>举例来说，HTTPS 被拿到明文内容，无论你对密码做了非对称式加密还是散列，在攻击者无法取得服务端密钥的前提之下，都是拿不到明文密码的。</p>
+<p>那为什么 hash 的状况有些复杂呢？</p>
+<p>假设我们在前端先把密码 hash 过后再传到后端，那后端是要直接存进去数据库吗？如果直接存进去数据库，哪天数据库的内容曝光，攻击者就拿到这些 hash 过的密码了。</p>
+<p>通常在有加盐以及散列演算法够强的前提之下，被拿到 hash 的密码还是能保证一定的安全性，可是在这种情况下，反而变得很不安全。</p>
+<p>因为前端传给后端的内容已经是 hash 过的了，所以攻击者可以直接拿 hash 过的密码进行登入，根本不用知道明文是什么。虽然保护了明文，但失去了原本散列的安全性。</p>
+<p>因此如果要做 client side hashing，server side 收到后也要再做一次。如此一来，就算数据库被偷走，攻击者也没办法利用数据库中的 hash 直接登入。</p>
+<p>有些人可能跟我一样好奇：「做两次 hash 不会更不安全吗？」，我们可以看一下 Google 在 <a href="https://cloud.google.com/static/solutions/modern-password-security-for-system-designers.pdf">Modern password security for system designers</a> 里面怎么说：</p>
+<blockquote>
+<p>Have the client computer hash the password using a cryptographically secure algorithm and a unique salt provided by the server. When the password is received by the server, hash it again with a different salt that is unknown to the client. Be sure to store both salts securely. If you are using a modern and secure hashing algorithm, repeated hashing does not reduce entropy.</p>
+</blockquote>
+<p>看起来是还好，问题不大。</p>
+<p>总之呢，看起来最安全的但也更复杂的解法就是 client side 先 hash 一次，然后丢到 server 的时候再 hash 一次存进数据库，如此一来就可以保证：</p>
+<ol>
+<li>HTTPS 因为各种原因失效时，攻击者无法取得明文密码</li>
+<li>在 Server 端，没有任何人知道用户的明文密码</li>
+<li>明文密码不会因为人为失误被记录到 log 中</li>
+</ol>
+<p>那如果真的比较好用，为什么没人在用？</p>
+<h2>结论</h2>
+<p>第一个结论是：「在 client 端发送密码前先把密码加密或是 hash，确实能够增加安全性」
+理由是做了以后，能够达成以下事项：</p>
+<ol>
+<li>HTTPS 因为各种原因失效时，攻击者无法取得明文密码</li>
+<li>在 Server 端，没有任何人知道用户的明文密码</li>
+<li>明文密码不会因为人为失误被记录到 log 中
+以上都是没有在 client 加密或是 hash 时做不到的。</li>
+</ol>
+<p>第三个结论是：「虽然从技术上来看能够增加安全性，但实际上是否实作，仍然要考虑其他因素」
+这因素就是我前面提过的「可能性」还有开头我讲先不谈的「成本」。
+若是真的比较安全，为什么一般网站不会实作这个机制？</p>
+<ul>
+<li>或许是因为觉得 HTTPS 被攻破的可能性太低，低到可以忽略不计（我相信这是大多数留言的人觉得不需要做的理由，我也同意这点）</li>
+<li>也或许是成本太高，会增加程序码复杂度；若是采用加密的方案，也会消耗更多运算的资源在加解密上面，这也是成本。</li>
+</ul>
+<hr>
+<p>这就是我觉得应该讲清楚的地方。
+在前端先做 hash 或是加密，它确实是有优点的，不是多此一举，也不是没有意义，更不是让系统变得更危险。</p>
+<p>但这不代表每个系统都该实作这个机制，因为它带来的效益或许没有成本高，这个端看各个公司的考量。对大部分的公司来说，与其为了 HTTPS 失效这个极低的可能性去投入成本，不如把时间花在加强其他登入环节的安全性（例如说 2FA 啦，或是不同设备登录警告等等），带来的效益会更高。</p>
+<p>有些服务还会选择把整包 request 都加密，而非只有密码，这个又更安全但是成本又更高，而且 debug 很不方便。虽然说既然加密做在 client 端，攻击者一定有办法逆向这个机制，看出是怎么做的，但这不代表这些机制没帮助。</p>
+<p>举例来说，假设我有个抢票 App 不想让别人知道 API 怎么调用，于是就实作了一个超复杂的加解密机制，尽管高手还是可以做逆向工程，写出一个抢票机器人，但这个机制增加了他的时间成本以及对技术的要求。</p>
+<p>以技术上来说，就算理论上一定会被破解，这些机制还是有意义的，它的意义在于增加破解难度，加壳、混淆都是一样的，不会因为「在 client 端的东西一定会被看穿」而不去做这些机制。</p>
+<p>重点在于你想保护的商业逻辑的价值，有没有高到你需要付出这些成本去做额外的安全机制。
+很多人在讨论这个问题的时候，没有办法把「单一问题」跟「最佳实践」切开来看，总是在讨论着「以成本来说，怎样怎样才是最好的」或是「为什么不干脆怎样怎样」，但技术选型从来都不是一刀切的事情，最好的方案通常成本也较高，如果真的没有这么多的资源怎么办？是不是就需要选择次好且成本较低的方案？</p>
+<p>不是只有最佳实践才叫做实践，技术是需要进行妥协的。</p>
+<p>举个例子，把登入验证机制都换成 <a href="https://developers.google.com/identity/passkeys?hl=zh-tw">Passkeys</a>，成本可能是 50，增加的安全性是 90。</p>
+<p>把原本明文传输的密码先 hash，成本可能是 20，增加的安全性是 5。</p>
+<p>尽管 Passkeys 的效益整体来说更高，但问题是有些公司可能现在就只有 20 个单位的资源。</p>
+<p>我自己认为一位优秀的工程师不能只给得出最佳实践，而是必须针对有限资源的状况之下，给出各种不同的解法，因此这篇讨论的问题不是毫无意义的。把这个问题整理过一轮之后，自然而然就会出现许多成本不同，效益也不同的解法。</p>
+<p>有多少资源，就做多少事。</p>
+<hr>
+<p>最后，如果你需要一个条列式的简单结论，会是：</p>
+<ol>
+<li>无论如何，一定要先用 HTTPS</li>
+<li>可以的话，能用 Passkeys 当然是最好，少掉传统密码的一些问题</li>
+<li>如果你想要用很安全的方式验证密码，请参考 SRP（Secure Remote Password）协定</li>
+<li>若是上述都没有资源做的话，那在前端先把密码做加密或是 hash 后再发送，确实能够增加一点安全性，但同时还是会带来额外成本</li>
+<li>如果你是银行或需要较高的安全性，再来考虑要不要做这个，否则极大多数的状况下，你不需要这个机制就够安全了，资源投入在其他地方的效益会更大</li>
+</ol>
+<p>若是对这个结论有不同意见，或是有在文章中发现哪些逻辑错误或技术错误，欢迎留言指正与讨论，感恩。</p>
