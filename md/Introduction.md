@@ -1,33 +1,25 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [www.patterns.dev](https://www.patterns.dev/vanilla/rendering-patterns)
 
-> An introduction to Rendering Patterns
+# Rendering Patterns
+SSG
+ISR
+SSR,RSC
+Streaming SSR
+Edge rendering
 
-Rendering Pattern
-
-When you start architecting a new web app, one of the foundational decisions you make is - “How and where do I want to render content?“. Should it be rendered on the web server, build server, on the Edge, or directly on the client? Should it be rendered all at once, partially, or progressively?
-
-The answers to these critical decisions largely depend on the use case.” Choosing the most suitable rendering pattern can make a world of difference to the Developer Experience (DX) you create for the engineering team and the User Experience(UX) you design for your end users.
-
-Choosing the correct pattern could lead to faster builds and excellent loading performance at low processing costs. On the other hand, a wrong choice of pattern can kill an app that could have brought to life a great business idea. So you must ensure that every revolutionary idea you have goes into development with the appropriate rendering pattern.
-
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/4.1.png)
+![](_resources/4.1.png)
 
 Importance of Rendering Patterns
 --------------------------------
-
-To create great UX, we usually try to optimize our apps for user-centric metrics, such as the [Core Web Vitals (CWV)](https://web.dev/vitals/). The CWV metrics measure parameters most relevant to user experience. Optimizing the CWV can help ensure a great user experience and optimal SEO for our apps.
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAACbklEQVRoQ+2aMU4dMRCGZw6RC1CSSyQdLZJtKQ2REgoiRIpQkCYClCYpkgIESQFIpIlkW+IIcIC0gUNwiEFGz+hlmbG9b1nesvGW++zxfP7H4/H6IYzkwZFwQAUZmpJVkSeniFJKA8ASIi7MyfkrRPxjrT1JjZ8MLaXUDiJuzwngn2GJaNd7vyP5IoIYY94Q0fEQIKIPRGS8947zSQTRWh8CwLuBgZx479+2BTkHgBdDAgGAC+fcywoyIFWqInWN9BSONbTmFVp/AeA5o+rjKRJ2XwBYRsRXM4ZXgAg2LAPzOCDTJYQx5pSIVlrC3EI45y611osMTHuQUPUiYpiVooerg7TWRwDAlhSM0TuI+BsD0x4kGCuFSRVzSqkfiLiWmY17EALMbCAlMCmI6IwxZo+INgQYEYKBuW5da00PKikjhNNiiPGm01rrbwDwofGehQjjNcv1SZgddALhlJEgwgJFxDNr7acmjFLqCyJuTd6LEGFttpmkYC91Hrk3s1GZFERMmUT01Xv/sQljjPlMRMsxO6WULwnb2D8FEs4j680wScjO5f3vzrlNJszESWq2LYXJgTzjZm56MCHf3zVBxH1r7ftU1splxxKYHEgoUUpTo+grEf303rPH5hxENJqDKQEJtko2q9zGeeycWy3JhpKhWT8+NM/sufIhBwKI+Mta+7pkfxKMtd8Qtdbcx4dUQZcFCQ2I6DcAnLUpf6YMPxhIDDOuxC4C6djoQUE6+tKpewWZ1wlRkq0qUhXptKTlzv93aI3jWmE0Fz2TeujpX73F9TaKy9CeMk8vZusfBnqZ1g5GqyIdJq+XrqNR5AahKr9CCcxGSwAAAABJRU5ErkJggg==)
-
 To create a great DX for our product/engineering teams, we have to optimize our development environments by ensuring faster build times, easy rollbacks, scalable infrastructure, and many other features that help developers succeed.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/5.png)
+![](_resources/5.png)
 
 Setting up a development environment based on these principles enables our development teams to build a great product efficiently.
 
 Summarizing our expectations, we have now built quite a long list. But, if you choose the correct rendering pattern, you can get most of these benefits out of the box.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/6.png)
+![](_resources/6.png)
 
 Choosing a Pattern
 ------------------
@@ -46,7 +38,7 @@ With static rendering, the HTML for the entire page gets generated at build time
 
 The process described above is most suitable for pages that do not change often and display the same data no matter who requests them. Since we consume a lot of dynamic, customized data on the web today, we have variations of static rendering to cater to different use cases.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/img1.png)
+![](_resources/img1.png)
 
 ### Basic/Plain Static Rendering
 
@@ -62,11 +54,11 @@ When the site is deployed and built (For example, on Vercel), the corresponding 
 
 When a user requests the page, the server sends the pre-generated HTML to the client. This response is also cached to the edge location closest to the user. The browser then renders the HTML and employs a JavaScript bundle to hydrate the page.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/7.png)
+![](_resources/7.png)
 
 Plain static rendering is excellent for performance because it results in an extremely **quick TTFB** since HTML is already available on the server. The browser receives a faster response and can render it quickly, resulting in a **fast FCP and LCP**. Since the content is static, there is **no layout shift** while rendering it.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/8.png)
+![](_resources/8.png)
 
 Thus, Plain Static Rendering, especially using a CDN for caching, helps to achieve great Core Web Vitals. However, most websites have at least some dynamic content or user interaction.
 
@@ -74,15 +66,15 @@ Thus, Plain Static Rendering, especially using a CDN for caching, helps to achie
 
 Let’s say we wanted to enhance our real-estate demo to display the most recent property listings. We’d have to use a data provider to get these listings.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/9.png)
+![](_resources/9.png)
 
 We can use **Static Rendering with Client-Side `fetch`** in this case. This pattern works great when you want to update data on every request.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/10.png)
+![](_resources/10.png)
 
 You can still use static rendering for the website to render the UI with a **skeleton component** where you want to place the dynamic listing data. Then, after the page has loaded, we can fetch the data (using SWR, for example) on the client.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/11.png)
+![](_resources/11.png)
 
 A **custom API route** is used to fetch the data from the CMS and return this data.
 
@@ -90,11 +82,11 @@ A **custom API route** is used to fetch the data from the CMS and return this da
 
 The pre-generated HTML file is sent to the client when the user requests the page. The user initially sees the skeleton UI without any data. The client fetches the data from the API route, receives the response, and shows the listings. (the hydration call is not included in the example)es the response and shows the listings. (the hydration call is not included in the example)
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/12.png)
+![](_resources/12.png)
 
 While **Static Rendering with Client-Side** fetch gives us a **good TTFB and FCP**, the **LCP is sub-optimal** since “largest content” can only be displayed after we get the listings data from the API route.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/13.png)
+![](_resources/13.png)
 
 There is also a strong **possibility of layout shifts**, especially if the size of the skeleton UI doesn’t match the content rendered eventually.
 
@@ -104,11 +96,11 @@ Next.js offers some solutions, as discussed in the following sections, to improv
 
 ### Static with `getStaticProps`
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/14.png)
+![](_resources/14.png)
 
 This method allows you to access the data provider and fetch data at build time on the server. It can be a good solution if you know that the dynamic data on a static page will always be available at build time.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/15.png)
+![](_resources/15.png)
 
 The `getStaticProps` method allows us to generate the HTML with the data on the server. Thus, we can avoid creating API routes to fetch the data on the client. Similarly, a skeleton component is not required while the data loads, as the page, will be rendered with the data.
 
@@ -120,11 +112,11 @@ When we build the project, the data provider is called, and the returned data is
 
 When a user requests the page, the process is similar to plain static rendering. The response is cached and rendered to the screen, and the browser fetches the JavaScript bundles required to hydrate the page.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/16.png)
+![](_resources/16.png)
 
 From a client perspective, the network and main thread work are identical to plain static rendering, so we get a similarly **superior performance**.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/17.png)
+![](_resources/17.png)
 
 As the site grows, the DX, when using this method, may not be so good.
 
@@ -134,23 +126,23 @@ The method is also suitable only when we can get away with renewing data infrequ
 
 ### Incremental Static Regeneration
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/18.png)
+![](_resources/18.png)
 
 We can use incremental static regeneration to solve the build time, and dynamic data issues discussed earlier.
 
 ISR is hybrid in the sense that it allows us to pre-render only certain static pages and render the dynamic pages on-demand when the user requests them. This results in shorter build times and allows automatic invalidation of the cache and regeneration of the page after a specific interval.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/19.png)
+![](_resources/19.png)
 
 Let’s assume we now want to show individual property details to enhance our previous demo. We can pre-render these new pages so that they load quickly when a user clicks on a listing.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/20.png)
+![](_resources/20.png)
 
 Next.js helps us achieve this by using the getStaticPaths method to generate dynamic paths. We can tell Next.js which pages to pre-generate based on their query parameter.
 
 For our demo, let’s fetch all listings and pre-generate the pages for each of them. Note that this would take very long if there were thousands of listings. In that case, we will have to tell Next to only pre-generate a subset of all the pages and render a fallback when the remaining listing pages are generated on-demand (when the user requests).
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/21.png)
+![](_resources/21.png)
 
 The pre-rendered and generated on-demand pages are delivered similarly. If a user requests a page that hasn’t been generated yet, it gets generated on-demand and cached by the Edge. Thus, only the first user is likely to have a poorer experience for pages that are not pre-rendered. Everyone else will benefit from the fast, cached response.
 
@@ -158,7 +150,7 @@ The pre-rendered and generated on-demand pages are delivered similarly. If a use
 
 This addresses the long build-time problem of the previous methods. But we still have the landing page, which needs to be redeployed every time we have a new listing.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/22.png)
+![](_resources/22.png)
 
 To enable a refresh of the landing page, we can automatically invalidate the cache and regenerate the page in the background at a specific interval. We can use this by adding a revalidate field to the returned object.
 
@@ -166,7 +158,7 @@ To enable a refresh of the landing page, we can automatically invalidate the cac
 
 If a user requests a page that has been in the cache for longer than the specified number of seconds, the user will initially see the stale page. The page regeneration is triggered simultaneously. Once the page is regenerated in the background, the cache is invalidated and updated with the recently regenerated page.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/23.png)
+![](_resources/23.png)
 
 With Incremental Static Regeneration, we can show dynamic content by automatically revalidating the page every few seconds.
 
@@ -174,11 +166,11 @@ Although this is already a vast improvement from what we had before, there are a
 
 ### On-demand Incremental Static Regeneration
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/24.png)
+![](_resources/24.png)
 
 To solve the last drawback mentioned above we have **On-demand Incremental Static Regeneration** which allows us to use ISR, but the regeneration occurs on certain events rather than at fixed intervals.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/25.png)
+![](_resources/25.png)
 
 Instead of using a `revalidate` field, we revalidate based on new data in API routes.
 
@@ -188,7 +180,7 @@ For example, we can listen to an incoming webhook event that tells us when new d
 
 With regular ISR, the updated page is cached only at the edge nodes which have handled user requests for the page. On-demand ISR regenerates and redistributes the page across the edge network so that users worldwide will automatically see the most recent version of the page from the edge cache without seeing stale content. We also avoid unnecessary regenerations and serverless function calls, reducing operational costs compared to regular ISR.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/26.png)
+![](_resources/26.png)
 
 Thus On-demand ISR gives us performance benefits and a great DX.
 
@@ -198,15 +190,15 @@ It allows us to have fast and dynamic websites that are always online at a reaso
 
 ### Server-Side Rendering
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/27.png)
+![](_resources/27.png)
 
 With server-side rendering, we generate the HTML for every request. This approach is most suitable for pages containing highly personalized data, for example, data based on the user cookie or generally any data obtained from the user’s request. It’s also suitable for pages that should be render-blocking, perhaps based on authentication state.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/28.png)
+![](_resources/28.png)
 
 A personalized dashboard is an excellent example of highly dynamic content on a page. Most of the content is based on the user’s identity or authorization level that may be contained in a user cookie. This dashboard only shows when a user is authenticated and possibly shows user-specific sensitive data that should not be visible to others.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/29.png)
+![](_resources/29.png)
 
 Next.js allows us to render the page on the server using the `getServerSideProps` method. This method runs on the server for every request and eventually passes the returned data to the page to generate the HTML.
 
@@ -216,7 +208,7 @@ When a user requests the page, the `getServerSideProps` method runs, returns the
 
 The generated HTML content is unique to every request and should not be cached by the CDN.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/31.png)
+![](_resources/31.png)
 
 The network and main thread for the client are very similar for static and server-side rendering. The FCP is almost equal to the LCP, and we can easily avoid layout shifts as there is no dynamic content loading after the initial page load.
 
@@ -224,7 +216,7 @@ The network and main thread for the client are very similar for static and serve
 
 However, the TTFB for server-rendered pages is significantly longer than static rendering as the page gets generated from scratch at every request.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/32.png)
+![](_resources/32.png)
 
 Although server-rendering is an excellent method when you want to render highly personalized data, there are some things to consider to achieve a great user experience and reduce server costs. These are likely to be high because you invoke serverless functions at every request.
 
@@ -252,13 +244,13 @@ If your serverless function is deployed in San Francisco, but your database is i
 
 Vercel uses serverless functions to server-render your pages.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/34.png)
+![](_resources/34.png)
 
 Although serverless functions have many benefits, such as only having to pay for what you use, there are a few limitations. The time it takes to start up the lambda, known as the long cold boot, is a common issue with serverless functions. Also, connections to databases can be slow. You should also not call a serverless function located on one side of the planet from the other.
 
 ### Edge SSR + HTTP Streaming
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/35.png)
+![](_resources/35.png)
 
 Vercel is currently exploring **Edge Server-Side Rendering**, which will enable users to **server-render from all regions** and experience a **near-zero cold boot**. Another benefit of **Edge SSR** is that the edge runtime allows **HTTP streaming**.
 
@@ -270,13 +262,13 @@ With serverless functions, we generate the entire page server-side and wait for 
 
 With Edge SSR, we can stream parts of the document as soon as they’re ready and hydrate these components granularly. This reduces the waiting time for users as they can see components as they stream in one by one.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/40.png)
+![](_resources/40.png)
 
 **Streaming SSR** also enables **React Server Components**. The combination of **Edge SSR with React Server Components** can allow us to have a beautiful **hybrid between static and server rendering**.
 
 **React Server Components** allow us to partially render React components on the server, which is useful for components that require large dependencies that need not be downloaded to the client.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/41.png)
+![](_resources/41.png)
 
 Going back to the real-estate website example, if we wanted to show the landing page again and include region-specific listings for the user. The vast majority of the page only contains static data; it’s just the listings that require request-based data.
 
@@ -285,13 +277,13 @@ Instead of having to server-render the entire page, we can now choose only to re
 Conclusion
 ----------
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1658990025/patterns.dev/42.png)
+![](_resources/42.png)
 
 We have now introduced many patterns that render content on the server. [Client Side Rendering](https://www.patterns.dev/posts/client-side-rendering/)(CSR) with complete rehydration is still recommended for very dynamic websites where every component on the screen may change based on user interaction.
 
 Depending on the type of the application or the page type, some of the patterns may be more suitable than the others. The following chart compares the highlights of different patterns and provides use cases for each.
 
-![](https://res.cloudinary.com/ddxwdqwkr/image/upload/f_auto/v1616962404/patterns.dev/Rendering-ComparisonTable.svg)
+![](_resources/Rendering-ComparisonTable.svg.png)
 
 The following table from [Patterns for Building JavaScript Websites in 2022](https://dev.to/this-is-learning/patterns-for-building-javascript-websites-in-2022-5a93) offers another view pivoted by key application characteristics. It should be helpful for anyone looking for a suitable pattern for common [application holotypes](https://jasonformat.com/application-holotypes/).
 
