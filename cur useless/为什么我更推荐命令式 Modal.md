@@ -38,16 +38,9 @@ const App: React.FC = () => {
 }
 ```
 
-Copy
-
 上面是一个受控的声明式 Modal 定义，写起来非常臃肿。你需要手动控制 Modal 的 Open 状态。并且你需要首先定义一个状态，然后在编写 UI，将状态和 UI 绑定。
-
 这样的写法，我们需要在同一个组件定义一个状态，一个触发器（例如 Button）-> 控制状态 -> 流转到 Modal 显示。不仅写起来复杂，后期维护起来也很困难。
-
 业务越积越多，后面你的页面上可能是这样的。
-
-TSX
-
 ```
 <>
   <Button type="primary" onClick={showModal}>

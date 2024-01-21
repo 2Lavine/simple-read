@@ -627,7 +627,7 @@ console.log(map) // weakMap中key为obj的键值对已经不存在
 </blockquote>
 <h2>一. 明确问题</h2>
 <p>平时在开发的时候一般都是使用<code>proxy</code>进行代理的，它的原理是：浏览器会先去访问本地的 node 服务器，然后 node 服务器再去代理到你要访问的后端<code>api</code>接口，但是我们可能平时没有<code>node</code>服务器的概念，因为 node 服务器在.jpgack 中，我们一般是通过下面这种方式来设置</p>
-<p><img src="_resources/9d5c3fe6b3a44d2d8d2236126b840fe2~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<p><img src="../_resources/9d5c3fe6b3a44d2d8d2236126b840fe2~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg" alt=""></p>
 <p>我们一般会通过后端的<code>Nginx</code>代理来解决跨域的问题，
 但是你知道前端的生产地址配置是什么吗？如何通过 Nginx 访问后端接口呢？是直接配置的类似于<code>http://www.xxxx.com/api/aaa</code>这样的路径呢？还是直接是一个相对路径<code>/prod</code>？要想搞清楚这些，首先就要了解什么是<code>Nginx</code>。</p>
 <h2>二. 什么是 Nginx</h2>
@@ -636,11 +636,11 @@ console.log(map) // weakMap中key为obj的键值对已经不存在
 <ol>
 <li>反向代理：服务器的 IP 是被屏蔽的，也就是说客户端不知道服务器真实的地址是哪个，客户端访问的地址或者域名是访问的 Nginx 服务器的地址。</li>
 </ol>
-<p><img src="_resources/9dcb4fb5a1454216b376f812f783f385~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<p><img src="../_resources/9dcb4fb5a1454216b376f812f783f385~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg" alt=""></p>
 <ol start="2">
 <li>正向代理：和反向代理刚好相反，这个时候服务器不知道真正的客户端是哪个，也就是相当于直接访问服务器的是 nginx 代理服务器。</li>
 </ol>
-<p><img src="_resources/61b32d2f664c4fa9ae4046cf08bb1327~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<p><img src="../_resources/61b32d2f664c4fa9ae4046cf08bb1327~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg" alt=""></p>
 <h2>三. 前端使用 Nginx 解决跨域</h2>
 <p>跨域是指在浏览器的环境下，当一个网页的<code>JavaScript</code>代码通过<code>Ajax</code> <code>Websocket</code>或其他技术发送 HTTP 请求的目标资源位于不同的域名，端口或者协议下，就会发生跨域。</p>
 <p>Nginx 如何解决跨域</p>
@@ -679,9 +679,9 @@ console.log(map) // weakMap中key为obj的键值对已经不存在
 };
 </code></pre>
 <p>👹这样打出的包的静态资源的路径就是下边这样的</p>
-<p><img src="_resources/70fe7bf2f7fe4562aed68ed444549964~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<p><img src="../_resources/70fe7bf2f7fe4562aed68ed444549964~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg" alt=""></p>
 <p>🥰如果是直接使用的默认的打包路径就是如下这种</p>
-<p><img src="_resources/a0eefab971954aafb28672e5befd1144~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75..jpg.jpg" alt=""></p>
+<p><img src="../_resources/a0eefab971954aafb28672e5befd1144~tplv-k3u1fbpfcp-jj-mark!3024!0!0!0!q75.awebp.jpg" alt=""></p>
 <h2>五. 总结</h2>
 <p>最后总结一下，前端上线打包完就是一个静态文件，是一个相对路径，后端会通过 Nginx 来监听这个资源的请求，当匹配到<code>/</code>就返回静态资源，当匹配到某个<code>/prod</code>就将请求反向代理到后端真实服务器的地址，前端打包的是一个相对路径，Nginx 会在前面拼上去具体的域名或者 ip，这样就打通了线上前端访问的基本内容。</p>
 

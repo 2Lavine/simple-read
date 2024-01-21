@@ -61,7 +61,7 @@ function readDirectory(readPath) {
 
       const newFileContent = fileContent
         .replace(/_resources\/_resources\//g, "_resources/")
-        .replace(/.webp/g, ".jpg");
+        .replace(/.webp"/g, ".jpg");
       fs.writeFileSync(outputFilePath, newFileContent);
     }
   });
