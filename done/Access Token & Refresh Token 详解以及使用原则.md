@@ -1,40 +1,36 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6859572307505971213?searchId=20240112202231678693B99788D345C320)
 
-本文通过分析 Access Token 和 Refresh Token 的配合流程和安全要点，得到正确管理和使用 Access Token 和 Refresh Token 的方法和原则。
-
 Oauth2 使用 Token 的基本流程
 ---------------------
 
 我们先看看一个来自 [RFC6749](https://link.juejin.cn?target=http%3A%2F%2Fwww.rfcreader.com%2F%23rfc6749 "http://www.rfcreader.com/#rfc6749") 定义的 Oauth2 中 token 使用的基本流程，大概可以明白 Access Token 和 Refresh Token 两个的用法。
 
 ```
-+--------+                                           +---------------+
-  |        |--(A)------- Authorization Grant --------->|               |
-  |        |                                           |               |
-  |        |<-(B)----------- Access Token -------------|               |
-  |        |               & Refresh Token             |               |
-  |        |                                           |               |
-  |        |                            +----------+   |               |
-  |        |--(C)---- Access Token ---->|          |   |               |
-  |        |                            |          |   |               |
-  |        |<-(D)- Protected Resource --| Resource |   | Authorization |
-  | Client |                            |  Server  |   |     Server    |
-  |        |--(E)---- Access Token ---->|          |   |               |
-  |        |                            |          |   |               |
-  |        |<-(F)- Invalid Token Error -|          |   |               |
-  |        |                            +----------+   |               |
-  |        |                                           |               |
-  |        |--(G)----------- Refresh Token ----------->|               |
-  |        |                                           |               |
-  |        |<-(H)----------- Access Token -------------|               |
-  +--------+           & Optional Refresh Token        +---------------+
++----+                                           +---------------+
+|        |--(A)------- Authorization Grant --------->|           |
+|        |                                           |          |
+|        |<-(B)----------- Access Token -------------|          |
+|        |               & Refresh Token             |          |
+|        |                                           |          |
+|        |                            +----------+   |          |
+|        |--(C)---- Access Token ---->|          |   |          |
+|        |                            |          |   |          |
+|        |<-(D)- Protected Resource --| Resource |   |Auth      |
+| Client |                            |  Server  |   | Server    |
+|        |--(E)---- Access Token ---->|          |   |          |
+|        |                            |          |   |          |
+|        |<-(F)- Invalid Token Error -|          |   |          |
+|        |                            +----------+   |          |
+|        |                                           |          |
+|        |--(G)----------- Refresh Token ----------->|          |
+|        |                                           |          |
+|        |<-(H)----------- Access Token -------------|          |
++----+           & Optional Refresh Token        +------+
                Figure 2: Refreshing an Expired Access Token
 ```
 
 上图中 Authorization Server 翻译为授权服务，负责 Token 的签发。Resource Server 翻译为资源服务，也就是被授权访问的资源，比如 API 接口。在分布式应用中，他们应该分属不同的服务。 值得注意的是，资源服务器不签发 Token，但是可以具备独立验证 Access Token 的能力。
-
 上面的流程图包括了下面的步骤。
-
 *   (A) 客户端向授权服务器请求 Access Token（整个认证授权的流程，可以是多次请求完成该步骤）
 *   (B) 授权服务器验证客户端身份无误，且请求的资源是合理的，则颁发 Access Token 和 Refresh Token，可以同时返回 Access Token 的过期时间等附加属性。
 *   (C) 带着 Access Token 请求资源
@@ -45,9 +41,6 @@ Oauth2 使用 Token 的基本流程
 *   (H) 授权服务器验证 Refresh Token，如果有效，则签发新的 Access Token（或者同时下发一个新的 Refresh Token）。
 
 我们总结几个点，Access Token 作为请求资源的凭证，是使用最频繁的，但是有效期比较短，Refresh Token 有效期较长，只会发给授权服务器，用来获取新的 Access Token。
-
-那么问题来了：
-
 ### 资源服务如何脱离授权服务验证 Access Token？
 
 以 JTW 为例。如果 Access Token 是 JWT 形式签发，资源服务可以使用验证签名的方式判断是否合法，只需要把签名密钥在资源服务同步一份即可。也有使用非对称加密的，授权服务使用私钥签发，资源服务使用公钥验证。由于 JWT 允许携带一些信息，用户，权限，有效期等，因此资源服务判断 JWT 合法之后可以继续根据携带信息来判断是否可访问资源。仅此而已，这样的好处是可以快速验证有效性，坏处是 Access Token 一旦签发，将很难收回，只能通过过期来失效。
@@ -71,11 +64,3 @@ Refresh Token 的有效期就是允许用户在多久时间内不用重新登录
 
 所有 token 应该保管在 private 的地方，也就是只能客户端自己使用，所有 token 都应该在 [TLS](https://link.juejin.cn?target=https%3A%2F%2Fzh.wikipedia.org%2Fwiki%2F%25E5%2582%25B3%25E8%25BC%25B8%25E5%25B1%25A4%25E5%25AE%2589%25E5%2585%25A8%25E6%2580%25A7%25E5%258D%2594%25E5%25AE%259A%23TLS_1.3 "https://zh.wikipedia.org/wiki/%E5%82%B3%E8%BC%B8%E5%B1%A4%E5%AE%89%E5%85%A8%E6%80%A7%E5%8D%94%E5%AE%9A#TLS_1.3") 信道下发送（比如 HTTPS）。
 
-参考
---
-
-[The OAuth 2.0 Authorization Framework](https://link.juejin.cn?target=http%3A%2F%2Fwww.rfcreader.com%2F%23rfc6749_line2308 "http://www.rfcreader.com/#rfc6749_line2308")
-
-[JWT 原理简析](https://link.juejin.cn?target=https%3A%2F%2Fczj.so%2F198%2Fjwt-json-web-token-%25e5%258e%259f%25e7%2590%2586%25e7%25ae%2580%25e6%259e%2590.html "https://czj.so/198/jwt-json-web-token-%e5%8e%9f%e7%90%86%e7%ae%80%e6%9e%90.html")
-
-[请关注我的个人博客](https://link.juejin.cn?target=https%3A%2F%2Fczj.so%2F1218%2Faccess-token-refresh-token-xiangjieyijizhengquedeyongfa.html "https://czj.so/1218/access-token-refresh-token-xiangjieyijizhengquedeyongfa.html")

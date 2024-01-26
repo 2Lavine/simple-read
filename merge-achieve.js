@@ -57,11 +57,11 @@ function readDirectory(readPath) {
       // fs.writeFileSync(outputFilePath, result.join("\n"));
       const fileContent = result.join("\n");
       // replace _resources/_resources/ to _resources/
-      // replace .webp to .jpg
+      // replace .awebp to .jpg
 
       const newFileContent = fileContent
         .replace(/_resources\/_resources\//g, "_resources/")
-        .replace(/.webp"/g, ".jpg");
+        // .replace(/.awebp"/g, ".jpg\"");
       fs.writeFileSync(outputFilePath, newFileContent);
     }
   });

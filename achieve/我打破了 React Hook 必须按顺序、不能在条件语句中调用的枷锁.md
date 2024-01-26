@@ -26,29 +26,21 @@ function App(){
 
 限制的原因
 -----
-
 这个限制并不是 React 团队凭空造出来的，的确是由于 React Hook 的实现设计而不得已为之。
-
 以 Preact 的 Hook 的实现为例，它用**数组和下标**来实现 Hook 的查找（React 使用链表，但是原理类似）。
-
 ```
 // 当前正在运行的组件
 let currentComponent
-
 // 当前 hook 的全局索引
 let currentIndex
-
 // 第一次调用 currentIndex 为 0
 useState('first') 
-
 // 第二次调用 currentIndex 为 1
 useState('second')
 ```
 
 可以看出，每次 Hook 的调用都对应一个全局的 index 索引，通过这个索引去当前运行组件 `currentComponent` 上的 `_hooks` 数组中查找保存的值，也就是 Hook 返回的 `[state, useState]`
-
 那么假如条件调用的话，比如第一个 `useState` 只有 0.5 的概率被调用：
-
 ```
 // 当前正在运行的组件
 let currentComponent
@@ -64,9 +56,7 @@ if (Math.random() > 0.5) {
 // 第二次调用 currentIndex 为 1
 useState('second')
 ```
-
 在 Preact 第一次渲染组件的时候，假设 `Math.random()` 返回的随机值是 `0.6`，那么第一个 Hook 会被执行，此时组件上保存的 `_hooks` 状态是：
-
 ```
 _hooks: [
   { value: 'first', update: function },
@@ -74,18 +64,17 @@ _hooks: [
 ]
 ```
 
-用图来表示这个查找过程是这样的：
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d33115c214c4c6fae9eec2b9decf3a2~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
-
 假设第二次渲染的时候，`Math.random()` 返回的随机值是 `0.3`，此时只有第二个 useState 被执行了，那么它对应的全局 `currentIndex` 会是 0，这时候去 `_hooks[0]` 中拿到的却是 `first` 所对应的状态，这就会造成渲染混乱。
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1f4be62e50ff44aeaed94ea1ff32b9c9~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
 
 没错，本应该值为 `second` 的 value，莫名其妙的被指向了 `first`，渲染完全错误！
 
-以这个例子来看：
 
+
+---
+
+以这个例子来看：
 ```
 export default function App() {
   if (Math.random() > 0.5) {
@@ -106,15 +95,13 @@ export default function App() {
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a2a6d68d6904dfda2217d18bc78868b~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
 
+
 破解限制
 ----
 
 有没有办法破解限制呢？
-
 如果要破解全局索引递增导致的 bug，那么我们可以考虑换种方式存储 Hook 状态。
-
 如果不用下标存储，是否可以考虑用一个**全局唯一的 key** 来保存 Hook，这样不是就可以绕过下标导致的混乱了吗？
-
 比如 `useState` 这个 API 改造成这样：
 
 ```
@@ -134,18 +121,14 @@ export default function App() {
 ```
 
 这样，通过 `_hooks['key']` 来查找，就无所谓前序的 Hook 出现的任何意外情况了。
-
 也就是说，原本的存储方式是：
-
 ```
 _hooks: [
   { value: 'first', update: function },
   { value: 'second', update: function },
 ]
 ```
-
 改造后：
-
 ```
 _hooks: [
   key1: { value: 'first', update: function },
@@ -157,27 +140,21 @@ _hooks: [
 
 改造源码
 ----
-
 来试着改造一下 Preact 源码，它的 Hook 包的位置在 [hooks/src/index.js](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fpreactjs%2Fpreact%2Fblob%2Fmaster%2Fhooks%2Fsrc%2Findex.js "https://github.com/preactjs/preact/blob/master/hooks/src/index.js") 下，找到 `useState` 方法：
-
 ```
 export function useState(initialState) {
   currentHook = 1;
   return useReducer(invokeOrReturn, initialState, undefined);
 }
 ```
-
 它的底层调用了 `useReducer`，所以新增加一个 `key` 参数透传下去：
-
 ```
 + export function useState(initialState, key) {
   currentHook = 1;
 + return useReducer(invokeOrReturn, initialState, undefined, key);
 }
 ```
-
 `useReducer` 原本是通过全局索引去获取 Hook state：
-
 ```
 // 全局索引
 let currentIndex
@@ -189,9 +166,7 @@ export function useReducer(reducer, initialState, init) {
   return hookState._value;
 }
 ```
-
 改造成兼容版本，有 key 的时候优先传入 key 值：
-
 ```
 // 全局索引
 let currentIndex
@@ -203,9 +178,7 @@ let currentIndex
    return hookState._value;
 }
 ```
-
 最后改造一下 `getHookState` 方法：
-
 ```
 function getHookState(index, type) {
   const hooks =
@@ -229,30 +202,7 @@ function getHookState(index, type) {
   return hooks._list[index];
 }
 ```
-
 这里设计成传入 `key` 值的时候，初始化就不往数组里 `push` 新状态，而是直接通过下标写入即可，原本的取状态的写法 `hooks._list[index]` 本身就支持通过 `key` 从数组上取值，不用改动。
-
-至此，改造就完成了。
-
-来试试新用法：
-
-```
-export default function App() {
-  if (Math.random() > 0.5) {
-    useState(10000, 'key1');
-  }
-  const [value, setValue] = useState(0, 'key2');
-
-  return (
-    <div>
-      <button onClick={() => setValue(value + 1)}>+</button>
-      {value}
-    </div>
-  );
-}
-```
-
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d6c4122331af410895767f4540acda12~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
 
 自动编译
 ----
@@ -260,7 +210,6 @@ export default function App() {
 事实上 React 团队也考虑过给每次调用加一个 `key` 值的设计，在 Dan Abramov 的 [为什么顺序调用对 React Hooks 很重要？](https://link.juejin.cn?target=https%3A%2F%2Foverreacted.io%2Fzh-hans%2Fwhy-do-hooks-rely-on-call-order%2F%23%25E7%25BC%25BA%25E9%2599%25B7-2-%25E5%2591%25BD%25E5%2590%258D%25E5%2586%25B2%25E7%25AA%2581 "https://overreacted.io/zh-hans/why-do-hooks-rely-on-call-order/#%E7%BC%BA%E9%99%B7-2-%E5%91%BD%E5%90%8D%E5%86%B2%E7%AA%81") 中已经详细解释过这个提案。
 
 多重的缺陷导致这个提案被否决了，尤其是在遇到自定义 Hook 的时候，比如你提取了一个 `useFormInput`：
-
 ```
 const valueKey = Symbol();
  
@@ -276,7 +225,6 @@ function useFormInput() {
 ```
 
 然后在组件中多次调用它：
-
 ```
 function Form() {
   // 使用 Symbol
@@ -295,7 +243,6 @@ function Form() {
 ```
 
 此时这个通过 `key` 寻找 Hook state 的方式就会发生冲突。
-
 但我的想法是，能不能借助 **babel 插件的编译能力**，实现编译期自动为每一次 **Hook 调用**都注入一个 `key`， 伪代码如下：
 
 ```
@@ -307,7 +254,6 @@ traverse(node) {
 ```
 
 生成这样的代码：
-
 ```
 function Form() {
 +  const name = useFormInput('key_1'); 
@@ -333,27 +279,5 @@ function Form() {
 }
 ```
 
-key 的生成策略可以是随机值，也可以是注入一个 Symbol，这个无所谓，保证运行时期不会改变即可。也许有一些我没有考虑周到的地方，对此有任何想法的同学都欢迎加我微信 [sshsunlight](https://link.juejin.cn?target=https%3A%2F%2Fp1-juejin.byteimg.com%2Ftos-cn-i-k3u1fbpfcp%2F017d568dc1d14cd883cc3238350a39ec~tplv-k3u1fbpfcp-watermark.image "https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/017d568dc1d14cd883cc3238350a39ec~tplv-k3u1fbpfcp-watermark.image") 讨论，当然单纯的交个朋友也没问题，大佬或者萌新都欢迎。
+key 的生成策略可以是随机值，也可以是注入一个 Symbol，这个无所谓，保证运行时期不会改变即可。
 
-总结
---
-
-本文只是一篇**探索性质**的文章：
-
-*   介绍 Hook 实现的大概原理以及限制
-*   探索出修改源码机制绕过限制的方法
-
-其实本意是**帮助大家更好的理解 Hook**。
-
-我并不希望 React 取消掉这些限制，我觉得这也是设计的取舍。
-
-如果任何子函数，任何条件表达式中都可以调用 Hook，代码也会变得更加**难以理解和维护**。
-
-如果你真的希望更加灵活的使用类似的 Hook 能力，Vue3 底层**响应式收集依赖**的原理就可以完美的绕过这些限制，但更加灵活的同时也一定会无法避免的增加更多维护风险。
-
-感谢大家
-----
-
-我是 ssh，目前就职于[字节跳动的 Web Infra 团队](https://link.juejin.cn?target=https%3A%2F%2Fwebinfra.org%2Fbytedance%2Fweb-infra "https://webinfra.org/bytedance/web-infra")，目前团队在北上广深杭都还缺人（尤其是北京）。
-
-为此我组建了一个[氛围特别好的招聘社群](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fsl1673495%2Fbytedance-apm-group%2Fblob%2Fmain%2FREADME.md "https://github.com/sl1673495/bytedance-apm-group/blob/main/README.md")，大家在里面尽情的讨论面试相关的想法和问题，也欢迎你加入，随时投递简历给我。

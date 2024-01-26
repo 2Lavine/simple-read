@@ -1,69 +1,19 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [github.com](https://github.com/YoRenChen/Blog/issues/4)
 
-根据当前页面内容布局，把当前内容切换为骨架容器，生成对应的 html。
-
-[👉🏻 直冲 代码实现 demo](https://github.com/YoRenChen/skeleton-screen-demo)  
-_or_  
-👉🏻 继续查看以下分析文 👇🏻👇🏻👇🏻
-
-前言
---
-
-本文涉及到主要插件有 ：  
-`Puppeteer`  
-`vue-server-renderer`  
-`rollup`  
-`page-skeleton-webpack-plugin`  
-`vue-skeleton-webpack-plugin`
-
-CSR：客户端渲染。
-
-📢📢📢：
-
-本文涉及代码基于`page-skeleton-webpack-plugin`为前提所简化。  
-**本文目的是：让有兴趣的读者能更快了解内部实现。**  
-**实现目的是：达到页面的简单骨架屏时无需再写额外的代码。**
-
-构建思路基于 [page-skeleton-webpack-plugin](https://github.com/ElemeFE/page-skeleton-webpack-plugin) 和 [vue-skeleton-webpack-plugin](https://github.com/lavas-project/vue-skeleton-webpack-plugin) 两个框架所做的学习简化版。
-
-如有意可以前往观看其源码。
-
-大致目录
-----
-
-*   生成流程
-*   最终效果
-*   使用场景
-*   元素处理
 
 生成流程
 ----
-
 骨架屏生成的流程如下：
-
 1.  通过获取 DOM 节点，把元素解析成骨架页标签
 2.  添加自定义骨架屏 class 进行样式覆盖
 3.  填充到 index.html 并输出
 
 ![](https://user-images.githubusercontent.com/30005394/120107134-617e8680-c192-11eb-8dfc-cf3de1764d79.png)
 
-最终效果
-----
-
-把当前布局的页面转化为对应布局的骨架屏：  
-(页面一：)
-
- ![](https://user-images.githubusercontent.com/30005394/120107222-c5a14a80-c192-11eb-9590-7bb39225c99f.gif) [ ![](https://user-images.githubusercontent.com/30005394/120107222-c5a14a80-c192-11eb-9590-7bb39225c99f.gif) ](https://user-images.githubusercontent.com/30005394/120107222-c5a14a80-c192-11eb-9590-7bb39225c99f.gif)   [](https://user-images.githubusercontent.com/30005394/120107222-c5a14a80-c192-11eb-9590-7bb39225c99f.gif) 
-
-(页面二：)
-
- ![](https://user-images.githubusercontent.com/30005394/120107247-dea9fb80-c192-11eb-9933-1f82794573ee.gif) [ ![](https://user-images.githubusercontent.com/30005394/120107247-dea9fb80-c192-11eb-9933-1f82794573ee.gif) ](https://user-images.githubusercontent.com/30005394/120107247-dea9fb80-c192-11eb-9933-1f82794573ee.gif)   [](https://user-images.githubusercontent.com/30005394/120107247-dea9fb80-c192-11eb-9933-1f82794573ee.gif) 
-
 快速开始
 ----
 
 该章节用于快速了解和尝试运行。
-
 ```
 git clone https://gitlab.ayla.com.cn/ccpg/application/fe-play/skeletondemo.git
 yarn install / npm i
@@ -88,15 +38,12 @@ npm run start:serve
 
 使用场景
 ----
-
 本章节介绍骨架屏使用的三个场景分析和实现。
-
 1.  首屏
 2.  去缓存刷新，根据不同的页面地址展示不同骨架屏
 3.  组件局部 loading
 
 ### 首屏
-
 对于首屏实现骨架屏，大致就是替换 index.html 页面的内容，在请求 html 的时候第一时间会渲染出骨架屏内容。
 
 ![](https://user-images.githubusercontent.com/30005394/120107365-66900580-c193-11eb-99c6-4d147d3003b1.png)
@@ -179,22 +126,19 @@ _由于这个插件需要手动创建的是一个 vue 页面实例，那么页�
 #### vue-server-renderer
 
 这里尝试的是 vue-server-renderer，因为 nuxt 要改代码所以先鸽一边。
-
 我们快速了解下`vue-server-renderer`大致原理：
 
 ![](https://user-images.githubusercontent.com/30005394/120107698-a1466d80-c194-11eb-901b-877241971f59.png)
 
 说白了就是把原来访问的 index.html，改为通过跑一个 node 应用监听这个端口，当用户访问这个端口的时候生成一个渲染好的 html 再返回内容。
-
-_这里有个问题，就是服务端渲染返回的是已经渲染好的 html 页面，那么再放上个骨架屏就有点画蛇添足的感觉了，不过先想实现这个功能那就忽略这个细节 T.T_
-
+这里有个问题，就是服务端渲染返回的是已经渲染好的 html 页面，那么再放上个骨架屏就有点画蛇添足的感觉了，不过先想实现这个功能那就忽略这个细节 T.T_
 续着 vue-skeleton 的服务端渲染想法，我可以把渲染的部分去掉，只是做服务端监听，不使用渲染。
 
 直接浏览器请求的链接路由返回处理好 index.html 的 spa 应用方式。那么获取到的 html 由于要加载 js 生成 vue 实例，又会先渲染显示骨架屏，而且可以根据不同路径生成对应的骨架屏。
 
 ![](https://user-images.githubusercontent.com/30005394/120107710-af948980-c194-11eb-95da-ed03b121c9fa.png)
 
-_hhh, 真就脱裤放屁了…_
+hhh, 真就脱裤放屁了…
 
 这里注意一点。由于在服务端生成页面并解析成骨架屏会消耗大量时间，那么我们需要在打包的时候先有已经根据路由列表生成骨架屏的 shell 文档夹。
 
@@ -324,18 +268,3 @@ npm run start:serve
 
 ![](https://user-images.githubusercontent.com/30005394/120108209-c63be000-c196-11eb-963b-e884679c218f.png)
 
-### 参考
-
-[ElemeFE/page-skeleton-webpack-plugin](https://github.com/ElemeFE/page-skeleton-webpack-plugin)  
-[lavas-project/vue-skeleton-webpack-plugin](https://github.com/lavas-project/vue-skeleton-webpack-plugin/)  
-[https://github.com/Jocs/jocs.github.io/issues/22 - Connect to preview](https://github.com/Jocs/jocs.github.io/issues/22)  
-[第 40 题 (2019-09-16)：如何实现骨架屏，说说你的思路 · Issue #42 · qappleh/Interview](https://github.com/qappleh/Interview/issues/42)  
-[饿了么的 PWA 升级实践](https://huangxuan.me/2017/07/12/upgrading-eleme-to-pwa/#%E5%9C%A8%E6%9E%84%E5%BB%BA%E6%97%B6%E4%BD%BF%E7%94%A8-vue-%E9%A2%84%E6%B8%B2%E6%9F%93%E9%AA%A8%E6%9E%B6%E5%B1%8F)
-
- 
-
-您好，方便加下 QQ 一起探讨这个方案吗？247955430
-
- 
-
-Nothing to preview

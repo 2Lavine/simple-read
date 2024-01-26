@@ -6,7 +6,7 @@
   "pathInTags": "onlyRelative",
   "downUnknown": false,
   "saveAttE": "inFolderBelow",
-  "realTimeUpdate": true,
+  "realTimeUpdate": false,
   "filesizeLimit": 0,
   "tryCount": 2,
   "realTimeUpdateInterval": 5,

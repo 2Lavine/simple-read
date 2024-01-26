@@ -1,0 +1,1125 @@
+<h1>2022 年了, 真的懂 requestAnimationFrame 么？</h1><h3>更新渲染过程</h3>
+<ol>
+<li>遍历当前浏览上下文中所有的 document ，必须按在列表中找到的顺序处理每个 document 。（多个 iframe 有多个 document）</li>
+<li>渲染时机（Rendering opportunities）：
+<ol>
+<li>如果当前浏览上下文中没有到渲染时机则将所有 docs 删除，取消渲</li>
+<li>是否存在渲染时机由浏览器自行判断，根据硬件刷新率限制、页面性能或页面是否在后台等因素</li>
+</ol>
+</li>
+<li>如果当前文档不为空，设置 hasARenderingOpportunity 为 true 。</li>
+<li>不必要的渲染（Unnecessary rendering）：
+<ol>
+<li>如果浏览器认为更新文档的浏览上下文的呈现不会产生可见效果且文档的 Request animation frame callbacks 是空的，则取消渲染。</li>
+</ol>
+</li>
+<li>如果文档的浏览上下文是顶级浏览上下文，则刷新该文档的自动对焦候选对象。</li>
+<li>依次处理 resize 事件，scroll 事件，处理媒体查询，运行 CSS 动画，传入一个 performance.now() 时间戳。</li>
+<li>执行 requestAnimationFrame 回调，传入一个 performance.now() 时间戳。</li>
+<li>执行 intersectionObserver 回调，传入一个 performance.now() 时间戳。</li>
+<li>对每个 document 进行绘制。</li>
+<li>更新 ui 并呈现。</li>
+</ol>
+<p>流程基本如下图所示 <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bee8d1d1e9b1437ebd0fa2ce5e5b795e~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
+<p>至此，requestAnimationFrame 的回调时机就清楚了，它会在 style/layout/paint 之前调用。</p>
+<h2>渲染时机</h2>
+<p>浏览器渲染有个渲染时机（Rendering opportunity）的问题，也就是浏览器会根据当前的浏览上下文判断是否进行渲染，它会尽量高效，只有必要的时候才进行渲染，</p>
+<ul>
+<li>如果没有界面的改变，就不会渲染。</li>
+<li>按照规范里说的一样，因为考虑到硬件的刷新频率限制、页面性能以及页面是否存在后台等等因素，有可能执行完 setTimeout 这个 task 之后，发现还没到渲染时机，所以 setTimeout 回调了几次之后才进行渲染</li>
+</ul>
+
+<h1>CDN</h1><p>在 DNS 服务器的协助下，无论是对用户还是服务器，内容分发网络都可以是完全透明的，在两者都不知情的情况下，由 CDN 的缓存节点接管了用户向服务器发出的资源请求。
+问题是缓存节点中必须有用户想要请求的资源副本，才可能代替源站来响应用户请求。CDN 该“如何获取源站资源” 和 “如何管理（更新）资源”。</p>
+<h2>CDN 的内容分发</h2>
+<ul>
+<li>主动分发（Push）：分发由源站主动发起，将内容从源站或者其他资源库推送到用户边缘的各个 CDN 缓存节点上。这个推送的操作没有什么业界标准可循，可以采用任何传输方式（HTTP、FTP、P2P，等等）、任何推送策略（满足特定条件、定时、人工，等等）、任何推送时间，只要与后面说的更新策略相匹配即可。由于主动分发通常需要源站、CDN 服务双方提供程序 API 接口层面的配合，所以它对源站并不是透明的，只对用户一侧单向透明。主动分发一般用于网站要预载大量资源的场景。比如双十一之前一段时间内，淘宝、京东等各个网络商城就会开始把未来活动中所需用到的资源推送到 CDN 缓存节点中，特别常用的资源甚至会直接缓存到你的手机 APP 的存储空间或者浏览器的 <a href="https://en.wikipedia.org/wiki/Web_storage#localStorage">localStorage</a> 上。</li>
+</ul>
+<ul>
+<li>被动回源（Pull）：被动回源由用户访问所触发全自动、双向透明的资源缓存过程。当某个资源首次被用户请求的时候，CDN 缓存节点发现自己没有该资源，就会实时从源站中获取，这时资源的响应时间可粗略认为是资源从源站到 CDN 缓存节点的时间，再加上资源从 CDN 发送到用户的时间之和。因此，被动回源的首次访问通常是比较慢的（但由于 CDN 的网络条件一般远高于普通用户，并不一定就会比用户直接访问源站更慢），不适合应用于数据量较大的资源。被动回源的优点是可以做到完全的双向透明，不需要源站在程序上做任何的配合，使用起来非常方便。这种分发方式是小型站点使用 CDN 服务的主流选择，如果不是自建 CDN，而是购买阿里云、腾讯云的 CDN 服务的站点，多数采用的就是这种方式。</li>
+</ul>
+<h2>CDN 管理更新资源</h2>
+<ul>
+<li>对于 “CDN 如何管理（更新）资源” 这个问题，同样没有统一的标准可言，尽管在 HTTP 协议中，关于缓存的 Header 定义中确实是有对 CDN 这类共享缓存的一些指引性参数，比如 “浏览器” 小节 HTTP header 参数 Cache-Control 的 s-maxage，但是否要遵循，完全取决于 CDN 本身的实现策略。
+现在，最常见的做法是超时被动失效与手工主动失效相结合。超时失效是指给予缓存资源一定的生存期，超过了生存期就在下次请求时重新被动回源一次。而手工失效是指 CDN 服务商一般会提供给程序调用来失效缓存的接口，在网站更新时，由持续集成的流水线自动调用该接口来实现缓存更新。</li>
+</ul>
+<h2>CDN 的应用场景</h2>
+<ol>
+<li>加速静态资源</li>
+<li>安全防御：
+<ol>
+<li>CDN 在广义上可以视作网站的堡垒机，源站只对 CDN 提供服务，由 CDN 来对外界其他用户服务，这样恶意攻击者就不容易直接威胁源站。CDN 对某些攻击手段的防御，如对 <a href="https://zh.wikipedia.org/zh-tw/%E9%98%BB%E6%96%B7%E6%9C%8D%E5%8B%99%E6%94%BB%E6%93%8A">DDoS 攻击</a>的防御尤其有效。
+<ol>
+<li>将安全都寄托在 CDN 上本身是不安全的，一旦源站真实 IP 被泄漏，就会面临很高的风险。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>状态缓存：CDN 不仅可以缓存源站的资源，还可以缓存源站的状态，比如源站的 301/302 转向就可以缓存起来让客户端直接跳转、还可以通过 CDN 开启 <a href="https://es.wikipedia.org/wiki/HTTP_Strict_Transport_Security">HSTS</a>、可以通过 CDN 进行 <a href="https://zh.wikipedia.org/wiki/OCSP%E8%A3%85%E8%AE%A2">OCSP 装订</a>加速 SSL 证书访问等。、</li>
+<li>修改资源：CDN 可以在返回资源给用户的时候修改它的任何内容，以实现不同的目的。比如，可以对源站未压缩的资源自动压缩并修改 Content-Encoding，以节省用户的网络带宽消耗、可以对源站未启用客户端缓存的内容加上缓存 Header，自动启用客户端缓存，可以修改 <a href="https://developer.mozilla.org/zh-CN/docs/Glossary/CORS">CORS</a> 的相关 Header，将源站不支持跨域的资源提供跨域能力等。</li>
+<li>访问控制：CDN 可以实现 IP 黑 / 白名单功能，根据不同的来访 IP 提供不同的响应结果，根据 IP 的访问流量来实现 QoS 控制、根据 HTTP 的 Referer 来实现防盗链等。</li>
+</ol>
+<h3><strong>3. 服务端缓存</strong></h3>
+<p>服务端缓存主要是为了<strong>减少 CPU/IO、数据库以及下游服务接口的压力</strong>，这也是实际编程中最常用的手段。
+除减少数据库的压力外，缓存返回数据的响应速度比数据库要快。另外，尽可能不调用外部接口，因为外部接口无论 WebSocket、WebService，还是 HTTP，其响应速度都是不可控的。如果外部接口响应时间过长，也会影响自身性能。</p>
+<p>服务端缓存大致分为以下几种：</p>
+<ul>
+<li>容器缓存，如 Nginx、Tomcat 等。</li>
+<li>中间件缓存，如 MongoDB、Elasticsearch、Redis、Kafka 等。</li>
+<li>页面静态化缓存，如 FreeMaker、Thymeleaf 等。</li>
+<li>文件管理，如 FastDFS 等。</li>
+</ul>
+
+<h1>CSS 模块化方案探讨（BEM、OOCSS、CSS Modules、CSS-in-JS ...）</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6947335144894103583?searchId=20240120202017BD9D5A30E810FAEC4E61">juejin.cn</a></p>
+</blockquote>
+<p>根据这些 CSS 模块化方案的特点，我简单的将它们分为了三大类：</p>
+<ol>
+<li><strong>CSS 命名方法论</strong>：通过人工的方式来约定命名规则。</li>
+<li><strong>CSS Modules</strong>：一个 CSS 文件就是一个独立的模块。</li>
+<li><strong>CSS-in-JS</strong>：在 JS 中写 CSS。</li>
+</ol>
+<h2>CSS 命名方法论</h2>
+<p>为了避免 CSS 选择器命名冲突的问题，以及更好的实现 CSS 模块化，CSS 社区在早期诞生了一些 CSS 命名方法论，它们几乎都有一个共同的特点——为选择器增加冗长的前缀或后缀，并试图通过人工的方式来生成全局唯一的命名。
+这无疑会增加了类命名的复杂度和维护成本，也让 HTML 标签显得臃肿。</p>
+<h3>BEM</h3>
+<p>核心思想是 <strong>通过组件名的唯一性来保证选择器的唯一性，从而保证样式不会污染到组件外</strong>。</p>
+<p>BEM 命名规约是 <code>.block-name__element-name--modifier-name</code>，
+即 <code>.模块名__元素名--修饰器名</code> 三个部分，</p>
+<ul>
+<li>用双下划线 <code>__</code> 来明确区分模块名和元素名，</li>
+<li>用双横线 <code>--</code> 来明确区分元素名和修饰器名。
+在 BEM 中不建议使用子代选择器，因为每一个类名已经都是全局唯一的了，除非是 block 相互嵌套的场景。</li>
+</ul>
+<pre><code>&lt;!-- 示例模块 --&gt;
+&lt;div class=&quot;card&quot;&gt;
+  &lt;div class=&quot;card__head&quot;&gt;
+    &lt;ul class=&quot;card__menu&quot;&gt;
+      &lt;li class=&quot;card__menu-item&quot;&gt;menu item 1&lt;/li&gt;
+      &lt;li class=&quot;card__menu-item card__menu-item--active&quot;&gt;menu item 3&lt;/li&gt;
+      &lt;li class=&quot;card__menu-item card__menu-item--disable&quot;&gt;menu item 4&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;card__body&quot;&gt;&lt;/div&gt;
+  &lt;div class=&quot;card__foot&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<h3>OOCSS</h3>
+<p><a href="https://link.juejin.cn?target=http%3A%2F%2Foocss.org" title="http://oocss.org">OOCSS</a>（Object-Oriented CSS）即面向对象的 CSS，它借鉴了 OOP（面向对象编程）的抽象思维，</p>
+<ul>
+<li>主张将元素的样式抽象成多个独立的小型样式类，来提高样式的灵活性和可重用性。</li>
+</ul>
+<p>OOCSS 有两个基本原则：</p>
+<ol>
+<li><strong>独立的结构和样式</strong>。即不要将定位、尺寸等布局样式与字体、颜色等表现样式写在一个选择器中。</li>
+<li><strong>独立的容器和内容</strong>。即让对象的行为可预测，避免对位置的依赖，子元素即使离开了容器也应该能正确显示。</li>
+<li></li>
+</ol>
+<p>OOCSS 要求为这个容器创建更多的 “原子类”，并且每个样式对应一个类，这样是为了后面可以重复使用这些组件的样式，避免重复写相同的样式，就拿这个实例来说，我们给这个容器增加下面的类：</p>
+<pre><code>&lt;div class=&quot;size1of4 bgBlue solidGray mt-5 ml-10 mr-10 mb-10&quot;&gt;&lt;/div&gt;
+
+&lt;style&gt;
+  .size1of4 { width: 25%; }
+  .bgBlue { background: blue; }
+  .solidGray { border: 1px solid #ccc; }
+  .mt-5 { margin-top: 5px; }
+  .mr-10 { margin-right: 10px }
+  .mb-10 { margin-bottom: 10px; }
+  .ml-10 { margin-left: 10px; }
+&lt;/style&gt;
+</code></pre>
+<p>OOCSS 最大的优点是让样式可复用性最大化，也能够显著减少整体的 CSS 代码数量。缺点也很明显，你需要为每个元素搜集一大堆类名，这可是一个不小的体力活 😅。
+在 OOCSS 中，类名既要能传递对象的用途，也要有通用性，例如 mod、complex、pop 等。如果将 CSS 类命名的太语义化，例如 navigation-bar，那么就会将其限制在导航栏，无法应用到网页的其它位置。</p>
+<h3>SMACSS</h3>
+<p><a href="https://link.juejin.cn?target=http%3A%2F%2Fsmacss.com" title="http://smacss.com">SMACSS</a>（Scalable and Modular Architecture for CSS）即可伸缩及模块化的 CSS 结构，由 Jonathan Snook 在 2011 年雅虎时提出。</p>
+<p>SAMCSS 按照部件的功能特性，将其划分为五大类：</p>
+<ol>
+<li>基础（Base）是为 HTML 元素定义默认样式，可以包含属性、伪类等选择器。</li>
+<li>布局（Layout）会将页面分为几部分，可作为高级容器包含一个或多个模块，例如左右分栏、栅格系统等。</li>
+<li>模块（Module）又名对象或块，是可重用的模块化部分，例如导航栏、产品列表等。</li>
+<li>状态（State）描述的是任一模块或布局在特定状态下的外观，例如隐藏、激活等。</li>
+<li>主题（Theme）也就是换肤，描述了页面的外观，它可修改前面四个类别的样式，例如链接颜色、布局方式等。</li>
+</ol>
+<p>SMACSS 推荐使用前缀来区分不同部件：</p>
+<ol>
+<li>基础规则是直接作用于元素的，因此不需要前缀。</li>
+<li>布局的前缀是 <code>l-</code> 或 <code>layout-</code>，例如 <code>.l-table</code>、<code>.layout-grid</code> 等。</li>
+<li>模块的前缀是 <code>m-</code> 或模块自身的命名，例如 <code>.m-nav</code>、<code>.card</code>、<code>.field</code> 等。</li>
+<li>状态的前缀是 <code>is-</code>，例如 <code>.is-active</code>、<code>.is-current</code> 等。</li>
+<li>主题的前缀是 <code>theme-</code>，例如 <code>.theme-light</code>、<code>.theme-dark</code> 等。</li>
+</ol>
+<pre><code>&lt;form class=&quot;layout-grid&quot;&gt;
+  &lt;div class=&quot;field&quot;&gt;
+    &lt;input type=&quot;search&quot; id=&quot;searchbox&quot; /&gt;
+    &lt;span class=&quot;msg is-error&quot;&gt;There is an error!&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
+</code></pre>
+<h3>ITCSS</h3>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fitcss.io" title="https://itcss.io">ITCSS</a>（Inverted Triangle CSS，倒三角 CSS）是一套方便扩展和管理的 CSS 体系架构，它兼容 BEM、OOCSS、SMACSS 等 CSS 命名方法论。ITCSS 使用 <strong>分层</strong> 的思想来管理你的样式文件，类似服务端开发中的 MVC 分层设计。</p>
+<p>ITCSS 将 CSS 的样式规则划分成以下的几个层次：</p>
+<ol>
+<li>Settings：项目使用的全局变量，比如颜色，字体大小等等。</li>
+<li>Tools：项目使用的 mixins 和 functions。到 Tools 为止，不会生成具体的 CSS 代码。</li>
+<li>Generic：最基本的设定，比如 reset.css、normalize.css 等。</li>
+<li>Base：最基础的元素（elements），比如 img、p、link、list 等。</li>
+<li>Objects：某种设计模式，比如水平居中，</li>
+<li>Components：UI 组件，比如 button、switch、slider 等。</li>
+<li>Trumps：用于辅助和微调的样式，只有这一层才可以使用 <code>!important</code>。</li>
+</ol>
+<h2>CSS Modules</h2>
+<p>手写命名前缀后缀的方式让开发者苦不堪言，于是 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fcss-modules%2Fcss-modules" title="https://github.com/css-modules/css-modules">CSS Modules</a> 这种真正的模块化工具就诞生了。</p>
+<p>CSS Modules 允许我们像 import 一个 JS Module 一样去 import 一个 CSS Module。</p>
+<ul>
+<li>每一个 CSS 文件都是一个独立的模块，每一个类名都是该模块所导出对象的一个属性。通过这种方式，便可在使用时明确指定所引用的 CSS 样式。并且，</li>
+<li>CSS Modules 在打包时会自动将 id 和 class 混淆成全局唯一的 hash 值，从而避免发生命名冲突问题。</li>
+</ul>
+<p>CSS Modules 特性：</p>
+<ul>
+<li><strong>作用域</strong>：
+<ul>
+<li>模块中的名称默认都属于本地作用域，定义在 <code>:local</code> 中的名称也属于本地作用域，</li>
+<li>定义在 <code>:global</code> 中的名称属于全局作用域，全局名称不会被编译成哈希字符串。</li>
+</ul>
+</li>
+<li><strong>命名</strong>：
+<ul>
+<li>对于本地类名称，CSS Modules 建议使用 camelCase 方式来命名，这样会使 JS 文件更干净，即 <code>styles.className</code>。</li>
+<li>但是你仍然可以固执己见地使用 <code>styles['class-name']</code>，允许但不提倡。</li>
+</ul>
+</li>
+<li><strong>组合</strong>：使用 <code>composes</code> 属性来继承另一个选择器的样式，这与 Sass 的 <code>@extend</code> 规则类似。</li>
+<li><strong>变量</strong>：使用 <code>@value</code> 来定义变量，不过需要安装 PostCSS 和 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fcss-modules%2Fpostcss-modules-values" title="https://github.com/css-modules/postcss-modules-values">postcss-modules-values</a> 插件。</li>
+</ul>
+<pre><code>/* style.css */
+:global(.card) {
+  padding: 20px;
+}
+.article {
+  background-color: #fff;
+}
+.title {
+  font-size: 18px;
+}
+</code></pre>
+<pre><code>// App.js
+import React from 'react'
+import styles from './style.css'
+
+export default function App() {
+  return (
+    &lt;article className={styles.article}&gt;
+      &lt;h2 className={styles.title}&gt;Hello World&lt;/h2&gt;
+      &lt;div class&gt;Lorem ipsum dolor sit amet.&lt;/div&gt;
+    &lt;/article&gt;
+  )
+}
+</code></pre>
+<p>编译结果：</p>
+<pre><code>&lt;style&gt;
+  .card {
+    padding: 20px;
+  }
+  .style__article--ht21N {
+    background-color: #fff;
+  }
+  .style__title--3JCJR {
+    font-size: 18px;
+  }
+&lt;/style&gt;
+
+&lt;article class=&quot;style__article--ht21N&quot;&gt;
+  &lt;h2 class=&quot;style__title--3JCJR&quot;&gt;Hello World&lt;/h2&gt;
+  &lt;div class=&quot;card&quot;&gt;Lorem ipsum dolor sit amet.&lt;/div&gt;
+&lt;/article&gt;
+</code></pre>
+<h3>CSS Modules 集成</h3>
+<p>在 webpack 中使用 CSS Modules（开启 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fwebpack-contrib%2Fcss-loader" title="https://github.com/webpack-contrib/css-loader">css-loader</a> 的 modules 特性）：</p>
+<pre><code>// webpack.config.js -&gt; module.rules
+{
+  test: /\.(c|sa|sc)ss$/i,
+  exclude: /node_modules/,
+  use: [
+    'style-loader',
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 2,
+        // 开启 CSS Modules
+        modules: true,
+        // 借助 CSS Modules，可以很方便地自动生成 BEM 风格的命名
+        localIdentName: '[path][name]__[local]--[hash:base64:5]',
+      },
+    },
+    'postcss-loader',
+    'sass-loader',
+  ],
+},
+</code></pre>
+<p>在 PostCSS 中使用 CSS Modules（使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fmadyankin%2Fpostcss-modules" title="https://github.com/madyankin/postcss-modules">postcss-modules</a> 插件）：</p>
+<pre><code>// postcss.config.js
+module.exports = {
+  plugins: {
+    'postcss-modules': {
+      generateScopedName: '[path][name]__[local]--[hash:base64:5]',
+    },
+  },
+}
+</code></pre>
+<h3>配合 CSS 预处理器使用</h3>
+<p>使用 CSS Modules 时，推荐配合 CSS 预处理器（Sass/Less/Stylus）一起使用。
+CSS 预处理器提供了许多有用的功能，如嵌套、变量、mixins、functions 等，同时也让定义本地名称或全局名称变得容易。</p>
+<pre><code>:global(.title) {
+  color: yellow;
+}
+
+:global {
+  .global-class-name {
+    color: green;
+  }
+}
+</code></pre>
+<h2>在 Vue 中编写 CSS 的正确姿势</h2>
+<p>方式一：使用 Scoped CSS（推荐）
+为 &lt;style&gt; 区块添加 scoped 属性即可开启 “组件样式作用域（Scoped CSS）”。
+在背后，Vue 会为该组件内所有的元素都加上一个全局唯一的属性选择器，形如 [data-v-5298c6bf]，这样在组件内的 CSS 就只会作用于当前组件中的元素。</p>
+<pre><code>&lt;template&gt;
+  &lt;header class=&quot;header&quot;&gt;header&lt;/header&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;
+.header {
+  background-color: green;
+}
+&lt;/style&gt;
+</code></pre>
+<p>编译结果：</p>
+<pre><code>&lt;header class=&quot;header&quot; data-v-5298c6bf&gt;header&lt;/header&gt;
+
+&lt;style&gt;
+.header[data-v-5298c6bf] {
+  background-color: green;
+}
+&lt;/style&gt;
+</code></pre>
+<p>方式二：使用 CSS Modules
+为 &lt;\style&gt; 区块添加 module 属性即可开启 CSS Modules。
+在背后，Vue 会为组件注入一个名为 $style 的计算属性，并混淆类名，然后你就可以在模板中通过一个动态类绑定来使用它了。
+<template></p>
+  <header :class="$style.header">header</header>
+</template>
+```
+<style module>
+.header {
+  background-color: green;
+}
+</style>
+编译结果：
+<header class="App__header--382G7">header</header>
+<style>
+.App__header--382G7 {
+  background-color: green;
+}
+</style>
+<pre><code>
+在 React 中编写 CSS 的正确姿势
+--
+React 并没有给我们提供与 Vue scoped 类似的特性，我们需要通过其他方式来实现 CSS 模块化。
+
+在 React 中有很多编写 CSS 的姿势，这里推荐几种最常见的：
+- 使用 styled-components：styled-components 是最流行也是最好用的 CSS-in-JS 库，它将 CSS、JS 以及 React 开发中最流行的一些语法整合起来，易上手，且功能强大。
+- 使用 CSS Modules：在外部管理 CSS，然后将类名映射到组件内部，他会为每个 class 都分配一个全局唯一 hash。另外，这两个插件会帮你更好地在 React 中使用 CSS Modules：react-css-modules、babel-plugin-react-css-modules。
+
+
+## CSS Modules 与 styled-components 
+CSS Modules 与 styled-components 是两种截然不同的 CSS 模块化方案，它们最本质的区别是：前者是在外部管理 CSS，后者是在组件中管理 CSS。两者没有孰好孰坏，如果你能接受 CSS-in-JS 这种编程模式，更推荐使用 styled-components。如果一时无法接受，觉得其过于激进了，那就用 CSS Modules。It doesn't matter，选择了哪一个，就用哪一个的体系去管理项目就好了。</code></pre>
+
+<h1>ChatGPT 对话为什么不用 Websocket 而使用 EventSource？</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7246955055109210149?searchId=20240118154711D0B7224F42C488B76A60">juejin.cn</a></p>
+</blockquote>
+<p>在 ChatGPT 官网我们可以看到，对话的方式仅仅只有一个<code>post</code>请求</p>
+<p><code>EventSource</code> 接口是 web 内容与服务器发送事件 一个 <code>EventSource</code> 实例会对 HTTP 服务器开启一个持久化的连接，以 <code>text/event-stream</code> 格式发送事件，此连接会一直保持开启直到通过调用 <code>EventSource.close()</code> 关闭。</p>
+<p><strong>EventSource</strong>:</p>
+<ul>
+<li>优势：
+<ul>
+<li>简单易用：EventSource API 非常简单，易于使用和理解。</li>
+<li>服务器推送：EventSource 适用于服务器主动向客户端推送数据，客户端只能接收服务器发送的事件。</li>
+<li>自动重连：EventSource 会自动处理连接断开和重新连接的情况，适用于长期保持连接并接收事件流的场景。</li>
+<li>兼容性：EventSource 在大多数现代浏览器中得到支持。</li>
+</ul>
+</li>
+<li>劣势：
+<ul>
+<li>单向通信：EventSource 只支持从服务器到客户端的单向通信，客户端无法向服务器发送数据。</li>
+<li>较少的功能：相比于 WebSocket，EventSource 提供的功能较为有限，仅限于接收服务器发送的事件。</li>
+</ul>
+</li>
+</ul>
+<p><strong>WebSocket</strong>:</p>
+<ul>
+<li>优势：
+<ul>
+<li>双向通信：WebSocket 支持双向通信，客户端和服务器可以彼此发送数据。</li>
+<li>实时性：WebSocket 提供了更低的延迟和更快的数据传输速度，适用于实时性要求较高的应用场景。</li>
+<li>丰富的功能：WebSocket 提供了更多的功能，例如数据帧的自定义和二进制数据的传输等。</li>
+</ul>
+</li>
+<li>劣势：
+<ul>
+<li>复杂性：WebSocket API 相对于 EventSource 更为复杂，使用起来可能需要更多的代码和理解。</li>
+<li>需要服务器支持：使用 WebSocket 需要服务器端实现对应的 WebSocket 协议，而 EventSource 只需要服务器端支持发送事件即可。</li>
+<li>兼容性：相对于 EventSource，WebSocket 在某些较旧的浏览器或网络环境中的支持可能不够广泛。</li>
+</ul>
+</li>
+</ul>
+<p>综上所述，<code>EventSource</code> 适用于服务器主动推送事件给客户端，并且在保持长期连接和接收事件流时表现良好。 <code>WebSocket</code> 适用于需要实时双向通信和更丰富功能的场景，但需要服务器端和客户端都支持 <code>WebSocket</code> 协议，选择使用哪种技术应基于具体需求和应用场景进行评估。</p>
+<h2>为什么 <code>ChatGPT</code> 对话为什么不用 <code>Websocket</code> 而使用 <code>EventSource</code> ？</h2>
+<p>当然，<code>ChatGPT</code> 对话可以使用<code>Websocket</code>或<code>EventSource</code>进行实时通信，下面是我个人的总结：</p>
+<ol>
+<li>服务器推送：<code>EventSource</code>专注于服务器向客户端主动推送事件的模型，这对于<code>ChatGPT</code>对话非常适用。<code>ChatGPT</code>通常是作为一个长期运行的服务，当有新的回复可用时，服务器可以主动推送给客户端，而不需要客户端频繁发送请求。</li>
+<li>自动重连和错误处理：<code>EventSource</code>具有内置的自动重连机制，它会自动处理连接断开和重新连接的情况。这对于<code>ChatGPT</code>对话而言很重要，因为对话可能需要持续一段时间，连接的稳定性很重要。</li>
+<li>简单性和易用性：相对于<code>WebSocket</code>，<code>EventSource</code>的 API 更加简单易用，只需实例化一个<code>EventSource</code>对象，并处理服务器发送的事件即可。这使得开发者可以更快速地实现对话功能，减少了一些复杂性。</li>
+<li>广泛的浏览器支持：<code>EventSource</code>在大多数现代浏览器中得到广泛支持，包括移动端浏览器。相比之下，<code>WebSocket</code>在某些旧版本的浏览器中可能不被完全支持，需要考虑兼容性问题。</li>
+</ol>
+<p>需要注意的是，<code>WebSocket</code>也是一种很好的选择，特别是当需要实现更复杂的实时双向通信、自定义协议等功能时，或者对浏览器的兼容性要求较高时。最终选择使用<code>WebSocket</code>还是<code>EventSource</code>应该根据具体的项目需求和技术考虑来确定。</p>
+<h3>2023-06-30 更新：</h3>
+<p>家人们，是我的失误。我原本以为<code>EventSource</code>是通过 POST 发起请求的，但是实际上<code>EventSource</code>只支持 GET 请求。</p>
+<ul>
+<li>ChatGPT 是通过自己重写方法来发起 POST 请求的，微软官方提供了这个库，<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FAzure%2Ffetch-event-source" title="https://github.com/Azure/fetch-event-source">github.com/Azure/fetch…</a></li>
+</ul>
+
+<h1>一种自动化生成骨架屏的方案</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://github.com/Jocs/jocs.github.io/issues/22">github.com</a></p>
+</blockquote>
+<h2>首屏加载的演进</h2>
+<p>通常方案，我们会在首屏、或者获取数据时，在页面中展现一个进度条，或者转动的 Spinner。</p>
+<ul>
+<li>进度条：明确知道交互所需时间，或者知道一个大概值的时候我们选择使用进度条。</li>
+<li>Spinner：无法预测获取数据、或者打开页面的时长。</li>
+</ul>
+<p>那么有没有比进度条和 Spinner 更好的方案呢？也许我们需要的是骨架屏。
+「Polar」他是这样定义骨架屏的，他认为骨架屏是一个页面的空白版本，通过这个空白版本传递信息，我们的页面正在渐进式的加载过程中。</p>
+<h2>如何构建骨架屏</h2>
+<p>手写骨架屏带来的问题就是，</p>
+<ul>
+<li>比较机械重复的工作，</li>
+<li>频繁更改手写骨架屏增加了维护成本。
+其他两种备选方案：</li>
+<li>服务端渲染（ssr）</li>
+<li>预渲染（prerender)
+服务端渲染（ssr）</li>
+<li>需要评估服务端渲染的成本，
+<ul>
+<li>首先我们需要服务端的支持，因此涉及到了到了服务构建、部署等，同时我们的 web 项目是一个流量较大的网站，也需要考虑服务器的负载，</li>
+<li>缓存策略，特别是一些外卖行业，由于地理位置的不同，不同用户看到的页面也是不一样的，也就是所谓的千人千面，这也为缓存造成了一定困难。
+预渲染（prerender），所谓预渲染，</li>
+</ul>
+</li>
+<li>预渲染渲染的页面数据是在构建过程中就已经打包到了 html 中， 当真实访问页面的时候，</li>
+<li>真实数据可能已经和预渲染的数据有了很大的出入，而且预渲染的页面也是一个不可交互的页面，在页面没有启动之前，用户无法和预渲染的页面进行任何交互，</li>
+<li>预渲染页面中的数据反而会影响到用户获取真实的信息，当涉及到一些价格、金额、地理位置的地方甚至会导致用户做出一些错误的决定。</li>
+</ul>
+<p><strong>生成骨架屏基本方案</strong>
+通过 <a href="https://link.zhihu.com/?target=https%3A//github.com/GoogleChrome/puppeteer">puppeteer</a> 在服务端操控 <a href="https://link.zhihu.com/?target=https%3A//developers.google.com/web/updates/2017/04/headless-chrome">headless Chrome</a> 打开开发中的需要生成骨架屏的页面
+在等待页面加载渲染完成之后，在保留页面布局样式的前提下，通过对页面中元素进行删减或增添，对已有元素通过层叠样式进行覆盖，这样达到在不改变页面布局下，
+隐藏图片和文本，通过样式覆盖，使得其展示为灰色块。</p>
+<p>骨架屏的具体生成过程。
+正如上面基本方案所描述的那样，我们将页面分成了不同的块：</p>
+<ul>
+<li>文本块：仅包含文本节点（NodeType 为 <code>Node.TEXT_NODE</code>）的元素（NodeType 为 <code>Node.ELEMENT_NODE</code>），一个文本块可能是一个 p 元素也可能是 div 等。文本块将会被转化为灰色条纹。</li>
+<li>图片块：图片块是很好区分的，任何 img 元素都将被视为图片块，图片块的颜色将被处理成配置的颜色，形状也被修改为配置的矩形或者圆型。</li>
+<li>按钮块：任何 button 元素、 type 为 button 的 input 元素，role 为 button 的 a 元素，都将被视为按钮块。按钮块中的文本块不在处理。</li>
+<li>svg 块：任何最外层是 svg 的元素都被视为 svg 块。</li>
+<li>伪类元素块：任何伪类元素都将视为伪类元素块，如 <code>::before</code> 或者 <code>::after</code>。</li>
+</ul>
+<h2>我们为什么要把页面划分为不同的块呢</h2>
+<p>将页面划分为不同的块，然后分别对每个块进行处理，这样不会破坏页面整体的样式和布局，当我们最终生成骨架屏后，骨架屏的布局样式将和真实页面的布局样式完全一致，这样就达到了复用样式及页面布局的目的。</p>
+<h2>puppeteer插入脚本进行生成</h2>
+<p>在所有分开处理之前，我们需要完成一项工作，就是将我们生成骨架屏的脚本，插入到 puppeteer 打开的页面中，这样我们才能够执行脚本，并最终生成骨架屏。</p>
+<p>值得庆幸的是，puppeteer 在其生成的 page 实例中提供了一个原生的方法。
+有了这种方法，我们可以插入一段 js 脚本的 url 或者是相对 / 绝对路径，也可以直接是 js 脚本的内容，在我们的实践过程中，我们直接插入的脚本内容。</p>
+<pre><code>async makeSkeleton(page) {
+    const { defer } = this.options
+    await page.addScriptTag({ content: this.scriptContent })
+    await sleep(defer)
+    await page.evaluate((options) =&gt; {
+      Skeleton.genSkeleton(options)
+    }, this.options)
+  }
+</code></pre>
+<p>有了上面插入的脚本，并且我们在脚本中提供了一个全局对象 <code>Skeleton</code>，这样我们就可以直接通过 page.evaluate 方法来执行脚本内容并最终生成骨架页面了。</p>
+<p>由于时间有限，这儿不会对每个块的生成骨架结构进行详尽分析，这儿可能会重点阐述下文本块、图片块、svg 块如何生成骨架结构的，然后再谈谈如何对骨架结构进行优化。</p>
+<h2><strong>文本块的骨架结构生成</strong></h2>
+<p>文本块可以算是骨架屏生成中最复杂的一个区块了，正如上面也说的，任何只包含文本节点的元素都将视为文本块，在确定某个元素是文本块后，下一步就是通过一些 CSS 样式，以及元素的增减将其修改为骨架样式。</p>
+<p>在这张图中，图左边虚线框内是一个 p 元素，可以看到其内部有 4 行文本，右图是一个已经生成好的带有 4 行文本的骨架屏。在生成文本块骨架屏之前，我们首先需要了解一些基本的参数。</p>
+<ul>
+<li>单行文本内容的高度，可以通过 fontSize 获取到。</li>
+<li>单行文本内容加空白间隙的高度，可以通过 lineHeight 获取到。</li>
+<li>p 元素总共有多少行文本，也就是所谓行数，这个可以通过 p 元素的（height - paddingTop - paddingBottom）/ lineHeight 大概算出。</li>
+<li>文本的 textAlign 属性。</li>
+</ul>
+<p>在这些参数中，fontSize、lineHeight、paddingTop、paddingBottom 都可以通过 getComputedStyle 获取到，而元素的高度 height 可以通过 getBoundingClientRect 获取到，有了这些参数后我们就能够绘制文本块的骨架屏了。</p>
+<p>在我们绘制文本块的时候，backgroundSize 宽度为 100%， 高度为 lineHeight，也就是灰色条纹加透明条纹的高度是 lineHeight。虽然我们把灰色条纹绘制出来了，但是，我们的文本依然显示，在最终骨架样式效果出现之前，我们还需要隐藏文本，设置 <code>color：‘transparent’</code> 这样我们的文本就和背景色一致，最终显示得也就是灰色条纹了。</p>
+<h2><strong>图片块的骨架生成</strong></h2>
+<p>图片块的绘制比文本块要相对简单很多，但是在订方案的过程中也踩了一些坑，这儿简单分享下采坑经历。</p>
+<p>最初订的方案是通过一个 DIV 元素来替换 IMG 元素，然后设置 DIV 元素背景为灰色，DIV 的宽高等同于原来 IMG 元素的宽高，</p>
+<ul>
+<li>
+<p>这种方案有一个严重的弊端就是，原来通过元素选择器设置到 IMG 元素上的样式无法运用到 DIV 元素上面，导致最终图片块的骨架效果和真实的图片在页面样式上有出入，特别是没法适配不同的移动端设备，因为 DIV 的宽高被硬编码。</p>
+</li>
+<li>
+<p>看似「高级」的方法，通过 Canvas 来绘制和原来图片大小相同的灰色块，然后将 Canvas 转化为 dataUrl 赋予给 IMG 元素的 src 特性上，这样 IMG 元素就显示成了一个灰色块了，看似完美，</p>
+<ul>
+<li>当我们将生成的骨架页面生成 HTML 文档时，一下就傻眼了，文档大小尽然有 200 多 kb，我们做骨架页面渲染的一个重要原因就是希望用户在感知上感觉页面加载快了，如果骨架页面都有 200 多 kb，必将导致页面加载比之前要慢一些，违背了我们的初衷，因此该方案也只能够放弃。</li>
+</ul>
+</li>
+</ul>
+<p><strong>最终方案</strong>，我们选择了将一张 1 * 1 像素的 gif 透明图片，转化成 dataUrl ，然后将其赋予给 IMG 元素的 src 特性上，同时设置图片的 width 和 height 特性为之前图片的宽高，将背景色调至为骨架样式所配置的颜色值，完美解决了所有问题。</p>
+<p>这是 1 * 1 像素的 base64 格式的图片，总共只有几十个字节，明显比之前通过 Canvas 绘制的图片小很多。</p>
+<p><strong>svg 块骨架结构</strong></p>
+<p>svg 块处理起来也比较简单，首先我们需要判断 svg 元素 hidden 属性是否为 true，如果为 true，说明该元素不展示的，所以我们可以直接删除该元素。</p>
+<p>如果不是隐藏的元素，那么我们将会把 svg 元素内部所有元素删除，减少最终生成的骨架页面体积，其次，设置 svg 元素的宽、高和形状等。</p>
+<h2><strong>一些优化的细节</strong></h2>
+<ul>
+<li>首先，由上面一些代码可以看出，在我们生成骨架页面的过程中，我们将所有的共用样式通过 <code>addStyle</code> 方法缓存起来，最后在生成骨架屏的时候，统一通过 style 标签插入到骨架屏中。这样保证了样式尽可能多的复用。</li>
+<li>其次，在处理列表的时候，为了生成骨架屏尽可能美观，我们对列表进行了同化处理，也就是说将 list 中所有的 listItem 都是同一个 listItem 的克隆。这样生成的 list 的骨架屏样式就更加统一了。</li>
+<li>骨架屏仅是一种加载状态，并非真实页面，因此其并不需要完整的页面，其实只需要首屏就好了，我们对非首屏的元素进行了删除，只保留了首屏内部元素，这样也大大缩减了生成骨架屏的体积。</li>
+<li>删除无用的 CSS 样式，只是我们只提取了对骨架屏有用的 CSS，然后通过 style 标签引入。</li>
+</ul>
+<h2>删除无用的 CSS 样式</h2>
+<p>关键代码大致是这样的，看屏幕：</p>
+<pre><code>const checker = (selector) =&gt; {
+  if (DEAD_OBVIOUS.has(selector)) {
+    return true
+  }
+  if (/:-(ms|moz)-/.test(selector)) {
+     return true
+  }
+  if (/:{1,2}(before|after)/.test(selector)) {
+    return true
+  }
+  try {
+    const keep = !!document.querySelector(selector)
+    return keep
+  } catch (err) {
+    const exception = err.toString()
+    console.log(`Unable to querySelector('${selector}') [${exception}]`, 'error')
+    return false
+  }
+}
+</code></pre>
+<p>可以看出，我们主要通过 document.querySelector 方法来判断该 CSS 是否被使用到，如果该 CSS 选择器能够选择上元素，说明该 CSS 样式是有用的，保留。如果没有选择上元素，说明该 CSS 样式没有用到，所以移除。</p>
+<h2>通过 webpack 将骨架屏打包到项目中</h2>
+<p>在上一个部分，我们分析了怎么去生成骨架屏，在这一部分，我们将探讨如何通过 webpack 将骨架屏打包的项目中。在这过程中，思考了以下一些问题：</p>
+<p><strong>为什么在开发过程中生成骨架屏？</strong>
+其主要原因还是为了骨架屏的可编辑。</p>
+<ul>
+<li>如果我们同时在构建的过程中生成骨架屏，并打包到项目中，这时的骨架屏我们是无法预览的，因此我们对此时的骨架屏一无所知，也不能够做任何修改，这就是我们在开发中生成骨架屏的原因所在。</li>
+</ul>
+<p>在上一个部分，我们通过一些样式和元素的修改生成了骨架屏页面，但是我们并没有马上将其写入到配置的输出文档夹中，在写入骨架页面到项目之前。我们通过 <a href="https://github.com/webpack/memory-fs">memory-fs</a> 将骨架屏写入到内存中，以便我们能够通过预览页面进行访问。同时我们也将骨架屏源码发送到了预览页面，这样我们就可以通过修改源码，对骨架屏进行二次编辑。</p>
+<h2>更多思考</h2>
+<p>首先是对 SPA 多路由的支持，其实现在插件已经支持多路由了，只是还没有用到真实项目中，我们针对每一个路由页面生成一个单独的 <code>index.html</code>，也就是静态路由。然后将每个路由生成的骨架屏插入到不同的静态路由的 html 中。</p>
+<p>其次，玩过服务端渲染的同学都知道，在 React 和 Vue 服务端渲染中有一种称为 Client-side Hydration 的技术，指的是在 Vue 在浏览器接管由服务端发送来的静态 HTML，使其变为由 Vue 管理的动态 DOM 的过程。
+在我们构建骨架屏的过程中，其 DOM 结构和真实页面的 DOM 结构基本相同，只是添加了一些行内样式和 classname，我们也在思考这些 DOM 能够被复用，也就是在应用启动时重新创建所有 DOM。我们只用激活这些骨架屏 DOM，让其能够相应数据的变化，这似乎就可以使骨架屏和真实页面更好的融合。</p>
+<p>还有，在页面启动后，我们可能还是会通过 AJAX 获取后端数据，这时候我们也可以通过 骨架屏 来作为一种加载状态。也就是说，其实我们可以在「非首屏骨架屏」上做一些工作。</p>
+
+<h1>为什么我们正在放弃 CSS-in-JS</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7158712727538499598?searchId=20240120202017BD9D5A30E810FAEC4E61">juejin.cn</a></p>
+</blockquote>
+<h1>什么是 CSS-in-JS</h1>
+<p>CSS-in-JS 允许你直接使用 JavaScript 或者 TypeScript 修改你的 React 组件的样式</p>
+<pre><code>import styled from '@emotion/styled'
+
+const ErrorMessageRed = styled.div`
+  color: red;
+  font-weight: bold;
+`;
+
+function App() {
+  return (
+   &lt;div&gt;
+    &lt;ErrorMessageRed&gt;
+      hello ErrorMessageRed !!
+    &lt;/ErrorMessageRed&gt;
+   &lt;/div&gt;
+  );
+}
+
+export default App;
+</code></pre>
+<h2>CSS-in-JS 的类型</h2>
+<p><strong>运行时类型的 CSS-in-JS</strong> ，styled-components 和 Emotion 都属于这个类型。
+<strong>编译时类型 CSS-in-JS</strong> 这块会在文章末段稍微提及到。</p>
+<h2>CSS-in-JS优点</h2>
+<p><strong>1.Locally-scoped styles：</strong> 当我们在裸写 CSS 的时候，很容易就污染到其他我们意想不到的组件。比如我们写了一个列表，每一行的需要加一个内边距和边框的样式。我们可能会写这样的 CSS 代码
+CSS-in-JS 就可以通过 <strong>Locally-scoped styles</strong> 来完全解决这个问题。如果你的列表代码这么写的话：</p>
+<pre><code>&lt;div className={css`
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+    `}&gt;
+	...row item...
+ &lt;/div&gt;
+</code></pre>
+<p>这样的话，内边距和边框的样式永远不会影响到其他组件。</p>
+<blockquote>
+<p>提示：CSS Modules 也提供了 <strong>Locally-scoped styles</strong></p>
+</blockquote>
+<p><strong>2. Colocation：</strong>
+你的 React 组件是写在 <code>src/components</code> 目录中的，当你裸写 CSS 的时候，你的 .css 文件可能是放置在 <code>src/styles</code> 目录中。随着项目越来越大，你很难明确哪些 CSS 样式是用在哪些组件上，
+一个更好的组织代码的方式可能是将相关的代码文件放在同个地方。这种做法成为「共置」
+如果你使用 CSS-in-JS，你可以直接在 React 组件内部书写样式，如果组织得好，那么你的项目的可维护性将大大提升。</p>
+<blockquote>
+<p>提示：CSS Modules 也提供了「共置」的能力</p>
+</blockquote>
+<p><strong>3. 在样式中使用 JavaScript 变量：</strong> CSS-in-JS 提供了让你在样式中访问 JavaScript 变量的能力</p>
+<pre><code>function App(props) {
+    const color = &quot;red&quot;;
+    const ErrorMessageRed = styled.div`
+      color: ${props.color || color};
+      font-weight: bold;
+    `;
+    
+    return (
+        &lt;div&gt;
+            &lt;ErrorMessageRed&gt;
+              hello ErrorMessageRed !!
+            &lt;/ErrorMessageRed&gt;
+        &lt;/div&gt;
+    );
+}
+</code></pre>
+<p>上面的例子展示了，我们可以在 CSS-in-JS 方案中使用 JavaScript 的 const 变量 或者是 React 组件的 props。这样可以减少很多重复代码，当我们需要同时在 JavaScript 和 CSS 两侧定义相同的变量的时候。我们通过这样的能力可以不需要使用 inline styles 这样的方式来完成高度自定义的样式。(inline styles 对性能不是特别友好，当我们有很多相同的样式写在不同的组件的时候)</p>
+<h2>CSS-in-JS 缺点</h2>
+<ol>
+<li><strong>CSS-in-JS 的运行时问题</strong>。
+<ol>
+<li>当你的组件进行渲染的时候，CSS-in-JS 库会在运行时将你的样式代码 ” 序列化” 为可以插入文档的 CSS 。这无疑会消耗浏览器更多的 CPU 性能</li>
+</ol>
+</li>
+<li><strong>CSS-in-JS 让你的包体积更大了。</strong> 这是一个明显的问题。每个访问你的站点的用户都不得不加载关于 CSS-in-JS 的 JavaScript。Emotion 的包体积压缩之后是 <a href="https://link.juejin.cn?target=https%3A%2F%2Fbundlephobia.com%2Fpackage%2F%40emotion%2Freact%4011.10.4" title="https://bundlephobia.com/package/@emotion/react@11.10.4">7.9k</a> ，而 styled-components 则是 <a href="https://link.juejin.cn?target=https%3A%2F%2Fbundlephobia.com%2Fpackage%2Fstyled-components%405.3.6" title="https://bundlephobia.com/package/styled-components@5.3.6">12.7 kB</a> 。虽然这些包都不算是特别大，但是如果再加上 react &amp; react-dom 的话，那也是不小的开销。</li>
+<li><strong>CSS-in-JS 让 React DevTools 变得难看。</strong> 每一个使用 <code>css</code> prop 的 react 元素， Emotion 都会渲染成 <code>&lt;EmotionCssPropInternal&gt;</code> 和 <code>&lt;Insertion&gt;</code> 组件。如果你使用很多的 <code>css</code> prop，那么你会在 React DevTools 看到下面这样的场景</li>
+<li><strong>频繁的插入 CSS 样式规则会迫使浏览器做更多的工作。</strong></li>
+</ol>
+<p>在 concurrent 渲染模式下，React 可以在渲染之间让出浏览器的控制权。</p>
+<ul>
+<li>如果你为一个组件插入一个新的 CSS 规则，然后 React 让出控制权，浏览器会检查这个新的规则是否作用到了已有的树上。所以浏览器重新计算了样式规则。</li>
+<li>然后 React 渲染下一个组件，该组件发现一个新的规则，那么又会重新触发样式规则的计算。</li>
+<li><strong>实际上 React 进行渲染的每一帧，所有 DOM 元素上的 CSS 规则都会重新计算</strong>。这会非常非常的慢</li>
+<li>更坏的是，这个问题好像是无解的（针对运行时 CSS-in-JS）。运行时 CSS-in-JS 库会在组件渲染的时候插入新的样式规则，这对性能来说是一个很大的损耗。</li>
+</ul>
+<h1>性能检测</h1>
+<h2>内部序列化渲染 vs. 外部序列化渲染</h2>
+<p>样式序列化指的是 Emotion 将你的 CSS 字符串或者样式对象转化成可以插入文档的纯 CSS 字符串。Emotion 同时也会在序列化的过程中根据生成的存 CSS 字符串计算出相应的哈希值——这个哈希值就是你可以看到的动态生成的类名，比如 <code>css-an61r6</code></p>
+<p>在测试前，我预感到这个样式序列化是在 React 组件渲染周期里面完成还是外面完成，将对 Emotion 的性能表现起到比较大的影响。</p>
+<p>在渲染周期内完成的代码如下</p>
+<pre><code>function MyComponent() {
+  return (
+    &lt;div
+      css={{
+        backgroundColor: 'blue',
+        width: 100,
+        height: 100,
+      }}
+    /&gt;
+  );
+}
+</code></pre>
+<p>每次 <code>MyComponent</code> 渲染，样式对象都会被序列化一次。如果 <code>MyComponent</code> 渲染的比较频繁，重复的序列化将有很大的性能开销</p>
+<p>一个性能更好的方案是把样式移到组件的外面，所以序列化过程只会在组件模块被载入的时候发生，而不是每次都要执行一遍。你可以使用 <code>@emotion/react</code> 的 <code>css</code> 方法</p>
+<pre><code>const myCss = css({
+  backgroundColor: 'blue',
+  width: 100,
+  height: 100,
+});
+
+function MyComponent() {
+  return &lt;div css={myCss} /&gt;;
+}
+</code></pre>
+<p>当然，这样使得你无法在样式种获得组件的 props，所以你会错失 CSS-in-JS 的一个主要的卖点。</p>
+<h1>我们的新样式方案</h1>
+<p>在我们下定决心要移除 CSS-in-JS 之后，剩下的问题就是：我们应该什么方案来代替。我们既想要有裸写 CSS 这样的性能，又想要尽可能保留 CSS-in-JS 的优点。</p>
+<p>CSS Modules 其实也是可以提供 locally-scoped styles 和 colocated 这样类似的能力的。并且 CSS Modules 编译成原生 CSS 文件之后，没有运行时的性能开销。</p>
+<p>Sass Modules ( 使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fsass-lang.com%2F" title="https://sass-lang.com/">Sass</a> 来写 CSS Modules ) 。你既可以享受 CSS Modules 的 locally-scoped styles 能力，又可以享受 Sass 强大的编译时功能（去除运行时性能开销）。这就是我们会使用 Sass Modules 的一个重要原因。</p>
+<blockquote>
+<p>注意：使用 Sass Modules ，你将无法享受到 CSS-in-JS 的第 3 个优点（在 CSS 中使用 JS 变量）。但是你可以使用 <code>:export</code> 块将 Sass 代码的常量导出到 JS 代码中。这个用起来不是特别方便，但是会使你的代码更加清晰。</p>
+</blockquote>
+<h2><strong>Utility Classes</strong></h2>
+<p>比较担心我们团队从 Emotion 切换到 Sass Modules 之后，会在写一些极度常用的样式的时候不是很方便，比如 <code>display: flex</code> 。之前我们是这样写的</p>
+<pre><code>&lt;FlexH alignItems=&quot;center&quot;&gt;...&lt;/FlexH&gt;
+</code></pre>
+<p>如果改用 Sass Modules 之后，我们需要创建一个 <code>.module.scss</code> 文件，然后写一个 <code>display: flex</code> 和 <code>align-item: center</code> 。这不是世界末日，但肯定是不够方便的。</p>
+<p>为了提升开发体验，我们决定引入一个 Utility Classes。如果你对 Utility Classes 还不是很熟悉，用一句话概括就是，“他们是一些只包含一个 CSS 属性的 CSS 类”。通常情况下，你会在你的元素上使用多个这样的类，通过组合的方式来修改元素的样式。对于上面的这个例子，你可能需要这样写：</p>
+<pre><code>&lt;div class&gt;...&lt;/div&gt;
+</code></pre>
+<p>我们已经在新组件上使用 Sass Modules 和 Utility Classes 好几个星期了。我们觉得都不错。它的开发体验跟 Emotion 差不多，但是运行时的性能更加的好。
+我们也使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Ftyped-scss-modules" title="https://www.npmjs.com/package/typed-scss-modules">typed-scss-modules</a> 来为 Sass Modules 生成 TypeScript 的类型文件。也许这样做最大的好处就是允许我们定一个帮助函数 <code>utils()</code> ，这样我们可以像使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fclassnames" title="https://www.npmjs.com/package/classnames">classnames</a> 去操作样式。</p>
+<h2>一些关于 构建时 <strong>CSS-in-JS 方案</strong></h2>
+<p>本文主要关注的是 运行时 CSS-in- JS 方案，比如 Emotion 和 styled-components 。
+最近，我们也关注到了一些将样式转换是纯 CSS 的构建时 CSS-in-JS 方案。
+包括</p>
+<ul>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fcompiledcssinjs.com%2F" title="https://compiledcssinjs.com/">Compiled</a></li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Fvanilla-extract.style%2F" title="https://vanilla-extract.style/">Vanilla Extract</a></li>
+<li><a href="https://link.juejin.cn?target=https%3A%2F%2Flinaria.dev%2F" title="https://linaria.dev/">Linaria</a>
+这些库的目标是为了提供类似于运行时 CSS-in-JS 的能力，但是没有性能损耗。
+目前我还没有在真实项目中使用构建时 CSS-in-JS 方案。</li>
+</ul>
+<p>但我想这些方案对比 Sass Modules 大概会有以下的缺点：</p>
+<ul>
+<li>依然会在组件 mount 的时候完成样式的第一次插入，这还是会使得浏览器重新计算每个 DOM 节点的样式</li>
+<li>动态样式无法被抽取出来，所以会使用 CSS 变量加上行内样式的方法来替代。过多的行内样式依然会影响性能</li>
+<li>这些库依然会插入一些特定的组件到项目的 React 树中，依然会导致 React DevTools 的可读性变得比较差</li>
+</ul>
+
+<h1>在网页上呈现  |  Articles  |  web.dev</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://web.dev/articles/rendering-on-the-web?hl=zh-cn">web.dev</a></p>
+</blockquote>
+<h2>术语</h2>
+<ul>
+<li><strong><a href="https://web.dev/articles/inp?hl=zh-cn">Interaction to Next Paint (INP)</a></strong>：被视为一种代表性指标，用于评估网页是否能够一致地快速响应用户输入。</li>
+<li><strong><a href="https://web.dev/articles/tbt?hl=zh-cn">总阻塞时间 (TBT)</a></strong>：一种 <a href="https://almanac.httparchive.org/en/2022/performance#inp-and-tbt">INP 的代理指标</a>，用于计算在网页加载期间主线程被阻塞的时间。</li>
+</ul>
+<h2>服务器端渲染</h2>
+<p>服务器端渲染通常会生成快速的 FCP。在服务器上运行网页逻辑和呈现可以避免向客户端发送大量 JavaScript。</p>
+<ul>
+<li>这有助于减少页面的 TBT，</li>
+<li>这也可能会导致 INP 下降，因为主线程在网页加载期间阻塞率较低。
+<ul>
+<li>如果主线程的阻塞频率降低，用户互动就会有更多机会更快地运行。</li>
+</ul>
+</li>
+<li>一个潜在的弊端：在服务器上生成网页需要时间，这可能会导致 TTFB 较高。</li>
+</ul>
+<p>请务必注意，对于有些网页，您可以选择使用服务器端呈现，而不能为另一些网页使用服务器端呈现。一些网站采用了混合呈现技术，并取得了理想成效。</p>
+<ul>
+<li><a href="https://medium.com/dev-channel/a-netflix-web-performance-case-study-c0bcde26a9d9">Netflix</a> 服务器呈现其相对静态的着陆页，同时为互动量较大的网页<a href="https://dev.to/addyosmani/speed-up-next-page-navigations-with-prefetching-4285">预提取</a> JS，从而使这些由客户端呈现且数量较大的网页更有可能快速加载。</li>
+</ul>
+<h2>静态渲染</h2>
+<p><a href="https://frontarm.com/james-k-nelson/static-vs-server-rendering/">静态渲染</a>在构建时进行。</p>
+<ul>
+<li>与服务器端呈现不同，由于无需在服务器上动态生成网页的 HTML，该呈现方式还能始终如一地实现快速的 TTFB。</li>
+<li>一般来说，静态呈现意味着为每个网址提前生成单独的 HTML 文件。借助预先生成的 HTML 响应，可以将静态渲染部署到多个 CDN，以充分利用边缘缓存。
+静态呈现的缺点之一是，必须为每个可能的网址生成单独的 HTML 文件。如果您无法提前预测这些网址的具体内容，或者对于包含大量独特网页的网站来说，这可能会极具挑战性甚至不可行。
+<strong>注意</strong> ：Next.js 或 Nuxt 等热门框架的抽象同时提供静态呈现和服务器端呈现。
+您有必要了解静态呈现和预呈现之间的区别：</li>
+<li>静态呈现的网页具有互动性，无需在客户端执行大量 JavaScript，</li>
+<li>预呈现可提高单页应用的 FCP（必须在客户端启动才能实现网页真正的互动性）。</li>
+</ul>
+<h2>服务器端呈现与静态呈现</h2>
+<p>服务器端渲染并不是万能的，其动态特性可能会产生巨大的计算开销成本。</p>
+<p>许多服务器端渲染解决方案不会提前刷新，可能会延迟 TTFB，或使发送的数据翻倍（例如，客户端上的 JavaScript 使用的内嵌状态）。</p>
+<ul>
+<li>在 React 中，<code>renderToString()</code> 速度可能很慢，因为它是同步的、单线程的。</li>
+<li>支持流式传输的<a href="https://react.dev/reference/react-dom/server">新版 React 服务器 DOM API</a>，可更快将 HTML 响应的初始部分发送给浏览器，而其他部分仍在服务器上生成。</li>
+</ul>
+<p>“正确” 服务器端渲染涉及到找到或构建<a href="https://medium.com/@reactcomponentcaching/">组件缓存</a>解决方案、管理内存消耗、应用<a href="https://speakerdeck.com/maxnajim/hastening-react-ssr-with-component-memoization-and-templatization">记忆</a>技术以及其他问题。您通常会多次处理 / 重新构建同一应用 - 一次在客户端上，另一次在服务器上。服务器端渲染可以让某些内容更快显示，但并不意味着您的工作量就会变小。如果在服务器生成的 HTML 响应到达客户端后，您在客户端上会处理很多工作，这仍可能会导致您网站的 TBT 和 INP 较高。</p>
+<p>服务器端渲染会按需为每个网址生成 HTML，但可能比仅提供静态呈现的内容更慢。如果您能够完成额外的工作，那么服务器端呈现和 <a href="https://freecontent.manning.com/caching-in-react/">HTML 缓存</a>可以显著缩短服务器呈现时间。与静态呈现相比，服务器端呈现的优势在于，它能够拉取更多 “实时” 数据，并响应一组更完整的请求。需要个性化的网页是不适合静态呈现的请求类型的具体示例。</p>
+<p>在构建 <a href="https://web.dev/explore/progressive-web-apps?hl=zh-cn">PWA</a> 时，服务器端渲染也可能会做出一些有趣的决策：是使用整页 <a href="https://developer.chrome.com/docs/workbox/service-worker-overview/?hl=zh-cn">Service Worker</a> 缓存，还是单纯通过服务器渲染个别内容，哪种做法更好？</p>
+<h2>客户端渲染</h2>
+<p>客户端呈现是指使用 JavaScript 直接在浏览器中呈现网页。</p>
+<ul>
+<li>所有逻辑、数据提取、模板化和路由都是在客户端而非服务器上处理的。</li>
+<li>其有效结果是，服务器会向用户的设备传递更多数据，而这也带来了一系列需要权衡的利弊。</li>
+</ul>
+<p>在移动设备上，客户端渲染可能难以获取且保持快速运行。</p>
+<ul>
+<li>您可以使用 <code>&lt;link rel=preload&gt;</code> 更快地传送关键脚本和数据，让解析器更快地工作。</li>
+<li>为了确保初始和后续导航能够提供即时体验，<a href="https://web.dev/articles/apply-instant-loading-with-prpl?hl=zh-cn">PRPL</a> 等模式也值得评估。</li>
+</ul>
+<p>客户端渲染的主要缺点是，</p>
+<ul>
+<li>需要的 JavaScript 数量往往会随着应用的增长而增加，这可能会对网页的 INP 产生负面影响。</li>
+<li>添加新的 JavaScript 库、Polyfill 和第三方代码会变得尤其困难，它们会争用处理能力，而且往往必须先进行处理，然后才能呈现网页内容。</li>
+</ul>
+<p>如果体验使用的是依赖大型 JavaScript 软件包的客户端渲染，</p>
+<ul>
+<li>就应该考虑<a href="https://web.dev/articles/reduce-javascript-payloads-with-code-splitting?hl=zh-cn">积极的代码拆分</a>，以便在网页加载期间降低 TBT 和 INP，并确保延迟加载 JavaScript，即 “只在需要时提供您所需的内容”。</li>
+<li>对于互动很少或没有互动的体验，服务器端渲染可以代表这些问题的可扩展性更强的解决方案。</li>
+</ul>
+<p>对于构建单页应用的人员来说，</p>
+<ul>
+<li>确定大多数页面共用的界面核心部分意味着您可以应用<a href="https://developer.chrome.com/blog/app-shell/?hl=zh-cn">应用 Shell 缓存</a>技术。</li>
+<li>与 Service Worker 结合使用可以显著提升重复访问的感知性能，因为可以非常快地从 <code>CacheStorage</code> 加载 App Shell HTML 及其依赖项。</li>
+</ul>
+<h2>通过 Rehydration 结合使用服务器端渲染和客户端渲染</h2>
+<p>此方法尝试通过同时在客户端渲染与服务器端渲染之间进行权衡取舍。以 HTML 形式呈现应用的服务器处理导航请求（例如完整网页加载或重新加载），然后将用于呈现的 JavaScript 和数据嵌入到生成的文档中。谨慎处理后，即可实现与服务器端渲染一样的快速 FCP，然后使用称为 “(re)hydration” 的技术在客户端上重新渲染，从而“接收”。<a href="https://react.dev/reference/react-dom/client/hydrateRoot"></a>这是一个有效的解决方案，但可能存在相当大的性能缺陷。</p>
+<p>使用 Rehydration 进行服务器端渲染的主要缺点是，</p>
+<ul>
+<li>即使能够改善 FCP，也会对 TBT 和 INP 产生明显的负面影响。</li>
+<li>服务器端呈现的页面可能看上去像是已加载且具有互动性，但实际上只有在执行组件的客户端脚本并附加事件处理脚本后，才能响应输入。在
+<ul>
+<li>移动设备上，这可能需要几秒甚至几分钟的时间。</li>
+</ul>
+</li>
+</ul>
+<p>这种情况很快就会变得令人沮丧，因为用户在尝试与网页互动时却不知道为什么没有任何反应。</p>
+<h3>补水问题：一款应用花了两个钱</h3>
+<p>水解问题通常比因 JavaScript 导致的互动延迟问题更严重。
+为了让客户端 JavaScript 能够准确地 “接续” 服务器停止的位置，而不必重新请求服务器用于呈现其 HTML 的所有数据，当前的服务器端呈现解决方案通常会将响应从界面的数据依赖关系序列化为脚本标记。生成的 HTML 文档包含大量重复内容：</p>
+<p><img src="https://web.dev/static/articles/rendering-on-the-web/image/html-document-containing-94fb8c198eab8.png?hl=zh-cn" alt=""></p>
+<p>如您所见，服务器会返回应用界面的说明来响应导航请求，但也返回用于编写该界面的源数据以及界面实现的完整副本，后者随后会在客户端上启动。只有在 <code>bundle.js</code> 完成加载和执行之后，此界面才会变为交互式界面。</p>
+<p>使用服务器端呈现和重构 (rehydration) 功能从真实网站收集的性能指标表明，不建议使用。归根结底，原因在于用户体验：极易导致用户陷入 “恐怖山谷”，虽然页面看起来已经准备就绪，但他们却觉得没有互动。
+不过，通过 Rehydration 进行服务器端渲染是有希望的。</p>
+<ul>
+<li>从短期来看，仅对可缓存性极强的内容使用服务器端渲染可以减少 TTFB，从而产生与预渲染类似的结果。</li>
+<li><a href="https://www.emberjs.com/blog/2017/10/10/glimmer-progress-report.html">逐步</a>、逐步或部分补充水分，可能是提高此技术将来可行性的关键。</li>
+</ul>
+<h2>流式服务器端渲染和渐进式重构</h2>
+<p>在过去几年里，服务器端渲染有了不少改进。
+通过<a href="https://mxstbr.com/thoughts/streaming-ssr">流式服务器端渲染</a>，您可以分块发送 HTML，浏览器在收到数据块时便可以逐步进行渲染。这样可以实现快速 FCP，因为标记到达用户的速度会更快。
+在 React 中，信息流在 [<code>renderToPipeableStream()</code>] 中是异步的（与同步 <code>renderToString()</code> 相比），意味着背压得到妥善处理。</p>
+<p>渐进式补液功能也值得考虑，并且 React <a href="https://github.com/facebook/react/pull/14717">已经推出</a>。通过这种方法，服务器渲染的应用的各个部分会随时间 “启动”，而不是目前常用的方法，即一次性初始化整个应用。这有助于减少使网页具有互动性所需的 JavaScript 数量，因为可以推迟页面低优先级部分的客户端升级，以防止阻塞主线程，从而使用户互动可在用户发起互动后更早地发生。</p>
+<p>渐进式 Rehydration 还有助于避免一个最常见的服务器端渲染补全陷阱，即由服务器渲染的 DOM 树被销毁，然后立即重新构建，最常见的情况是初始同步客户端渲染所需的数据尚未准备就绪，可能在等待 <code>Promise</code> 的解析。</p>
+
+<h1>我打破了 React Hook 必须按顺序、不能在条件语句中调用的枷锁</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6939766434159394830?searchId=202401190957549536CA1CC2F6CD1EA205">juejin.cn</a></p>
+</blockquote>
+<p>React 官网介绍了 Hook 的这样一个限制：</p>
+<blockquote>
+<p><strong>不要在循环，条件或嵌套函数中调用 Hook</strong>， 确保总是在你的 React 函数的最顶层以及任何 return 之前调用他们。遵守这条规则，你就能确保 Hook 在每一次渲染中都按照同样的顺序被调用。这让 React 能够在多次的 <code>useState</code> 和 <code>useEffect</code> 调用之间保持 hook 状态的正确。(如果你对此感到好奇，我们在下面会有更深入的解释。)</p>
+</blockquote>
+<p>这个限制在开发中也确实会时常影响到我们的开发体验，比如函数组件中出现 if 语句提前 return 了，后面又出现 Hook 调用的话，React 官方推的 eslint 规则也会给出警告。</p>
+<pre><code>function App(){
+  if (xxx) {
+    return null;
+  }
+
+  // ❌ React Hook &quot;useState&quot; is called conditionally. 
+  // React Hooks must be called in the exact same order in every component render.
+  useState();
+  
+  return 'Hello'
+}
+</code></pre>
+<p>其实是个挺常见的用法，很多时候满足某个条件了我们就不希望组件继续渲染下去。但由于这个限制的存在，我们只能把所有 Hook 调用提升到函数的顶部，增加额外开销。</p>
+<p>由于 React 的源码太复杂，接下来本文会以原理类似但精简很多的 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fpreactjs%2Fpreact" title="https://github.com/preactjs/preact">Preact</a> 的源码为切入点来调试、讲解。</p>
+<h2>限制的原因</h2>
+<p>这个限制并不是 React 团队凭空造出来的，的确是由于 React Hook 的实现设计而不得已为之。
+以 Preact 的 Hook 的实现为例，它用<strong>数组和下标</strong>来实现 Hook 的查找（React 使用链表，但是原理类似）。</p>
+<pre><code>// 当前正在运行的组件
+let currentComponent
+// 当前 hook 的全局索引
+let currentIndex
+// 第一次调用 currentIndex 为 0
+useState('first') 
+// 第二次调用 currentIndex 为 1
+useState('second')
+</code></pre>
+<p>可以看出，每次 Hook 的调用都对应一个全局的 index 索引，通过这个索引去当前运行组件 <code>currentComponent</code> 上的 <code>_hooks</code> 数组中查找保存的值，也就是 Hook 返回的 <code>[state, useState]</code>
+那么假如条件调用的话，比如第一个 <code>useState</code> 只有 0.5 的概率被调用：</p>
+<pre><code>// 当前正在运行的组件
+let currentComponent
+
+// 当前 hook 的全局索引
+let currentIndex
+
+// 第一次调用 currentIndex 为 0
+if (Math.random() &gt; 0.5) {
+  useState('first')
+}
+
+// 第二次调用 currentIndex 为 1
+useState('second')
+</code></pre>
+<p>在 Preact 第一次渲染组件的时候，假设 <code>Math.random()</code> 返回的随机值是 <code>0.6</code>，那么第一个 Hook 会被执行，此时组件上保存的 <code>_hooks</code> 状态是：</p>
+<pre><code>_hooks: [
+  { value: 'first', update: function },
+  { value: 'second', update: function },
+]
+</code></pre>
+<p>假设第二次渲染的时候，<code>Math.random()</code> 返回的随机值是 <code>0.3</code>，此时只有第二个 useState 被执行了，那么它对应的全局 <code>currentIndex</code> 会是 0，这时候去 <code>_hooks[0]</code> 中拿到的却是 <code>first</code> 所对应的状态，这就会造成渲染混乱。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1f4be62e50ff44aeaed94ea1ff32b9c9~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
+<p>没错，本应该值为 <code>second</code> 的 value，莫名其妙的被指向了 <code>first</code>，渲染完全错误！</p>
+<hr>
+<p>以这个例子来看：</p>
+<pre><code>export default function App() {
+  if (Math.random() &gt; 0.5) {
+    useState(10000)
+  }
+  const [value, setValue] = useState(0)
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setValue(value + 1)}&gt;+&lt;/button&gt;
+      {value}
+    &lt;/div&gt;
+  )
+}
+</code></pre>
+<p>结果是这样：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6a2a6d68d6904dfda2217d18bc78868b~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
+<h2>破解限制</h2>
+<p>有没有办法破解限制呢？
+如果要破解全局索引递增导致的 bug，那么我们可以考虑换种方式存储 Hook 状态。
+如果不用下标存储，是否可以考虑用一个<strong>全局唯一的 key</strong> 来保存 Hook，这样不是就可以绕过下标导致的混乱了吗？
+比如 <code>useState</code> 这个 API 改造成这样：</p>
+<pre><code>export default function App() {
+  if (Math.random() &gt; 0.5) {
+    useState(10000, 'key1');
+  }
+  const [value, setValue] = useState(0, &quot;key2&quot;);
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setValue(value + 1)}&gt;+&lt;/button&gt;
+      {value}
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<p>这样，通过 <code>_hooks['key']</code> 来查找，就无所谓前序的 Hook 出现的任何意外情况了。
+也就是说，原本的存储方式是：</p>
+<pre><code>_hooks: [
+  { value: 'first', update: function },
+  { value: 'second', update: function },
+]
+</code></pre>
+<p>改造后：</p>
+<pre><code>_hooks: [
+  key1: { value: 'first', update: function },
+  key2: { value: 'second', update: function },
+]
+</code></pre>
+<p>注意，数组本身就支持对象的 key 值特性，不需要改造 <code>_hooks</code> 的结构。</p>
+<h2>改造源码</h2>
+<p>来试着改造一下 Preact 源码，它的 Hook 包的位置在 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fpreactjs%2Fpreact%2Fblob%2Fmaster%2Fhooks%2Fsrc%2Findex.js" title="https://github.com/preactjs/preact/blob/master/hooks/src/index.js">hooks/src/index.js</a> 下，找到 <code>useState</code> 方法：</p>
+<pre><code>export function useState(initialState) {
+  currentHook = 1;
+  return useReducer(invokeOrReturn, initialState, undefined);
+}
+</code></pre>
+<p>它的底层调用了 <code>useReducer</code>，所以新增加一个 <code>key</code> 参数透传下去：</p>
+<pre><code>+ export function useState(initialState, key) {
+  currentHook = 1;
++ return useReducer(invokeOrReturn, initialState, undefined, key);
+}
+</code></pre>
+<p><code>useReducer</code> 原本是通过全局索引去获取 Hook state：</p>
+<pre><code>// 全局索引
+let currentIndex
+
+export function useReducer(reducer, initialState, init) {
+  const hookState = getHookState(currentIndex++, 2);
+  hookState._reducer = reducer;
+
+  return hookState._value;
+}
+</code></pre>
+<p>改造成兼容版本，有 key 的时候优先传入 key 值：</p>
+<pre><code>// 全局索引
+let currentIndex
+
++ export function useReducer(reducer, initialState, init, key) {
++  const hookState = getHookState(key || currentIndex++, 2);
+   hookState._reducer = reducer;
+
+   return hookState._value;
+}
+</code></pre>
+<p>最后改造一下 <code>getHookState</code> 方法：</p>
+<pre><code>function getHookState(index, type) {
+  const hooks =
+    currentComponent.__hooks ||
+    (currentComponent.__hooks = {
+      _list: [],
+      _pendingEffects: [],
+    });
+
+// 传入 key 值是 string 或 symbol 都可以
++  if (typeof index !== 'number') {
++    if (!hooks._list[index]) {
++      hooks._list[index] = {};
++    }
++  } else {
+    if (index &gt;= hooks._list.length) {
+      hooks._list.push({});
+    }
+  }
+  // 这里天然支持 key 值取用的方式
+  return hooks._list[index];
+}
+</code></pre>
+<p>这里设计成传入 <code>key</code> 值的时候，初始化就不往数组里 <code>push</code> 新状态，而是直接通过下标写入即可，原本的取状态的写法 <code>hooks._list[index]</code> 本身就支持通过 <code>key</code> 从数组上取值，不用改动。</p>
+<h2>自动编译</h2>
+<p>事实上 React 团队也考虑过给每次调用加一个 <code>key</code> 值的设计，在 Dan Abramov 的 <a href="https://link.juejin.cn?target=https%3A%2F%2Foverreacted.io%2Fzh-hans%2Fwhy-do-hooks-rely-on-call-order%2F%23%25E7%25BC%25BA%25E9%2599%25B7-2-%25E5%2591%25BD%25E5%2590%258D%25E5%2586%25B2%25E7%25AA%2581" title="https://overreacted.io/zh-hans/why-do-hooks-rely-on-call-order/#%E7%BC%BA%E9%99%B7-2-%E5%91%BD%E5%90%8D%E5%86%B2%E7%AA%81">为什么顺序调用对 React Hooks 很重要？</a> 中已经详细解释过这个提案。</p>
+<p>多重的缺陷导致这个提案被否决了，尤其是在遇到自定义 Hook 的时候，比如你提取了一个 <code>useFormInput</code>：</p>
+<pre><code>const valueKey = Symbol();
+ 
+function useFormInput() {
+  const [value, setValue] = useState(valueKey);
+  return {
+    value,
+    onChange(e) {
+      setValue(e.target.value);
+    },
+  };
+}
+</code></pre>
+<p>然后在组件中多次调用它：</p>
+<pre><code>function Form() {
+  // 使用 Symbol
+  const name = useFormInput(); 
+  // 又一次使用了同一个 Symbol
+  const surname = useFormInput(); 
+  // ...
+  return (
+    &lt;&gt;
+      &lt;input {...name} /&gt;
+      &lt;input {...surname} /&gt;
+      {/* ... */}
+    &lt;/&gt;    
+  )
+}
+</code></pre>
+<p>此时这个通过 <code>key</code> 寻找 Hook state 的方式就会发生冲突。
+但我的想法是，能不能借助 <strong>babel 插件的编译能力</strong>，实现编译期自动为每一次 <strong>Hook 调用</strong>都注入一个 <code>key</code>， 伪代码如下：</p>
+<pre><code>traverse(node) {
+  if (isReactHookInvoking(node)) {
+    addFunctionParameter(node, getUniqKey(node))
+  }
+}
+</code></pre>
+<p>生成这样的代码：</p>
+<pre><code>function Form() {
++  const name = useFormInput('key_1'); 
++  const surname = useFormInput('key_2'); 
+  // ...
+  return (
+    &lt;&gt;
+      &lt;input {...name} /&gt;
+      &lt;input {...surname} /&gt;
+      {/* ... */}
+    &lt;/&gt;    
+  )
+}
+
++ function useFormInput(key) {
++  const [value, setValue] = useState(key);
+  return {
+    value,
+    onChange(e) {
+      setValue(e.target.value);
+    },
+  };
+}
+</code></pre>
+<p>key 的生成策略可以是随机值，也可以是注入一个 Symbol，这个无所谓，保证运行时期不会改变即可。</p>
+
+<h1>第一个可以在条件语句中使用的原生 hook 诞生了</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7155673959084589070?searchId=2024011909074637716191FEDA6F0DC2CF">juejin.cn</a></p>
+</blockquote>
+<p><code>use</code>什么？就是这个<code>hook</code>就叫<code>use</code>。这也是第一个：</p>
+<ul>
+<li>可以在条件语句中书写的<code>hook</code></li>
+<li>可以在其他<code>hook</code>回调中书写的<code>hook</code></li>
+</ul>
+<h2>use 是什么</h2>
+<p>我们知道，<code>async</code>函数会配合<code>await</code>关键词使用，比如：</p>
+<pre><code>async function load() {
+  const {name} = await fetchName();
+  return name;
+}
+</code></pre>
+<p>类似的，在<code>React</code>组件中，可以配合<code>use</code>起到类似的效果，比如：</p>
+<pre><code>function Cpn() {
+  const {name} = use(fetchName());
+  return &lt;p&gt;{name}&lt;/p&gt;;
+}
+</code></pre>
+<p>可以认为，<code>use</code>的作用类似于：</p>
+<ul>
+<li><code>async await</code>中的<code>await</code></li>
+<li><code>generator</code>中的<code>yield</code>
+<code>use</code>作为<strong>读取异步数据的原语</strong>，可以配合<code>Suspense</code>实现<strong>数据请求、加载、返回</strong>的逻辑。</li>
+</ul>
+<hr>
+<p>举个例子，下述例子中，当<code>fetchNote</code>执行异步请求时，会由包裹<code>Note</code>的<code>Suspense</code>组件渲染<strong>加载中状态</strong>。</p>
+<p>当请求成功时，会重新渲染，此时<code>note</code>数据会正常返回。
+当请求失败时，会由包裹<code>Note</code>的<code>ErrorBoundary</code>组件处理失败逻辑。</p>
+<pre><code>function Note({id}) {
+  const note = use(fetchNote(id));
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;{note.title}&lt;/h1&gt;
+      &lt;section&gt;{note.body}&lt;/section&gt;
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<p>其背后的实现原理并不复杂：</p>
+<ol>
+<li>当<code>Note</code>组件首次<code>render</code>，<code>fetchNote</code>发起请求，会<code>throw promise</code>，打断<code>render</code>流程</li>
+<li>以<code>Suspense fallback</code>作为渲染结果</li>
+<li>当<code>promise</code>状态变化后重新触发渲染</li>
+<li>根据<code>note</code>的返回值渲染
+实际上这套<strong>基于 promise 的打断、重新渲染流程</strong>当前已经存在了。<code>use</code>的存在就是为了替换上述流程。</li>
+</ol>
+<h2>Promise与 use</h2>
+<p>与当前<code>React</code>中已经存在的上述 <strong>promise 流程</strong>不同，<code>use</code>仅仅是个<strong>原语</strong>（<code>primitives</code>），并不是完整的处理流程。
+比如，<code>use</code>并没有<strong>缓存 promise</strong> 的能力。</p>
+<p>举个例子，在下面代码中<code>fetchTodo</code>执行后会返回一个<code>promise</code>，<code>use</code>会消费这个<code>promise</code>。</p>
+<pre><code class="language-js">async function fetchTodo(id) {
+  const data = await fetchDataFromCache(`/api/todos/${id}`);
+  return {contents: data.contents};
+}
+
+function Todo({id, isSelected}) {
+  const todo = use(fetchTodo(id));
+  return (
+    &lt;div className={isSelected ? 'selected-todo' : 'normal-todo'}&gt;
+      {todo.contents}
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<p>当<code>Todo</code>组件的<code>id prop</code>变化后，触发<code>fetchTodo</code>重新请求是符合逻辑的。
+但是当<code>isSelected prop</code>变化后，<code>Todo</code>组件也会重新<code>render</code>，<code>fetchTodo</code>执行后会返回一个新的<code>promise</code>。
+返回新的<code>promise</code>不一定产生新的请求（取决于<code>fetchTodo</code>的实现），但一定会影响<code>React</code>接下来的运行流程（比如不能命中性能优化）。
+这时候，需要配合<code>React</code>提供的<code>cache API</code>（同样处于<code>RFC</code>）。
+下述代码中，如果<code>id prop</code>不变，<code>fetchTodo</code>始终返回同一个<code>promise</code>：</p>
+<pre><code>const fetchTodo = cache(async (id) =&gt; {
+  const data = await fetchDataFromCache(`/api/todos/${id}`);
+  return {contents: data.contents};
+});
+</code></pre>
+<h2>use 的潜在作用</h2>
+<p>当前，<code>use</code>的应用场景局限在<strong>包裹 promise</strong>。
+但是未来，<code>use</code>会作为客户端中处理异步数据的主要手段，比如：</p>
+<ul>
+<li>处理<code>context</code>
+<code>use(Context)</code>能达到与<code>useContext(Context)</code>一样的效果，区别在于前者可以在条件语句，以及其他<code>hook</code>回调内执行。</li>
+<li>处理<code>state</code>
+可以利用<code>use</code>实现新的原生状态管理方案：</li>
+</ul>
+<pre><code>const currentState = use(store);
+const latestValue = use(observable);
+</code></pre>
+<h2>为什么不使用 async await</h2>
+<p>本文开篇提到，<code>use</code>原语类似<code>async await</code>中的<code>await</code>，那为什么不直接使用<code>async await</code>呢？类似下面这样：</p>
+<pre><code>// Note 是 React 组件
+async function Note({id, isEditing}) {
+  const note = await db.posts.get(id);
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;{note.title}&lt;/h1&gt;
+      &lt;section&gt;{note.body}&lt;/section&gt;
+      {isEditing ? &lt;NoteEditor note={note} /&gt; : null}
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<p>有两方面原因。</p>
+<p>一方面，<code>async await</code>的工作方式与<code>React</code>客户端处理异步时的逻辑不太一样。
+当<code>await</code>的请求<code>resolve</code>后，调用栈是从<code>await</code>语句继续执行的（<code>generator</code>中<code>yield</code>也是这样）。
+而在<code>React</code>中，更新流程是从根组件开始的，所以当数据返回后，更新流程是从根组件从头开始的。
+改用<code>async await</code>的方式势必对当前<code>React</code>底层架构带来挑战。最起码，会对性能优化产生不小的影响。
+另一方面，<code>async await</code>这种方式接下来会在<code>Server Component</code>中实现，也就是异步的服务端组件</p>
+<p>服务端组件与客户端组件都是<code>React</code>组件，但前者在服务端渲染（<code>SSR</code>），后者在客户端渲染（<code>CSR</code>），如果都用<code>async await</code>，不太容易从代码层面区分两者。</p>
+<h2>总结</h2>
+<p><code>use</code>是一个<strong>读取异步数据的原语</strong>，他的出现是为了规范<code>React</code>在客户端处理异步数据的方式。</p>
+<ul>
+<li>既然是原语，那么他的功能就很底层，比如不包括请求的缓存功能（由<code>cache</code>处理）。</li>
+<li>之所以这么设计，是因为<code>React</code>团队并不希望开发者直接使用他们。这些原语的受众是<code>React</code>生态中的其他库。比如，类似<code>SWR</code>、<code>React-Query</code>这样的请求库</li>
+</ul>

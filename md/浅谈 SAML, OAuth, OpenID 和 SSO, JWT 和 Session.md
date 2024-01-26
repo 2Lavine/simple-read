@@ -190,18 +190,11 @@ drive = build('drive', 'v2', credentials=credentials)
     
 
 #### Refresh Token
-
 现在可以回答上面的问题了，为什么我们需要 `refresh token`？
-
 这样的处理是为了 **职责的分离**：
-
 *   **refresh token:** 负责 **身份认证**；
-    
 *   **access token:** 负责 **请求资源**。
-    
-
 虽然 `refresh token` 和 `access token` 都由 `IDP` 发出，但是 `access token` 还要和 `SP` 进行 **数据交换**，如果 **公用的话** 这样就会有 **身份泄露** 的可能。并且 `IDP` 和 `SP` 可能是 **完全不同** 的 **服务提供** 的。而在上文，我们之所以没有这样的顾虑是因为 `IDP` 和 `SP` 都是 `Google`。
-
 ### JWT
 
 #### 初步认识
@@ -213,15 +206,10 @@ drive = build('drive', 'v2', credentials=credentials)
 ![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/7/6/1646cd18502035d0~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.png)
 
 1.  首先需要在 `Google API` 上创建一个服务账号（`service account`）。
-    
 2.  获取 **服务账号** 的 **认证信息**（`credential`），包括 **邮箱地址**，`client ID`，以及一对 **公钥 / 私钥**。
-    
 3.  使用 `Client ID` 和 **私钥** 创一个 **签名** 的 `JWT`，然后将这个 `JWT` 发送给 `Google` 交换 `access token`。
-    
 4.  `Google` 返回 `access token`。
-    
 5.  程序通过 `access token` 访问 `API`。
-    
 
 甚至你可以不需要向 `Google` 索要 `access token`，而是携带 `JWT` 作为 `HTTP header` 里的 `bearer token` 直接访问 `API` 也是可以的。这才是 `JWT` 的最大魅力。
 

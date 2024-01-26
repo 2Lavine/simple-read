@@ -1,14 +1,8 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [www.patterns.dev](https://www.patterns.dev/vanilla/view-transitions)
 
-> An introduction to animating page transitions using the View Transitions API and libraries
-
-Rendering Pattern
-
 **Note**: The View Transitions API for Single-Page Applications is available in Chrome 111+
-
 Introduction to View Transitions
 --------------------------------
-
 The [View Transitions API](https://developer.chrome.com/docs/web-platform/view-transitions/) offers a simple way to transition any visual DOM change from one state to the next. This might include small changes such as toggling some content, or broader changes such as navigating from one page to the next. Below is a [demo](https://astro-movies.pages.dev/) of the View Transitions API in an SPA (Single-Page Application) [src](https://github.com/Charca/astro-movies):
 
 <video src="https://res.cloudinary.com/ddxwdqwkr/video/upload/v1678492898/patterns.dev/astro-movies-2023.mp4" control></video>
@@ -266,7 +260,3 @@ Page transitions can be a great way to communicate changes from one page to the 
 An alternative (or complementary) approach is to perform exit animations immediately, as soon as the user has clicked a link. This has the benefit of buying some time for the request to complete before the new HTML arrives.
 
 ![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAACbklEQVRoQ+2aMU4dMRCGZw6RC1CSSyQdLZJtKQ2REgoiRIpQkCYClCYpkgIESQFIpIlkW+IIcIC0gUNwiEFGz+hlmbG9b1nesvGW++zxfP7H4/H6IYzkwZFwQAUZmpJVkSeniFJKA8ASIi7MyfkrRPxjrT1JjZ8MLaXUDiJuzwngn2GJaNd7vyP5IoIYY94Q0fEQIKIPRGS8947zSQTRWh8CwLuBgZx479+2BTkHgBdDAgGAC+fcywoyIFWqInWN9BSONbTmFVp/AeA5o+rjKRJ2XwBYRsRXM4ZXgAg2LAPzOCDTJYQx5pSIVlrC3EI45y611osMTHuQUPUiYpiVooerg7TWRwDAlhSM0TuI+BsD0x4kGCuFSRVzSqkfiLiWmY17EALMbCAlMCmI6IwxZo+INgQYEYKBuW5da00PKikjhNNiiPGm01rrbwDwofGehQjjNcv1SZgddALhlJEgwgJFxDNr7acmjFLqCyJuTd6LEGFttpmkYC91Hrk3s1GZFERMmUT01Xv/sQljjPlMRMsxO6WULwnb2D8FEs4j680wScjO5f3vzrlNJszESWq2LYXJgTzjZm56MCHf3zVBxH1r7ftU1splxxKYHEgoUUpTo+grEf303rPH5hxENJqDKQEJtko2q9zGeeycWy3JhpKhWT8+NM/sufIhBwKI+Mta+7pkfxKMtd8Qtdbcx4dUQZcFCQ2I6DcAnLUpf6YMPxhIDDOuxC4C6djoQUE6+tKpewWZ1wlRkq0qUhXptKTlzv93aI3jWmE0Fz2TeujpX73F9TaKy9CeMk8vZusfBnqZ1g5GqyIdJq+XrqNR5AahKr9CCcxGSwAAAABJRU5ErkJggg==)
-
-#### Dom Christie
-
-Software Engineer
