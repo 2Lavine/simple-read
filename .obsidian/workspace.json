@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "8e454f11942db8e7",
+        "id": "ad5e0cec3aa4a3bd",
         "type": "tabs",
         "children": [
           {
-            "id": "f3af568eb3f92439",
+            "id": "8c6ec655adffb5bc",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "done/前端性能优化必杀技：骨架屏让你快人一步.md",
+                "file": "md/TDD 实战.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "done/前端性能优化必杀技：骨架屏让你快人一步.md"
+                "file": "md/TDD 实战.md"
               }
             }
           },
@@ -96,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "done/前端性能优化必杀技：骨架屏让你快人一步.md",
+                "file": "md/TDD 实战.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "done/前端性能优化必杀技：骨架屏让你快人一步.md",
+                "file": "md/TDD 实战.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -169,38 +169,39 @@
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "f3af568eb3f92439",
+  "active": "8c6ec655adffb5bc",
   "lastOpenFiles": [
-    "md/同学，请实现一个扫码登录.md",
-    "md/前端性能优化指南 - CNode 技术社区.md",
+    "md/谈谈复杂应用的状态管理（上）：为什么是 Zustand.md",
+    "md/TDD 实战.md",
+    "done/使用 Vitest 和 React Testing Library 给 Next.js 应用单元测试.md",
+    "md/Vitest 进行React测试.md",
     "md/全新的 React 组件设计理念 Headless UI.md",
-    "md/京东一面：post 为什么会发送两次请求？🤪🤪🤪.md",
-    "md/Tailwind CSS + cva 实现样式变体组件.md",
-    "md/Service Worker 从入门到出门.md",
-    "md/Progressive Hydration.md",
-    "md/Next.js 13 全解析 - Paranoid_K's Blog.md",
-    "md/Islands 架构原理和实践.md",
-    "md/Compound Pattern.md",
-    "md/ChatGPT 对话为什么不用 Websocket 而使用 EventSource？.md",
-    "md/CSS 模块化方案探讨（BEM、OOCSS、CSS Modules、CSS-in-JS ...）.md",
-    "md/Access Token & Refresh Token 详解以及使用原则.md",
-    "md/2022 年了, 真的懂 requestAnimationFrame 么？.md",
-    "done/React Fiber 架构.md",
-    "md/Animating View Transitions.md",
-    "done/2024-01-26.md",
-    "md/Islands Architecture.md",
-    "done/前端性能优化必杀技：骨架屏让你快人一步.md",
-    "done/从源码角度解析：react hook 为啥不能放入条件语句中.md",
-    "md/基于 CSR 的骨架屏生成.md",
+    "md/谈谈复杂应用的状态管理（下）：基于 Zustand 的渐进式状态管理实践.md",
+    "md/浅谈 SAML, OAuth, OpenID 和 SSO, JWT 和 Session.md",
+    "done/京东一面：post 为什么会发送两次请求？🤪🤪🤪.md",
+    "done/Vitest  组件测试.md",
     "md/React Fiber 架构.md",
+    "done/基于 CSR 的骨架屏生成.md",
+    "md/2024-01-31.md",
+    "md/2024-02-02.md",
+    "md/Islands Architecture.md",
+    "md/Animating View Transitions.md",
+    "md/缓存必知必会.md",
+    "md/Tailwind CSS + cva 实现样式变体组件.md",
+    "done/年轻人的第一款单元测试框架———vitest.md",
+    "md/Service Worker 从入门到出门.md",
+    "md/Web 应用的轻量级状态管理工具 zustand.md",
+    "md/同学，请实现一个扫码登录.md",
+    "done/Vitest 前端 TDD 的一大利器.md",
+    "achieve/2024-01-23.md",
+    "achieve/2024-01-22.md",
+    "done/精读《zustand 源码》.md",
+    "output/2024-1-29 15-36-53.html",
+    "achieve/精读《zustand 源码》.md",
     "_resources/2ebd036e77414665b6baefb4117cb8ea_MD5.png",
     "_resources/2f7adc00aedf34a9e33061465bb5efe9_MD5.png",
     "_resources/85527725259dc3a2e740ed1a8f79bee4_MD5.png",
     "_resources/Pasted image 20240125122753.png",
-    "md/缓存必知必会.md",
-    "done/2024-01-22.md",
-    "done/2024-01-23.md",
-    "done/API requestAnimationFrame.md",
     "_resources/Thumbs.db",
     "done",
     "_resources/ea2d7ce3e517151d251b4ee9b220c84c_MD5.png",
@@ -216,7 +217,6 @@
     "done",
     "output/2023-12-28 09-35-53.html",
     "cur useless/problems / 回溯算法去重问题的另一种写法. md at master · youngyangyang04",
-    "cur useless/problems ",
     "未命名.canvas"
   ]
 }
