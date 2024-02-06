@@ -1,0 +1,2737 @@
+<h1>2024-01-31</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844904071736852487?searchId=2024013109533719B9C5AE5C320162A1DF">juejin.cn</a></p>
+</blockquote>
+<h3>一、分析打包速度</h3>
+<p>优化 webpack 构建速度的第一步是知道将精力集中在哪里。我们可以通过 <code>speed-measure-webpack-plugin</code> 测量你的 webpack 构建期间各个阶段花费的时间：</p>
+<pre><code>// 分析打包时间
+const SpeedMeasurePlugin = require(&quot;speed-measure-webpack-plugin&quot;);
+const smp = new SpeedMeasurePlugin();
+// ...
+module.exports = smp.wrap(prodWebpackConfig)
+</code></pre>
+<p>特定的项目，都有自己特定的性能构建瓶颈，下面我们对打包的每一个环节进行优化。</p>
+<h3>二、分析影响打包速度环节</h3>
+<p>打包就是从入口文件开始将所有的依赖模块打包到一个文件中的过程，
+当然，在打包过程中涉及各种编译、优化过程。</p>
+<h2>影响构建速度的地方</h2>
+<p>打包过程中，常见影响构建速度的地方有哪些喃？</p>
+<ol>
+<li>开始打包，我们需要获取所有的依赖模块: 搜索时间
+<ul>
+<li>搜索所有的依赖项，这需要占用一定的时间，即搜索时间，那么我们就确定了：</li>
+<li><strong>我们需要优化的第一个时间就是搜索时间。</strong></li>
+</ul>
+</li>
+<li>解析所有的依赖模块（解析成浏览器可运行的代码）: 解析时间
+<ul>
+<li>webpack 根据我们配置的 loader 解析相应的文件。</li>
+<li>日常开发中我们需要使用 loader 对 js ，css ，图片，字体等文件做转换操作，并且转换的文件数据量也是非常大。</li>
+<li>由于 js 单线程的特性使得这些转换操作不能并发处理文件，而是需要一个个文件进行处理。
+<strong>我们需要优化的第二个时间就是解析时间。</strong></li>
+</ul>
+</li>
+<li>将所有的依赖模块打包到一个文件:压缩时间</li>
+</ol>
+<ul>
+<li>将所有解析完成的代码，打包到一个文件中，为了使浏览器加载的包更新（减小白屏时间），所以 webpack 会对代码进行优化。
+JS 压缩是发布编译的最后阶段，通常 webpack 需要卡好一会，这是因为压缩 JS 需要先将代码解析成 AST 语法树，然后需要根据复杂的规则去分析和处理 AST，最后将 AST 还原成 JS，这个过程涉及到大量计算，因此比较耗时，打包就容易卡住。
+<ul>
+<li><strong>我们需要优化的第三个时间就是压缩时间。</strong></li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li>二次打包
+当更改项目中一个小小的文件时，我们需要重新打包，所有的文件都必须要重新打包，需要花费同初次打包相同的时间，但项目中大部分文件都没有变更，尤其是第三方库。
+<strong>我们需要优化的第四个时间就是二次打包时间。</strong></li>
+</ol>
+<h3>三、 优化解析时间 - 开启多进程打包</h3>
+<p>运行在 Node.js 之上的 webpack 是单线程模式的，
+webpack 打包只能逐个文件处理，当 webpack 需要打包大量文件时，打包时间就会比较漫长。</p>
+<h4>1. thread-loader（webpack4 官方推荐）</h4>
+<p>把这个 loader 放置在其他 loader 之前，</p>
+<ul>
+<li>放置在这个 loader 之后的 loader 就会在一个单独的 worker【worker pool】 池里运行，</li>
+<li>一个 worker 就是一个 nodeJS 进程【node.js proces】，每个单独进程处理时间上限为 600ms，各个进程的数据交换也会限制在这个时间内。</li>
+<li>thread-loader 使用起来也非常简单，只要把 thread-loader 放置在其他 loader 之前， 那 thread-loader 之后的 loader 就会在一个单独的 worker 池 (worker pool) 中运行。</li>
+</ul>
+<pre><code class="language-js">module.exports = {
+  // ...
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        // 创建一个 js worker 池
+        use: [ 
+          'thread-loader',
+          'babel-loader'
+        ] 
+      },
+      {
+        test: /\.s?css$/,
+        exclude: /node_modules/,
+        // 创建一个 css worker 池
+        use: [
+          'style-loader',
+          'thread-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              localIdentName: '[name]__[local]--[hash:base64:5]',
+              importLoaders: 1
+            }
+          },
+          'postcss-loader'
+        ]
+      }
+      // ...
+    ]
+    // ...
+  }
+  // ...
+}
+</code></pre>
+<p>注意：thread-loader 放在了 style-loader 之后，这是因为 thread-loader 后的 loader 没法存取文件也没法获取 webpack 的选项设置。</p>
+<p>官方上说每个 worker 大概都要花费 600ms ，所以官方为了防止启动 worker 时的高延迟，提供了对 worker 池的优化：<strong>预热</strong></p>
+<pre><code class="language-js">// ...
+const threadLoader = require('thread-loader');
+
+const jsWorkerPool = {
+  // 产生的 worker 的数量，默认是 (cpu 核心数 - 1)
+  // 当 require('os').cpus() 是 undefined 时，则为 1
+  workers: 2,
+  
+  // 闲置时定时删除 worker 进程
+  // 默认为 500ms
+  // 可以设置为无穷大， 这样在监视模式(--watch)下可以保持 worker 持续存在
+  poolTimeout: 2000
+};
+
+const cssWorkerPool = {
+  // 一个 worker 进程中并行执行工作的数量
+  // 默认为 20
+  workerParallelJobs: 2,
+  poolTimeout: 2000
+};
+
+threadLoader.warmup(jsWorkerPool, ['babel-loader']);
+threadLoader.warmup(cssWorkerPool, ['css-loader', 'postcss-loader']);
+
+
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'thread-loader',
+            options: jsWorkerPool
+          },
+          'babel-loader'
+        ]
+      },
+      {
+        test: /\.s?css$/,
+        exclude: /node_modules/,
+        use: [
+          'style-loader',
+          {
+            loader: 'thread-loader',
+            options: cssWorkerPool
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              localIdentName: '[name]__[local]--[hash:base64:5]',
+              importLoaders: 1
+            }
+          },
+          'postcss-loader'
+        ]
+      }
+      // ...
+    ]
+    // ...
+  }
+  // ...
+}
+</code></pre>
+<p><strong>注意：请仅在耗时的 loader 上使用。</strong></p>
+<h4>2. HappyPack</h4>
+<p>在 webpack 构建过程中，实际上耗费时间大多数用在 loader 解析转换以及代码的压缩中，</p>
+<ul>
+<li>HappyPack 可利用多进程对文件进行打包 (默认 cpu 核数 - 1)，对多核 cpu 利用率更高。</li>
+<li>HappyPack 可以让 Webpack 同一时间处理多个任务，发挥多核 CPU 的能力，将任务分解给多个子进程去并发的执行，子进程处理完后，再把结果发送给主进程。</li>
+</ul>
+<p>happypack 的处理思路是将原有的 webpack 对 loader 的执行过程从单一进程的形式扩展多进程模式，原本的流程保持不变。</p>
+<ul>
+<li>使用 HappyPack 也有一些限制，它只兼容部分主流的 loader，具体可以查看官方给出的 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Famireh%2Fhappypack%2Fwiki%2FLoader-Compatibility-List" title="https://github.com/amireh/happypack/wiki/Loader-Compatibility-List">兼容性列表</a>。
+<strong>注意：Ahmad Amireh 推荐使用 thread-loader，并宣布将不再继续维护 happypack，所以不推荐使用它</strong></li>
+</ul>
+<pre><code class="language-js">const path = require('path')
+const webpack = require(&quot;webpack&quot;);
+const HappyPack = require('happypack'); // 多进程loader
+// node 提供的系统操作模块
+const os = require('os');
+//  构造出共享进程池，根据系统的内核数量，指定进程池个数，也可以其他数量
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+const createHappyPlugin = (id, loaders) =&gt; new HappyPack({
+  // 用唯一的标识符 id 来代表当前的 HappyPack 是用来处理一类特定的文件
+  id: id,
+  // 如何处理 .js 文件，用法和 Loader 配置中一样
+  loaders: loaders,
+  // 其它配置项(可选)
+  // 代表共享进程池，即多个 HappyPack 实例都使用同一个共享进程池中的子进程去处理任务，以防止资源占用过多
+  threadPool: happyThreadPool,
+  // 是否允许 HappyPack 输出日志，默认是 true
+  verbose: true
+  // threads：代表开启几个子进程去处理这一类型的文件，默认是3个，类型必须是整数
+});
+
+const clientWebpackConfig = {
+  // ...
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        // 把对 .js .jsx 文件的处理转交给 id 为 happy-babel 的 HappyPack 实例
+        use: [&quot;happypack/loader?id=happy-babel&quot;],
+        // 排除 node_modules 目录下的文件
+        // node_modules 目录下的文件都是采用的 ES5 语法，没必要再通过 Babel 去转换
+        exclude: /node_modules/,
+      }
+    ]
+  },
+  // ...
+  plugins: [
+    createHappyPlugin('happy-babel', [{
+      loader: 'babel-loader',
+      options: {
+        presets: ['@babel/preset-env', &quot;@babel/preset-react&quot;],
+        plugins: [
+          [&quot;import&quot;, { &quot;libraryName&quot;: &quot;antd&quot;, &quot;style&quot;: true }],
+          ['@babel/plugin-proposal-class-properties',{loose:true}]
+        ],
+        cacheDirectory: true,
+        // Save disk space when time isn't as important
+        cacheCompression: true,
+        compact: true,
+      }
+    }]),
+    // ...
+  ]
+}
+</code></pre>
+<p><strong>注意，当项目较小时，多进程打包反而会使打包速度变慢。</strong></p>
+<h3>四、合理利用缓存（缩短连续构建时间，增加初始构建时间）</h3>
+<p>使用 webpack 缓存的方法有几种，例如使用 <code>cache-loader</code>，<code>HardSourceWebpackPlugin</code> 或 <code>babel-loader</code> 的 <code>cacheDirectory</code> 标志。</p>
+<ul>
+<li>所有这些缓存方法都有启动的开销。</li>
+<li>重新运行期间在本地节省的时间很大，但是初始（冷）运行实际上会更慢。
+如果你的项目生产版本每次都必须进行初始构建的话，缓存会增加构建时间，减慢你的速度。如果不是，那它们就会大大缩减你二次构建的时间。</li>
+</ul>
+<h4>1. cache-loader</h4>
+<p>cache-loader 和 thread-loader 一样，使用起来也很简单，仅仅需要在一些性能开销较大的 loader 之前添加此 loader，以将结果缓存到磁盘里，显著提升二次构建速度。</p>
+<pre><code>module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.ext$/,
+        use: ['cache-loader', ...loaders],
+        include: path.resolve('src'),
+      },
+    ],
+  },
+};
+</code></pre>
+<p><strong>⚠️ 请注意，保存和读取这些缓存文件会有一些时间开销，所以请只对性能开销较大的 loader 使用此 loader。</strong></p>
+<h4>2. HardSourceWebpackPlugin</h4>
+<ul>
+<li>第一次构建将花费正常的时间</li>
+<li>第二次构建将显着加快（大概提升 90% 的构建速度）。</li>
+</ul>
+<pre><code class="language-js">const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+const clientWebpackConfig = {
+  // ...
+  plugins: [
+    new HardSourceWebpackPlugin({
+      // cacheDirectory是在高速缓存写入。默认情况下，将缓存存储在node_modules下的目录中
+      // 'node_modules/.cache/hard-source/[confighash]'
+      cacheDirectory: path.join(__dirname, './lib/.cache/hard-source/[confighash]'),
+      // configHash在启动webpack实例时转换webpack配置，
+      // 并用于cacheDirectory为不同的webpack配置构建不同的缓存
+      configHash: function(webpackConfig) {
+        // node-object-hash on npm can be used to build this.
+        return require('node-object-hash')({sort: false}).hash(webpackConfig);
+      },
+      // 当加载器、插件、其他构建时脚本或其他动态依赖项发生更改时，
+      // hard-source需要替换缓存以确保输出正确。
+      // environmentHash被用来确定这一点。如果散列与先前的构建不同，则将使用新的缓存
+      environmentHash: {
+        root: process.cwd(),
+        directories: [],
+        files: ['package-lock.json', 'yarn.lock'],
+      },
+      // An object. 控制来源
+      info: {
+        // 'none' or 'test'.
+        mode: 'none',
+        // 'debug', 'log', 'info', 'warn', or 'error'.
+        level: 'debug',
+      },
+      // Clean up large, old caches automatically.
+      cachePrune: {
+        // Caches younger than `maxAge` are not considered for deletion. They must
+        // be at least this (default: 2 days) old in milliseconds.
+        maxAge: 2 * 24 * 60 * 60 * 1000,
+        // All caches together must be larger than `sizeThreshold` before any
+        // caches will be deleted. Together they must be at least this
+        // (default: 50 MB) big in bytes.
+        sizeThreshold: 50 * 1024 * 1024
+      },
+    }),
+    new HardSourceWebpackPlugin.ExcludeModulePlugin([
+      {
+        test: /.*\.DS_Store/
+      }
+    ]),
+  ]
+}
+</code></pre>
+<h3>五、优化压缩时间</h3>
+<h4>1. webpack3</h4>
+<p>webpack3 启动打包时加上 <code>--optimize-minimize</code> ，这样 Webpack 会自动为你注入一个带有默认配置的 UglifyJSPlugin 。</p>
+<p>或：</p>
+<pre><code>module.exports = {
+    optimization: {
+        minimize: true,
+    },
+}
+</code></pre>
+<p>压缩 JavaScript 代码需要先把代码解析成用 Object 抽象表示的 AST 语法树，再去应用各种规则分析和处理 AST，导致这个过程计算量巨大，耗时非常多。但 <code>UglifyJsPlugin</code> 是单线程，所以我们可以使用 <code>ParallelUglifyPlugin</code> 。</p>
+<p><code>ParallelUglifyPlugin</code> 插件实现了多进程压缩，<code>ParallelUglifyPlugin</code> 会开启多个子进程，把对多个文件的压缩工作分配给多个子进程去完成，每个子进程其实还是通过 <code>UglifyJS</code> 去压缩代码，但是变成了并行执行。 所以 <code>ParallelUglifyPlugin</code> 能更快的完成对多个文件的压缩工作。</p>
+<h4>2. webpack4</h4>
+<p>webpack4 默认内置使用 <code>terser-webpack-plugin</code> 插件压缩优化代码，而该插件使用 <code>terser</code> 来缩小 <code>JavaScript</code> 。</p>
+<h2>terser 是什么？</h2>
+<p>所谓 terser，官方给出的定义是：</p>
+<blockquote>
+<p>用于 ES6+ 的 JavaScript 解析器、mangler/compressor（压缩器）工具包。</p>
+</blockquote>
+<p>为什么 webpack 选择 terser？</p>
+<blockquote>
+<p>不再维护 uglify-es ，并且 uglify-js 不支持 ES6 +。</p>
+<p>terser 是 uglify-es 的一个分支，主要保留了与 uglify-es 和 uglify-js@3 的 API 和 CLI 兼容性。</p>
+</blockquote>
+<ul>
+<li>terser 启动多进程
+使用多进程并行运行来提高构建速度。并发运行的默认数量为 <code>os.cpus().length - 1</code> 。</li>
+</ul>
+<pre><code>module.exports = {
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+      }),
+    ],
+  },
+};
+</code></pre>
+<p><strong>可以显著加快构建速度，因此强烈推荐开启多进程</strong></p>
+<h3>六、优化搜索时间 - 缩小文件搜索范围 减小不必要的编译工作</h3>
+<p>webpack 打包时，会从配置的 <code>entry</code> 触发，解析入口文件的导入语句，再递归的解析，在遇到导入语句时 webpack 会做两件事情：</p>
+<ul>
+<li>根据导入语句去寻找对应的要导入的文件。例如 <code>require('react')</code> 导入语句对应的文件是 <code>./node_modules/react/react.js</code>，<code>require('./util')</code> 对应的文件是 <code>./util.js</code>。</li>
+<li>根据找到的要导入文件的后缀，使用配置中的 Loader 去处理文件。例如使用 ES6 开发的 JavaScript 文件需要使用 babel-loader 去处理。</li>
+</ul>
+<p>以上两件事情虽然对于处理一个文件非常快，但是当项目大了以后文件量会变的非常多，这时候构建速度慢的问题就会暴露出来。 虽然以上两件事情无法避免，但需要尽量减少以上两件事情的发生，以提高速度。</p>
+<p>接下来一一介绍可以优化它们的途径。</p>
+<h2>优化 webpack 搜索速度</h2>
+<ol>
+<li>
+<p>优化 loader 配置
+使用 Loader 时可以通过 <code>test</code> 、 <code>include</code> 、 <code>exclude</code> 三个配置项来命中 Loader 要应用规则的文件</p>
+</li>
+<li>
+<p>优化 resolve.module 配置
+<code>resolve.modules</code> 用于配置 webpack 去哪些目录下寻找第三方模块，<code>resolve.modules</code> 的默认值是 <code>['node_modules']</code> ，含义是先去当前目录下的 <code>./node_modules</code> 目录下去找想找的模块，如果没找到就去上一级目录 <code>../node_modules</code> 中找，再没有就去 <code>../../node_modules</code> 中找，以此类推。</p>
+</li>
+<li>
+<p>优化 resolve.alias 配置
+<code>resolve.alias</code> 配置项通过别名来把原导入路径映射成一个新的导入路径，减少耗时的递归解析操作。</p>
+</li>
+<li>
+<p>优化 resolve.extensions 配置
+在导入语句没带文件后缀时，webpack 会根据 resolve.extension 自动带上后缀后去尝试询问文件是否存在，所以在配置 <code>resolve.extensions</code> 应尽可能注意以下几点：</p>
+</li>
+</ol>
+<ul>
+<li><code>resolve.extensions</code> 列表要尽可能的小，不要把项目中不可能存在的情况写到后缀尝试列表中。</li>
+<li>频率出现最高的文件后缀要优先放在最前面，以做到尽快的退出寻找过程。</li>
+<li>在源码中写导入语句时，要尽可能的带上后缀，从而可以避免寻找过程。</li>
+</ul>
+<ol start="5">
+<li>优化 resolve.mainFields 配置
+有一些第三方模块会针对不同环境提供几分代码。</li>
+</ol>
+<ul>
+<li>例如分别提供采用 ES5 和 ES6 的 2 份代码，这 2 份代码的位置写在 <code>package.json</code> 文件里，如下：</li>
+</ul>
+<pre><code>{
+  &quot;jsnext:main&quot;: &quot;es/index.js&quot;,// 采用 ES6 语法的代码入口文件
+  &quot;main&quot;: &quot;lib/index.js&quot; // 采用 ES5 语法的代码入口文件
+}
+</code></pre>
+<p>webpack 会根据 <code>mainFields</code> 的配置去决定优先采用那份代码，<code>mainFields</code> 默认如下：</p>
+<pre><code>mainFields: ['browser', 'main']
+</code></pre>
+<p>webpack 会按照数组里的顺序去 <code>package.json</code> 文件里寻找，只会使用找到的第一个。
+假如你想优先采用 ES6 的那份代码，可以这样配置：</p>
+<pre><code>mainFields: ['jsnext:main', 'browser', 'main']
+</code></pre>
+<ol start="7">
+<li>优化 module.noParse 配置
+<code>module.noParse</code> 配置项可以让 Webpack 忽略对部分没采用模块化的文件的递归解析处理，这样做的好处是能提高构建性能。 原因是一些库，例如 jQuery 、ChartJS， 它们庞大又没有采用模块化标准，让 Webpack 去解析这些文件耗时又没有意义。</li>
+</ol>
+<h4>7. 详细配置</h4>
+<pre><code class="language-js">// 编译代码的基础配置
+module.exports = {
+  // ...
+  module: {
+    // 项目中使用的 jquery 并没有采用模块化标准，webpack 忽略它
+    noParse: /jquery/,
+    rules: [
+      {
+        // 这里编译 js、jsx
+        // 注意：如果项目源码中没有 jsx 文件就不要写 /\.jsx?$/，提升正则表达式性能
+        test: /\.(js|jsx)$/,
+        // babel-loader 支持缓存转换出的结果，通过 cacheDirectory 选项开启
+        use: ['babel-loader?cacheDirectory'],
+        // 排除 node_modules 目录下的文件
+        // node_modules 目录下的文件都是采用的 ES5 语法，没必要再通过 Babel 去转换
+        exclude: /node_modules/,
+      },
+    ]
+  },
+  resolve: {
+    // 设置模块导入规则，import/require时会直接在这些目录找文件
+    // 可以指明存放第三方模块的绝对路径，以减少寻找
+    modules: [
+      path.resolve(`${project}/client/components`), 
+      path.resolve('h5_commonr/components'), 
+      'node_modules'
+    ],
+    // import导入时省略后缀
+    // 注意：尽可能的减少后缀尝试的可能性
+    extensions: ['.js', '.jsx', '.react.js', '.css', '.json'],
+    // import导入时别名，减少耗时的递归解析操作
+    alias: {
+      '@compontents': path.resolve(`${project}/compontents`),
+    }
+  },
+};
+</code></pre>
+<p>以上就是所有和缩小文件搜索范围相关的构建性能优化了，在根据自己项目的需要去按照以上方法改造后，你的构建速度一定会有所提升。</p>
+
+<h1>2024-02-02</h1><p>crowdsource  众包</p>
+
+<h1>HTTP 灵魂之问</h1><h2>HTTP 报文结构是怎样的？</h2>
+<p>HTTP报文=起始行 + 请求头 + 空行 + 实体
+由于 http <code>请求报文</code>和<code>响应报文</code>是有一定区别，因此我们分开介绍。</p>
+<h3>起始行</h3>
+<p>对于请求报文来说，起始行类似下面这样:</p>
+<pre><code>GET /home HTTP/1.1
+</code></pre>
+<p>也就是<strong>方法 + 路径 + http 版本</strong>。
+对于响应报文来说，起始行一般张这个样:</p>
+<pre><code>HTTP/1.1 200 OK
+</code></pre>
+<p>响应报文的起始行也叫做<code>状态行</code>。由 <strong>http 版本、状态码和原因</strong>三部分组成。
+值得注意的是，在起始行中，每两个部分之间用<strong>空格</strong>隔开，最后一个部分后面应该接一个<strong>换行</strong>，严格遵循<code>ABNF</code>语法规范。</p>
+<h3>头部</h3>
+<p>展示一下请求头和响应头在报文中的位置:
+头部字段的格式：</p>
+<ul>
+<li>
+<ol>
+<li>字段名不区分大小写</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>字段名不允许出现空格，不可以出现下划线<code>_</code></li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>字段名后面必须<strong>紧接着<code>:</code></strong></li>
+</ol>
+</li>
+</ul>
+<h3>空行</h3>
+<p>很重要，用来区分开<code>头部</code>和<code>实体</code>。
+问: 如果说在头部中间故意加一个空行会怎么样？
+那么空行后的内容全部被视为实体。</p>
+<h3>实体</h3>
+<p>就是具体的数据了，也就是<code>body</code>部分。
+请求报文对应<code>请求体</code>, 响应报文对应<code>响应体</code>。</p>
+<h2>HTTP 的请求方法？</h2>
+<h3>有哪些请求方法？</h3>
+<p><code>http/1.1</code>规定了以下请求方法 (注意，都是大写):</p>
+<ul>
+<li>HEAD: 获取资源的元信息</li>
+<li>POST: 提交数据，即上传数据</li>
+<li>PUT: 修改数据</li>
+<li>CONNECT: 建立连接隧道，用于代理服务器</li>
+<li>OPTIONS: 列出可对资源实行的请求方法，用来跨域请求</li>
+<li>TRACE: 追踪请求 - 响应的传输路径</li>
+</ul>
+<h3>GET 和 POST 有什么区别？</h3>
+<ul>
+<li>从<strong>缓存</strong>的角度，GET 请求会被浏览器主动缓存下来，留下历史记录，而 POST 默认不会。</li>
+<li>从<strong>编码</strong>的角度，GET 只能进行 URL 编码，只能接收 ASCII 字符，而 POST 没有限制。</li>
+<li>从<strong>参数</strong>的角度，GET 一般放在 URL 中，因此不安全，POST 放在请求体中，更适合传输敏感信息。</li>
+<li>从<strong>幂等性</strong>的角度，<code>GET</code>是<strong>幂等</strong>的，而<code>POST</code>不是。(<code>幂等</code>表示执行相同的操作，结果也是相同的)</li>
+<li>从 <strong>TCP</strong> 的角度，GET 请求会把请求报文一次性发出去，而 POST 会分为两个 TCP 数据包，首先发 header 部分，如果服务器响应 100(continue)， 然后发 body 部分。(<strong>火狐</strong>浏览器除外，它的 POST 请求只发一个 TCP 包)</li>
+</ul>
+<h2>003: 如何理解 URI？</h2>
+<p><strong>URI</strong>, 全称为 (Uniform Resource Identifier), 也就是<strong>统一资源标识符</strong>，它的作用很简单，就是区分互联网上不同的资源。</p>
+<p>但是，它并不是我们常说的<code>网址</code>, 网址指的是<code>URL</code>, 实际上<code>URI</code>包含了<code>URN</code>和<code>URL</code>两个部分，由于 URL 过于普及，就默认将 URI 视为 URL 了。</p>
+<h3>URI 的结构</h3>
+<p>URI 真正最完整的结构是这样的。
+<strong>scheme</strong> 表示协议名，比如<code>http</code>, <code>https</code>, <code>file</code>等等。后面必须和<code>://</code>连在一起。
+<strong>user:passwd</strong>@ 表示登录主机时的用户信息，不过很不安全，不推荐使用，也不常用。
+<strong>host:port</strong> 表示主机名和端口。
+<strong>path</strong> 表示请求路径，标记资源所在位置。
+<strong>query</strong> 表示查询参数，为<code>key=val</code>这种形式，多个键值对之间用<code>&amp;</code>隔开。
+<strong>fragment</strong> 表示 URI 所定位的资源内的一个<strong>锚点</strong>，浏览器可以根据这个锚点跳转到对应的位置。
+举个例子:</p>
+<pre><code>https://www.baidu.com/s?wd=HTTP&amp;rsv_spt=1
+</code></pre>
+<p>这个 URI 中，<code>https</code>即<code>scheme</code>部分，<code>www.baidu.com</code>为<code>host:port</code>部分（注意，http 和 https 的默认端口分别为 80、443），<code>/s</code>为<code>path</code>部分，而<code>wd=HTTP&amp;rsv_spt=1</code>就是<code>query</code>部分。</p>
+<h3>URI 编码</h3>
+<p>URI 只能使用<code>ASCII</code>, ASCII 之外的字符是不支持显示的，而且还有一部分符号是界定符，如果不加以处理就会导致解析出错。
+因此，URI 引入了<code>编码</code>机制，将所有<strong>非 ASCII 码字符</strong>和<strong>界定符</strong>转为十六进制字节值，然后在前面加个<code>%</code>。
+如，空格被转义成了<code>%20</code>，<strong>三元</strong>被转义成了<code>%E4%B8%89%E5%85%83</code>。</p>
+<h2>004: 如何理解 HTTP 状态码？</h2>
+<p>RFC 规定 HTTP 的状态码为<strong>三位数</strong>，被分为五类:</p>
+<ul>
+<li><strong>1xx</strong>: 表示目前是协议处理的中间状态，还需要后续操作。</li>
+<li><strong>2xx</strong>: 表示成功状态。</li>
+<li><strong>3xx</strong>: 重定向状态，资源位置发生变动，需要重新请求。</li>
+<li><strong>4xx</strong>: 请求报文有误。</li>
+<li><strong>5xx</strong>: 服务器端发生错误。</li>
+</ul>
+<h3>1xx</h3>
+<p><strong>101 Switching Protocols</strong>。在<code>HTTP</code>升级为<code>WebSocket</code>的时候，如果服务器同意变更，就会发送状态码 101。</p>
+<h3>2xx</h3>
+<p><strong>200 OK</strong> 是见得最多的成功状态码。通常在响应体中放有数据。
+<strong>204 No Content</strong> 含义与 200 相同，但响应头后没有 body 数据。
+<strong>206 Partial Content</strong> 顾名思义，表示部分内容，它的使用场景为 HTTP 分块下载和断点续传，当然也会带上相应的响应头字段<code>Content-Range</code>。</p>
+<h3>3xx</h3>
+<p><strong>301 Moved Permanently</strong> 即永久重定向，对应着 <strong>302 Found</strong>，即临时重定向。
+比如你的网站从 HTTP 升级到了 HTTPS 了，以前的站点再也不用了，应当返回<code>301</code>，这个时候浏览器默认会做缓存优化，在第二次访问的时候自动访问重定向的那个地址。
+而如果只是暂时不可用，那么直接返回<code>302</code>即可，和<code>301</code>不同的是，浏览器并不会做缓存优化。
+<strong>304 Not Modified</strong>: 当协商缓存命中时会返回这个状态码。详见<a href="https://link.juejin.cn?target=http%3A%2F%2F47.98.159.95%2Fmy_blog%2Fperform%2F001.html" title="http://47.98.159.95/my_blog/perform/001.html">浏览器缓存</a></p>
+<h3>4xx</h3>
+<p><strong>400 Bad Request</strong>: 开发者经常看到一头雾水，只是笼统地提示了一下错误，并不知道哪里出错了。
+<strong>403 Forbidden</strong>: 这实际上并不是请求报文出错，而是服务器禁止访问，原因有很多，比如法律禁止、信息敏感。
+<strong>404 Not Found</strong>: 资源未找到，表示没在服务器上找到相应的资源。
+<strong>405 Method Not Allowed</strong>: 请求方法不被服务器端允许。
+<strong>406 Not Acceptable</strong>: 资源无法满足客户端的条件。
+<strong>408 Request Timeout</strong>: 服务器等待了太长时间。
+<strong>409 Conflict</strong>: 多个请求发生了冲突。
+<strong>413 Request Entity Too Large</strong>: 请求体的数据过大。
+<strong>414 Request-URI Too Long</strong>: 请求行里的 URI 太大。
+<strong>429 Too Many Request</strong>: 客户端发送的请求过多。
+<strong>431 Request Header Fields Too Large</strong> 请求头的字段内容太大。</p>
+<h3>5xx</h3>
+<p><strong>500 Internal Server Error</strong>: 仅仅告诉你服务器出错了，出了啥错咱也不知道。
+<strong>501 Not Implemented</strong>: 表示客户端请求的功能还不支持。
+<strong>502 Bad Gateway</strong>: 服务器自身是正常的，但访问的时候出错了，啥错误咱也不知道。
+<strong>503 Service Unavailable</strong>: 表示服务器当前很忙，暂时无法响应服务。</p>
+<h2>005: 简要概括一下 HTTP 的特点？HTTP 有哪些缺点？</h2>
+<h3>HTTP 特点</h3>
+<p>HTTP 的特点概括如下:</p>
+<ol>
+<li>灵活可扩展，主要体现在两个方面。
+<ol>
+<li>语义上的自由，只规定了基本格式，比如空格分隔单词，换行分隔字段，其他的各个部分都没有严格的语法限制。</li>
+<li>传输形式的多样性，不仅仅可以传输文本，还能传输图片、视频等任意数据，非常方便。</li>
+</ol>
+</li>
+<li>可靠传输。这属于 TCP 的特性</li>
+<li>请求 - 应答。也就是<code>一发一收</code>、<code>有来有回</code>， 当然这个请求方和应答方不单单指客户端和服务器之间，如果某台服务器作为代理来连接后端的服务端，那么这台服务器也会扮演<strong>请求方</strong>的角色。</li>
+<li>无状态。这里的状态是指<strong>通信过程的上下文信息</strong>，而每次 http 请求都是独立、无关的，默认不需要保留状态信息。</li>
+</ol>
+<h3>HTTP 缺点</h3>
+<h4>无状态</h4>
+<p>在需要长连接的场景中，需要保存大量的上下文信息，以免传输大量重复的信息，那么这时候无状态就是 http 的缺点了。
+但与此同时，另外一些应用仅仅只是为了获取一些数据，不需要保存连接上下文信息，无状态反而减少了网络开销，成为了 http 的优点。</p>
+<h4>明文传输</h4>
+<p>即协议里的报文 (主要指的是头部) 不使用二进制数据，而是文本形式。
+这当然对于调试提供了便利，但同时也让 HTTP 的报文信息暴露给了外界，给攻击者也提供了便利。<code>WIFI陷阱</code>就是利用 HTTP 明文传输的缺点，诱导你连上热点，然后疯狂抓你所有的流量，从而拿到你的敏感信息。</p>
+<h4>队头阻塞问题</h4>
+<p>当 http 开启长连接时，共用一个 TCP 连接，同一时刻只能处理一个请求，那么当前请求耗时过长的情况下，其它的请求只能处于阻塞状态，也就是著名的<strong>队头阻塞</strong>问题。</p>
+<h2>006: 对 Accept 系列字段了解多少？</h2>
+<p>对于<code>Accept</code>系列字段的介绍分为四个部分: <strong>数据格式</strong>、<strong>压缩方式</strong>、<strong>支持语言</strong>和<strong>字符集</strong>。</p>
+<h3>数据格式</h3>
+<p>上一节谈到 HTTP 灵活的特性，它支持非常多的数据格式，那么这么多格式的数据一起到达客户端，客户端怎么知道它的格式呢？
+<strong>MIME</strong>(Multipurpose Internet Mail Extensions, <strong>多用途互联网邮件扩展</strong>)。</p>
+<ul>
+<li>它首先用在电子邮件系统中，让邮件可以发任意类型的数据，</li>
+<li>这对于 HTTP 来说也是通用的。</li>
+</ul>
+<p>因此，HTTP 从 <strong>MIME type</strong> 取了一部分来标记报文 body 部分的数据类型，</p>
+<ul>
+<li>发送端发送的特定类型体现在<code>Content-Type</code>这个字段，</li>
+<li>接收端想要收到特定类型的数据，也可以用<code>Accept</code>字段。</li>
+</ul>
+<p>具体而言，这两个字段的取值可以分为下面几类:</p>
+<ul>
+<li>text： text/html, text/plain, text/css 等</li>
+<li>image: image/gif, image/jpeg, image/png 等</li>
+<li>audio/video: audio/mpeg, video/mp4 等</li>
+<li>application: application/json, application/javascript, application/pdf, application/octet-stream</li>
+</ul>
+<h3>压缩方式</h3>
+<ul>
+<li>发送方采取什么样的压缩方式的<code>Content-Encoding</code>字段上</li>
+<li>接受方的<code>Accept-Encoding</code>字段上。
+这个字段的取值有下面几种：</li>
+</ul>
+<ul>
+<li>gzip: 当今最流行的压缩格式</li>
+<li>deflate: 另外一种著名的压缩格式</li>
+<li>br: 一种专门为 HTTP 发明的压缩算法</li>
+</ul>
+<pre><code>// 发送端
+Content-Encoding: gzip
+// 接收端
+Accept-Encoding: gzip
+</code></pre>
+<h3>支持语言</h3>
+<p>对于发送方而言，还有一个<code>Content-Language</code>字段，在需要实现国际化的方案当中，可以用来指定支持的语言，在接受方对应的字段为<code>Accept-Language</code>。如:</p>
+<pre><code>// 发送端
+Content-Language: zh-CN, zh, en
+// 接收端
+Accept-Language: zh-CN, zh, en
+</code></pre>
+<h3>字符集</h3>
+<p>发送端并没有对应的<code>Content-Charset</code>, 而是直接放在了<code>Content-Type</code>中，以 <strong>charset</strong> 属性指定。
+在接收端对应为<code>Accept-Charset</code>，指定可以接受的字符集，而在:</p>
+<pre><code>// 发送端
+Content-Type: text/html; charset=utf-8
+// 接收端
+Accept-Charset: charset=utf-8
+</code></pre>
+<h2>007: 对于定长和不定长的数据，HTTP 是怎么传输的？</h2>
+<h3>定长包体</h3>
+<p>对于定长包体而言，发送端在传输的时候一般会带上 <code>Content-Length</code>, 来指明包体的长度。</p>
+<pre><code>const http = require('http');
+const server = http.createServer();
+server.on('request', (req, res) =&gt; {
+  if(req.url === '/') {
+    res.setHeader('Content-Type', 'text/plain');
+    res.setHeader('Content-Length', 10);
+    res.write(&quot;helloworld&quot;);
+  }
+})
+
+server.listen(8081, () =&gt; {
+  console.log(&quot;成功启动&quot;);
+})
+</code></pre>
+<p>这是长度正确的情况，那不正确的情况是如何处理的呢？
+我们试着把这个长度设置的小一些:
+重启服务，再次访问，现在浏览器中内容如下:hellowor
+那后面的<code>ld</code>哪里去了呢？实际上在 http 的响应体中直接被截去了。</p>
+<p>然后我们试着将这个长度设置得大一些:
+此时浏览器显示如下:直接无法显示了。可以看到<code>Content-Length</code>对于 http 传输过程起到了十分关键的作用，如果设置不当可以直接导致传输失败。</p>
+<h3>不定长包体</h3>
+<p>对于<code>不定长包体</code>而言是如何传输的呢？另外一个 http 头部字段了:</p>
+<pre><code>Transfer-Encoding: chunked
+</code></pre>
+<p>表示分块传输数据，设置这个字段后会自动产生两个效果:</p>
+<ul>
+<li>Content-Length 字段会被忽略</li>
+<li>基于长连接持续推送动态内容</li>
+</ul>
+<pre><code>const http = require('http');
+const server = http.createServer();
+server.on('request', (req, res) =&gt; {
+  if(req.url === '/') {
+    res.setHeader('Content-Type', 'text/html; charset=utf8');
+    res.setHeader('Content-Length', 10);
+    res.setHeader('Transfer-Encoding', 'chunked');
+    res.write(&quot;&lt;p&gt;来啦&lt;/p&gt;&quot;);
+    setTimeout(() =&gt; {
+      res.write(&quot;第一次传输&lt;br/&gt;&quot;);
+    }, 1000);
+    setTimeout(() =&gt; {
+      res.write(&quot;第二次传输&quot;);
+      res.end()
+    }, 2000);
+  }
+})
+
+server.listen(8009, () =&gt; {
+  console.log(&quot;成功启动&quot;);
+})
+</code></pre>
+<p>访问效果入下:
+<img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/3/22/170ffd728ba3840d~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp" alt="">
+用 telnet 抓到的响应如下:</p>
+<p><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/3/22/170ffd78332368a0~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp" alt="">
+注意，<code>Connection: keep-alive</code>及之前的为响应行和响应头，后面的内容为响应体，这两部分用换行符隔开。
+响应体的结构比较有意思，如下所示:</p>
+<pre><code>chunk长度(16进制的数)
+第一个chunk的内容
+chunk长度(16进制的数)
+第二个chunk的内容
+......
+</code></pre>
+<p>最后是留有有一个<code>空行</code>的，这一点请大家注意。
+以上便是 http 对于<strong>定长数据</strong>和<strong>不定长数据</strong>的传输方式。</p>
+<h2>008: HTTP 如何处理大文件的传输？</h2>
+<p>对于几百 M 甚至上 G 的大文件来说，如果要一口气全部传输过来显然是不现实的，会有大量的等待时间，严重影响用户体验。因此，HTTP 针对这一场景，采取了<code>范围请求</code>的解决方案，允许客户端仅仅请求一个资源的一部分。
+当然，前提是服务器要支持<strong>范围请求</strong>，要支持这个功能，就必须加上这样一个响应头:</p>
+<pre><code>Accept-Ranges: none
+</code></pre>
+<p>用来告知客户端这边是支持范围请求的。</p>
+<h3>Range 字段拆解</h3>
+<p>而对于客户端而言，它需要指定请求哪一部分，通过<code>Range</code>这个请求头字段确定，
+格式为<code>bytes=x-y</code>。接下来就来讨论一下这个 Range 的书写格式:</p>
+<ul>
+<li><strong>0-499</strong> 表示从开始到第 499 个字节。</li>
+<li><strong>500</strong>- 表示从第 500 字节到文件终点。</li>
+<li><strong>-100</strong> 表示文件的最后 100 个字节。</li>
+</ul>
+<p>服务器收到请求之后，首先验证范围<strong>是否合法</strong>，</p>
+<ul>
+<li>如果越界了那么返回<code>416</code>错误码</li>
+<li>否则读取相应片段，返回<code>206</code>状态码。</li>
+</ul>
+<p>同时，服务器需要添加<code>Content-Range</code>字段，</p>
+<ul>
+<li>这个字段的格式根据请求头中<code>Range</code>字段的不同而有所差异。</li>
+<li>具体来说，请求<code>单段数据</code>和请求<code>多段数据</code>，响应头是不一样的。
+举个例子:</li>
+</ul>
+<pre><code>// 单段数据
+Range: bytes=0-9
+// 多段数据
+Range: bytes=0-9, 30-39
+</code></pre>
+<h3>单段数据</h3>
+<p>对于<code>单段数据</code>的请求，返回的响应如下:</p>
+<pre><code>HTTP/1.1 206 Partial Content
+Content-Length: 10
+Accept-Ranges: bytes
+Content-Range: bytes 0-9/100
+
+i am xxxxx
+</code></pre>
+<p>值得注意的是<code>Content-Range</code>字段，<code>0-9</code>表示请求的返回，<code>100</code>表示资源的总大小，很好理解。</p>
+<h3>多段数据</h3>
+<p>接下来我们看看多段请求的情况。得到的响应会是下面这个形式:</p>
+<pre><code>HTTP/1.1 206 Partial Content
+Content-Type: multipart/byteranges; boundary=00000010101
+Content-Length: 189
+Connection: keep-alive
+Accept-Ranges: bytes
+
+
+--00000010101
+Content-Type: text/plain
+Content-Range: bytes 0-9/96
+
+i am xxxxx
+--00000010101
+Content-Type: text/plain
+Content-Range: bytes 20-29/96
+
+eex jspy e
+--00000010101--
+</code></pre>
+<p>这个时候出现了一个非常关键的字段<code>Content-Type: multipart/byteranges;boundary=00000010101</code>，它代表了信息量是这样的:</p>
+<ul>
+<li>请求一定是多段数据请求</li>
+<li>响应体中的分隔符是 00000010101
+因此，在响应体中各段数据之间会由这里指定的分隔符分开，而且在最后的分隔末尾添上<code>--</code>表示结束。
+以上就是 http 针对大文件传输所采用的手段。</li>
+</ul>
+<h2>009: HTTP 中如何处理表单数据的提交？</h2>
+<p>在 http 中，有两种主要的表单提交的方式，体现在两种不同的<code>Content-Type</code>取值:</p>
+<ul>
+<li>application/x-www-form-urlencoded</li>
+<li>multipart/form-data</li>
+</ul>
+<p>由于表单提交一般是<code>POST</code>请求，很少考虑<code>GET</code>，因此这里我们将默认提交的数据放在请求体中。</p>
+<h3>application/x-www-form-urlencoded</h3>
+<p>对于<code>application/x-www-form-urlencoded</code>格式的表单内容，有以下特点:</p>
+<ul>
+<li>其中的数据会被编码成以<code>&amp;</code>分隔的键值对</li>
+<li>字符以 <strong>URL 编码方式</strong>编码。
+如</li>
+</ul>
+<pre><code>// 转换过程: {a: 1, b: 2} -&gt; a=1&amp;b=2 -&gt; 如下(最终形式)
+&quot;a%3D1%26b%3D2&quot;
+</code></pre>
+<h3>multipart/form-data</h3>
+<p>对于<code>multipart/form-data</code>而言:</p>
+<ul>
+<li>请求头中的<code>Content-Type</code>字段会包含<code>boundary</code>，且<code>boundary</code>的值有浏览器默认指定。例: <code>Content-Type: multipart/form-data;boundary=----WebkitFormBoundaryRRJKeWfHPGrS4LKe</code>。</li>
+<li>数据会分为多个部分，每两个部分之间通过分隔符来分隔，每部分表述均有 HTTP 头部描述子包体，如<code>Content-Type</code>，在最后的分隔符会加上<code>--</code>表示结束。</li>
+</ul>
+<p>相应的<code>请求体</code>是下面这样:</p>
+<pre><code>Content-Disposition: form-data;;
+Content-Type: text/plain
+data1
+----WebkitFormBoundaryRRJKeWfHPGrS4LKe
+Content-Disposition: form-data;;
+Content-Type: text/plain
+data2
+----WebkitFormBoundaryRRJKeWfHPGrS4LKe--
+</code></pre>
+<h3>小结</h3>
+<p>值得一提的是，<code>multipart/form-data</code> 格式最大的特点在于: <strong>每一个表单元素都是独立的资源表述</strong>。另外，你可能在写业务的过程中，并没有注意到其中还有<code>boundary</code>的存在，如果你打开抓包工具，确实可以看到不同的表单元素被拆分开了，之所以在平时感觉不到，是以为浏览器和 HTTP 给你封装了这一系列操作。</p>
+<p>而且，在实际的场景中，对于图片等文件的上传，基本采用<code>multipart/form-data</code>而不用<code>application/x-www-form-urlencoded</code>，因为没有必要做 URL 编码，带来巨大耗时的同时也占用了更多的空间。</p>
+<h2>010: HTTP1.1 如何解决 HTTP 的队头阻塞问题？</h2>
+<h3>什么是 HTTP 队头阻塞？</h3>
+<p>从前面的小节可以知道，HTTP 传输是基于<code>请求-应答</code>的模式进行的，报文必须是一发一收，但值得注意的是，里面的任务被放在一个任务队列中串行执行，一旦队首的请求处理太慢，就会阻塞后面请求的处理。这就是著名的<code>HTTP队头阻塞</code>问题。</p>
+<h2>解决队头阻塞</h2>
+<ul>
+<li>并发连接
+对于一个域名允许分配多个长连接，那么相当于增加了任务队列，不至于一个队伍的任务阻塞其它所有任务。在 RFC2616 规定过客户端最多并发 2 个连接，不过事实上在现在的浏览器标准中，这个上限要多很多，Chrome 中是 6 个。</li>
+</ul>
+<p>但其实，即使是提高了并发连接，还是不能满足人们对性能的需求。</p>
+<ul>
+<li>域名分片
+一个域名不是可以并发 6 个长连接吗？那我就多分几个域名。
+比如 content1.sanyuan.com 、content2.sanyuan.com。
+这样一个<code>sanyuan.com</code>域名下可以分出非常多的二级域名，而它们都指向同样的一台服务器，能够并发的长连接数更多了，事实上也更好地解决了队头阻塞的问题。</li>
+</ul>
+<h2>011: 对 Cookie 了解多少？</h2>
+<h3>Cookie 简介</h3>
+<p>前面说到了 HTTP 是一个无状态的协议，每次 http 请求都是独立、无关的，默认不需要保留状态信息。但有时候需要保存一些状态，怎么办呢？</p>
+<p>HTTP 为此引入了 Cookie。Cookie 本质上就是浏览器里面存储的一个很小的文本文件，内部以键值对的方式来存储 (在 chrome 开发者面板的 Application 这一栏可以看到)。向同一个域名下发送请求，都会携带相同的 Cookie，服务器拿到 Cookie 进行解析，便能拿到客户端的状态。而服务端可以通过响应头中的<code>Set-Cookie</code>字段来对客户端写入<code>Cookie</code>。举例如下:</p>
+<pre><code>// 请求头
+Cookie: a=xxx;b=xxx
+// 响应头
+Set-Cookie: a=xxx
+set-Cookie: b=xxx
+</code></pre>
+<h3>Cookie 属性</h3>
+<h4>Cookie生存周期</h4>
+<p>Cookie 的有效期可以通过 <strong>Expires</strong> 和 <strong>Max-Age</strong> 两个属性来设置。</p>
+<ul>
+<li><strong>Expires</strong> 即<code>过期时间</code></li>
+<li><strong>Max-Age</strong> 用的是一段时间间隔，单位是秒，从浏览器收到报文开始计算。
+若 Cookie 过期，则这个 Cookie 会被删除，并不会发送给服务端。</li>
+</ul>
+<h4>Cookie作用域</h4>
+<p>关于作用域也有两个属性: <strong>Domain</strong> 和 <strong>path</strong>, 给 <strong>Cookie</strong> 绑定了域名和路径，在发送请求之前，发现域名或者路径和这两个属性不匹配，那么就不会带上 Cookie。值得注意的是，对于路径来说，<code>/</code>表示域名下的任意路径都允许使用 Cookie。</p>
+<h4>Cookie安全相关</h4>
+<p>如果带上<code>Secure</code>，说明只能通过 HTTPS 传输 cookie。
+如果 cookie 字段带上<code>HttpOnly</code>，那么说明只能通过 HTTP 协议传输，不能通过 JS 访问，这也是预防 XSS 攻击的重要手段。
+相应的，对于 CSRF 攻击的预防，也有<code>SameSite</code>属性。</p>
+<p><code>SameSite</code>可以设置为三个值，<code>Strict</code>、<code>Lax</code>和<code>None</code>。
+<strong>a.</strong> 在<code>Strict</code>模式下，浏览器完全禁止第三方请求携带 Cookie。比如请求<code>sanyuan.com</code>网站只能在<code>sanyuan.com</code>域名当中请求才能携带 Cookie，在其他网站请求都不能。
+<strong>b.</strong> 在<code>Lax</code>模式，就宽松一点了，但是只能在 <code>get 方法提交表单</code>况或者<code>a 标签发送 get 请求</code>的情况下可以携带 Cookie，其他情况均不能。
+<strong>c.</strong> 在<code>None</code>模式下，也就是默认模式，请求会自动携带上 Cookie。</p>
+<h3>Cookie 的缺点</h3>
+<ol>
+<li>容量缺陷。Cookie 的体积上限只有<code>4KB</code>，只能用来存储少量的信息。</li>
+<li>性能缺陷。Cookie 紧跟域名，不管域名下面的某一个地址需不需要这个 Cookie ，请求都会携带上完整的 Cookie，这样随着请求数的增多，其实会造成巨大的性能浪费的，因为请求携带了很多不必要的内容。但可以通过<code>Domain</code>和<code>Path</code>指定<strong>作用域</strong>来解决。</li>
+<li>安全缺陷。由于 Cookie 以纯文本的形式在浏览器和服务器中传递，很容易被非法用户截获，然后进行一系列的篡改，在 Cookie 的有效期内重新发送给服务器，这是相当危险的。另外，在<code>HttpOnly</code>为 false 的情况下，Cookie 信息能直接通过 JS 脚本来读取。</li>
+</ol>
+
+<h1>IntersectionObserver</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903874302574599?searchId=202402012325316CE94CF6E1922963D4F6">juejin.cn</a></p>
+</blockquote>
+<h2>IntersectionObserver</h2>
+<p>IntersectionObserver 接口提供了一种</p>
+<ul>
+<li>异步观察目标元素与祖先元素或顶级文档 <a href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FGlossary%2Fviewport" title="https://developer.mozilla.org/en-US/docs/Glossary/viewport">viewport</a> 的交集中的变化的方法。</li>
+<li>祖先元素与视窗 viewport 被称为<strong>根 (root)。</strong></li>
+</ul>
+<p>用法
+是以<code>new</code>的形式声明一个对象，接收两个参数<code>callback</code>和<code>options</code></p>
+<pre><code>const io = new IntersectionObserver(callback, options)
+io.observe(DOM)
+</code></pre>
+<pre><code>const options = {
+  root: null,
+  rootMargin: 0,
+  thresholds: 1,
+}
+const io = new IntersectionObserver(entries =&gt; {
+  console.log(entries)
+  // Do something
+}, options)
+</code></pre>
+<h4>2.callback</h4>
+<p>callback 是添加监听后，当监听目标发生滚动变化时触发的回调函数。</p>
+<ul>
+<li>接收一个参数 entries，即 IntersectionObserverEntry 实例。</li>
+<li>entries描述了目标元素与 root 的交叉状态。具体参数如下：</li>
+</ul>
+<p>boundingClientRect 返回包含目标元素的边界信息，返回结果与 element.getBoundingClientRect() 相同
+intersectionRatio 返回目标元素出现在可视区的比例
+isIntersecting 返回一个布尔值，下列两种操作均会触发 callback：</p>
+<ol>
+<li>如果目标元素出现在 root 可视区，返回 true。</li>
+<li>如果从 root 可视区消失，返回 false
+rootBounds 用来描述交叉区域观察者 (intersection observer) 中的根.
+target 目标元素：与根出现相交区域改变的元素 (Element)</li>
+</ol>
+<h4>3.options</h4>
+<p>options 是一个对象，用来配置参数，也可以不填。共有三个属性，具体如下：</p>
+<table><thead><tr><th>属性</th><th>说明</th></tr></thead><tbody><tr><td>root</td><td>所监听对象的具体祖先元素。如果未传入值或值为<code>null</code>，则默认使用顶级文档的视窗 (一般为 html)。</td></tr><tr><td>rootMargin</td><td>计算交叉时添加到<strong>根 (root)<strong> 边界盒 <a target="_blank" title="https://developer.mozilla.org/en-US/docs/Glossary/bounding_box" href="https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FGlossary%2Fbounding_box" ref="nofollow noopener noreferrer">bounding box</a> 的矩形偏移量，&nbsp;可以有效的缩小或扩大根的判定范围从而满足计算需要。所有的偏移量均可用</strong>像素</strong> (<code>px</code>) 或<strong>百分比</strong> (<code>%</code>) 来表达, 默认值为 "0px 0px 0px 0px"。</td></tr><tr><td>threshold</td><td>一个包含阈值的列表, 按升序排列, 列表中的每个阈值都是监听对象的交叉区域与边界区域的比率。当监听对象的任何阈值被越过时，都会触发 callback。默认值为 0。</td></tr></tbody></table>
+<h4>4. 方法</h4>
+<p>IntersectionObserver 有哪些方法？ 如果要监听某些元素，则必须要对该元素执行一下 observe</p>
+<table><thead><tr><th>方法</th><th>说明</th></tr></thead><tbody><tr><td>observe()</td><td>开始监听一个目标元素</td></tr><tr><td>unobserve()</td><td>停止监听特定目标元素</td></tr><tr><td>takeRecords()</td><td>返回所有观察目标的 IntersectionObserverEntry 对象数组</td></tr><tr><td>disconnect()</td><td>使 IntersectionObserver 对象停止全部监听工作</td></tr></tbody></table>
+<h3>应用：</h3>
+<h4>1. 图片懒加载</h4>
+<pre><code>const imgList = [...document.querySelectorAll('img')]
+
+var io = new IntersectionObserver((entries) =&gt;{
+  entries.forEach(item =&gt; {
+    // isIntersecting是一个Boolean值，判断目标元素当前是否可见
+    if (item.isIntersecting) {
+      item.target.src = item.target.dataset.src
+      // 图片加载后即停止监听该元素
+      io.unobserve(item.target)
+    }
+  })
+}, {
+  root: document.querySelector('.root')
+})
+
+// observe遍历监听所有img节点
+imgList.forEach(img =&gt; io.observe(img))
+</code></pre>
+<h4>2. 埋点曝光</h4>
+<p>假如有个需求，对一个页面中的特定元素，只有在其完全显示在可视区内时进行埋点曝光。</p>
+<pre><code>const boxList = [...document.querySelectorAll('.box')]
+
+var io = new IntersectionObserver((entries) =&gt;{
+  entries.forEach(item =&gt; {
+    // intersectionRatio === 1说明该元素完全暴露出来，符合业务需求
+    if (item.intersectionRatio === 1) {
+      // 。。。 埋点曝光代码
+      io.unobserve(item.target)
+    }
+  })
+}, {
+  root: null,
+  threshold: 1, // 阀值设为1，当只有比例达到1时才触发回调函数
+})
+
+// observe遍历监听所有box节点
+boxList.forEach(box =&gt; io.observe(box))
+</code></pre>
+
+<h1>TDD 实战</h1><p>TDD (Test-Driven Development 测试驱动开发）简单地说就是先根据需求写测试用例，然后实现代码，通过后再接着写下一个测试和实现，循环直到全部功能和重构完成。</p>
+<h2>覆盖率</h2>
+<p>查看测试跑完的测试覆盖率报告看看是否覆盖全面了，防止有遗漏</p>
+<pre><code>yarn text --coverage
+</code></pre>
+<p>此时 vitest 会帮我我们自动安装 <code>@vitest/coverage-c8</code> 安装完成后，我们便可以查看测试报告了</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45e16eb755de4a19ae5ac10dd9a53bee~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
+<p>可以看到 branch 下覆盖率并非 100，说明代码中有没有测试到的条件。在项目根目录中会生成一个 coverage 目录，只有浏览器代开 coverage 下的 <code>index.html</code>，我们可以看到没有测试到的代码</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e97437b8f0a4fd6adbe1508052ef801~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
+<p>没有测试到的代码会高亮，继续补全测试用例即可。</p>
+<p>随着编写组件代码和测试熟练度的增加，个人可以调整写组件和测试用例的先后顺序，或者 2 者同步进行，但是最终提交的时候，组件的测试代码和测试用例是同步提交在一个 commit 中，并不是等组件开发完成后再来补测试用例，以上便上 TDD 的过程。</p>
+
+<h1>Vitest  组件测试</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7129667747134308389?searchId=202401261549374C48CC23171B271C060A">juejin.cn</a></p>
+</blockquote>
+<h2>什么是 Vitest？</h2>
+<p>在测试过程中使用 Vite 开发服务器来转换你的文档，并监听你的应用程序的相同配置（通过<code>vite.config.js</code>），从而消除了使用 Jest 等测试替代品所涉及的重复工作。</p>
+<ul>
+<li>与 Jest 兼容</li>
+<li>开箱即用的 ESM、Typescript 和 JSX 支持，并且由 <strong>esbuild</strong> 提供支持。</li>
+</ul>
+<h2>为什么选择 Vitest？</h2>
+<p>Vite 是一个构建工具，</p>
+<ul>
+<li>开箱即用，支持常见的 web 模式、<code>glob</code>导入和 <strong>SSR</strong> 等功能。</li>
+<li>将 Jest 等框架与 Vite 一起使用，导致 Vite 和 Jest 之间有很多重复的配置，而 Vitest 解决了这一问题，它消除了为我们的应用程序编写单元测试所需的额外配置。</li>
+<li>Vitest 使用与 Vite 相同的配置，并在开发、构建和测试时共享一个共同的转换管道。它还可以使用与 Vite 相同的插件 API 进行扩展，并与 Jest 的 API 兼容，以方便从 Jest 迁移，而不需要做很多重构工作。</li>
+</ul>
+<h2>Vitest 配置</h2>
+<p><strong>vite.config.js</strong></p>
+<pre><code>import { defineConfig } from &quot;vite&quot;;
+import vue from &quot;@vitejs/plugin-vue&quot;;
+export default defineConfig({
+    plugins: [vue()],
+    //add test to vite config
+    test: {
+        // ...
+    },
+});
+</code></pre>
+<p>为 TypeScript 配置 Vitest 是类似的，但如果从 Vite 导入 <code>defineConfig</code>，我们需要在配置文档的顶部使用三斜线命令添加对 Vitest 类型的引用。</p>
+<pre><code>/// &lt;reference types=&quot;vitest&quot; /&gt;
+import { defineConfig } from &quot;vite&quot;;
+import vue from &quot;@vitejs/plugin-vue&quot;;
+// https://vitejs.dev/config/
+export default defineConfig({
+    plugins: [vue()],
+    test: {
+        // ...
+    },
+});
+</code></pre>
+<h2>测试内容</h2>
+<p>我们的测试需要检查以下内容：</p>
+<ul>
+<li>该组件根据通知类型渲染出正确的样式。</li>
+<li>当 <code>message</code> 为空时，通知就会逐渐消失。</li>
+<li>当关闭按钮被点击时，该组件会发出一个事件。</li>
+</ul>
+<p>为了测试这些功能，在项目中添加一个 <code>notification.test.js</code> 用于测试。</p>
+<h2>安装测试依赖项</h2>
+<p>在编写单元测试时，我们需要用一个什么都不做的假组件来替换组件的现有实现。这被称为 <strong>stub(存根)</strong>，</p>
+<ul>
+<li>为了在测试中使用存根，我们需要访问 Vue Test Utils 的<code>mount</code>方法，这是 Vue.js 的官方<a href="https://link.juejin.cn?target=https%3A%2F%2Ftest-utils.vuejs.org%2F" title="https://test-utils.vuejs.org/">测试工具库</a>。</li>
+</ul>
+<p>现在我们来安装 Vue Test Utils。</p>
+<p>以从<code>&quot;@vue/test-utils&quot;</code>导入 <code>mount</code>。</p>
+<pre><code>import { mount } from &quot;@vue/test-utils&quot;;
+</code></pre>
+<p>在测试中，我们还需要能够模拟 DOM。Vitest 目前同时支持 <code>happy-dom</code> 和 <code>jsdom</code>。对于这个演示，我们将使用<code>happy-dom</code>，然后安装它：
+我们可以在测试文档的顶部添加以下注释...
+<strong>notification.test.js</strong></p>
+<pre><code>/**
+ * @vitest-environment happy-dom
+ */
+</code></pre>
+<p>. 或者将此添加到 <code>vite/vitest</code> 配置文档中，以避免在有多个需要 <code>happy-dom</code> 工作的测试文档时出现重复情况。
+<strong>vite.config.js</strong></p>
+<pre><code>import { defineConfig } from &quot;vite&quot;;
+import vue from &quot;@vitejs/plugin-vue&quot;;
+// https://vitejs.dev/config/
+export default defineConfig({
+    plugins: [vue()],
+    test: {
+        environment: &quot;happy-dom&quot;,
+    },
+});
+</code></pre>
+<p>因为我们只有一个测试文档，所以我们可以选择第一个选项，所以我们测试文档内容如下：
+<strong>notification.test.js</strong></p>
+<pre><code>/**
+ * @vitest-environment happy-dom
+ */
+
+import { mount } from &quot;@vue/test-utils&quot;;
+</code></pre>
+<p>有了这些依赖关系，我们现在可以导入我们要测试的组件。</p>
+<p><strong>notification.test.js</strong></p>
+<pre><code>/**
+ * @vitest-environment happy-dom
+ */
+import { mount } from &quot;@vue/test-utils&quot;;
+import notification from &quot;../components/notification.vue&quot;;
+</code></pre>
+<h2>常见的 Vitest 方法</h2>
+<p>为了编写测试，我们需要利用以下常见的方法，这些方法可以从 Vitest 导入。</p>
+<ul>
+<li><code>describe</code>： <code>describe</code> 方法将测试分组这个函数接受一个名字和一个函数，用于将相关的测试组合在一起。当你为一个有多个测试点（如逻辑和外观）的组件编写测试时，它就会很方便。</li>
+<li><code>test/it</code>：这个函数代表被测试的实际代码块。它接受一个字符串，通常是测试案例的名称或描述（例如，渲染成功的正确样式）和另一个函数，所有的检查和测试在这里进行。</li>
+<li><code>expect</code>： 这个函数用于测试值或创建断言。它接受一个预期为实际值（字符串、数字、对象等）的参数 <strong>x</strong>，并使用任何支持的方法对其进行评估（例如<code>toEqual(y)</code>，检查 x 是否与 y 相同）。</li>
+</ul>
+<p>因此，我们现在将这些导入我们的测试文档中
+<strong>notification.test.js</strong></p>
+<pre><code>/**
+ * @vitest-environment happy-dom
+ */
+
+import { mount } from &quot;@vue/test-utils&quot;;
+import notification from &quot;../components/notification.vue&quot;;
+import { describe, expect, test } from &quot;vitest&quot;;
+</code></pre>
+<p>有了这些函数，我们开始构建我们的单元测试。</p>
+<h2>创建 Vitest 单元测试</h2>
+<p><strong>notification.test.js</strong>
+在这里，我们使用 <code>mount</code> 来存根我们的组件，以便进行测试。
+<code>mount</code> 接受组件作为第一个参数，接受一个选项列表作为第二个参数。
+这些选项提供了不同的属性，目的是确保你的组件能在浏览器中正常工作。
+在这个列表中，我们只需要 <code>props</code> 属性</p>
+<pre><code>describe(&quot;notification.vue&quot;, () =&gt; {
+    test(&quot;renders the correct style for error&quot;, () =&gt; {
+        const type = &quot;error&quot;;
+        const wrapper = mount(notification, {
+            props: { type },
+        });
+        expect(wrapper.classes()).toEqual(
+            expect.arrayContaining([&quot;notification--error&quot;])
+        );
+    });
+});
+</code></pre>
+<p>在这一点上，剩下的就是写一个断言，或者更好的是，写出我们组件的预期行为，即：<code>renders the correct style for error</code>。</p>
+<p>为了做到这一点，我们使用了 <code>expect</code> 方法。它接受我们的存根组件和所有的选项（在我们的例子中，我们把它命名为<code>wrapper</code>以方便参考）。</p>
+<p>这个方法可以被链接到其他一些方法上，但是对于这个特定的断言，我们要重新检查组件的类列表是否返回一个包含这个 <code>notification——error</code> 的数组。。</p>
+<p>我们使用 <code>classes</code> 函数来实现这一点，该函数返回包含该组件所有类的数组。在这之后，下一件事就是使用 <code>toEqual</code> 函数进行比较，它检查一个值 <strong>X</strong> 是否等于 ** Y**。在这个函数中，我们检查它是否返回一个包含我们的类的数组: <code>notification--error</code>。</p>
+<h2>测试点击事件</h2>
+<p>每当组件上的按钮被点击，它就会发出一个事件:</p>
+<pre><code class="language-js">test(&quot;emits event when close button is clicked&quot;, async() =&gt; {
+	const wrapper = mount(notification, {
+		data() {
+			return {
+				clicked: false,
+			};
+		},
+	});
+	const closeButton = wrapper.find(&quot;button&quot;);
+	await closeButton.trigger(&quot;click&quot;);
+	expect(wrapper.emitted()).toHaveProperty(&quot;clear-notification&quot;);
+    });
+</code></pre>
+<p>在这个测试块中，我们使用了一个 <strong>async</strong> 函数，因为我们将触发一个事件，它返回一个 Promise，我们需要等待这个 Promise 的解决，以便捕捉这个事件所引起的变化。我们还使用了<code>data</code>函数，并添加了一个 <code>clicked</code> 属性，当点击时将被切换。</p>
+<p>到这，我们需要触发这个点击事件，我们首先通过使用 <code>find</code> 函数来获得按钮。这个函数与<code>querySelector</code>相同，它接受一个类、一个 id 或一个属性，并返回一个元素。</p>
+<p>在找到按钮后，使用 <a href="https://link.juejin.cn?target=https%3A%2F%2Ftest-utils.vuejs.org%2Fapi%2F%23trigger" title="https://test-utils.vuejs.org/api/#trigger">trigger</a> 方法来触发一个点击事件。这个方法接受要触发的事件名称（click, focus, blur, keydown 等），执行这个事件并返回一个 promise。出于这个原因，我们等待这个动作，以确保在我们根据这个事件做出断言之前，已经对我们的 DOM 进行了改变。</p>
+<p>最后，我们使用返回一个数组的 <code>[emitted](https://test-utils.vuejs.org/api/#emitted)</code> 方法检查我们的组件所发出的事件列表。然后我们检查这个数组是否包括 <code>clear-notification</code> 事件。</p>
+<h2>测试渲染</h2>
+<p>最后，我们测试以确保我们的组件渲染出正确的消息，并传递给 <code>message</code> prop。</p>
+<pre><code>test(&quot;renders message when message is not empty&quot;, () =&gt; {
+        const message = &quot;Something happened, try again&quot;;
+        const wrapper = mount(notification, {
+            props: { message },
+        });
+        expect(wrapper.find(&quot;p&quot;).text()).toBe(message);
+    });
+</code></pre>
+<p>这里，我们创建了一个 <code>message</code> 变量，给它分配了一个随机字符串，并把它作为一个 prop 传递给我们的组件。</p>
+<p>然后，我们使用 <code>p</code> 标签搜索我们的消息文本，因为这里是显示消息的地方，并检查其文本是否与 <code>message</code> 相同。</p>
+<p>我们使用 <code>text</code> 方法提取这个标签的内容，这和 <code>innerText</code>很相似。最后，我们使用前面的函数 <code>toBe</code> 来断言这个值与 <code>message</code> 相同。</p>
+
+<h1>Vitest 前端 TDD 的一大利器</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7078906878779981832?searchId=202401261549374C48CC23171B271C060A">juejin.cn</a></p>
+</blockquote>
+<ul>
+<li>TDD 是什么？Test Driven Development，测试驱动开发</li>
+<li>TDD 有什么好处？测试来保证代码的功能正常，重构只需要通过测试即可。</li>
+</ul>
+<h2>为什么要用 Vitest</h2>
+<ul>
+<li>与 Vite 的配置通用，watch 模式下极快的反应（相当于测试中 HMR）。</li>
+<li>可以对 Vue/React 组件进行测试。</li>
+<li>开箱即用 Typescript/JSX/ESM（这一点我想配过 jest 的人应该懂是什么意思）</li>
+<li>与 Jest 几乎相同的 API，同时也有 Jest 的快照功能（这个非常好用！）</li>
+<li>模拟 DOM</li>
+<li>生成测试覆盖率</li>
+</ul>
+<h2>使用 Vitest</h2>
+<h3>2. 编写测试文件</h3>
+<p>默认可以匹配的文件为 <code>[filename].{spec, test}.{ts, js}</code>
+例如，我们可以在项目根目录创建一个 <code>index.test.ts</code></p>
+<pre><code>import { expect, test } from 'vitest'
+test('hello vitest', () =&gt; {
+  expect(1).toBe(2)
+})
+</code></pre>
+<p>vitest 默认以观察模式（watch 模式）启动，所以我们可以随时查看自己的代码是否通过测试。
+如果你仅仅是想运行测试，那么可以使用 <code>vitest run</code>（非观察模式）</p>
+<h3>3. inlineSnapshot</h3>
+<p>下面我来介绍一个非常好玩的特性 <code>inlineSnapshot</code>，这个功能可以让我们直接看到我们的代码运行后的效果</p>
+<pre><code>// 常规的写法，我们需要这样
+test('hello vitest', () =&gt; {
+ expect(genNumber(1, 10)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+})
+</code></pre>
+<p>但是如果我们只是想看看这个函数运行之后的效果呢？有意思的地方来了，如果我们使用 <code>toMatchInlineSnapshot</code>，在开启观察模式的情况下， Vitest 将会自动更新快照。如果我们想更新快照，可以在观察模式下直接敲击 <code>u</code> 来更新快照。非观察模式下可以通过 <code>vitest -u</code> 可以批量更新快照</p>
+<pre><code>expect(genNumber(2, 20)).toMatchInlineSnapshot()
+</code></pre>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4757d19a9a0342cf9343118f322b5f87~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?" alt=""></p>
+
+<h1>Vitest 进行React测试</h1><h2>前提条件</h2>
+<p>@vitejs/plugin-react 是为了让 Vitest 支持 React
+jsdom 可以让 Node.js 环境中模拟真实的 dom api ，
+比如下面代码就是依赖 jsdom， 在 nodejs 环境中有了 <code>document.querySelector</code> 这个 api.</p>
+<pre><code class="language-js">const jsdom = require(&quot;jsdom&quot;);
+const { JSDOM } = jsdom;
+const dom = new JSDOM(`&lt;!DOCTYPE html&gt;&lt;p&gt;Hello world&lt;/p&gt;`);
+console.log(dom.window.document.querySelector(&quot;p&quot;).textContent); //
+</code></pre>
+<p>紧接着，需要让 Vitest 支持 jsdom 和 react，我们需要添加一个配置文件</p>
+<pre><code class="language-js">import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+  },
+})
+</code></pre>
+<h3>测试 React 组件</h3>
+<p>现在我们来试试，是否可以测试 React 组件代码。
+首先我们随便新建一个文件<code>app.test.tsx</code> 文件，输入以下代码</p>
+<pre><code>import { describe, expect, it } from &quot;vitest&quot;;
+import { render, screen } from &quot;@testing-library/react&quot;;
+function App() {
+  return &lt;div&gt;app&lt;/div&gt;;
+}
+
+describe(&quot;App&quot;, () =&gt; {
+  it(&quot;it should be render&quot;, () =&gt; {
+    render(&lt;App /&gt;);
+    expect(screen.getByText(&quot;app&quot;)).toBeInTheDocument();
+  });
+});
+</code></pre>
+<p>vitest 默认没有 <code>toBeInTheDocument</code> 方法，
+toBeInTheDocument 是 testing library 中的断言方法，vitest 默认不包含，因此我们需要配置一下初始化文件，继承 testing library 断言库，新建一个 <code>vitest-setup.ts</code> 文件</p>
+<pre><code class="language-js">import { vi, expect, afterEach } from &quot;vitest&quot;;
+import { cleanup } from &quot;@testing-library/react&quot;;
+import matchers, {
+  TestingLibraryMatchers,
+} from &quot;@testing-library/jest-dom/matchers&quot;;
+
+declare global {
+  namespace Vi {
+    interface JestAssertion&lt;T = any&gt;
+      extends jest.Matchers&lt;void, T&gt;,
+        TestingLibraryMatchers&lt;T, void&gt; {}
+  }
+}
+// 继承 testing-library 的扩展 except
+expect.extend(matchers);
+// 全局设置清理函数，避免每个测试文件手动清理
+afterEach(() =&gt; {
+  cleanup();
+});
+</code></pre>
+<p>上面代码中，<code>cleanup()</code> 是为了在每次 <code>render</code> 后清理 react dom 树，若不清理可能会导致内存泄漏和非 “幂等” 测试（这可能导致测试中难以调试的错误），详情请看<a href="https://link.juejin.cn?target=https%3A%2F%2Ftesting-library.com%2Fdocs%2Freact-testing-library%2Fapi%23cleanup" title="https://testing-library.com/docs/react-testing-library/api#cleanup">官方文档</a></p>
+<p>然后在 vitest.config.ts 中设置 <code>setupFiles</code> 文件路径</p>
+<pre><code>export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: &quot;jsdom&quot;,
+ +   setupFiles: &quot;./vitest-setup.ts&quot;,
+  },
+  resolve: {
+    alias: {
+      &quot;@&quot;: path.resolve(__dirname, &quot;.&quot;),
+    },
+  },
+});
+</code></pre>
+
+<h1>Web 应用的轻量级状态管理工具 zustand</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7038780686991376415?searchId=20240126153450902039BAB3C63517BA67">juejin.cn</a></p>
+</blockquote>
+<h2>轻量级状态管理方案</h2>
+<p>我们知道，redux 不仅是一个状态管理工具，其同时也提倡一种优秀的模式，即我们熟知的：</p>
+<blockquote>
+<p>Store -&gt; Dispatch -&gt; Action -&gt; Reducer -&gt; Store</p>
+</blockquote>
+<p>而这种模式需要我们手写大量的模板代码，</p>
+<ul>
+<li>有了官方解决方案 <strong>@reduxjs/toolkit</strong> 和社区方案 <strong>@rematch/core</strong></li>
+<li>经过分析，事实上我们可以看到 redux 的核心代码库仅有 <strong>1.6kb</strong> 的大小，但为了适配 React.js 和解决模板代码的问题，至少也要增加 <strong>7.1kb</strong> 的资源大小</li>
+</ul>
+<p>在移动端场景下，项目一般较为简单、规模较小，对于工具的核心需求其实也仅仅是满足应用状态管理即可。于是，<strong>zustand</strong> 社区方案成为了我的一个选择。
+　　
+还列出了 jotai，它与 zustand 出自同一个开发者群体之手，前者仅适用于 React.js 组件内的状态管理，而后者还适用于组件之外的状态操作。<strong>zustand</strong> 足够简单，且无需太多模板代码，仅 <strong>954B</strong> 大小即可满足应用状态管理的核心需求。</p>
+<h2>redux vs zustand</h2>
+<p>分析一下两者的源码实现，第一步首先来看看两者的核心实现，即状态管理的机制。</p>
+<h2>状态管理做的是什么事情</h2>
+<p>状态即数据
+对于一个原生的 Web 应用来说，某一时刻页面展示的结构和样式取决于此时的状
+态
+状态可能会由于用户交互动作发生变化。</p>
+<ul>
+<li>Web 应用有很多状态，比如表单的勾选按钮状态，我们
+<ul>
+<li>将这种状态视为局部状态，该状态的变化不会导致页面其它部分发生变化；</li>
+</ul>
+</li>
+<li>更进一步，勾选按钮的状态会同步影响表单提交按钮是否处于可点击的状态，
+<ul>
+<li>此时一个状态在页面两个部分都有影响，</li>
+<li>显然，对于局部状态来说，页面局部可以完成自治，而对于全局状态来说，则需要一个全局中心化的 “数据库” 来进行管理。</li>
+</ul>
+</li>
+</ul>
+<h2>redux 和 zustand</h2>
+<pre><code class="language-js">// Redux (https://redux.js.org/api/api-reference)
+createStore(reducer, [preloadedState], [enhancer])
+// Store
+getState()
+subscribe(listener)
+dispatch(action)
+
+
+// zustand (https://github.com/pmndrs/zustand)
+createStore()
+// Store
+getState()
+subscribe()
+setState()// zustand (github.com/pmndrs/zust…)
+createStore()
+// Store
+getState()
+subscribe()
+setState()
+</code></pre>
+<p>两者都有一个 <code>createStore()</code> API 来创建一个中心化的数据存储区，
+　- 同时创建的 store 实例均会暴露出主动获取状态的 API <code>getState()</code>
+　- 订阅状态更新的 API <code>subscribe()</code>，
+　- 更新状态的 API <code>dispatch()</code> 和 <code>setState()</code>，
+　- 当然 redux 还引入了一个 <code>reducer</code> 的概念和 API。</p>
+<h3>zustand subscribe()</h3>
+<p>在状态订阅的 <code>subscribe()</code> API 实现中
+　　- zustand 仅是简单的直接将订阅函数添加到订阅列表中，
+　　- 同时提供了一个 <code>selector</code> 机制来过滤状态：</p>
+<pre><code class="language-js">const subscribe: Subscribe&lt;TState&gt; = &lt;StateSlice&gt;(
+  listener: StateListener&lt;TState&gt; | StateSliceListener&lt;StateSlice&gt;,
+  selector?: StateSelector&lt;TState, StateSlice&gt;,
+  equalityFn?: EqualityChecker&lt;StateSlice&gt;
+) =&gt; {
+  if (selector || equalityFn) {
+    return subscribeWithSelector(
+      listener as StateSliceListener&lt;StateSlice&gt;,
+      selector,
+      equalityFn
+    )
+  }
+  listeners.add(listener as StateListener&lt;TState&gt;)
+  // Unsubscribe
+  return () =&gt; listeners.delete(listener as StateListener&lt;TState&gt;)
+}
+
+
+const subscribeWithSelector = &lt;StateSlice&gt;(
+  listener: StateSliceListener&lt;StateSlice&gt;,
+    selector: StateSelector&lt;TState, StateSlice&gt; = getState as any,
+    equalityFn: EqualityChecker&lt;StateSlice&gt; = Object.is
+) =&gt; {
+        console.warn('[DEPRECATED] Please use subscribeWithSelector middleware')
+let currentSlice: StateSlice = selector(state)
+      function listenerToAdd() {
+const nextSlice = selector(state)
+      if (!equalityFn(currentSlice, nextSlice)) {
+const previousSlice = currentSlice
+      listener((currentSlice = nextSlice), previousSlice)
+}
+}
+      listeners.add(listenerToAdd)
+// Unsubscribe
+return () =&gt; listeners.delete(listenerToAdd)
+}// see https://github.com/pmndrs/zustand/blob/v3.6.5/src/vanilla.ts#L107
+const subscribeWithSelector = &lt;StateSlice&gt;(
+        listener: StateSliceListener&lt;StateSlice&gt;,
+          selector: StateSelector&lt;TState, StateSlice&gt; = getState as any,
+          equalityFn: EqualityChecker&lt;StateSlice&gt; = Object.is
+) =&gt; {
+              console.warn('[DEPRECATED] Please use subscribeWithSelector middleware')
+let currentSlice: StateSlice = selector(state)
+            function listenerToAdd() {
+const nextSlice = selector(state)
+            if (!equalityFn(currentSlice, nextSlice)) {
+const previousSlice = currentSlice
+            listener((currentSlice = nextSlice), previousSlice)
+}
+}
+            listeners.add(listenerToAdd)
+// Unsubscribe
+return () =&gt; listeners.delete(listenerToAdd)
+}
+</code></pre>
+<p>通过上面 <code>listenerToAdd()</code> 函数可以看到，在订阅状态时提供了 <code>selector</code> 的话，状态更新时会首先将状态过滤一遍再通知给订阅者。</p>
+<pre><code class="language-js">const setState: SetState&lt;TState&gt; = (partial, replace) =&gt; {
+    listeners.forEach((listener) =&gt; listener(state, previousState))
+}
+</code></pre>
+<p>通过 <code>setState()</code> 更新状态时，所有订阅函数将会调用，同时会将新的状态和旧的状态传递给订阅函数。</p>
+<h2>redux 订阅函数</h2>
+<p>接下来，看看 redux 的实现，redux 在添加订阅函数时做了一些特殊的判断，以及特殊处理：</p>
+<pre><code class="language-js">// see https://github.com/reduxjs/redux/blob/v4.1.2/src/createStore.js#L128
+function subscribe(listener) {
+  // ...
+  if (isDispatching) {
+    throw new Error(&quot;...&quot;);
+  }
+  let isSubscribed = true;
+  ensureCanMutateNextListeners();
+  nextListeners.push(listener);
+
+  return function unsubscribe() {
+    if (!isSubscribed) {
+      return;
+    }
+
+    if (isDispatching) {
+      throw new Error(&lt;span class=&quot;hljs-string&quot;&gt;'...'&lt;/span&gt;);
+    }
+    isSubscribed = false;
+    ensureCanMutateNextListeners();
+    const index = nextListeners.indexOf(listener);
+    nextListeners.splice(index, &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;);
+    currentListeners = null;
+  };
+}
+
+// see https://github.com/reduxjs/redux/blob/v4.1.2/src/createStore.js#L82
+function ensureCanMutateNextListeners() {
+  if (nextListeners === currentListeners) {
+    nextListeners = currentListeners.slice();
+  }
+} // see https://github.com/reduxjs/redux/blob/v4.1.2/src/createStore.js#L82
+function ensureCanMutateNextListeners() {
+  if (nextListeners === currentListeners) {
+    nextListeners = currentListeners.slice();
+  }
+}
+</code></pre>
+<p>根据实现，redux 通过 <code>isDispatching</code> 标志位避免在状态更新期间添加订阅函数，以及通过 <code>ensureCanMutateNextListeners()</code> 函数将订阅函数列表做了浅拷贝再进行添加和删除操作，这都是对潜在的问题的规避。</p>
+<pre><code>function dispatch(action) {
+  const listeners = (currentListeners = nextListeners);
+  for (let i = 0; i &lt; listeners.length; i++) {
+    const listener = listeners[i];
+    listener();
+  }
+  return action;
+}
+</code></pre>
+<p>redux 通过 <code>dispatch()</code> 更新状态时，由于在订阅时没有默认提供 <code>selector</code> 机制，所以会无差别的通知所有订阅者，同时也不会将新旧状态传递给订阅函数，当然在官方示例代码中可以看到，官方推荐在订阅函数中主动通过 <code>getState()</code> 获取新的状态以及完成 selector 操作。可以说，由于 redux 和 zustand 设计理念不同，订阅的实现方式也略有差别，前者控制的更细致，而灵活性很高，而后者在保持简单性的同时也没有牺牲灵活性。</p>
+<h3>zustand的setState()函数 &amp;&amp; dispatch()</h3>
+<p>状态更新机制是两者实现最大的不同，zustand 提供一个 <code>setState()</code> 函数来更新状态：</p>
+<pre><code class="language-ts">const setState: SetState&lt;TState&gt; = (partial, replace) =&gt; {
+    const nextState =
+      typeof partial === 'function'
+        ? (partial as (state: TState) =&gt; TState)(state)
+        : partial
+    if (nextState !== state) {
+      const previousState = state
+      state = replace
+        ? (nextState as TState)
+        : Object.assign({}, state, nextState)
+      listeners.forEach((listener) =&gt; listener(state, previousState))
+    }
+  }
+</code></pre>
+<p>根据源码实现来看，zustand 通过 <code>Object.assign</code> 函数合并更新状态，同时提供 <code>replace</code> 标志位直接将旧状态完全替换。</p>
+<h2>Redux 的状态更新函数</h2>
+<p>redux 的状态更新则要复杂一些，</p>
+<ul>
+<li>官方推荐将状态更新拆分为多个步骤，
+<ul>
+<li><code>dispatch()</code> 函数触发一个 <code>Action</code>，</li>
+<li>具体处理 Action 以及状态合并的操作均由 <code>Reducer</code> 函数完成，
+<ul>
+<li>该函数是一个纯函数。
+为什么要这么设计</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>纯函数对于状态变化来说是可预测的，而且利于测试，更是实现时间旅行类似功能的基础。</li>
+</ul>
+<pre><code class="language-js">function dispatch(action) {
+    if (!isPlainObject(action)) {
+      throw new Error();
+    }
+    if (typeof action.type === &quot;undefined&quot;) {
+      throw new Error();
+    }
+    if (isDispatching) {
+      throw new Error(&quot;Reducers may not dispatch actions.&quot;);
+    }
+  
+    try {
+      isDispatching = true;
+      currentState = currentReducer(currentState, action);
+    } finally {
+      isDispatching = false;
+    }
+  
+    const listeners = (currentListeners = nextListeners);
+    for (let i = 0; i &lt; listeners.length; i++) {
+      const listener = listeners[i];
+      listener();
+    }
+  
+    return action;
+  }
+  
+</code></pre>
+<p>根据源码实现来看，这里出现了 <code>isDispatching</code> 标志位，主要是用来限制状态更新过程中不能再次发起状态更新操作，避免出现错误。</p>
+<p>不过，有一点值得提一下，redux 默认不支持异步更新状态，需要借助 redux-thunk 库来支持；而 zustand 本身则是支持异步更新状态的。</p>
+<p>根据以上分析来看，实际上核心实现是相似的，而且 zustand 作为后来者，对 redux 有借鉴也有简化的地方，满足状态管理的核心简单需求是没有多大问题的，可作为 redux 的一个替代方案。</p>
+<h3>React.js 适配</h3>
+<p>如果说，核心库差异较小，而且包尺寸相近的话，那么最大的差异则出现在对 React.js 库的适配上面。
+\ zustand 在对其适配的时候也是以 Hook API 的方式实现，没有提供类组件的适配。
+zustand 将 <code>createStore</code> 函数的返回值作为一个自定义 hook 来实现，其中为了让 React.js 组件能感知到状态更新，是利用 <code>useEffect</code> 来完成订阅操作，而状态更新发布后，则通过 <code>forceUpdate()</code> 来强制组件进行 rerender 以获取最新的状态。</p>
+<p>然而，react-redux 的实现则要复杂的多。由于其出现的较早，所以同时适配了类组件和函数组件。这里不再细究 react-redux 的具体实现，但其与 zustand 最大的差异则在于把状态放在了 <code>Context</code> 中存储，所以需要使用 <code>Provider</code> 将页面的根组件包裹起来才能使用。redux 的 <code>useSelector()</code> Hook API 与 zustand 上面提到的 <code>useStore()</code> 的实现逻辑也非常相似。</p>
+
+<h1>为什么 Bun 可能对 Node 降维打击？</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7330143281525243958?utm_source=gold_browser_extension">juejin.cn</a></p>
+</blockquote>
+<h2>deno 的产品定位</h2>
+<h2>Deno 是 JS/TS 的安全运行时，原生支持 TS，无需手动配置。与 Node 不同，Node 的脚本默认具有广泛的权限，Deno 则认为 “脚本千万条，安全第一条”，要求开发者显式赋予敏感操作的权限，比如文件系统的读写。这自然增加了我们的学习成本和心智负担，但 Deno 的鲁棒性确实对 Node “降维打击”。
+运行时测评</h2>
+<p>Bun 是一个 JS/TS 的运行时。所谓运行时，顾名思义就是一个提供使用和运行程序的环境。</p>
+<p>运行时的关键组件之一是 JS 引擎，用于将 JS 代码转换为机器码。Node 使用为 Chrome 浏览器提供支持的谷歌 V8 引擎，而 Bun 则使用 JSC（JavaScriptCore），此乃苹果为 Safari 浏览器开发的开源 JS 引擎。</p>
+<p>V8 和 JSC 各有千秋，两者使用了不同的架构和优化策略。JSC 优先考虑更快的启动时间和更少的内存占用，短板在于更慢的执行时间。V8 优先考虑更快的执行和更多的运行时优化，短板在于更多的内存开销。</p>
+<p>Node 原生并不支持 TS，Bun 内置了 TS 转译器，</p>
+<ul>
+<li>原生支持 <code>.js/.ts/.jsx/.tsx</code> 文件，无需安装任何外部依赖。</li>
+<li>Bun 的内置转译器将各种乱七八糟的文件无缝转换为平平无奇的 JS，无需额外步骤就能直接跑 TS。</li>
+</ul>
+<p>在 Node 中使用 ESM 常见方案，包括但不限于：</p>
+<ul>
+<li>在 <code>package.json</code> 中添加 <code>&quot;type&quot;: &quot;module&quot;</code> 属性</li>
+<li>使用 <code>.mjs</code> 扩展名取代 <code>js</code> 扩展名</li>
+</ul>
+<p>Bun 原生兼容 CJS/ESM，无需任何配置。Bun 的亮点功能是，它能够在同一文件中同时支持 <code>import/require()</code>，类似于旧版 TS 的奇葩模块语法，这在 Node 中是不可能事件：</p>
+<pre><code>// Bun 中的混合模块语法
+import vue from 'vue'
+const react = require('react')
+</code></pre>
+<hr>
+<p>Bun 使用 <code>--hot</code> flag 原生支持热重载，与需要重启整个进程的 Node 不同，Bun 会就地重载代码，而不会终止旧进程。这可以确保 HTTP 和 <code>WebSocket</code> 的连接不间断，并保留 App 状态，提供更丝滑的开发体验。</p>
+<h2>除了 JS 的标准（比如模块），对浏览器标准的 Web API（比如 <code>WebSocket</code>），Node 的支持也不一致。
+举个栗子，Node 的早期版本不支持浏览器中常用的 <code>fetch</code> API，我们必须依赖 <code>node-fetch</code> 等第三方模块来 “曲线救国”。虽然但是，Node 18+ 开始实验性支持 <code>fetch</code>，目测未来可期。
+Bun 则内置支持这些 Web 标准 API，我们可以直接使用稳定的 <code>fetch/Request/Response</code> 等 API，无需任何额外依赖。由于这些 API 是 Bun 的原生实现，所以其性能比第三方备胎更快、更可靠。
+使用 Web 标准 API 设置 HTTP 服务器或 <code>WebSocket</code> 服务器，它每秒处理的请求比 Node 多 <code>4</code> 倍，处理的 <code>WebSocket</code> 消息比 Node 的 <code>ws</code> 包多 5 倍。
+打包器</h2>
+<p>所谓打包，指的是是获取多个 JS 文件，并将其合并到一个或多个优化包中的过程。此过程还可能涉及转换，比如将 TS 转换为 JS，或者压缩代码减小体积。Node 的打包通常由第三方工具而不是 Node 本身处理。</p>
+<ul>
+<li>vite之类它们都提供了代码分割、树摇优化和热模块替换等功能。</li>
+<li>Bun 本身也是一个打包器。它旨在打包各种平台的 JS/TS 代码，包括浏览器中的前端 App（Vue/React App）和 Node。Bun 比 esbuild 快 <code>1.75</code> 倍，并且对 Webpack 等其他打包器 “降维打击”。
+Bun 的一个天秀功能是 JS 宏，这允许在打包期间执行 JS 函数，并将结果直接内联到最终打包中。</li>
+</ul>
+<p>举个栗子，在打包过程中利用 JS 宏来获取猫猫的名字，该宏不是运行时的 API 调用，而是在打包时获取数据，将结果直接内联到最终产物中：</p>
+<pre><code>// cats.ts
+export async function getCat() {
+  const response = await fetch('https://space.bilibili.com/3493137875994964?spm_id_from=333.1245.0.0')
+  const cat = await response.json()
+  return cat.name
+}
+
+// index.ts
+// Bun 的 JS 宏
+import { getCat } from './cats.ts' with { type: 'macro' }
+const cat = await getCat()
+
+// build/index.js
+// 打包后直接内联数据，比如猫猫的名字
+var cat = await '人猫神话'
+console.log(cat)
+</code></pre>
+
+<h1>为什么你不应该在 React 中直接使用 useEffect 从 API 获取数据</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://blog.skk.moe/post/why-you-should-not-fetch-data-directly-in-use-effect/">blog.skk.moe</a></p>
+</blockquote>
+<h2>TL; DR</h2>
+<ul>
+<li>绝大部分触发网络请求的原因都是用户操作，应该在 Event Handler 中发送网络请求</li>
+<li>大部分时候，首屏需要的数据可以通过服务端渲染 SSR 直出、无需在客户端额外发送网络请求</li>
+<li>即使需要客户端在首屏获取数据，未来 React 和社区维护的库会提供基于 Suspense 的数据请求 Pattern、实现「Render as your fetch」</li>
+<li>即使在使用「Fetch on render」的 Pattern，也应该直接使用第三方库如 SWR 或 React Query，而不是直接使用 <code>useEffect</code></li>
+</ul>
+<h2>从发送一个简单的请求开始</h2>
+<p>设想一下你在编写一个 React 应用，需要从 API 获取产品列表数据、并渲染到页面上。你想到了网络请求不属于渲染、而是渲染的副作用，你还想到了 React 提供了一个专门的 Hook <code>useEffect</code> 用于处理渲染的副作用，最常见的场景就是将属于 React 外部的状态同步到 React 内部中。你不假思索，实现了一个 <code>&lt;ProductList /&gt;</code> 组件：</p>
+<pre><code>const ProductList = () =&gt; {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() =&gt; {
+    fetch('https://dummyjson.com/products')
+      .then(res =&gt; res.json())
+      .then(data =&gt; setProducts(data));
+  }, []);
+
+  return (
+    &lt;ul&gt;
+      {products.map(product =&gt; (
+        &lt;Product {...product} key={product.id} /&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}
+</code></pre>
+<h2>在 UI 中展示「加载中」和错误</h2>
+<p>你发现首次加载的时候，直到数据加载完成之前页面都是白屏，用户体验很不好。于是你决定实现一个「加载中」的进度条、引入了一个新的状态 <code>isLoading</code>：
+然后你又意识到，除了一个「正在玩命加载中」以外，你还需要在服务器出错时显示错误提示、必要时还要上报错误日志，于是你又引入了一个新的状态 <code>error</code>：</p>
+<pre><code>const ProductList = () =&gt; {
+  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    setIsLoading(true);
+    fetch('https://dummyjson.com/products')
+      .then(res =&gt; res.json())
+      .then(data =&gt; {
+        setProducts(data);
+        setIsLoading(false);
+      })
+      .catch(err =&gt; {
+        // TODO 错误日志上报
+        setError(err)
+      });
+  }, []);
+
+  if (isLoading) {
+    {/* TODO 实现一个骨架屏 &lt;Skeleton /&gt; 改善 UX、避免 CLS */}
+    return &lt;Loading&gt;正在玩命加载中...&lt;/Loading&gt;;
+  }
+
+  if (error) {
+    {/* TODO 添加「重试」按钮 */}
+    return &lt;div&gt;出现错误啦！&lt;/div&gt;
+  }
+
+  return (
+    &lt;ul&gt;
+      {products.map(product =&gt; (
+        &lt;Product {...product} key={product.id} /&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}
+</code></pre>
+<h2>封装一个新的 Hook</h2>
+<p>你发现每个需要从 API 获取数据的组件都需要重复上述的代码，非常繁琐。于是你决定将其封装成一个 <code>useFetch</code> 的 Hook，在组件中可以直接调用：</p>
+<pre><code>const useFetch = (url, requestInit = {}) =&gt; {
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    setIsLoading(true);
+    fetch(url, requestInit)
+      .then(res =&gt; res.json())
+      .then(data =&gt; {
+        setData(data);
+        setIsLoading(false);
+      })
+      .catch(err =&gt; setError(err));
+  }, [url, requestInit]);
+
+  return { data, isLoading, error };
+}
+</code></pre>
+<p>现在，你可以直接在组件中使用 <code>useFetch</code> Hook 了：</p>
+<pre><code>const ProductList = () =&gt; {
+  const { isLoading, data, error } = useFetch('https://dummyjson.com/products');
+}
+
+const Product = ({ id }) =&gt; {
+  const { isLoading, data, error } = useFetch(`https://dummyjson.com/products/${id}`);
+}
+</code></pre>
+<h2>处理 Race Condition</h2>
+<p>你实现了一个在多个产品之间切换的轮播组件，当前展示的产品存储在状态 <code>curentProduct</code> 中：</p>
+<pre><code>const Carousel = ({ intialProductId }) =&gt; {
+  const [currentProduct, setCurrentProduct] = useState(intialProductId);
+  const { data, isLoading, error } = useFetch(`https://dummyjson.com/products/${currentProduct}`);
+};
+</code></pre>
+<p>结果你在测试时发现，在轮播组件中快速切换时，有时候当你点击下一个产品，界面上却展示了上一个产品。<br>
+因为你没有在 <code>useEffect</code> 中声明如何清除你的副作用。</p>
+<ul>
+<li>发送网络请求是一个异步的行为，收到服务器数据的顺序并不一定是网络请求发送时的顺序、出现了 Race Condition：</li>
+</ul>
+<pre><code>| =============== Request Product 1 ===============&gt; | setState()
+      | ===== Request Product 2 ====&gt; | setState() |
+</code></pre>
+<p>如果发生了如上所示的第二个产品的数据返回地比第一个产品快的情况，你的 <code>data</code> 就会被第一个产品的数据覆盖掉。</p>
+<p>于是你在 <code>useFetch</code> 中写了一个清除副作用的逻辑：</p>
+<pre><code>const useFetch = (url, requestInit = {}) =&gt; {
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    let isCancelled = false;
+    setIsLoading(true);
+    fetch(url, requestInit)
+      .then(res =&gt; res.json())
+      .then(data =&gt; {
+        if (!isCancelled) {
+          setData(data);
+          setIsLoading(false);
+        }
+      })
+      .catch(err =&gt; {
+        if (!isCancelled) {
+          setError(err);
+          setIsLoading(false);
+        }
+      });
+
+    return () =&gt; {
+      isCancelled = true;
+      setIsLoading(false);
+    }
+  }, [url, requestInit]);
+
+  return { data, isLoading, error };
+}
+</code></pre>
+<p>感谢 JavaScript 闭包的力量，现在即使 Product 2 的数据比 Product 1 的数据更早返回，Product 1 的数据也不会覆盖掉 Product 2 的数据。
+你还可以在清除副作用时检测当前浏览器是否支持 <code>AbortController</code>、用 <code>AbortSignal</code> 取消中止网络请求：</p>
+<pre><code>const isAbortControllerSupported = typeof AbortController !== 'undefined';
+
+const useFetch = (url, requestInit = {}) =&gt; {
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    let isCancelled = false;
+    let abortController = null;
+    if (isAbortControllerSupported) {
+      abortController = new AbortController();
+    }
+
+    setIsLoading(true);
+    fetch(url, { signal: abortController?.signal, ...requestInit })
+      // .then(...
+
+    return () =&gt; {
+      isCancelled = true;
+      abortController?.abort();
+      setIsLoading(false);
+    }
+  }, [url, requestInit]);
+
+  return { data, isLoading, error };
+}
+</code></pre>
+<h2>缓存网络请求</h2>
+<p>让我们继续回到上述的轮播组件。
+每当轮播组件切换时，<code>&lt;Product /&gt;</code> 就会接受一个新的 <code>props.id</code>、组件就会经历一次更新、<code>url</code> 发生改变、<code>useEffect</code> 重新执行、触发一次新的网络请求。为了去除后续不必要的网络请求，<code>useFetch</code> 需要一个缓存：</p>
+<pre><code>const isAbortControllerSupported = typeof AbortController !== 'undefined';
+/** TODO 将 RequestInit 对象也存在缓存里 */
+const cache = new Map();
+
+const useFetch = (url, requestInit = {}) =&gt; {
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  useEffect(() =&gt; {
+    let isCancelled = false;
+    let abortController = null;
+    if (isAbortControllerSupported) {
+      abortController = new AbortController();
+    }
+    if (cache.has(url)) {
+      setData(cache.get(url));
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+      fetch(url, { signal: abortController?.signal, ...requestInit })
+        .then(res =&gt; res.json())
+        .then(data =&gt; {
+          if (!isCancelled) {
+            cache.set(url, data);
+            setData(data);
+            setIsLoading(false);
+          }
+        })
+        .catch(err =&gt; {
+          if (!isCancelled) {
+            setError(err);
+            setIsLoading(false);
+          }
+        });
+    }
+
+    return () =&gt; {
+      isCancelled = true;
+      abortController?.abort();
+      setIsLoading(false);
+    }
+  }, [url, requestInit]);
+
+  return { data, isLoading, error };
+}
+</code></pre>
+<h2>缓存刷新</h2>
+<blockquote>
+<p>There are 2 hard problems in computer science: naming things, cache invalidation, and off-by-1 errors.</p>
+</blockquote>
+<p>有了缓存，你就需要刷新缓存，不然你的显示在 UI 上的数据就可能过时。你有很多的时机可以刷新缓存，比如你可以在标签页失去 Focus 的时候刷新缓存：</p>
+<pre><code>const isAbortControllerSupported = typeof AbortController !== 'undefined';
+const cache = new Map();
+const isSupportFocus = typeof document !== 'undefined' &amp;&amp; typeof document.hasFocus === 'function';
+
+const useFetch = (url, requestInit = {}) =&gt; {
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  const removeCache = useCallback(() =&gt; {
+    cache.delete(url);
+  }, [url]);
+  const revalidate = useCallback(() =&gt; {
+    // TODO 重新 fetch 获取数据填充缓存
+  }， []);
+
+  useEffect(() =&gt; {
+    const onBlur = () =&gt; {
+      removeCache();
+    };
+
+    const onFocus = () =&gt; {
+      revalidate();
+    };
+
+    window.addEventListener('focus', onFocus);
+    window.addEventListener('blur', onBlur);
+
+    return () =&gt; {
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener('blur', onBlur);
+    };
+  })
+
+  // fetch 相关逻辑
+  // useEffect(() =&gt; ...
+
+  return { data, isLoading, error };
+}
+</code></pre>
+<p>你还可以定时重复更新缓存（interval），你还可以当用户网络状态发生改变时（从数据流量切换到 Wi-Fi 时）更新缓存。现在你需要写更多的 <code>useEffect</code> 和 <code>addEventListener</code> 了。</p>
+<p>而且，当组件卸载、重新挂载时，你虽然可以先使用缓存渲染界面避免再次白屏，但是你随后需要异步刷新缓存、最后将最新数据再更新到 UI 上。</p>
+<h2>兼容 React 18 Concurrent Rendering</h2>
+<p>React 18 引入了 Concurrent Rendering 的概念。</p>
+<ul>
+<li>简单来说，当 opt-in 了 Concurrent Rendering 之后，React 能够打断、暂停、</li>
+<li>甚至中止被标记为「低优先级」的 Update（如 Transition）、为「高优先级」的 Update 让路。</li>
+</ul>
+<p>在实现 <code>useFetch</code> 的缓存时，<code>cache</code> 是一个全局变量，每一个组件中的每一个 <code>useFetch</code> 都能够直接读写 <code>cache</code>。虽然 <code>cache.get</code> 时得到的数据都是最新的，</p>
+<ul>
+<li>但是一个 <code>useFetch</code> 调用 <code>cache.set</code> 后，<code>cache</code> 却无法通知其他 <code>useFetch</code> 需要更新、只能被动地等待其他 <code>useFetch</code> 的下次 <code>cache.get</code>。</li>
+</ul>
+<p>假设你的 <code>&lt;ProductList /&gt;</code> 组件使用了 React 18 的 Concurrent API，如 <code>useTransition</code> 或 <code>startTransition</code>，同时 <code>&lt;ProductList /&gt;</code> 和 <code>&lt;Carousel /&gt;</code> 都使用了 <code>useFetch('https://dummyjson.com/products')</code> 获取从同一个 API 获取数据。</p>
+<ul>
+<li>由于 <code>&lt;ProductList&gt;</code> 组件 opt in 了 Concurrent Rendering，因此 <code>&lt;ProductList /&gt;</code> 和 <code>&lt;Carousel /&gt;</code> 渲染和更新不一定是同时发生的（React 可能会为了响应用户与 <code>&lt;Carousel /&gt;</code> 的交互，暂停 <code>&lt;ProductList /&gt;</code> 的更新，即两个组件的更新不是同步的），</li>
+<li>而在两次更新之间，<code>useFetch</code> 的缓存可能由于刷新、发生了改变，最终导致 <code>&lt;ProductList /&gt;</code> 和 <code>&lt;Carousel /&gt;</code> 分别的 <code>useFetch</code> 使用了不同的缓存数据，导致了不一致（Tearing）。</li>
+<li>为了避免 Tearing、通知 React 全局变量的更新并安排重新渲染，你需要重新实现 <code>cache</code>、以使用 React 18 的另一个 Hook <code>useSyncExternalStore</code>：</li>
+</ul>
+<pre><code>const cache = {
+  __internalStore: new Map(),
+  __listeners: new Set(),
+  set(key) {
+    this.__internalStore.set(key);
+    this.__listeners.forEach(listener =&gt; listener());
+  },
+  delete(key) {
+    this.__internalStore.delete(key);
+    this.__listeners.forEach(listener =&gt; listener());
+  },
+  subscribe(listener) {
+    this.__listeners.add(listener);
+    return () =&gt; this.__listeners.delete(listener);
+  },
+  getSnapshot() {
+    return this.__internalStore;
+  }
+}
+
+const useFetch = (url, requestInit) =&gt; {
+  const currentCache = useSyncExternalStore(
+    cache.subscribe,
+    useCallback(() =&gt; cache.getSnapshot().get(url), [url])
+  );
+
+  // 缓存刷新逻辑
+  // useEffect(() =&gt; ...
+
+  useEffect(() =&gt; {
+    let isCancelled = false;
+    let abortController = null;
+    if (isAbortControllerSupported) {
+      abortController = new AbortController();
+    }
+
+    // 不再直接 `cache.get`，而是读取通过 useSyncExternalStore 获取到的 currentCache
+    // TODO：理想中应该直接将 currentCache 视为 data，而不是将 currentCache 同步到 data 中
+    if (currentCache) {
+      setData(localCache);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+      fetch(url, { signal: abortController?.signal, ...requestInit })
+        .then(res =&gt; res.json())
+        .then(data =&gt; {
+          if (!isCancelled) {
+            // 写入 cache 时，直接使用 cache.set
+            cache.set(url, data);
+            setData(data);
+            setIsLoading(false);
+          }
+        })
+        .catch(err =&gt; {
+          // if (!isCancelled) ...
+        });
+    }
+
+    return () =&gt; {
+      isCancelled = true;
+      abortController?.abort();
+      setIsLoading(false);
+    }
+  }, [url, requestInit]);
+}
+</code></pre>
+<p>现在，每当有一个 <code>useFetch</code> 写入 <code>cache</code> 后，React 都会使用 <code>cache</code> 中的最新值更新所有使用了 <code>useFetch</code> 的组件。</p>
+<p>感觉到头昏脑涨了吗？绑紧你的安全带，让我们继续。</p>
+<h2>请求合并去重</h2>
+<blockquote>
+<p>There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.<br>
+Oh and weird concurrency bugs.<br>
+Oh and weird concurrency bugs.</p>
+</blockquote>
+<p>你的 React 应用可能是这样的：</p>
+<pre><code>&lt;Layout&gt;
+  &lt;Carousel list={hotProductLists}&gt;
+    {
+      (productId) =&gt; &lt;Product id={productId} /&gt;
+    }
+  &lt;/Carousel&gt;
+  &lt;ProductList&gt;
+    {allProductLists.map(product =&gt; &lt;Product key={product.id} id={product.id} /&gt;)}
+  &lt;/ProductList&gt;
+&lt;/Layout&gt;
+</code></pre>
+<p>由于你在 <code>&lt;Product /&gt;</code> 组件中 Fetch on render，因此同一时刻，你的 React Tree 中可能存在不止一个 <code>&lt;Product id={114514} /&gt;</code>；
+因此在页面首次加载、没有缓存时，你可能仍然会同时向同一个 URL 发送不止一次的请求。</p>
+<ul>
+<li>为了合并相同请求，你需要实现一个 mutex lock，避免多个 <code>useFetch</code> 向同一个 URL 发送多个请求；</li>
+<li>然后你还需要实现一个 pub/sub，将 API 的响应数据广播到所有使用这个 URL 的 <code>useFetch</code>。</li>
+</ul>
+<h2>更多，我还要更多</h2>
+<p>作为一个用于发送网络请求的、low-level 的 React Hook，<code>useFetch</code> 需要实现的功能只多不少：</p>
+<ul>
+<li>Error Retry：在数据加载出问题的时候，要进行有条件的重试（如仅 5xx 时重试，403、404 时放弃重试）</li>
+<li>Preload：预加载数据，避免瀑布流请求</li>
+<li>SSR、SSG：服务端获取的数据用来提前填充缓存、渲染页面、然后再在客户端刷新缓存</li>
+<li>Pagination：大量数据、分页请求</li>
+<li>Mutation：响应用户输入、将数据发送给服务端</li>
+<li>Optimistic Mutation：用户提交输入时先更新本地 UI、形成「已经修改成功」的假象，同时异步将输入发送给服务端；如果出错，还需要回滚本地 UI</li>
+<li>Middleware：日志、错误上报、Authentication</li>
+</ul>
+<p>既然一个 <code>useFetch</code> 的需求这么多，为什么不直接使用现成的 React Data Fetching Hook 呢？不论 <a href="https://swr.vercel.app/">SWR</a> 还是 <a href="https://tanstack.com/query/v4">React Query</a> 都能够覆盖这些功能。</p>
+
+<h1>京东一面：post 为什么会发送两次请求？🤪🤪🤪</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7269952188927017015?utm_source=gold_browser_extension">juejin.cn</a></p>
+</blockquote>
+<h2>什么是同源策略</h2>
+<p>同源策略主要表现在以下三个方面：DOM、Web 数据和网络。</p>
+<ul>
+<li>DOM 访问限制：同源策略限制了网页脚本（如 JavaScript）访问其他源的 DOM。这意味着通过脚本无法直接访问跨源页面的 DOM 元素、属性或方法。这是为了防止恶意网站从其他网站窃取敏感信息。</li>
+<li>Web 数据限制：同源策略也限制了从其他源加载的 Web 数据（例如 XMLHttpRequest 或 Fetch API）。在同源策略下，XMLHttpRequest 或 Fetch 请求只能发送到与当前网页具有相同源的目标。这有助于防止跨站点请求伪造（CSRF）等攻击。</li>
+<li>网络通信限制：同源策略还限制了跨源的网络通信。浏览器会阻止从一个源发出的请求获取来自其他源的响应。这样做是为了确保只有受信任的源能够与服务器进行通信，以避免恶意行为。
+出于安全原因，浏览器限制从脚本内发起的跨源 HTTP 请求，XMLHttpRequest 和 Fetch API，只能从加载应用程序的同一个域请求 HTTP 资源，除非使用 CORS 头文件</li>
+</ul>
+<h1>CORS</h1>
+<p>不一定是浏览器限制了发起跨站请求，也可能是跨站请求可以正常发起，但是返回结果被浏览器拦截了。
+浏览器将不同域的内容隔离在不同的进程中，网络进程负责下载资源并将其送到渲染进程中，但由于跨域限制，某些资源可能被阻止加载到渲染进程。
+如果浏览器发现一个跨域响应包含了敏感数据，它可能会阻止脚本访问这些数据，即使网络进程已经获得了这些数据。</p>
+<p>CORB 的目标是在渲染之前尽早阻止恶意代码获取跨域数据。</p>
+<blockquote>
+<p>CORB 是一种安全机制，用于防止跨域请求恶意访问跨域响应的数据。渲染进程会在 CORB 机制的约束下，选择性地将哪些资源送入渲染进程供页面使用。</p>
+</blockquote>
+<p>跨源资源共享（Cross-Origin Resource Sharing，CORS）是一种机制，允许在受控的条件下，不同源的网页能够请求和共享资源。由于浏览器的同源策略限制了跨域请求，CORS 提供了一种方式来解决在 Web 应用中进行跨域数据交换的问题。</p>
+<p>CORS 的基本思想是，服务器在响应中提供一个标头（HTTP 头），指示哪些源被允许访问资源。浏览器在发起跨域请求时会先发送一个预检请求（OPTIONS 请求）到服务器，服务器通过设置适当的 CORS 标头来指定是否允许跨域请求，并指定允许的请求源、方法、标头等信息。</p>
+<h2>简单请求</h2>
+<p>不会触发 CORS 预检请求。这样的请求为 <code>简单请求</code>。
+若请求满足所有下述条件，则该请求可视为 <code>简单请求</code>：</p>
+<ol>
+<li>HTTP 方法限制：只能使用 GET、HEAD、POST 这三种 HTTP 方法之一。如果请求使用了其他 HTTP 方法，就不再被视为简单请求。</li>
+<li>自定义标头限制：请求的 HTTP 标头只能是以下几种常见的标头：<code>Accept</code>、<code>Accept-Language</code>、<code>Content-Language</code>、<code>Last-Event-ID</code>、<code>Content-Type</code>（仅限于 <code>application/x-www-form-urlencoded</code>、<code>multipart/form-data</code>、<code>text/plain</code>）。HTML 头部 header field 字段：DPR、Download、Save-Data、Viewport-Width、WIdth。如果请求使用了其他标头，同样不再被视为简单请求。</li>
+<li>请求中没有使用 ReadableStream 对象。</li>
+<li>不使用自定义请求标头：请求不能包含用户自定义的标头。</li>
+<li>请求中的任意 XMLHttpRequestUpload 对象均没有注册任何事件监听器；XMLHttpRequestUpload 对象可以使用 XMLHttpRequest.upload 属性访问</li>
+</ol>
+<h2>预检请求</h2>
+<p>非简单请求的 CORS 请求，会在正式通信之前，增加一次 HTTP 查询请求，称为 <code>预检请求</code>。
+需预检的请求要求必须首先使用 OPTIONS 方法发起一个预检请求到服务器，以获知服务器是否允许该实际请求。
+<code>预检请求</code> 的使用，可以避免跨域请求对服务器的用户数据产生未预期的影响。</p>
+<p>它首先会发起一个预检请求, 预检请求的头信息包括两个特殊字段：</p>
+<ul>
+<li>Access-Control-Request-Method：该字段是必须的，用来列出浏览器的 CORS 请求会用到哪些 HTTP 方法，上例是 POST。</li>
+<li>Access-Control-Request-Headers：该字段是一个逗号分隔的字符串，指定浏览器 CORS 请求会额外发送的头信息字段，上例是 <code>content-type</code>,<code>x-secsdk-csrf-token</code>。</li>
+<li>access-control-allow-origin：在上述例子中，表示 <code>https://juejin.cn</code> 可以请求数据，也可以设置为<code>*</code> 符号，表示统一任意跨源请求。</li>
+<li>access-control-max-age：该字段可选，用来指定本次预检请求的有效期，单位为秒。上面结果中，有效期是 1 天（86408 秒），即允许缓存该条回应 1 天（86408 秒），在此期间，不用发出另一条预检请求。</li>
+</ul>
+<p>一旦服务器通过了 <code>预检请求</code>，以后每次浏览器正常的 CORS 请求，就都跟简单请求一样，会有一个 Origin 头信息字段。服务器的回应，也都会有一个 Access-Control-Allow-Origin 头信息字段。
+上面头信息中，Access-Control-Allow-Origin 字段是每次回应都必定包含的。</p>
+<h2>附带身份凭证的请求与通配符</h2>
+<p>在响应附带身份凭证的请求时：</p>
+<ul>
+<li>为了避免恶意网站滥用 Access-Control-Allow-Origin 头部字段来获取用户敏感信息，服务器在设置时不能将其值设为通配符 <code>*</code>。相反，应该将其设置为特定的域，例如：Access-Control-Allow-Origin: <code>https://juejin.cn</code>。通过将 Access-Control-Allow-Origin 设置为特定的域，服务器只允许来自指定域的请求进行跨域访问。这样可以限制跨域请求的范围，避免不可信的域获取到用户敏感信息。</li>
+<li>为了避免潜在的安全风险，服务器不能将 Access-Control-Allow-Headers 的值设为通配符 <code>*</code>。这是因为不受限制的请求头可能被滥用。相反，应该将其设置为一个包含标头名称的列表，例如：Access-Control-Allow-Headers: X-PINGOTHER, Content-Type。通过将 Access-Control-Allow-Headers 设置为明确的标头名称列表，服务器可以限制哪些自定义请求头是允许的。只有在允许的标头列表中的头部字段才能在跨域请求中被接受。</li>
+<li>为了避免潜在的安全风险，服务器不能将 Access-Control-Allow-Methods 的值设为通配符 <code>*</code>。这样做将允许来自任意域的请求使用任意的 HTTP 方法，可能导致滥用行为的发生。相反，应该将其设置为一个特定的请求方法名称列表，例如：Access-Control-Allow-Methods: POST, GET。通过将 Access-Control-Allow-Methods 设置为明确的请求方法列表，服务器可以限制哪些方法是允许的。只有在允许的方法列表中的方法才能在跨域请求中被接受和处理。</li>
+<li>对于附带身份凭证的请求（通常是 Cookie），</li>
+</ul>
+<p>这是因为请求的标头中携带了 Cookie 信息，如果 Access-Control-Allow-Origin 的值为 <code>*</code>，请求将会失败。而将 Access-Control-Allow-Origin 的值设置为 <code>https://juejin。cn</code>，则请求将成功执行。</p>
+<p>另外，响应标头中也携带了 Set-Cookie 字段，尝试对 Cookie 进行修改。如果操作失败，将会抛出异常。</p>
+<h1>为什么本地使用 webpack 进行 dev 开发时，不需要服务器端配置 cors 的情况下访问到线上接口？</h1>
+<p>当你在本地通过 Ajax 或其他方式请求线上接口时，由于浏览器的同源策略，会出现跨域的问题。但是在服务器端并不会出现这个问题。</p>
+<p>它是通过 Webpack Dev Server 来实现这个功能。当你在浏览器中发送请求时，请求会先被 Webpack Dev Server 捕获，然后根据你的代理规则将请求转发到目标服务器，目标服务器返回的数据再经由 Webpack Dev Server 转发回浏览器。这样就绕过了浏览器的同源策略限制，使你能够在本地开发环境中访问线上接口。</p>
+<h1>总结</h1>
+<p>预检请求是在进行跨域资源共享 <code>CORS</code> 时，由浏览器自动发起的一种 OPTIONS 请求。它的存在是为了保障安全，并允许服务器决定是否允许跨域请求。</p>
+<p>跨域请求是指在浏览器中向不同域名、不同端口或不同协议的资源发送请求。
+出于安全原因，浏览器默认禁止跨域请求，只允许同源策略。
+而当网页需要进行跨域请求时，浏览器会自动发送一个预检请求，以确定是否服务器允许实际的跨域请求。</p>
+<p>预检请求中包含了一些额外的头部信息，如 Origin 和 Access-Control-Request-Method 等，用于告知服务器实际请求的方法和来源。服务器收到预检请求后，可以根据这些头部信息，进行验证和授权判断。
+如果服务器认可该跨域请求，将返回一个包含 Access-Control-Allow-Origin 等头部信息的响应，浏览器才会继续发送实际的跨域请求。</p>
+<p>使用预检请求机制可以有效地防范跨域请求带来的安全风险，保护用户数据和隐私。</p>
+
+<h1>使用 Vitest 和 React Testing Library 给 Next.js 应用单元测试</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7158478077670981662?searchId=202401261549374C48CC23171B271C060A">juejin.cn</a></p>
+</blockquote>
+<h2>TDD</h2>
+<p>现在我们就根据 TDD 测试方法论来测试开发 <code>VideoList</code> 组件。</p>
+<ol>
+<li>首先新建一个 <code>video-list.test.tsx</code> 测试文件，先写一个 <code>snapshot</code> 测试，此时保存测试肯定会报错，因为我们的组件还没建立；</li>
+<li>根据页面功能需求，写组件测试用例，可以先使用 <code>skip</code> 代替真实用例，也可以直接使用中文描述；</li>
+</ol>
+<pre><code>import { describe, expect, it } from &quot;vitest&quot;;
+import { render, screen } from &quot;@testing-library/react&quot;;
+import VideoList from &quot;@/components/video-list&quot;;
+
+describe(&quot;VideoList&quot;, () =&gt; {
+  it(&quot;it should be render&quot;, () =&gt; {
+    const { container } = render(&lt;VideoList data={[]} /&gt;);
+    expect(container).toMatchSnapshot();
+  });
+
+  it(&quot;it should be render with data&quot;, () =&gt; {});
+  it.skip(&quot;it should be render with className&quot;, () =&gt; {});
+});
+</code></pre>
+<p>1）渲染必须有数据
+2）渲染必须带 className
+3）渲染可以通过 editable 控制状态
+3.  建立 VideoList 组件文件，根据首页编写组件代码;</p>
+<pre><code>type Props = {
+  className?: string;
+  editable?: boolean;
+  horizontal?: boolean;
+  data: (Video &amp; {
+    author: User;
+  })[];
+};
+
+export default function VideoList({
+  data,
+  editable,
+  className,
+  horizontal,
+}: Props) {
+  return (
+    &lt;div className={className}&gt;
+      {data.map((item) =&gt; {
+        return (
+          &lt;VideoItem
+            key={item.id}
+            editable={editable}
+            horizontal={horizontal}
+            item={item}
+          /&gt;
+        );
+      })}
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<p>下面是 VideoItem 组件代码
+4.  替换组件中的数据为 mock 数据，确保 mock 数据在页面中显示，并且显示数据 count 与 mock 数据一致</p>
+<pre><code>it(&quot;it should be editable with editable props&quot;, () =&gt; {
+  const { container } = render(&lt;VideoList data={mockData} editable /&gt;);
+  expect(screen.queryAllByRole(&quot;edit&quot;)).toHaveLength(mockData.length);
+expect(screen.queryAllByRole(&quot;delete&quot;)).toHaveLength(mockData.length);
+});
+</code></pre>
+<ol start="5">
+<li>测试 className、 editable 等其他 props，根据测试用例修改组件代码，直至组件全部测试通过</li>
+</ol>
+<h2>测试自定义 Hooks</h2>
+<p>IntersectionObserver API，可以自动 &quot;观察&quot; 元素是否可见，Chrome 51+ 已经支持。由于可见（visible）的本质是，目标元素与视口产生一个交叉区，所以这个 API 叫做 &quot;交叉观察器&quot;，我们用它来实现无限滚动加载。</p>
+<ol>
+<li>这个 api，是浏览器特有的，Node 环境中不存在这个 api，因此我们需要 mock 一下这个 api</li>
+<li>我们通过使用 <code>vi.stubGlobal</code> 来模拟 <code>jsdom</code> 或 <code>node</code> 中不存在的全局变量。它将把全局变量的值放入 <code>globalThis</code> 对象，现在我们可以在测试环境中通过 <code>IntersectionObserver</code> 或 <code>window.IntersectionObserver</code> 访问。</li>
+</ol>
+<pre><code class="language-js">import { vi } from 'vitest'
+const IntersectionObserverMock = vi.fn(() =&gt; ({
+  disconnect: vi.fn(),
+  observe: vi.fn(),
+  takeRecords: vi.fn(),
+  unobserve: vi.fn(),
+}))
+vi.stubGlobal('IntersectionObserver', IntersectionObserverMock)
+</code></pre>
+<p>接下来新建一个测试文件，由于 useOnScreen 必须配合一个 domRef 值，所以我们必须重新写一个组件来配合测试：</p>
+<pre><code class="language-js">function App() {
+  const ref = useRef();
+  const visible = useOnScreen(ref);
+  return (
+    &lt;div role=&quot;test&quot; ref={ref}&gt;
+      {visible ? &quot;true&quot; : &quot;false&quot;}
+    &lt;/div&gt;
+  );
+}
+</code></pre>
+<p>紧接着的是测试代码：</p>
+<pre><code class="language-js">describe(&quot;useOnScreen&quot;, () =&gt; {
+  it(&quot;default value is false，After tigger function should be true&quot;, async () =&gt; {
+    render(&lt;App /&gt;);
+expect(screen.getByRole(&quot;test&quot;)).toHaveTextContent(&quot;false&quot;);
+  });
+});
+</code></pre>
+<p>默认值返回 false，当触发交叉观察器的时候会返回 true。
+IntersectionObserver 构造函数的回调方法没有主动执行，但是这一步在浏览器中是主动触发的，因此我们需要手动触发 mock 函数的回调方法, 最终测试代码如下：</p>
+<pre><code class="language-js">describe(&quot;useOnScreen&quot;, () =&gt; {
+  it(&quot;default value is false，After callback value should be true&quot;, async () =&gt; {
+    render(&lt;App /&gt;);
+    //  获得 mock 函数调用的参数
+    const callback = IntersectionObserverMock.mock.calls[0][0];
+expect(screen.getByRole(&quot;test&quot;)).toHaveTextContent(&quot;false&quot;);
+act(() =&gt; {
+      callback([{ isIntersecting: true }]);
+    });
+expect(screen.getByRole(&quot;test&quot;)).toHaveTextContent(&quot;true&quot;);
+  });
+});
+</code></pre>
+<p>上面代码中，我们可以使用 <code>IntersectionObserverMock.mock.calls</code> 来获得 mock 函数调用的参数，然后使用 <code>act</code> 方法 模拟浏览器真实操作，保存代码后，测试自动运行，我们可以看到测试成功，并且覆盖率 100%。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0acdb6e9445742b08d8c50c6f6a78ec0~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt=""></p>
+<h2>虽然是这一行代码解决了我的问题，但是我在写这个单元测试的过程中，也花费了我不少时间。
+小结</h2>
+<p><strong>思考</strong>
+对于前端单元测试，我觉得不要过多地去追求 100% 测试覆盖率，也不要为了单侧而单侧，而是需要根据功能和场景来写单侧，在成本和信心值中间找到一个平衡，应用一些好的实践去降低写单测的成本，提升写测试带来的回报，让我们的项目质量越来越高。</p>
+
+<h1>关于自建组件库的思考</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7063017892714905608">juejin.cn</a></p>
+</blockquote>
+<h2>问题思考</h2>
+<ul>
+<li>目前现状
+<ul>
+<li>不自建的话会有哪些问题，为什么不用 antd/element</li>
+<li>哪些人提出了哪些的问题</li>
+<li>分析为什么会出现这些问题</li>
+<li>哪些问题是必须解决的，哪些是阶段推进的</li>
+</ul>
+</li>
+<li>期望目标
+<ul>
+<li>组件库的<strong>定位</strong>是什么</li>
+<li>自建组件库是为了满足什么场景</li>
+<li><strong>阶段目标</strong>是什么</li>
+<li>最终期望达到什么效果</li>
+</ul>
+</li>
+<li>具体实现
+<ul>
+<li>哪些问题用哪些方法来解决</li>
+<li>关于后续迭代是怎么考虑的</li>
+</ul>
+</li>
+</ul>
+<h2>目前现状</h2>
+<p>仅仅是因为前端开发为了部分代码或者样式不用重复写就封装一个组件甚至组件库是一件很搞笑的事情，最终往往会出现以下问题：</p>
+<ul>
+<li>代码分散但是却高耦合，存在很多职责不明确</li>
+<li>封装过于死板，且暴露的属性职责不明确</li>
+<li>可维护性低，无法应对不断变化的需求</li>
+<li>可靠性低，对上游数据不做错误处理，对下游使用者不做兼容处理
+最后没法迭代，因为代码质量及版本问题，连原始开发者都改不动的，相关使用者怨声载道，然后又重构一遍，还是同样的设计思路，只不过基于已知业务场景改了写法，然后过一段时间又成为一个新的历史包袱。
+<strong>当你为了方便改别人的代码而选择 fork 别人的组件库下来简单改改再输出时，难道你觉得别人不会对 “你写的” 这个组件库持同样的看法么？</strong>
+你会发现，如果仅仅以一个业务员的角度去寻求解决办法的话，最后往往不能够得到其他业务员的认可的～
+组件库的存在目的是为了提高团队的工作效率，不是单纯为了个别人能少写代码，前者才是目的，后者只是其中一种实现方式（这句话自己悟吧）
+期望目标</li>
+</ul>
+<hr>
+<p>一个合格的组件库应该要让使用者感受到两点：</p>
+<ul>
+<li>约束（为什么只能这样传嘛？）</li>
+<li>方便（只要这样传就可以耶～）</li>
+</ul>
+<p>不合格的组件库往往只关注后者，但是其实前者更加重要
+在能实现甲方的需求前提下，约束的树立会让团队<strong>对某一问题形成一个固有的解决方案</strong>，这个使用过程会促成惯性的产生</p>
+<p>同时，这个惯性一旦建立，就能促成两个结果：</p>
+<ul>
+<li>弥合了人与人之间的差异</li>
+<li>提高了交流效率（不单单是开发，还包括设计、产品、测试等一条工作链路上的相关人）
+要知道的是，团队合作过程中，<strong>效率最低的环节永远是沟通</strong>，一个好的团队不是全员大神，而是做什么事情以一个整体，每个人步调趋于一致，这样效率才高～</li>
+</ul>
+<h2>具体实现</h2>
+<p>编写一个公共库需要考虑很多东西，下面主要分三点来阐述</p>
+<h3>逻辑的分割</h3>
+<ul>
+<li>避免一次性、不通用、没必要的封装</li>
+<li>不允许出现相互跨级或交叉引用的情况，应形成明确的上下级关系</li>
+<li>被抽离的逻辑代码应该尽可能的 “独立“，避免变成” 谁也离不开谁”</li>
+</ul>
+<h3>逻辑的封装</h3>
+<p>对于一个管理平台框架来说，宗旨是让开发少写代码、产品少写文档，不需要每次有新业务都要重复产出
+对于开发来说，具体有两点：</p>
+<ul>
+<li>大部分情况下，能拷贝下 demo 即可实现各类交互效果</li>
+<li>小部分情况下，组件能提供其他更多的可能以满足特殊需求
+封装过程中，仅暴露关键属性，提供多种可能，并且以比较常用的值作为 “默认值” 并明确定义，即可满足“大部分需求只需无脑引用，同时小部分的特殊需求也能被满足”</li>
+</ul>
+<h3>维护与开发</h3>
+<p>作为一个上游的 UI 库，要充分考虑下游使用者的情况</p>
+<ul>
+<li>做到升级后保证下游大部分情况下不需要改动</li>
+<li>组件的新增、删除、修改要有充分的理由（需求或 bug），并且要遵循最小影响原则</li>
+<li>组件的设计要充分考虑日后可能发生的变化</li>
+</ul>
+
+<h1>基于 CSR 的骨架屏生成</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://github.com/YoRenChen/Blog/issues/4">github.com</a></p>
+</blockquote>
+<h2>生成流程</h2>
+<p>骨架屏生成的流程如下：</p>
+<ol>
+<li>通过获取 DOM 节点，把元素解析成骨架页标签</li>
+<li>添加自定义骨架屏 class 进行样式覆盖</li>
+<li>填充到 index.html 并输出
+<img src="https://user-images.githubusercontent.com/30005394/120107134-617e8680-c192-11eb-8dfc-cf3de1764d79.png" alt=""></li>
+</ol>
+<h2>使用场景</h2>
+<p>本章节介绍骨架屏使用的三个场景分析和实现。</p>
+<ol>
+<li>首屏</li>
+<li>去缓存刷新，根据不同的页面地址展示不同骨架屏</li>
+<li>组件局部 loading</li>
+</ol>
+<h3>首屏</h3>
+<p>对于首屏实现骨架屏，大致就是替换 index.html 页面的内容，在请求 html 的时候第一时间会渲染出骨架屏内容。</p>
+<p><img src="https://user-images.githubusercontent.com/30005394/120107365-66900580-c193-11eb-99c6-4d147d3003b1.png" alt=""></p>
+<p>首屏生成大致流程：</p>
+<p><img src="https://user-images.githubusercontent.com/30005394/120107366-66900580-c193-11eb-9a2d-f0c721322ae0.png" alt=""></p>
+<p>生成页面对应的骨架屏，需要获取到这些页面的 Dom 结构，但在生成页面之前先偷偷获取并生成骨架屏。这里使用到_Puppeteer(Headless Chrome Node.js API，模拟 Chrome 浏览器的运行) 插件_。</p>
+<h4>Puppeteer</h4>
+<p>简单说一下 Puppeteer 执行与骨架屏生成大致流程：
+在转换过程中，涉及到 Puppteer 里需要把执行的页面 Js 注入到页面中：</p>
+<pre><code># skeletonjs/skeleton.js
+await page.addScriptTag({ content: this.scriptContent })
+</code></pre>
+<p>this.scriptContent 就是需要注入的 js 自运行代码，这里把 socket 和生成页面预览去除，单纯用 node 跑生成骨架页面程序服务。</p>
+<p>（也尝试像 page-skelrton 那样做成个 plugin，在生成端口地址之后运行 puppeteer。按预期走非常不错，但是有一个致命的问题，就是每次热跟新的时候都会执行这个周期，那就导致每次都运行 puppeteer 生成骨架，可以是可以但没必要，所以干脆单独成为一个 node 服务 。）</p>
+<h3>组件局部 loading</h3>
+<p>这部分只有一个思路，尚未实现。观察到 antd vue 的骨架屏是通过，标签实现。<br>
+那么思路就是使用标签包裹。<br>
+通过获取包含内容的数据结构，解构生成骨架屏，在数据请求成功之后隐藏起来。</p>
+<pre><code>&lt;skeleton show&gt;
+    ...dosomething
+&lt;/skeleton&gt;
+</code></pre>
+<h2>元素处理</h2>
+<p>本章节介绍骨架屏根据页面内容生成方案，很大程度依赖的是已经被渲染过的页面，居于这个页面上进行筛选元素。</p>
+<h3>筛选元素</h3>
+<ol>
+<li>深度遍历元素，获取 html 文档上所有元素</li>
+<li>屏幕宽高以内的元素</li>
+<li>筛选出特定设置元素</li>
+</ol>
+<p><img src="https://user-images.githubusercontent.com/30005394/120107901-5da03380-c195-11eb-8304-f230a7e5ec4f.png" alt=""></p>
+<h3>元素解析</h3>
+<h4>背景色</h4>
+<ol>
+<li>将拥有除了白色之外的颜色默认置色为骨架屏背景色</li>
+<li>将所有拥有 textChildNode 子元素的元素的文本颜色设置成背景色</li>
+</ol>
+<h4>svgs、buttons、image、inputs</h4>
+<p>以上元素不能在里面进行添加其他元素的操作，所以需要用其他元素今天替换，同时避免其他资源的加载。</p>
+<ol>
+<li>获取元素位置和 position、display</li>
+<li>使用 span 元素替换该元素</li>
+<li>加入背景色</li>
+<li>加入 loading 效果</li>
+</ol>
+<h4>伪类</h4>
+<p>伪类的使用场景比较多而且复杂，在变换骨架的时候会较为有难度，但使用伪类多为脱离文档流，故想在生成骨架屏的时候选择屏蔽伪类。</p>
+<h4>字体处理</h4>
+<ol>
+<li>获取文本内容</li>
+<li>根据实际高度和行高计算出文本的行数<br>
+a. 行数大于 1，将背景色填充所有行<br>
+b. 文本的长度背景色填充</li>
+<li>文本背景色填充<br>
+a. 绘制文本块中通过线性渐变来绘制灰色的文本条纹</li>
+</ol>
+<p>下面简述如何处理文本和字体条纹颜色转换。</p>
+<p>在判断文本行数时，会先获取文本填充到新建的内联元素，并继承 fontsize，获取到的内联元素 width 和 height 就是字体的宽和高，再对比原元素的宽高即可知道是否为多行文本。</p>
+<p>对单行文本进行颜色填充：</p>
+<blockquote>
+<p>摘自：CSS Secrets<br>
+“If a color stop has a position that is less than the specied position of any color stop before it in the list, set its position to be equal to the largest speci ed position of any color stop before it.”<br>
+— CSS Images Level 3 (<a href="http://w3.org/TR/css3-images">http://w3.org/TR/css3-images</a>)</p>
+</blockquote>
+<p>我们可以根据文本块的 lineHeight 和 fontsize 得到文本距离块上下的距离，设置 linear-gradient</p>
+<pre><code>字体大小和行高比例: textHeightRatio = fontSize/lineHeight
+字体顶部离行高的距离比: headerProportion = ((1 - textHeightRatio) / 2 * 100)
+字体底部离行高的距离比: footerProportion = (((1 - textHeightRatio) / 2 + textHeightRatio) * 100)
+设置backgroundSize: backgroundSize = (字体宽度比元素总长, 字体fontSize)
+设置linear-gradient: linear-gradient(transparent ${headerProportion}%, ${color} 0%, ${color} ${footerProportion}%, transparent 0%)
+</code></pre>
+<p><img src="https://user-images.githubusercontent.com/30005394/120108124-65140c80-c196-11eb-863f-6fa227c35d4f.png" alt=""></p>
+<h4>loading</h4>
+<ol>
+<li>新建元素加载到目标元素的 childrenNode 里</li>
+<li>position 为 absolute</li>
+<li>继承父类的相对位置作为默认位置</li>
+<li>不同元素处理：</li>
+</ol>
+<ul>
+<li>非字体元素</li>
+<li>字体元素<br>
+a. 高度设置：字体高度<br>
+b. translate：<code>translate(-${{ 'left': 0, 'center': '50%', 'right':calc(100% - ${width})}[textAlign]}, 0)</code><br>
+c. top: 字体顶部离行高的距离比<br>
+d. left: <code>{ 'left': 0, 'center': '50%', 'right':calc(100% - ${width})}[textAlign]</code></li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/30005394/120108209-c63be000-c196-11eb-963b-e884679c218f.png" alt=""></p>
+
+<h1>年轻人的第一款单元测试框架———vitest</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7190159077908381756?searchId=202401261549374C48CC23171B271C060A">juejin.cn</a></p>
+</blockquote>
+<h3>引入 Vue Test Utils</h3>
+<p>但这个时候我们不能直接就进行组件的单元测试，vitest 本身是不支持单元组件测试的，需要安装<code>Vue Test Utils</code>配合 vitest 才可进行，我们安装一下：
+<code>shallowMount</code>方法是 Vue Test Utils 库中的一个方法，它可以在测试环境中挂载一个 Vue 组件，并返回一个包装器对象，该对象可以用于访问组件的一些属性和方法，并且由于它是浅渲染，意味着它只会渲染当前组件，而不会渲染它的子组件。这对于单元测试来说很有用，因为它允许您专注于当前组件的行为，并避免与子组件的行为产生干扰。
+搭配<code>shallowMount</code>方法对组件进行一个挂载，将 Link 组件挂载到测试环境中</p>
+<h3>测试组件是否渲染成功</h3>
+<p>我们引入组件后，再导入<code>describe</code> <code>expect</code> <code>test</code>方法，
+对是否渲染成功进行判断，由于原组件当中我们对 link 组件定义了不同的颜色，
+这里我们直接判断默认颜色是否为黑色即可</p>
+<pre><code class="language-js">import Link from '../src/link/Link'
+import { shallowMount } from '@vue/test-utils'
+import { describe, expect, test } from 'vitest'
+​
+//使用shallowMount()方法挂载组件，并使用expect断言方法来检验组件的渲染是否正确
+describe('Link', () =&gt; {
+    test(&quot;mount @vue/test-utils&quot;, () =&gt; {
+        const wrapper = shallowMount(Link, {
+            slots: {
+                default: 'Link'
+            }
+        });​
+        //断言
+        expect(wrapper.text()).toBe(&quot;Link&quot;)
+    })
+})
+//对组件颜色进行测试，测试默认link颜色
+describe(&quot;Link&quot;, () =&gt; {
+    test(&quot;default color is black&quot;, () =&gt; {
+        // 使用 shallowMount 方法挂载组件
+        const wrapper = shallowMount(Link);​
+        // 断言组件默认颜色是否是 black
+        expect(wrapper.props().color).toBe(&quot;black&quot;);
+    });
+});
+</code></pre>
+
+<h1>谈谈复杂应用的状态管理（上）：为什么是 Zustand</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7177216308843380797?searchId=20240126153450902039BAB3C63517BA67">juejin.cn</a></p>
+</blockquote>
+<h2>复杂应用的状态管理天坑</h2>
+<p>ProEditor 是内部组件库 TechUI Studio 的编辑器组件。牵扯到大量的状态管理需求。
+<strong>❶ Editor 容器状态管理与组件Table状态管理拆分，但可联动消费；</strong></p>
+<ul>
+<li>容器状态负责了一些偏全局配置的状态维护，比如画布、代码页的切换，是否激活画布交互等等，</li>
+<li>而组件的状态则是保存了组件本身的所有配置和状态。
+好处在于</li>
+<li>不同组件可能会有不同的状态，而 Editor 的容器状态可以复用，</li>
+<li>比如做 ProForm 的时候，Editor 的容器仍然可以是同一个，组件状态只需额外实现 ProForm 的 Store 即可。</li>
+</ul>
+<h2>需要进行复杂的数据处理</h2>
+<p>ProEditor 针对表格编辑，做了大量的数据变换操作。</p>
+<ul>
+<li>比如 ProTable 中针对 <code>columns</code> 这个字段的更新就有 14 种操作。</li>
+<li>比如其中一个比较容易被感知的<code>updateColumnByOneAPI</code> 就是基于 oneAPI 的字段信息更新，细颗粒度地调整 columns 里的字段信息。</li>
+<li>而这样的字段修改类型的 store，在 ProEditor 中除了 <code>columns</code> 还有一个 <code>data</code>。
+当时，为了保证数据变更方法的可维护性与 action 的不变性，我采用了 userReducer 做变更方法的管理。</li>
+</ul>
+<p>因为一旦采用自定义 hooks ，就得写成下面这样才能保证不会重复渲染，会造成极大的心智负担，一旦出现数据不对的情况，很难排查到底是哪个方法或者依赖有问题。</p>
+<pre><code>// 自定 hook 的写法
+const useDataColumns = () =&gt; {
+  const createOrUpdateColumnsByMockData = useCallback(()=&gt;{
+    // ...
+  },[a,b]);
+  const createColumnsByOneAPI = useCallback(()=&gt;{
+    // ...
+  },[c,d]);
+  const updateColumnsByOneAPI = useCallback(()=&gt;{
+    // ...
+  },[a,b,c,d]);
+  // ...
+}
+</code></pre>
+<p>但 useReducer 也有很大的局限性，例如不支持异步函数、不支持内部的 reducer 互相调用，不支持和其他 state 联动（比如要当参数穿进去才可用），所以也不是最优解。</p>
+<h2>是个可被外部消费的组件</h2>
+<p>一旦提到组件，势必要提非受控模式和受控模式。为了支持好我们自己的场景，且希望把 ProEditor 变成一个好用的业务组件，所以我们做了受控模式，毕竟一个好用的组件一定是要能同时支持好这两种模式的。</p>
+<p>在实际场景下，我们既需要配置项（<code>config</code>）受控，同时也需要画布交互状态（<code>interaction</code>）受控，</p>
+<ul>
+<li>例如下面的场景：在激活某个单元格状态时点击生成，我们需要将这个选中状态进行重置，才能生成符合预期的设计稿。</li>
+<li>所以为了支持细颗粒度的受控能力，我们提供了多个受控值，供外部受控模式。</li>
+</ul>
+<pre><code class="language-js">// ProEditor 外部消费的 Demo 示意
+export default () =&gt; {
+  const [status, setStatus] = useState();
+  const { config, getState } = useState();
+
+  return  (
+    &lt;ProEditor
+      // config 和 onConfigChange 是一对
+      config={config}
+      onConfigChange={({ config }) =&gt; {
+        setConfig(config);
+      }}
+      // interaction 和 onInteractionChange 是另一对受控
+      interaction={status}
+      onInteractionChange={(s) =&gt; {
+        setStatus(s);
+      }}
+      /&gt;
+  );
+}
+</code></pre>
+<h2>为什么是 Zustand ？</h2>
+<h3>状态共享</h3>
+<p><strong>状态管理最必要的一点就是状态共享</strong>。</p>
+<ul>
+<li>这也是 context 出来以后，大部分文章说不需要 redux 的根本原因。</li>
+<li>context 可以实现最最基础的状态共享。
+<ul>
+<li>但这种方法（包括 redux 在内，都需要在最外层包一个 Provider。 Context 中的值都在 Provider 的作用域下有效。</li>
+</ul>
+</li>
+</ul>
+<pre><code>// Context 状态共享
+// store.ts
+export const StoreContext = createStoreContext(() =&gt; { ... });
+// index.tsx
+import { appState, StoreContext } from './store';
+root.render(
+    &lt;StoreContext.Provider value={appState}&gt;
+      &lt;App /&gt;
+    &lt;/StoreContext.Provider&gt;
+);
+// icon.tsx
+import { StoreContext } from './store';
+const ReplaceGuide: FC = () =&gt; {
+  const { i18n, hideGuide, settings } = useContext(StoreContext);
+  // ...
+  return ...
+}
+</code></pre>
+<p>而 zustand 做到的第一点创新就是：</p>
+<ul>
+<li><strong>默认不需要 Provider</strong>。</li>
+<li>直接声明一个 hooks 式的 useStore 后就可以在不同组件中进行调用。它们的状态会直接共享，简单而美好。
+由于没有 Provider 的存在，所以声明的 useStore 默认都是单实例，</li>
+<li>如果需要多实例的话，zustand 也提供了对应的 Provider 的<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fpmndrs%2Fzustand%23react-contexthttps%3A%2F%2Fgithub.com%2Fpmndrs%2Fzustand%23react-context" title="https://github.com/pmndrs/zustand#react-contexthttps://github.com/pmndrs/zustand#react-context">书写方式</a>，</li>
+<li>这种方式在组件库中比较常用。 ProEditor 也是用的这种方式做到了多实例。
+此外，zustand 的 store 状态既可以在 react 世界中消费，也可以在 react 世界外消费。</li>
+</ul>
+<h3>❷ 状态变更</h3>
+<ul>
+<li>hooks 的 <code>setState</code> 是原子级的变更状态，hold 不住复杂逻辑；</li>
+<li><code>useReducer</code> 的 hooks 借鉴了 redux 的思想，提供了 dispatch 变更的方式，但和 redux 的 reducer 一样，这种方式没法处理异步，且没法互相调用，</li>
+<li>最新的 <code>redux-toolkit</code> 中优化大量 redux 的模板代码，针对同步异步方法的书写仍然让人心生畏惧。
+而在 zustand 中，函数可以直接写，完全不用区分同步或者异步，一下子把区分同步异步的心智负担降到了 0。</li>
+</ul>
+<pre><code>// zustand store 写法
+
+// store.ts
+import create from 'zustand';
+
+const initialState = {
+ // ...
+};
+
+export const useStore = create((set, get) =&gt; ({
+  ...initialState,
+  createNewDesignSystem: async () =&gt; {
+    const { params, toggleLoading } = get();
+
+    toggleLoading();
+    const res = await dispatch('/hitu/remote/create-new-ds', params);
+    toggleLoading();
+
+    if (!res) return;
+
+    set({ created: true, designId: res.id });
+  },
+  toggleLoading: () =&gt; {
+    set({ loading: !get().loading });
+  }
+}));
+
+// CreateForm.tsx
+import { useStore } from './store';
+
+const CreateForm: FC = () =&gt; {
+  const { createNewDesignSystem } = useStore();
+
+  // ...
+}
+</code></pre>
+<p><strong>zustand 会默认将所有的函数保持同一引用</strong>。</p>
+<ul>
+<li>所以用 zustand 写的方法，默认都不会造成额外的重复渲染。
+在下图可以看到，所有 zustand 的 useStore 出来的值或者方法，都是橙色的变量，具有稳定引用，不会造成不必要的重复渲染。
+<strong>需要调用当前快照下的值或方法</strong>。
+===
+在常规的开发心智中，</li>
+<li>我们往往会在异步方法中直接调用当前快照的值来发起请求，</li>
+<li>或使用同步方法进行状态变更，这会有极好的状态内聚性。</li>
+</ul>
+<p>比如说，我们有一个方法叫「废弃草稿」，需要获取当前的一个 id ，向服务器发起请求做数据变更，同时为了保证当前界面的数据显示有效性，变更完毕后，我们需要重新获取数据。
+我们来看看 hooks 版本和 zustand 的写法对比，如下所示：</p>
+<pre><code class="language-js">// hooks 版本
+export const useStore = () =&gt; {
+  const [designId, setDesignId] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const refetch = useCallback(() =&gt; {
+    if (designId) {
+      mutateKitchenSWR('/hitu/remote/ds/versions', designId);
+    }
+  }, [designId]);
+
+  const deprecateDraft = useCallback(async () =&gt; {
+    setLoading(true);
+    const res = await dispatch('/hitu/remote/ds/deprecate-draft', designId);
+    setLoading(false);
+    if (res) {
+      message.success('草稿删除成功');
+    }
+    // 重新获取一遍数据
+    refetch();
+  }, [designId, refetch]);
+
+  return {
+    designId,
+    setDesignId,
+    loading,
+    deprecateDraft,
+    refetch,
+  }
+};
+</code></pre>
+<pre><code class="language-js">// zustand 写法
+const initialState = { designId: undefined, loading: false };
+export const useStore = create((set, get) =&gt; ({
+  ...initialState,
+  deprecateDraft: async () =&gt; {
+    set({ loading: true });
+    const res = await dispatch('/hitu/remote/ds/deprecate-draft', get().designId);
+    set({ loading: false });
+
+    if (res) {
+      message.success('草稿删除成功');
+    }
+    // 重新获取一遍数据
+    get().refetch();
+  },
+  refetch: () =&gt; {
+    if (get().designId) {
+      mutateKitchenSWR('/hitu/remote/ds/versions', get().designId);
+    }
+  },
+})
+</code></pre>
+<p>可以明显看到，光是从代码量上 zustand 的 store 比 hooks 减少了 30% 。</p>
+<h2>互调带来了引用变更</h2>
+<p>更重要的是， <strong>hooks 版本中互调带来了引用变更的问题</strong>。
+由于 <code>deprecateDraft</code> 和 <code>refetch</code> 都调用了 <code>designId</code>，这就会使得当 <code>designId</code> 发生变更时，<code>deprecateDraft</code> 和 <code>refetch</code> 的引用会发生变更，致使 react 触发刷新。这也是为什么 react 要搞一个 <code>useEvent</code> 的原因（<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Freactjs%2Frfcs%2Fblob%2Fuseevent%2Ftext%2F0000-useevent.md" title="https://github.com/reactjs/rfcs/blob/useevent/text/0000-useevent.md">RFC</a>）。</p>
+<p>而 zustand 则把这个问题解掉了。由于 zustand 在 create 方法中提供了 <code>get</code> 对象，使得我们可以用 get 方法直接拿到当前 store 中最新的 state 快照。这样一来，变更函数的引用始终不变，而函数本身却一直可以拿到最新的值。</p>
+<p>在这一趴，最后一点要夸 zustand 的是，它可以直接集成 useReducer 的模式，而且直接在官网提供了<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fpmndrs%2Fzustand%23cant-live-without-redux-like-reducers-and-action-types" title="https://github.com/pmndrs/zustand#cant-live-without-redux-like-reducers-and-action-types">示例</a>。这样就意味着之前在 ProEditor 中的那么多 action 可以极低成本完成迁移。</p>
+<pre><code>// columns 的 reducer 迁移
+import { columnsConfigReducer } from './columns';
+const createStore = create((set,get)=&gt;({
+  /**
+   * 控制 Columns 的复杂数据变更方法
+   */
+  dispatchColumns: (payload) =&gt; {
+    const { columns, internalUpdateTableConfig, updateDataByColumns } = get();
+    // 旧的 useReducer 直接复用过来
+    const nextColumns = columnsConfigReducer(columns, payload);
+    internalUpdateTableConfig({ columns: nextColumns }, 'Columns 配置');
+
+    updateDataByColumns(nextColumns);
+  },
+})
+</code></pre>
+<h3>❸ 状态派生</h3>
+<p>状态派生是状态管理中一个不被那么多人提起，但是在实际场景中被大量使用的东西，只是大家没有意识到，这理应也是状态管理的一环。</p>
+<p>状态派生可以很简单，也可以非常复杂。简单的例子，比如基于一个<code>name</code> 字段，拼接出对应的 url 。如果不考虑优化，其实都可以写一个中间的函数作为派生方法，但作为状态管理的一环，我们必须要考虑相应的优化。</p>
+<p>在 hooks 场景下，状态派生的方法可以使用 <code>useMemo</code>，例如：</p>
+<pre><code>// hooks 写法
+
+const App = () =&gt; {
+  const [name,setName]=useState('')
+  const url = useMemo(() =&gt; URL_HITU_DS_BASE(name || ''),[name])
+  // ...
+}
+</code></pre>
+<p>而 zustand 用了类似 redux selector 的方法，实现相应的状态派生，这个方式使得 useStore 的用法变得极其灵活和实用。而这种 selector 的方式使得 zustand 下细颗粒度的性能优化变为可能，且优化成本很低。</p>
+<pre><code>// zustand 的 selector 用法
+
+// 写法1
+const App = () =&gt; {
+  const url = useStore( s =&gt; URL_HITU_DS_BASE(s.name || ''));
+  // ...
+}
+
+// 写法2 将 selector 单独抽为函数
+export const dsUrlSelector = (s) =&gt; URL_HITU_DS_BASE(s.name || '');
+const App = () =&gt; {
+  const url = useStore(dsUrlSelector);
+  // ...
+}
+</code></pre>
+<p>由于写法 2 可以将 selector 抽为独立函数，那么我们就可以将其拆分到独立文件来管理派生状态。由于这些 selector 都是纯函数，所以能轻松实现测试覆盖。</p>
+<h3>❹ 性能优化</h3>
+<p>讲完状态派生后把 zustand 的 selector 能力后，直接很顺地就能来讲讲 zustand 的性能优化了。</p>
+<p>在裸 hooks 的状态管理下，要做性能优化得专门起一个专项来分析与实施。但基于 zustand 的 useStore 和 selector 用法，我们可以实现低成本、渐进式的性能优化。
+上图中可以看到，虽然 <code>tabs</code>、<code>internalSetState</code> 没有变化，但是其中的 config 数据项（data、columns 等）发生了变化，进而使得 <code>TableConfig</code> 组件触发重渲染。
+而我们的性能优化方法也很简单，只要利用 zustand 的 selector，将得到的对象聚焦到我们需要的对象，只监听这几个对象的变化即可。</p>
+<pre><code>// 性能优化方法
+
+import shallow from 'zustand/shallow'; // zustand 提供的内置浅比较方法
+import { useStore, ProTableStore } from './store'
+
+const selector = (s: ProTableStore) =&gt; ({
+  tabKey: s.tabKey,
+  internalSetState: s.internalSetState,
+});
+
+const TableConfig: FC = () =&gt; {
+  const { tabKey, internalSetState } = useStore(selector, shallow);
+}
+</code></pre>
+<p>这样一来，TableConfig 的性能优化就做好了~
+基于这种模式，性能优化就会变成极其简单无脑的操作，而且对于前期的功能实现的侵入性极小，代码的后续可维护性极高。
+就我个人的感受上， zustand 使用 selector 来作为性能优化的思路真的很精巧，就像是给函数式的数据流加上了一点点主观意愿上的响应式能力，堪称优雅。</p>
+<h3>❺ 数据分形与状态组合</h3>
+<p>如果子组件能够以同样的结构，作为一个应用使用，这样的结构就是分形架构。
+数据分形在状态管理里我觉得是个比较高级的概念。
+但从应用上来说很简单，就是更容易拆分并组织代码，而且具有更加灵活的使用方式，如下所示是拆分代码的方式。但这种方式其实我还没大使用，所以不多展开了。</p>
+<pre><code class="language-js">import create, { StateCreator } from 'zustand'
+interface BearSlice {
+  bears: number
+  addBear: () =&gt; void
+  eatFish: () =&gt; void
+}
+const createBearSlice: StateCreator&lt;
+  BearSlice &amp; FishSlice,
+  [],
+  [],
+  BearSlice
+&gt; = (set) =&gt; ({
+  bears: 0,
+  addBear: () =&gt; set((state) =&gt; ({ bears: state.bears + 1 })),
+  eatFish: () =&gt; set((state) =&gt; ({ fishes: state.fishes - 1 })),
+})
+
+interface FishSlice {
+  fishes: number
+  addFish: () =&gt; void
+}
+const createFishSlice: StateCreator&lt;
+  BearSlice &amp; FishSlice,
+  [],
+  [],
+  FishSlice
+&gt; = (set) =&gt; ({
+  fishes: 0,
+  addFish: () =&gt; set((state) =&gt; ({ fishes: state.fishes + 1 })),
+})
+
+const useBoundStore = create&lt;BearSlice &amp; FishSlice&gt;()((...a) =&gt; ({
+  ...createBearSlice(...a),
+  ...createFishSlice(...a),
+}))
+</code></pre>
+<p><strong>我用的更多的是基于这种分形架构下的各种中间件</strong>。由于这种分形架构，状态就具有了很灵活的组合性，例如将当前状态直接缓存到 localStorage。在 zustand 的架构下， 不用额外改造，直接加个 <code>persist</code> 中间件就好。</p>
+<pre><code>// 使用自带的 Persist Middleware
+
+import create from 'zustand'
+import {  persist } from 'zustand/middleware'
+
+interface BearState {
+  bears: number
+  increase: (by: number) =&gt; void
+}
+
+const useBearStore = create&lt;BearState&gt;(
+  persist((set) =&gt; ({
+    bears: 0,
+    increase: (by) =&gt; set((state) =&gt; ({ bears: state.bears + by })),
+  }))
+)
+</code></pre>
+<p>在 ProEditor 中，我使用最多的就是 <code>devtools</code> 这个中间件。这个中间件具有的功能就是：将这个 Store 和 Redux Devtools 绑定。</p>
+<pre><code>// devtools 中间件
+
+// store 逻辑
+const vanillaStore = (set,get)=&gt; ({ 
+  syncOutSource: (nextState) =&gt; {
+    set({ ...get(), ...nextState }, false, `受控更新：${Object.keys(nextState).join(' ')}`);
+  },
+  syncOutSourceConfig: ({ config }) =&gt; {
+    // ...
+    set({ ...get(), ...config }, false, `受控更新：🛠 组件配置`);
+    // ...
+  },
+}); 
+
+const createStore = create(
+  devtools(vanillaStore, { name: 'ProTableStore' })
+);
+</code></pre>
+<p>然后我们就可以在 redux-devtools 中愉快地查看数据变更了：
+可能有小伙伴会注意到，为什么我这边的状态变更还有中文名，那是因为 <code>devtools</code> 中间件为 zustand 的 set 方法，提供了一个额外参数。只要设置好相应的 set 值的最后一个变量，就可以直接在 devtools 中看到相应的变更事件名称。</p>
+<p>正是这样强大的分形能力，我们基于社区里做的一个 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fcharkour%2Fzundo" title="https://github.com/charkour/zundo">zundo</a> 中间件，在 ProEditor 中提供了一个简易的撤销重做 的 Demo 示例。
+而实现核心功能的代码就只有一行~ 😆
+PS：至于一开始提到的协同能力，我在社区中也有发现中间件 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fjoebobmiles%2Fzustand-middleware-yjs" title="https://github.com/joebobmiles/zustand-middleware-yjs">zustand-middleware-yjs</a> （不过还没尝试）。</p>
+<h3>❻ 多环境集成（ react 内外环境联动 ）</h3>
+<p>实际的复杂应用中，一定会存在某些不在 react 环境内的状态数据，以图表、画布、3D 场景最多。一旦要涉及到多环境下的状态管理，可以让人掉无数头发。</p>
+<p>而 zustand 说了，不慌，我已经考虑到了，<code>useStore</code> 上直接可以拿值，是不是很贴心~</p>
+<pre><code>// 官方示例
+
+// 1. 创建Store
+const useDogStore = create(() =&gt; ({ paw: true, snout: true, fur: true }))
+
+// 2. react 环境外直接拿值
+const paw = useDogStore.getState().paw
+
+// 3. 提供外部事件订阅
+const unsub1 = useDogStore.subscribe(console.log)
+
+// 4. react 世界外更新值
+useDogStore.setState({ paw: false })
+
+const Component = () =&gt; {
+  // 5. 在 react 环境内使用
+  const paw = useDogStore((state) =&gt; state.paw)
+  ...
+</code></pre>
+<p>虽然这个场景我还没遇到，但是一想到 zustand 在这种场景下也能支持，真的是让人十分心安。
+其实还有其他不太值得单独提的点，比如 zustand 在测试上也相对比较容易做，直接用 test-library/react-hooks 即可。</p>
