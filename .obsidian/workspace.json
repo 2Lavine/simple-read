@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/TDD 实战.md",
+                "file": "md/HTTP 灵魂之问，巩固你的 HTTP 知识体系.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/TDD 实战.md"
+                "file": "md/HTTP 灵魂之问，巩固你的 HTTP 知识体系.md"
               }
             }
           },
@@ -96,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/TDD 实战.md",
+                "file": "md/HTTP 灵魂之问，巩固你的 HTTP 知识体系.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/TDD 实战.md",
+                "file": "md/HTTP 灵魂之问，巩固你的 HTTP 知识体系.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -171,33 +171,33 @@
   },
   "active": "8c6ec655adffb5bc",
   "lastOpenFiles": [
-    "md/谈谈复杂应用的状态管理（上）：为什么是 Zustand.md",
-    "md/TDD 实战.md",
+    "md/个人笔记：Nextjs14 中的 RSC.md",
+    "md/React 的 Suspense 和 ErrorBoundary 还有这种关系？.md",
+    "md/[译] 使用 Node 和 OAuth 2.0 构建一个简单的 REST API.md",
+    "md/带你深度解锁 Webpack 系列 (基础篇).md",
+    "md/探秘神奇的 IntersectionObserver：释放网页性能的黑科技！.md",
+    "md/简单易懂的 webpack 打包后 JS 的运行过程.md",
+    "done/为什么你不应该在 React 中直接使用 useEffect 从 API 获取数据.md",
+    "done/为什么 Bun 可能对 Node 降维打击？.md",
+    "md/同学，请实现一个扫码登录.md",
+    "md/IntersectionObserver 实现虚拟列表初探.md",
+    "md/10 分钟了解 nextTick ，并实现简易版的 nextTick.md",
+    "md/React SSR 全流程原理：从 renderToString 到 hydrate.md",
+    "md/Session、Token 和 OAuth.md",
+    "done/关于自建组件库的思考.md",
+    "md/HTTP 灵魂之问，巩固你的 HTTP 知识体系.md",
+    "done/HTTP 灵魂之问.md",
+    "done/IntersectionObserver.md",
+    "done/Web 应用的轻量级状态管理工具 zustand.md",
+    "done/谈谈复杂应用的状态管理（上）：为什么是 Zustand.md",
+    "done/TDD 实战.md",
+    "done/2024-01-31.md",
+    "done/2024-02-02.md",
+    "done/Vitest 进行React测试.md",
     "done/使用 Vitest 和 React Testing Library 给 Next.js 应用单元测试.md",
-    "md/Vitest 进行React测试.md",
     "md/全新的 React 组件设计理念 Headless UI.md",
     "md/谈谈复杂应用的状态管理（下）：基于 Zustand 的渐进式状态管理实践.md",
-    "md/浅谈 SAML, OAuth, OpenID 和 SSO, JWT 和 Session.md",
-    "done/京东一面：post 为什么会发送两次请求？🤪🤪🤪.md",
-    "done/Vitest  组件测试.md",
-    "md/React Fiber 架构.md",
-    "done/基于 CSR 的骨架屏生成.md",
-    "md/2024-01-31.md",
-    "md/2024-02-02.md",
-    "md/Islands Architecture.md",
-    "md/Animating View Transitions.md",
-    "md/缓存必知必会.md",
-    "md/Tailwind CSS + cva 实现样式变体组件.md",
-    "done/年轻人的第一款单元测试框架———vitest.md",
-    "md/Service Worker 从入门到出门.md",
-    "md/Web 应用的轻量级状态管理工具 zustand.md",
-    "md/同学，请实现一个扫码登录.md",
-    "done/Vitest 前端 TDD 的一大利器.md",
-    "achieve/2024-01-23.md",
-    "achieve/2024-01-22.md",
-    "done/精读《zustand 源码》.md",
     "output/2024-1-29 15-36-53.html",
-    "achieve/精读《zustand 源码》.md",
     "_resources/2ebd036e77414665b6baefb4117cb8ea_MD5.png",
     "_resources/2f7adc00aedf34a9e33061465bb5efe9_MD5.png",
     "_resources/85527725259dc3a2e740ed1a8f79bee4_MD5.png",

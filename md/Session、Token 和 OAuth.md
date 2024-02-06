@@ -1,20 +1,14 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844903864458543111?searchId=2024020123354387E6C3055FA55B58B0BE)
 
-  前后端未分离以前，页面都是通过后台来渲染的，能不能访问到页面直接由后台逻辑判断。前后端分离以后，页面的元素由页面本身来控制，所以页面间的路由是由前端来控制了。当然，仅有前端做权限控制是远远不够的，后台还需要对每个接口做验证。  
-  为什么前端做权限控制是不够的呢？因为前端的路由控制仅仅是视觉上的控制，前端可以隐藏某个页面或者某个按钮，但是发送请求的方式还是有很多，完全可以跳过操作页面来发送某个请求。所以就算前端的权限控制做的非常严密，后台依旧需要验证每个接口。  
-  前端的权限控制主要有三种：路由控制（路由的跳转）、视图控制（按钮级别）和请求控制（请求拦截器）。这几种方式之后再详谈，前端做完权限控制，后台还是需要验证每一个接口，这就是鉴权。现在前后端配合鉴权的方式主要有以下几种：
 
+前端的权限控制主要有三种：路由控制（路由的跳转）、视图控制（按钮级别）和请求控制（请求拦截器）。
+这几种方式之后再详谈，前端做完权限控制，后台还是需要验证每一个接口，这就是鉴权。现在前后端配合鉴权的方式主要有以下几种：
 1.  session-cookie
 2.  Token 验证 (JWT)
 3.  OAuth(开放授权)
-
 ### session-cookie
-
 #### cookie
-
-  Http 协议是一个无状态的协议，服务器不会知道到底是哪一台浏览器访问了它，因此需要一个标识用来让服务器区分不同的浏览器。cookie 就是这个管理服务器与客户端之间状态的标识。  
-  cookie 的原理是，浏览器第一次向服务器发送请求时，服务器在 response 头部设置 Set-Cookie 字段，浏览器收到响应就会设置 cookie 并存储，在下一次该浏览器向服务器发送请求时，就会在 request 头部自动带上 Cookie 字段，服务器端收到该 cookie 用以区分不同的浏览器。当然，这个 cookie 与某个用户的对应关系应该在第一次访问时就存在服务器端，这时就需要 session 了。
-
+cookie 的原理是，浏览器第一次向服务器发送请求时，服务器在 response 头部设置 Set-Cookie 字段，浏览器收到响应就会设置 cookie 并存储，在下一次该浏览器向服务器发送请求时，就会在 request 头部自动带上 Cookie 字段，服务器端收到该 cookie 用以区分不同的浏览器。当然，这个 cookie 与某个用户的对应关系应该在第一次访问时就存在服务器端，这时就需要 session 了。
 ```
 const http = require('http')
 http.createServer((req, res) => {
@@ -28,8 +22,7 @@ http.createServer((req, res) => {
 ```
 
 #### session
-
-  session 是会话的意思，浏览器第一次访问服务端，服务端就会创建一次会话，在会话中保存标识该浏览器的信息。它与 cookie 的区别就是 session 是缓存在服务端的，cookie 则是缓存在客户端，他们都由服务端生成，为了弥补 Http 协议无状态的缺陷。
+session 是会话的意思，浏览器第一次访问服务端，服务端就会创建一次会话，在会话中保存标识该浏览器的信息。它与 cookie 的区别就是 session 是缓存在服务端的，cookie 则是缓存在客户端，他们都由服务端生成，为了弥补 Http 协议无状态的缺陷。
 
 #### session-cookie 认证
 
@@ -64,57 +57,9 @@ http.createServer((req, res) => {
 }).listen(3000)
 ```
 
-#### redis
-
-  redis 是一个键值服务器，可以专门放 session 的键值对。如何在 koa 中使用 session:
-
-```
-const koa = require('koa')
-const app = new koa()
-const session = require('koa-session')
-
-const redisStore = require('koa-redis')
-const redis = require('redis')
-const redisClient = redis.createClient(6379, 'localhost')
-
-const wrapper = require('co-redis')
-const client = wrapper(redisClient)
-
-//加密sessionid
-app.keys = ['session secret']
-
-const SESS_CONFIG = {
-  key: 'kbb:sess',
-  //此时让session存储在redis中
-  store: redisStore({ client })
-}
-
-app.use(session(SESS_CONFIG, app))
-
-app.use(ctx => {
-  //查看redis中的内容
-  redisClient.keys('*', (errr, keys) => {
-    console.log('keys:', keys)
-    keys.forEach(key => {
-      redisClient.get(key, (err, val) => {
-        console.log(val)
-      })
-    })
-  })
-  if (ctx.path === '/favicon.ico') return
-  let n = ctx.session.count || 0
-  ctx.session.count = ++n
-  ctx.body = `第${n}次访问`
-})
-
-app.listen(3000)
-```
-
 #### 用户登录认证
-
-  使用 session-cookie 做登录认证时，登录时存储 session，退出登录时删除 session，而其他的需要登录后才能操作的接口需要提前验证是否存在 session，存在才能跳转页面，不存在则回到登录页面。  
-  在 koa 中做一个验证的中间件，在需要验证的接口中使用该中间件。
-
+使用 session-cookie 做登录认证时，登录时存储 session，退出登录时删除 session，而其他的需要登录后才能操作的接口需要提前验证是否存在 session，存在才能跳转页面，不存在则回到登录页面。  
+在 koa 中做一个验证的中间件，在需要验证的接口中使用该中间件。
 ```
 //前端代码
 async login() {
@@ -171,7 +116,6 @@ router.post('/logout', async (ctx) => {
 ```
 
 ### Token
-
   token 是一个令牌，浏览器第一次访问服务端时会签发一张令牌，之后浏览器每次携带这张令牌访问服务端就会认证该令牌是否有效，只要服务端可以解密该令牌，就说明请求是合法的，令牌中包含的用户信息还可以区分不同身份的用户。一般 token 由用户信息、时间戳和由 hash 算法加密的签名构成。
 
 #### Token 认证流程
@@ -309,11 +253,8 @@ router.get(
   在前后端分离的情境下，我们常使用授权码方式，指的是第三方应用先申请一个授权码，然后再用该码获取令牌。
 
 ##### GitHub 第三方登录示例
-
-  我们用例子来理清授权码方式的流程。
-
+我们用例子来理清授权码方式的流程。
 1.  在 GitHub 中备案第三方应用，拿到属于它的客户端 ID 和客户端密钥。
-
   在 github-settings-developer settings 中创建一个 OAuth App。并填写相关内容。填写完成后 Github 会给你一个客户端 ID 和客户端密钥。
 
 ![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/6/13/16b4ec2927416360~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
@@ -364,12 +305,3 @@ router.get('/github/callback', async (ctx) => {
 
 })
 ```
-
-### 参考
-
-[cookie，session 傻傻分不清楚？](https://link.juejin.cn?target=https%3A%2F%2Fwww.cnblogs.com%2Fnickjiang%2Fp%2F9148136.html "https://www.cnblogs.com/nickjiang/p/9148136.html")  
-[把 cookie 聊清楚](https://juejin.cn/post/6844903501869350925 "https://juejin.cn/post/6844903501869350925")  
-[前后端常见的几种鉴权方式](https://link.juejin.cn?target=https%3A%2F%2Fblog.csdn.net%2Fwang839305939%2Farticle%2Fdetails%2F78713124%2F "https://blog.csdn.net/wang839305939/article/details/78713124/")  
-[前端面试查漏补缺 --(十) 前端鉴权](https://juejin.cn/post/6844903781704941576#heading-23 "https://juejin.cn/post/6844903781704941576#heading-23")  
-[谈前端权限](https://link.juejin.cn?target=https%3A%2F%2Fwww.jianshu.com%2Fp%2F08b9c9b519cd "https://www.jianshu.com/p/08b9c9b519cd")  
-[OAuth 2.0 的四种方式](https://link.juejin.cn?target=http%3A%2F%2Fwww.ruanyifeng.com%2Fblog%2F2019%2F04%2Foauth-grant-types.html "http://www.ruanyifeng.com/blog/2019/04/oauth-grant-types.html")

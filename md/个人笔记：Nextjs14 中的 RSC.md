@@ -123,13 +123,10 @@ export default Home
 > 这里描述简单的流程，而非原理。
 
 流式渲染返回的是一个 json 字符串，记录着 dom 元素类型，内容等，这个 json 被称为 **RSC Payload**
-
 1. 等包裹在`<Suspense>`中的组件加载完成后，会被编译为 **RSC Payload**。
-
 ```
 "a:[\"$\",\"div\",null,{\"children\":[[\"$\",\"span\",\"大海\",{\"children\":\"大海\"}],[\"$\",\"span\",\"河\",{\"children\":\"河\"}],[\"$\",\"span\",\"蝴蝶结\",{\"children\":\"蝴蝶结\"}]]}]\n"
 ```
-
 2. 一开始返回的 HTML 中预留着 `<tamplate>`和`<!--$?-->`注释。
 
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/725168f82ba54190837a140a33580b89~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=353&h=141&s=10464&e=png&b=fffefe)
@@ -141,9 +138,7 @@ export default Home
 ### 客户端组件
 
 在 RSC 范式中，传统的 React 组件被成为客户端组件 **React Clinet Compent**。在 客户端组件 中可以使用 `useEffect`、`useState`这些 hook，弥补了服务端组件不能进行复杂的交互逻辑的缺点。
-
 那如何识别客户端组件呢？很简单，有 `use clinet`的就是 客户端组件。
-
 ```
 'use client'
 import React, { useState } from 'react'
@@ -170,9 +165,7 @@ export default Count
 ### 边界
 
 如果客户端组件包裹着服务端组组件，并且状态不断改变，那么服务端组件会重新渲染吗？
-
 比如：
-
 ```
 function server() {
   return (

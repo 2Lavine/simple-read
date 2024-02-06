@@ -5,8 +5,9 @@
 我们知道，redux 不仅是一个状态管理工具，其同时也提倡一种优秀的模式，即我们熟知的：
 > Store -> Dispatch -> Action -> Reducer -> Store
 
-而这种模式需要我们手写大量的模板代码，于是就有了官方解决方案 **@reduxjs/toolkit** 和社区方案 **@rematch/core**，这进一步加剧了资源大小所带来的影响。
-经过分析，事实上我们可以看到 redux 的核心代码库仅有 **1.6kb** 的大小，但为了适配 React.js 和解决模板代码的问题，至少也要增加 **7.1kb** 的资源大小
+而这种模式需要我们手写大量的模板代码，
+- 有了官方解决方案 **@reduxjs/toolkit** 和社区方案 **@rematch/core**
+- 经过分析，事实上我们可以看到 redux 的核心代码库仅有 **1.6kb** 的大小，但为了适配 React.js 和解决模板代码的问题，至少也要增加 **7.1kb** 的资源大小
 
 在移动端场景下，项目一般较为简单、规模较小，对于工具的核心需求其实也仅仅是满足应用状态管理即可。于是，**zustand** 社区方案成为了我的一个选择。
 　　
@@ -17,19 +18,17 @@ redux vs zustand
 分析一下两者的源码实现，第一步首先来看看两者的核心实现，即状态管理的机制。
 ## 状态管理做的是什么事情
 状态即数据
-对于一个原生的 Web 应用来说，某一时刻页面展示的结构和样式取决于此时的状态
+对于一个原生的 Web 应用来说，某一时刻页面展示的结构和样式取决于此时的状
+态
 状态可能会由于用户交互动作发生变化。
-- Web 应用有很多状态，比如表单的勾选按钮状态，我们可以将这种状态视为局部状态，该状态的变化不会导致页面其它部分发生变化；
-- 当然，如果我们将用户体验设计更进一步，勾选按钮的状态会同步影响表单提交按钮是否处于可点击的状态，此时一个状态在页面两个部分都有影响，
-- 对于更复杂的 Web 应用来说，一个状态可能影响到页面数十个部分，
-- 我们就需要对状态的维护更新机制进行设计，将状态的维护从页面进行解耦，独立到全局来进行，则将这种状态称之为全局状态。显然，对于局部状态来说，页面局部可以完成自治，而对于全局状态来说，则需要一个全局中心化的 “数据库” 来进行管理。
-
-现在，我们可以知道，状态管理需要提供一个类似中心化的 “数据库”，同时对于状态要提供更新机制，而状态可以被多个部分依赖，状态更新的同时依赖方可以及时获取到最新状态。
-这不就是软件架构中典型的发布 / 订阅模式吗？所以，先来看看 redux 和 zustand 两者提供的 API，大致就能理解其核心实现的模型。
-
+- Web 应用有很多状态，比如表单的勾选按钮状态，我们
+	- 将这种状态视为局部状态，该状态的变化不会导致页面其它部分发生变化；
+- 更进一步，勾选按钮的状态会同步影响表单提交按钮是否处于可点击的状态，
+	- 此时一个状态在页面两个部分都有影响，
+	- 显然，对于局部状态来说，页面局部可以完成自治，而对于全局状态来说，则需要一个全局中心化的 “数据库” 来进行管理。
 ## redux 和 zustand 
 
-```
+```js
 // Redux (https://redux.js.org/api/api-reference)
 createStore(reducer, [preloadedState], [enhancer])
 // Store
@@ -51,14 +50,15 @@ subscribe()
 setState()
 ```
 
-　由此可见，两者提供的核心 API 是非常相近的，从 API 命名的角度来看，其核心实现无疑是基于发布 / 订阅模式。
-
-　两者都有一个 `createStore()` API 来创建一个中心化的数据存储区，同时创建的 store 实例均会暴露出主动获取状态的 API `getState()`，订阅状态更新的 API `subscribe()`，以及更新状态的 API `dispatch()` 和 `setState()`，当然 redux 还引入了一个 `reducer` 的概念和 API。
-
-　两者的核心库均只有 1kb 大小，而 zustand 更小，这是因为 zustand 实现更为简单一些，其差异主要集中在状态更新机制上，其次是状态订阅机制。
-
-### subscribe()
-　　在状态订阅的 `subscribe()` API 实现中，zustand 仅是简单的直接将订阅函数添加到订阅列表中，同时提供了一个 `selector` 机制来过滤状态：
+　两者都有一个 `createStore()` API 来创建一个中心化的数据存储区，
+　- 同时创建的 store 实例均会暴露出主动获取状态的 API `getState()`
+　- 订阅状态更新的 API `subscribe()`，
+　- 更新状态的 API `dispatch()` 和 `setState()`，
+　- 当然 redux 还引入了一个 `reducer` 的概念和 API。
+### zustand subscribe()
+　　在状态订阅的 `subscribe()` API 实现中
+　　- zustand 仅是简单的直接将订阅函数添加到订阅列表中，
+　　- 同时提供了一个 `selector` 机制来过滤状态：
 ```js
 const subscribe: Subscribe<TState> = <StateSlice>(
   listener: StateListener<TState> | StateSliceListener<StateSlice>,
@@ -96,7 +96,7 @@ const previousSlice = currentSlice
 // Unsubscribe
 return () => listeners.delete(listenerToAdd)
 }// see https://github.com/pmndrs/zustand/blob/v3.6.5/src/vanilla.ts#L107
-      const subscribeWithSelector = <StateSlice>(
+const subscribeWithSelector = <StateSlice>(
         listener: StateSliceListener<StateSlice>,
           selector: StateSelector<TState, StateSlice> = getState as any,
           equalityFn: EqualityChecker<StateSlice> = Object.is
@@ -115,14 +115,16 @@ const previousSlice = currentSlice
 return () => listeners.delete(listenerToAdd)
 }
 ```
+
 通过上面 `listenerToAdd()` 函数可以看到，在订阅状态时提供了 `selector` 的话，状态更新时会首先将状态过滤一遍再通知给订阅者。
 ```js
 const setState: SetState<TState> = (partial, replace) => {
     listeners.forEach((listener) => listener(state, previousState))
 }
 ```
-
 通过 `setState()` 更新状态时，所有订阅函数将会调用，同时会将新的状态和旧的状态传递给订阅函数。
+
+## redux 订阅函数
 接下来，看看 redux 的实现，redux 在添加订阅函数时做了一些特殊的判断，以及特殊处理：
 ```js
 // see https://github.com/reduxjs/redux/blob/v4.1.2/src/createStore.js#L128
@@ -178,10 +180,8 @@ function dispatch(action) {
 
 redux 通过 `dispatch()` 更新状态时，由于在订阅时没有默认提供 `selector` 机制，所以会无差别的通知所有订阅者，同时也不会将新旧状态传递给订阅函数，当然在官方示例代码中可以看到，官方推荐在订阅函数中主动通过 `getState()` 获取新的状态以及完成 selector 操作。可以说，由于 redux 和 zustand 设计理念不同，订阅的实现方式也略有差别，前者控制的更细致，而灵活性很高，而后者在保持简单性的同时也没有牺牲灵活性。
 
-### `setState()` && `dispatch()`
-
+### zustand的setState()函数 && dispatch()
 状态更新机制是两者实现最大的不同，zustand 提供一个 `setState()` 函数来更新状态：
-
 ```ts
 const setState: SetState<TState> = (partial, replace) => {
     const nextState =
@@ -199,9 +199,17 @@ const setState: SetState<TState> = (partial, replace) => {
 ```
 
 根据源码实现来看，zustand 通过 `Object.assign` 函数合并更新状态，同时提供 `replace` 标志位直接将旧状态完全替换。
- redux 的状态更新则要复杂一些，主要是官方推荐的编程模式将状态更新拆分为多个步骤，`dispatch()` 函数触发一个 `Action`，而具体处理 Action 以及状态合并的操作均由 `Reducer` 函数完成，该函数是一个纯函数。至于为什么要这么设计，官方有说明，纯函数对于状态变化来说是可预测的，而且利于测试，更是实现时间旅行类似功能的基础。
 
-```
+## Redux 的状态更新函数
+ redux 的状态更新则要复杂一些，
+ - 官方推荐将状态更新拆分为多个步骤，
+	 - `dispatch()` 函数触发一个 `Action`，
+	 - 具体处理 Action 以及状态合并的操作均由 `Reducer` 函数完成，
+		 - 该函数是一个纯函数。
+ 为什么要这么设计
+ - 纯函数对于状态变化来说是可预测的，而且利于测试，更是实现时间旅行类似功能的基础。
+
+```js
 function dispatch(action) {
     if (!isPlainObject(action)) {
       throw new Error();
@@ -240,7 +248,7 @@ function dispatch(action) {
 ### React.js 适配
 
 如果说，核心库差异较小，而且包尺寸相近的话，那么最大的差异则出现在对 React.js 库的适配上面。
-zustand 出现的较晚，目前 Hook API 已经成为 React.js 社区的主流，所以 zustand 在对其适配的时候也是以 Hook API 的方式实现，没有提供类组件的适配。
+\ zustand 在对其适配的时候也是以 Hook API 的方式实现，没有提供类组件的适配。
 zustand 将 `createStore` 函数的返回值作为一个自定义 hook 来实现，其中为了让 React.js 组件能感知到状态更新，是利用 `useEffect` 来完成订阅操作，而状态更新发布后，则通过 `forceUpdate()` 来强制组件进行 rerender 以获取最新的状态。
 
 然而，react-redux 的实现则要复杂的多。由于其出现的较早，所以同时适配了类组件和函数组件。这里不再细究 react-redux 的具体实现，但其与 zustand 最大的差异则在于把状态放在了 `Context` 中存储，所以需要使用 `Provider` 将页面的根组件包裹起来才能使用。redux 的 `useSelector()` Hook API 与 zustand 上面提到的 `useStore()` 的实现逻辑也非常相似。
