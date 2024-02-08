@@ -1,19 +1,8 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7247045258842996794?searchId=202402012325316CE94CF6E1922963D4F6)
 
-观察者 `API` 家族，全部文章列表，欢迎点赞收藏
-
-1.  IntersectionObserver - [《探秘神奇的 IntersectionObserver：释放网页性能的黑科技！》](https://juejin.cn/post/7247045258842996794 "https://juejin.cn/post/7247045258842996794")
-2.  ResizeObserver - [《尺寸变化的魔术师：ResizeObserver 的神奇力量》](https://juejin.cn/post/7248832185808175141 "https://juejin.cn/post/7248832185808175141")
-3.  MutationObserver - [《开启 DOM 观察者模式，引爆你的前端开发创造力！ - MutationObserver》](https://juejin.cn/post/7249665935786229819 "https://juejin.cn/post/7249665935786229819")
-4.  PerformanceObserver - 待完成
-
 引言
 ==
-
-文章旨在探寻有意思的前端现代技术`IntersectionObserver`，看看它**是什么**，能**做什么**，又有**哪些坑**，文章结构也是围绕这三大块展开：
-
-1.  **是什么**：介绍 `IntersectionObserver` 技术**基础知识**、**兼容性**以及**原理**
-2.  **做什么**：介绍 `IntersectionObserver` 在多场景的**应用**和**实战代码**，同时会介绍笔者总结的一些**进阶技巧**和**最佳实践**，其中应用场景多达 **10** 个：
+介绍 `IntersectionObserver` 在应用场景多达 **10** 个：
     *   图片懒加载
     *   无限滚动加载
     *   广告展示控制
@@ -26,25 +15,14 @@
     *   消息已读状态标记（各聊天软件）
 3.  **哪些坑**：介绍 `IntersectionObserver` 怎么**测试**和**调试**以及一些**限制**
 
-> 文章约 7000 字，阅读时长 20 - 30 分钟
-
-1. IntersectionObserver 的概述
+IntersectionObserver 的概述
 ===========================
-
 1.1 起源
 ------
-
 在现代网页开发中，动态加载和按需展示内容已成为提升用户体验和网页性能的重要手段。传统的方法通常依赖于滚动事件或定时器来监测元素与视窗的交叉状态，但这些方法效率低下且容易导致性能问题。为了解决这个问题，`W3C` 于 2016 年引入了 `IntersectionObserver API`。
-
-1.2 IntersectionObserver 是什么？
------------------------------
-
-`IntersectionObserver`是一种浏览器提供的 `JavaScript API`，用于监测元素与视窗的交叉状态。它可以告诉开发者一个元素是否进入或离开视窗，以及两者的交叉区域的大小和位置。  
-它提供了一种高效的方法来观察元素是否进入或离开视窗，而无需依赖滚动事件或定时器。它可以通过回调函数及设定的阈值来实时地通知开发者目标元素与视窗的交叉状态，并根据需要采取相应的操作。
 
 1.3 IntersectionObserver 的特性
 ----------------------------
-
 *   **异步执行**：`IntersectionObserver` 是异步执行的，它使用浏览器的内部优化机制，不会阻塞主线程，从而避免了性能问题。
 *   **节省资源**：相比于传统的滚动事件或定时器，`IntersectionObserver` 可以精确地观察元素与视窗的交叉状态，避免了不必要的计算和回调触发，从而节省了资源的消耗。
 *   **多目标观察**：`IntersectionObserver` 可以同时观察多个目标元素，通过回调函数逐个通知开发者它们的交叉状态，方便进行批量操作。
@@ -52,23 +30,7 @@
 
 通过使用 `IntersectionObserver`，开发者可以实现一些常见的功能，如图片懒加载、无限滚动加载、广告展示控制等，以提升网页的性能和用户体验。
 
-2. 兼容性
-======
-
-2.1 原生支持度
----------
-
-浏览器支持程度超过 95%，已经是一个可以使用的技术
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87bb667334f6480cb3c3cf2e0923097c~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
-2.2 polyfill
-------------
-
-如果需要兼容更低版本的浏览器环境，你可能需要安装一个 `polyfill`，以下是官方的 [IntersectionObserver polyfill](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FGoogleChromeLabs%2Fintersection-observer "https://github.com/GoogleChromeLabs/intersection-observer")  
-支持最低浏览器版本如下： ![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fedfdb5a92214506b380ed6b6679d27c~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
-
-3. IntersectionObserver 的工作原理
+3 IntersectionObserver 的工作原理
 =============================
 
 `IntersectionObserver` 的工作原理涉及到观察目标元素、目标元素与视窗的交叉区域、回调函数和阈值等方面。`MDN` 官方介绍请[移步](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FAPI%2FIntersection_Observer_API "https://developer.mozilla.org/zh-CN/docs/Web/API/Intersection_Observer_API")
@@ -113,7 +75,7 @@
 3.  **优化算法**  
     为了提高性能和减少回调触发的次数，`IntersectionObserver` 使用了一些优化算法。它会将目标元素进行分组，并按照它们在文档中的顺序进行观察。  
     当观察到交叉状态变化时，`IntersectionObserver` 会将变化的目标元素放入队列中，并按照它们在文档中的顺序进行处理。这样可以确保回调函数的触发顺序与元素在文档中的顺序一致，避免出现混乱或错误的情况。
-    
+
 
 通过采用惰性计算、队列处理和优化算法，`IntersectionObserver` 实现了高效而平滑的元素交叉状态观察和回调触发，为开发者提供了一种优雅且性能优化的解决方案。
 
@@ -154,17 +116,14 @@ lazyImages.forEach((img) => {
 
 4.2 无限滚动加载
 ----------
-
 无限滚动加载是 `IntersectionObserver` 另一个常见的应用场景，特别适用于需要展示大量数据的页面，如社交媒体流、新闻列表等。  
 传统的无限滚动加载通常基于滚动事件来触发数据加载，但这种方式在性能和用户体验上存在一些问题。而使用 `IntersectionObserver` 可以更高效地实现无限滚动加载。  
 实现无限滚动加载的步骤如下：
-
 1.  创建 `IntersectionObserver` 实例，并指定观察的目标元素，通常是页面底部的加载指示器或占位符元素。
 2.  在回调函数中，判断目标元素是否进入视窗。
 3.  若目标元素进入视窗，触发数据加载的操作，并更新页面内容。
 
 示例代码如下：
-
 ```
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -256,58 +215,16 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-.load-more-sentinel {
-  width: 100%;
-  height: 15px;
-  .load-more {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 0 auto;
-    margin: 8px 0;
-    span {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin-right: 5px;
-      border-radius: 50%;
-      background: $Gray8_a080;
-      animation: load 1.04s ease infinite;
-      animation-delay: calc(var(--order) * 0.13s);
-      &:last-child {
-        margin-right: 0px;
-      }
-    }
-  }
-}
-@keyframes load {
-  from {
-    opacity: 1;
-    transform: scale(1.3);
-  }
-  to {
-    opacity: 0.2;
-    transform: scale(0.3);
-  }
-}
-</style>
 ```
 
 4.3 广告展示控制
 ----------
-
 `IntersectionObserver` 在广告展示控制方面也有应用。传统的做法是通过滚动事件或定时器来检测广告元素是否在视窗中，并根据条件来显示或隐藏广告。  
 使用 `IntersectionObserver` 可以更精确地控制广告的展示。通过观察广告元素与视窗的交叉状态，可以实现以下功能：
-
 1.  延迟加载广告：只有当广告元素进入视窗时才开始加载广告内容，从而减少不必要的请求和资源消耗。
 2.  动态展示广告：可以根据广告元素与视窗的交叉比例来决定广告的展示方式。例如，可以在广告元素完全进入视窗后才显示广告，或者在广告元素的一部分进入视窗时展示部分广告内容。
 3.  预加载广告：可以在广告元素进入视窗之前提前加载广告内容，以减少展示广告的延迟时间。
-
 示例代码如下：
-
 ```
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -330,7 +247,6 @@ ads.forEach((ad) => {
 
 4.4 有效曝光埋点
 ----------
-
 有效曝光埋点是 `IntersectionObserver` 的另一个重要应用场景。在网页或应用中，我们常常需要追踪用户对某些元素的曝光情况，以便进行数据分析、广告计费和用户行为研究等，但如何识别曝光为**有效**的，也就是真实的出现在视口范围内，是一个难点。  
 `IntersectionObserver` 提供了一个可靠且高效的方式来实现有效曝光埋点。通过观察目标元素与视窗的交叉状态，可以确定元素是否在视窗中完全或部分可见，从而进行曝光统计。
 
@@ -552,14 +468,3 @@ function markMessageAsRead(messageElement) {
 2.  **事件顺序不确定性**：由于 `IntersectionObserver` 是异步执行的，不同元素的回调函数执行顺序是不确定的。这可能会导致在处理相关逻辑时需要额外的注意，以确保正确的顺序和逻辑关联性。
 3.  **对于某些特殊情况的支持不完整**：`IntersectionObserver` 在一些特殊情况下的支持可能不完整，例如浏览器缩放或滚动容器的变化。在这些情况下，可能需要额外的处理来确保准确的交叉状态检测。
 4.  **性能监控的限制**：虽然 `IntersectionObserver` 可以监测元素的可见性，但并不能直接提供元素的具体位置信息。如果需要精确的元素位置信息来进行性能监控或其他操作，可能需要额外的计算或结合其他技术来实现。
-
-最后
-==
-
-`IntersectionObserver` 的设计理念与现代 `JavaScript` 技术的思想相契合。它注重性能优化、可扩展性和可维护性，使得开发者能够编写高效、可读性强的代码。同时，`IntersectionObserver` 也积极采用新的 `Web` 标准和 `API`，与现代浏览器的功能紧密结合，提供更好的兼容性和用户体验。
-
-总体而言，`IntersectionObserver` 是现代 `JavaScript` 技术中的一颗璀璨明珠，它的出现为网页开发带来了新的可能性和便利性。它让我们能够更轻松地实现复杂的交互效果、优化性能，并提供更出色的用户体验。
-
-期待大家一起用现代 `JavaScript` 技术做一些有意思的事情。
-
-`Observer API` 家族另一个很有用的成员 `ResizeObserver` 欢迎大家查看[《# 尺寸变化的魔术师：ResizeObserver 的神奇力量》](https://juejin.cn/post/7248832185808175141 "https://juejin.cn/post/7248832185808175141")

@@ -1,7 +1,6 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844903736830066695?searchId=20240118154711D0B7224F42C488B76A60)
 
-可能有很多的同学有用 setInterval 控制 ajax 不断向服务端请求最新数据的经历 (轮询) 看下面的代码：
-
+可能有很多的同学有用 setInterval 控制 ajax 不断向服务端请求最新数据的经历 (轮询) 看
 ```
 setInterval(function() {
     $.get('/get/data-list', function(data, status) {
@@ -23,11 +22,11 @@ function poll() {
 }
 ```
 
-当结果返回之后再延时触发下一次的请求，这样虽然没办法保证两次请求之间的间隔时间完全一致但是至少可以保证数据返回的节奏是稳定的，看似已经实现了需求但是这么搞我们先不去管他的性能就代码结构也算不上优雅，为了解决这个问题可以让服务端长时间和客户端保持连接进行数据互通 h5新增了 WebSocket 和 EventSource 用来实现长轮询，下面我们来分析一下这两者的特点以及使用场景。
+当结果返回之后再延时触发下一次的请求，这样虽然没办法保证两次请求之间的间隔时间完全一致但是至少可以保证数据返回的节奏是稳定的，看似已经实现了需求但是这么搞我们先不去管他的性能就代码结构也算不上优雅，
+- 为了解决这个问题可以让服务端长时间和客户端保持连接进行数据互通 h5新增了 WebSocket 和 EventSource 用来实现长轮询，下面我们来分析一下这两者的特点以及使用场景。
 
 WebSocket
 ---------
-
 **是什么：** WebSocket 是一种通讯手段，基于 TCP 协议，默认端口也是 80 和 443，协议标识符是 ws（加密为 wss），它实现了浏览器与服务器的全双工通信，扩展了浏览器与服务端的通信功能，使服务端也能主动向客户端发送数据，不受跨域的限制。
 
 **有什么用：** WebSocket 用来解决 http 不能持久连接的问题，因为可以双向通信所以可以用来实现聊天室，以及其他由服务端主动推送的功能例如 实时天气、股票报价、余票显示、消息通知等。
@@ -35,13 +34,14 @@ WebSocket
 EventSource
 -----------
 
-**是什么：** EventSource 的官方名称应该是 Server-sent events（缩写 SSE）服务端派发事件，EventSource 基于 http 协议只是简单的单项通信，实现了服务端推的过程客户端无法通过 EventSource 向服务端发送数据。喜闻乐见的是 ie 并没有良好的兼容当然也有解决的办法比如 `npm install event-source-polyfill`。虽然不能实现双向通信但是在功能设计上他也有一些优点比如可以自动重连接, event IDs, 以及发送随机事件的能力（WebSocket 要借助第三方库比如 socket.io 可以实现重连。）
+**是什么：** EventSource 的官方名称应该是 Server-sent events（缩写 SSE）服务端派发事件，EventSource 基于 http 协议只是简单的单项通信，实现了服务端推的过程客户端无法通过 EventSource 向服务端发送数据。
+- 虽然不能实现双向通信但是在功能设计上他也有一些优点比如可以自动重连接, event IDs, 以及发送随机事件的能力（WebSocket 要借助第三方库比如 socket.io 可以实现重连。）
 
-**有什么用：** 因为受单项通信的限制 EventSource 只能用来实现像股票报价、新闻推送、实时天气这些只需要服务器发送消息给客户端场景中。EventSource 的使用更加便捷这也是他的优点。
+**有什么用：** 因为受单项通信的限制 EventSource 只能用来实现像股票报价、新闻推送、实时天气这些只需要服务器发送消息给客户端场景中。
+- EventSource 的使用更加便捷这也是他的优点。
 
 WebSocket & EventSource 的区别
 ---------------------------
-
 1.  WebSocket 基于 TCP 协议，EventSource 基于 http 协议。
 2.  EventSource 是单向通信，而 websocket 是双向通信。
 3.  EventSource 只能发送文本，而 websocket 支持发送二进制数据。
@@ -52,9 +52,7 @@ WebSocket & EventSource 的区别
 
 EventSource 的实现案例
 -----------------
-
 客户端代码
-
 ```
 // 实例化 EventSource 参数是服务端监听的路由
 var source = new EventSource('/EventSource-test')
@@ -141,11 +139,9 @@ app.listen(6788, () => {
 
 `event：` 事件类型，如果指定了该字段，则在客户端接收到该条消息时，会在当前的 EventSource 对象上触发一个事件，事件类型就是该字段的字段值，你可以使用 addEventListener() 方法在当前 EventSource 对象上监听任意类型的命名事件，如果该条消息没有 event 字段，则会触发 onmessage 属性上的事件处理函数。 `data：` 消息的数据字段，如果该条消息包含多个 data 字段, 则客户端会用换行符把它们连接成一个字符串来作为字段值。 `id：` 事件 ID，会成为当前 EventSource 对象的内部属性 "最后一个事件 ID" 的属性值。 `retry：` 一个整数值，指定了重新连接的时间 (单位为毫秒)，如果该字段值不是整数，则会被忽略。
 
-#### 重连是干什么的？
-
 上文提过 retry 字段是用来指定重连时间的，那为什么要重连呢，我们拿 node 来说，大家知道node 的特点是单线程异步 io，单线程就意味着如果 server 端报错那么服务就会停掉，当然在node 开发的过程中会处理这些异常，但是一旦服务停掉了这时就需要用 pm2 之类的工具去做重启操作，这时候 server 虽然正常了，但是客户端的 EventSource 链接还是断开的这时候就用到了重连。
 
-#### 为什么案例中消息要用 \ n 结尾？
+#### EventSource案例中消息要用 \ n 结尾？
 
 \n 是换行的转义字符，EventSource 规范规定每条消息后面都由一个空行作为分隔符，结尾加一个 \ n 表示一个字段结束，加两个 \ n 表示一条消息结束。(两个 \ n 表示换行之后又加了一个空行)
 
@@ -157,27 +153,15 @@ WebSocket 的实现案例
 #### WebSocket 的客户端原生 api
 
 `var ws = new WebSocket('ws://localhost:8080')` WebSocket 对象作为一个构造函数，用于新建 WebSocket 实例。
-
 `ws.onopen = function(){}` 用于指定连接成功后的回调函数。
-
 `ws.onclose = function(){}` 用于指定连接关闭后的回调函数
-
 `ws.onmessage = function(){}` 用于指定收到服务器数据后的回调函数
-
 `ws.send('data')` 实例对象的 send() 方法用于向服务器发送数据
-
 `socket.onerror = function(){}` 用于指定报错时的回调函数
-
-#### 服务端的 WebSocket 如何实现
-
-npm 上有很多包对 websocket 做了实现比如 [socket.io](https://link.juejin.cn?target=http%3A%2F%2Fsocket.io "http://socket.io")、WebSocket-Node、ws、还有很多，本文只对 socket.io 以及 ws 做简单的分析，细节还请查看官方文档。
-
 #### socket.io 和 ws 有什么不同
 
 `Socket.io：` Socket.io 是一个 WebSocket 库，包括了客户端的 js 和服务器端的 nodejs，它会自动根据浏览器从 WebSocket、AJAX 长轮询、Iframe 流等等各种方式中选择最佳的方式来实现网络实时应用（不支持 WebSocket 的情况会降级到 AJAX 轮询），非常方便和人性化，兼容性非常好，支持的浏览器最低达 IE5.5。屏蔽了细节差异和兼容性问题，实现了跨浏览器 / 跨设备进行双向数据通信。
-
 `ws：` 不像 [socket.io](https://link.juejin.cn?target=http%3A%2F%2Fsocket.io "http://socket.io") 模块， ws 是一个单纯的 websocket 模块，不提供向上兼容，不需要在客户端挂额外的 js 文件。在客户端不需要使用二次封装的 api 使用浏览器的原生 Websocket API 即可通信。
-
 #### 基于 socket.io 实现 WebSocket 双向通信
 
 客户端代码
@@ -299,9 +283,7 @@ io.on('connection', (socket) => {
 *   `io.to(id).emit()` : 向指定 id 的客户端发送事件
 
 #### 基于 ws 实现 WebSocket 双向通信
-
 客户端代码
-
 ```
 let num = 0
 let ws = new WebSocket('ws://127.0.0.1:6788')
@@ -374,8 +356,8 @@ wss.on('connection', (wsocket) => {
 })
 ```
 
-######         上面代码中在 `new WebSocketServer` 的时候传入了 `server: httpServer` 目的是统一端口，虽然 WebSocketServer 可以使用别的端口，但是统一端口还是更优的选择，其实 express 并没有直接占用 6788 端口而是 express 调用了内置 http 模块创建了 http.Server 监听了 6788。express 只是把响应函数注册到该 http.Server 里面。类似的，WebSocketServer 也可以把自己的响应函数注册到 http.Server 中，这样同一个端口，根据协议，可以分别由 express 和 ws 处理。我们拿到 express 创建的 http.Server 的引用，再配置到 wssOptions.server 里让 WebSocketServer 根据我们传入的 http 服务来启动，就实现了统一端口的目的。
+上面代码中在 `new WebSocketServer` 的时候传入了 `server: httpServer` 目的是统一端口，虽然 WebSocketServer 可以使用别的端口，但是统一端口还是更优的选择，其实 express 并没有直接占用 6788 端口而是 express 调用了内置 http 模块创建了 http.Server 监听了 6788。express 只是把响应函数注册到该 http.Server 里面。类似的，WebSocketServer 也可以把自己的响应函数注册到 http.Server 中，这样同一个端口，根据协议，可以分别由 express 和 ws 处理。我们拿到 express 创建的 http.Server 的引用，再配置到 wssOptions.server 里让 WebSocketServer 根据我们传入的 http 服务来启动，就实现了统一端口的目的。
 
-######         要始终注意，浏览器创建 WebSocket 时发送的仍然是标准的 HTTP 请求。无论是 WebSocket 请求，还是普通 HTTP 请求，都会被 http.Server 处理。具体的处理方式则是由 express 和 WebSocketServer 注入的回调函数实现的。WebSocketServer 会首先判断请求是不是 WS 请求，如果是，它将处理该请求，如果不是，该请求仍由 express 处理。所以，WS 请求会直接由 WebSocketServer 处理，它根本不会经过 express。
+要始终注意，浏览器创建 WebSocket 时发送的仍然是标准的 HTTP 请求。无论是 WebSocket 请求，还是普通 HTTP 请求，都会被 http.Server 处理。具体的处理方式则是由 express 和 WebSocketServer 注入的回调函数实现的。WebSocketServer 会首先判断请求是不是 WS 请求，如果是，它将处理该请求，如果不是，该请求仍由 express 处理。所以，WS 请求会直接由 WebSocketServer 处理，它根本不会经过 express。
 
 * 案例仓库：https://github.com/cp0725/YouChat/tree/master/webSocket-eventSource-test* * 部分概念参考自 https://www.w3cschool.cn/socket/*

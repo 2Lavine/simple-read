@@ -4,14 +4,11 @@
 
 前言
 --
-
 button 组件是我们在开发中经常会用到的组件，这是一个看起来十分简单的组件，但是在实际开发中，我们经常会遇到这样的需求：同一个 button 组件，需要实现不同的样式，比如：不同的颜色、不同的大小、不同的形状等等。那么，我们如何通过 Tailwind CSS 优雅的实现这样的需求呢？
 
 需求
 --
-
 为了方便演示，我们先来简单定义一下我们的基本需求：
-
 *   button 组件有几种语义类型 type：primary、secondary、success、danger 等
 *   button 组件有三种大小 size：small、medium、large
 *   button 组件有三种填充 fill：solid、outline、text
@@ -19,12 +16,10 @@ button 组件是我们在开发中经常会用到的组件，这是一个看起�
 *   button 组件支持 disabled
 *   button 组件支持 Icon
 *   button 组件支持 loading
-
 简单分析一下需求，前四个需求都是对应按钮的不同样式变体（variants），我们只需要给每种变体指定自己特有的样式即可。而 disabled 和 loading 对应按钮的不同状态。我们使用组合的方式构建 Button 组件，因此 Icon 的逻辑不必写在 Button 组件内部。这样的话，loading 态也可以分解成一个 loading-icon + disabled 的组合。
 
 初步实现
 ----
-
 我们会用到一个 [clsx](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Flukeed%2Fclsx "https://github.com/lukeed/clsx") 库，它可以帮助我们更方便的通过条件去控制样式的变化。我们先来看一下我们的 Button 组件的代码：
 
 ```

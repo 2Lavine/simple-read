@@ -1,18 +1,14 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7315231440777527334?searchId=202402010907246CE654181FAB6CEE8AB9)
 
 Suspense 组件想必大家都用过，一般是和 React.lazy 结合用，用来加载一些异步组件。
-
 比如这样一个组件：
-
 ```
 // src/Aaa.jsx
 export default function Aaa() {
     return <div>aaa</div>
 }
 ```
-
 就可以在另一个组件里用 lazy + Suspense 异步加载：
-
 ```
 import React, { Suspense } from 'react';
 
@@ -27,20 +23,11 @@ export default function App() {
 }
 ```
 
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/23d4ce96284147bc880c8009dabe30f1~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=528&h=316&s=17360&e=gif&f=17&b=fdfdfd)
-
 这里的 import 是 webpack 提供的用来异步加载模块的 api，它会动态下载模块所在的 chunk，然后从中解析出该模块，拿到 export 的值：
-
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/77c43e62df8f40dfbcf11fc50338f1b9~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=1134&h=782&s=194991&e=png&b=fefefe)
-
 后台管理系统用这个挺多的，因为不可能一下子把所有路由的组件都下载下来，所以会用 lazy + Suspense 的方式异步加载一些组件。
-
 大多数场景下，Suspense 就专门和 lazy 搭配使用的。
-
 但有的时候，你会发现 Suspense 不搭配 lazy 也可以。
-
 比如 jotai 这个状态管理库，它就号称支持了 Suspense，可以这样写：
-
 ```
 import { Suspense } from 'react'
 import { atom, useAtom } from 'jotai'
@@ -64,19 +51,9 @@ export default function App() {
   </Suspense>
 }
 ```
-
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/58846cdcf0044e77901d3b250941b37b~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=634&h=302&s=20854&e=gif&f=23&b=fefefe)
-
-现在并不是用 lazy 异步加载组件呀，怎么触发的 Suspense 呢？
+在并不是用 lazy 异步加载组件呀，怎么触发的 Suspense 呢？
 
 回答这个问题会涉及到 ErrorBoundary。
-
-现在 react 官网都推荐用 function 而不是 class 了：
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/405effbb6de142ca8fcaddb01fa9ccc1~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=1248&h=526&s=48543&e=png&b=fdf6f1)
-
-绝大多数情况我们用 function 组件就好了，没必要用 class 组件。
-
 但是有一个特性是只有 class 组件才有的，就是 ErrorBoundary。
 
 这样写：

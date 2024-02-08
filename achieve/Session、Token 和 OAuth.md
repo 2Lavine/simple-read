@@ -1,7 +1,11 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844903864458543111?searchId=2024020123354387E6C3055FA55B58B0BE)
 
 
-前端的权限控制主要有三种：路由控制（路由的跳转）、视图控制（按钮级别）和请求控制（请求拦截器）。
+前端的权限控制主要有三种：
+- 路由控制（路由的跳转）
+- 视图控制（按钮级别）
+- 请求控制（请求拦截器）。
+
 这几种方式之后再详谈，前端做完权限控制，后台还是需要验证每一个接口，这就是鉴权。现在前后端配合鉴权的方式主要有以下几种：
 1.  session-cookie
 2.  Token 验证 (JWT)
@@ -242,10 +246,8 @@ router.get(
 ```
 
 ### OAuth
-
   三方登入主要基于 OAuth 2.0。OAuth 协议为用户资源的授权提供了一个安全的、开放而又简易的标 准。与以往的授权方式不同之处是 OAuth 的授权不会使第三方触及到用户的帐号信息 (如用户名与密码)， 即第三方无需使用用户的用户名与密码就可以申请获得该用户资源的授权，因此 OAuth 是安全的。我们常见的提供 OAuth 认证服务的厂商有支付宝、QQ、微信。这样的授权方式使得用户使用门槛低，可以更好的推广自己的应用。  
   OAuth 相关文章推荐阮一峰老师的一系列文章 [OAuth 2.0](https://link.juejin.cn?target=http%3A%2F%2Fwww.ruanyifeng.com%2Fblog%2F2019%2F04%2Foauth_design.html "http://www.ruanyifeng.com/blog/2019/04/oauth_design.html") 。
-
 #### OAuth 认证流程
 
   OAuth 就是一种授权机制。数据的所有者告诉系统，同意授权第三方应用进入系统，获取这些数据。系统从而产生一个短期的进入令牌（token），用来代替密码，供第三方应用使用。  
@@ -256,11 +258,6 @@ router.get(
 我们用例子来理清授权码方式的流程。
 1.  在 GitHub 中备案第三方应用，拿到属于它的客户端 ID 和客户端密钥。
   在 github-settings-developer settings 中创建一个 OAuth App。并填写相关内容。填写完成后 Github 会给你一个客户端 ID 和客户端密钥。
-
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/6/13/16b4ec2927416360~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
-
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/6/13/16b4ec65ac38384a~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
-
 2. 此时在你的第三方网站就可以提供一个 Github 登录链接，用户点击该链接后会跳转到 Github。这一步拿着客户端 ID 向 Github 请求授权码 code。
 
 ```

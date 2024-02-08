@@ -1,8 +1,5 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6844903573675835400?searchId=2024013109533719B9C5AE5C320162A1DF)
 
-webpack 是现代前端开发中最火的模块打包工具，只需要通过简单的配置，便可以完成模块的加载和打包。那它是怎么做到通过对一些插件的配置，便可以轻松实现对代码的构建呢？
-
-### webpack 的配置
 
 ```
 const path = require('path');
@@ -61,9 +58,6 @@ module.exports = {
 *   Chunk：coding split 的产物，我们可以对一些代码打包成一个单独的 chunk，比如某些公共模块，去重，更好的利用缓存。或者按需加载某些功能模块，优化加载时间。在 webpack3 及以前我们都利用`CommonsChunkPlugin`将一些公共代码分割成一个 chunk，实现单独加载。在 webpack4 中`CommonsChunkPlugin`被废弃，使用`SplitChunksPlugin`
 
 ### webpack 详解
-
-读到这里，或许你对 webpack 有一个大概的了解，那 webpack 是怎么运行的呢？我们都知道，webpack 是高度复杂抽象的插件集合，理解 webpack 的运行机制，对于我们日常定位构建错误以及写一些插件处理构建任务有很大的帮助。
-
 #### 不得不说的 tapable
 
 webpack 本质上是一种事件流的机制，它的工作流程就是将各个插件串联起来，而实现这一切的核心就是 [Tapable](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fwebpack%2Ftapable "https://github.com/webpack/tapable")，webpack 中最核心的负责编译的`Compiler`和负责创建 bundles 的`Compilation`都是 Tapable 的实例。在 Tapable1.0 之前，也就是 webpack3 及其以前使用的 Tapable，提供了包括
@@ -87,7 +81,11 @@ CustomPlugin.prototype.apply = function(compiler) {
 this.apply*("emit",options)
 ```
 
-当然上面提到的 Tapable 都是 1.0 版本之前的，如果想深入学习，可以查看 [Tapable 和 事件流](https://link.juejin.cn?target=https%3A%2F%2Fsegmentfault.com%2Fa%2F1190000008060440 "https://segmentfault.com/a/1190000008060440") 那 1.0 的 Tapable 又是什么样的呢？1.0 版本发生了巨大的改变，不再是此前的通过`plugin`注册事件，通过`applyPlugins*`触发事件调用，那 1.0 的 Tapable 是什么呢？
+当然上面提到的 Tapable 都是 1.0 版本之前的，如果想深入学习，可以查看 [Tapable 和 事件流](https://link.juejin.cn?target=https%3A%2F%2Fsegmentfault.com%2Fa%2F1190000008060440 "https://segmentfault.com/a/1190000008060440") 那 1.0 的 Tapable 又是什么样的呢？
+
+1.0 版本 Tapable
+---
+1.0 版本发生了巨大的改变，不再是此前的通过`plugin`注册事件，通过`applyPlugins*`触发事件调用，那 1.0 的 Tapable 是什么呢？
 
 > 暴露出很多的钩子，可以使用它们为插件创建钩子函数
 
@@ -527,9 +525,7 @@ class SyncBailHookCodeFactory extends HookCodeFactory {
 	}
 }
 ```
-
 *   SyncWaterfallHook 中上一个插件执行结果当作下一个插件的入参
-
 ```
 class SyncWaterfallHookCodeFactory extends HookCodeFactory {
 	content({ onError, onResult, onDone, rethrowIfPossible }) {
@@ -548,9 +544,7 @@ class SyncWaterfallHookCodeFactory extends HookCodeFactory {
 	}
 }
 ```
-
 *   AsyncParallelHook 调用`callTapsParallel`并行执行插件
-
 ```
 class AsyncParallelHookCodeFactory extends HookCodeFactory {
 	content({ onError, onDone }) {

@@ -176,10 +176,3 @@ console.log(module.exports); // 1
 粘贴这段代码去浏览器跑一下，可以发现两次打印出来都是 1。这和 `wenpack` 打包逻辑是一模一样的。
 
 梳理一下打包后代码执行的流程，首先 `minifest.js` 会定义一个 `webpackJsonp` 方法，待其他打包后的文件（也可称为 `chunk`）调用。当调用 `chunk` 时，会先将该 `chunk` 中所有的 `moreModules`， 也就是每一个依赖的文件也可称为 `module` （如 `test.js`）存起来。之后通过 `executeModules` 判断这个文件是不是入口文件，决定是否执行第一次 `__webpack_require__`。而 `__webpack_require__` 的作用，就是根据这个 `module` 所 `require` 的东西，不断递归调用 `__webpack_require__`，`__webpack_require__`函数返回值后供 `require` 使用。当然，模块是不会重复加载的，因为 `installedModules` 记录着 `module` 调用后的 `exports` 的值，只要命中缓存，就返回对应的值而不会再次调用 `module`。`webpack` 打包后的文件，就是通过一个个函数隔离 `module` 的作用域，以达到不互相污染的目的。
-
-小结
---
-
-以上就是 `webpack` 打包后 `js` 文件是加载过程的简单描述，其实还是有很多细节没有说完的，比如如何异步加载对应模块， `chunkId` 有什么作用等，但由于篇幅所限 ~（还没研究透）~，不再详述。相关代码会放置 [github](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fljf0113%2Fhow-webpack-load-js-file "https://github.com/ljf0113/how-webpack-load-js-file") 中，欢迎随时查阅顺便点`star`。
-
-感谢各位看官大人看到这里，知易行难，希望本文对你有所帮助~ 谢谢！

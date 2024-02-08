@@ -1,123 +1,28 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/6858276396968951822?searchId=202402011426002E0BAE0A227ECB1B2AAC)
 
-前言
---
-
-你盼世界，我盼望你无`bug`。Hello 大家好！我是霖呆呆。
-
-最近都没怎么输出了😂，不是停更通知就是`"软文"`，还是有点不好意思的。问题不大，我道 (皮) 谦(厚)咯😄。
-
-所以今天咱再来聊点技术相关的东西吧，也就是本篇的标题——受控和非受控组件。
-
-写这篇文章的原因是呆呆在写`HOC`时有涉及到受控和非受控组件的内容，然后发现能说的内容还是挺多的，但是搜索了一下网络上的教材大多说的都比较混乱，对新手来说不太好理解。
-
-所以呆呆也是希望能发挥自身所长将这部分内容说的短而精，方便大家理解。
-
-(没错，这里的长就是你们想的长，而短不是你们想的短...)
-
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1d542f3084fd4bd0ad92cde67d803ee7~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
-
-好的👌，不皮了😁，来看看通过阅读本篇文章你可以学习到：
-
-*   受控组件基本概念
-*   select 受控组件
-*   动态表单受控组件案例
-*   非受控组件
-*   特殊的文件 file 标签
-
-正文
---
-
 ### 受控组件基本概念
-
 通过名称，我们可以猜测一下这两个词是什么意思：
-
 *   受控组件：受我们控制的组件
 *   非控组件：不受我们控制的组件
 
-(这提莫的不是废话吗...)
+其实也就是我们**对某个组件状态的掌控，它的值是否只能由用户设置，而不能通过代码控制**。
 
-咳咳，好吧，这里的受控和非控是什么意思呢？其实也就是我们**对某个组件状态的掌控，它的值是否只能由用户设置，而不能通过代码控制**。
+我们知道，在`React`中定义了一个`input`输入框的话，它并没有类似于`Vue`里`v-model`的这种双向绑定功能。
+- 也就是说，我们并没有一个指令能够将数据和输入框结合起来，用户在输入框中输入内容，然后数据同步更新。
 
-我们知道，在`React`中定义了一个`input`输入框的话，它并没有类似于`Vue`里`v-model`的这种双向绑定功能。也就是说，我们并没有一个指令能够将数据和输入框结合起来，用户在输入框中输入内容，然后数据同步更新。
-
-就像下面这个案例：
-
-```
-class TestComponent extends React.Component {
-  render () {
-    return <input  />
-  }
-}
-```
-
-用户在界面上的输入框输入内容时，它是自己维护了一个`"state"`，这样的话就能根据用户的输入自己进行`UI`上的更新。(这个`state`并不是我们平常看见的`this.state`，而是每个表单元素上抽象的`state`)
-
-想想此时如果我们想要控制输入框的内容可以怎样做呢？唔... 输入框的内容取决的是`input`中的`value`属性，那么我们可以在`this.state`中定义一个名为`username`的属性，并将`input`上的`value`指定为这个属性：
-
-```
-class TestComponent extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = { username: 'lindaidai' };
-  }
-  render () {
-    return <input  value={this.state.username} />
-  }
-}
-```
-
-但是这时候你会发现`input`的内容是只读的，因为`value`会被我们的`this.state.username`所控制，当用户输入新的内容时，`this.state.username`并不会自动更新，这样的话`input`内的内容也就不会变了。
-
-哈哈，你可能已经想到了，我们可以用一个`onChange`事件来监听输入内容的改变并使用`setState`更新`this.state.username`：
-
-```
-class TestComponent extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      username: "lindaidai"
-    }
-  }
-  onChange (e) {
-    console.log(e.target.value);
-    this.setState({
-      username: e.target.value
-    })
-  }
-  render () {
-    return <input  value={this.state.username} onChange={(e) => this.onChange(e)} />
-  }
-}
-```
-
-现在不论用户输入什么内容`state`与`UI`都会跟着更新了，并且我们可以在组件中的其它地方使用`this.state.username`来获取到`input`里的内容，也可以通过`this.setState()`来修改`input`里的内容。
-
-OK👌，现在让我们来看看**受控组件**的定义：
-
-在 HTML 的表单元素中，它们通常自己维护一套`state`，并随着用户的输入自己进行`UI`上的更新，这种行为是不被我们程序所管控的。而如果将`React`里的`state`属性和表单元素的值建立依赖关系，再通过`onChange`事件与`setState()`结合更新`state`属性，就能达到控制用户输入过程中表单发生的操作。被`React`以这种方式控制取值的表单输入元素就叫做**受控组件**。
-
-(额，呆呆认为上面👆这个总结就可以用在面试当中了)
-
+在 HTML 的表单元素中，它们通常自己维护一套`state`，并随着用户的输入自己进行`UI`上的更新，这种行为是不被我们程序所管控的。
+如果将`React`里的`state`属性和表单元素的值建立依赖关系，再通过`onChange`事件与`setState()`结合更新`state`属性，就能达到控制用户输入过程中表单发生的操作。被`React`以这种方式控制取值的表单输入元素就叫做**受控组件**。
 ### select 受控组件
-
-在上面呆呆用`input`向大家演示了一个最基本的受控组件，那么其实对于其它的表单元素使用起来也差不多，可能就是属性名和事件不同而已。
-
+对于其它的表单元素使用起来也差不多，可能就是属性名和事件不同而已。
 例如`input`类型为`text`的表单元素中使用的是：
-
 *   `value`
 *   `onChange`
-
 对于`textarea`标签也和它一样是使用`value`和`onChange`：
-
 ```
 <textarea value={this.state.value} onChange={this.handleChange} />
 ```
-
 #### 单选 select
-
 对于`select`表单元素来说，`React`中将其转化为受控组件可能和原生`HTML`中有一些区别。
-
 在原生中，我们默认一个`select`选项选中使用的是`selected`，比如下面这样：
 
 ```
@@ -128,9 +33,6 @@ OK👌，现在让我们来看看**受控组件**的定义：
   <option value="reserved">高冷</option>
 </select>
 ```
-
-给`"可爱"`的选项设置了`selected`，默认选中的就是它了。
-
 但是如果是使用`React`受控组件来写的话就不用那么麻烦了，因为它允许在根`select`标签上使用`value`属性，去控制选中了哪个。这样的话，对于我们也更加便捷，在用户每次重选之后我们只需要在根标签中更新它，就像是这个案例🌰：
 
 ```
@@ -219,18 +121,12 @@ class SelectComponent extends React.Component {
 export default SelectComponent;
 ```
 
-(但是呆呆在 Mac，Chrome 测试这个多选好像是有问题的)
 
 ### 动态表单受控组件案例
-
 上面👆咱们实现了一些简单的受控组件案例，接着来玩个稍微难点的。
-
 先看一下我们的需求：
-
 实现一个组件，传入以下数组，自动渲染出表单：
-
 (`CInput`代表一个输入框，`CSelect`代表一个选择框)
-
 ```
 // 决定表单的结构
 const formConfig = [
@@ -254,15 +150,11 @@ this.state = {
 ```
 
 效果：
-
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/269c41a5c93f4d1ca41c65cd430a1896~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
 
 也就是来实现一个简单的动态表单，看看受控组件在其中的应用。
-
 *   `formConfig`决定了表单的结构，也就是定义表单中会有哪些项
-    
 *   `this.state`中定义了表单中各项的值是什么，它与`formConfig`是靠`formConfig`中各项的`field`字段来建立链接的。
-    
 
 知道了上面👆这些东西，我们就能很快写出这个动态表单组件的大概样子了：
 
@@ -398,21 +290,12 @@ export default class CSelect extends Component {
   }
 }
 ```
-
-当然，这里演示的仅仅是一个简单的动态表单的实现，如果你想要在项目中实现的话要远比这个复杂多了。
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/558a76a01cf84235be99690189802d37~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
-
 ### 非受控组件
-
-上面👆向大家展示的是受控组件的一些基本概念还有相关操作，对于受控组件，我们需要为每个`状态更新`(例如`this.state.username`) 编写一个`事件处理程序`(例如`this.setState({ username: e.target.value })`)。
-
+上面👆向大家展示的是受控组件的一些基本概念还有相关操作，
+- 对于受控组件，我们需要为每个`状态更新`(例如`this.state.username`) 编写一个`事件处理程序`(例如`this.setState({ username: e.target.value })`)。
 那么还有一种场景是：我们仅仅是想要获取某个表单元素的值，而不关心它是如何改变的。对于这种场景，我们有什么应对的方法吗🤔️？
-
 唔...`input`标签它实际也是一个`DOM`元素，那么我们是不是可以用获取`DOM`元素信息的方式来获取表单元素的值呢？也就是使用`ref`。
-
 就像下面👇这个案例一样：
-
 ```
 import React, { Component } from 'react';
 
@@ -441,13 +324,9 @@ export class UnControll extends Component {
 同时我们也可以用`defaultValue`属性来指定表单元素的默认值。
 
 ### 特殊的文件 file 标签
-
 另外在`input`中还有一个比较特殊的情况，那就是`file`类型的表单控件。
-
 **对于 file 类型的表单控件它始终是一个不受控制的组件，因为它的值只能由用户设置，而不是以编程方式设置。**
-
 例如我现在想要通过状态更新来控制它：
-
 ```
 import React, { Component } from 'react';
 
@@ -481,9 +360,6 @@ export default class UnControll extends Component {
 ```
 
 在选择了文件之后，我试图用`setState`来更新，结果却报错了：
-
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/33381befaff74f39adf7bc30e4896801~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
-
 所以我们应当使用非受控组件的方式来获取它的值，可以这样写：
 
 ```
@@ -515,44 +391,10 @@ export default class FileComponent extends Component {
 <input type="file" multiple ref={this.fileRef} />
 ```
 
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c566373d8c3f4d30b1e002fe1152b259~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
 
-OK，相信大家对这两组概念已经有了一个清晰的认识。什么？你问我实际的应用场景？
-
-唔... 这个用 React 官方的话来说，绝大部分时候推荐使用`受控组件`来实现表单，因为在受控组件中，表单数据由`React`组件负责处理；当然如果选择`受受控组件`的话，表单数据就由`DOM`本身处理。
+React 官方的话来说，绝大部分时候推荐使用`受控组件`来实现表单，因为在受控组件中，表单数据由`React`组件负责处理；当然如果选择`受受控组件`的话，表单数据就由`DOM`本身处理。
 
 另外在学习两者的时候，呆呆也发现了一些写的比较好的文章，比这篇更深入，推荐给大家哟：
 
 *   [《在实际业务中如何灵活运用受控组件与非受控组件》](https://link.juejin.cn?target=https%3A%2F%2Fzhuanlan.zhihu.com%2Fp%2F37579677 "https://zhuanlan.zhihu.com/p/37579677")
 *   [《关于受控组件的思考》](https://link.juejin.cn?target=https%3A%2F%2Fblog.csdn.net%2Fneoveee%2Farticle%2Fdetails%2F95873911 "https://blog.csdn.net/neoveee/article/details/95873911")
-
-后语
---
-
-你盼世界，我盼望你无 bug。这篇文章就介绍到这里。
-
-主要是向大家介绍了一下控件与非控件组件的区别和用法，呆呆也终于`"重操旧业"`写起了文章，而且今天意外的发现掘金年中总结竟然上榜了，再次谢谢大家的不吝喜欢❤️，哈哈，相信大家也会越来越好的！
-
-喜欢「霖呆呆」的小伙还希望可以关注霖呆呆的公众号 LinDaiDai
-
-(由于最近不能贴二维码，所以委屈大家了...)
-
-我会不定时的更新一些前端方面的知识内容以及自己的原创文章🎉
-
-你的鼓励就是我持续创作的主要动力 😊.
-
-相关推荐:
-
-[《全网最详 bpmn.js 教材》](https://juejin.cn/post/6844904017567416328 "https://juejin.cn/post/6844904017567416328")
-
-[《【建议改成】读完这篇你还不懂 Babel 我给你寄口罩》](https://juejin.cn/post/6844904065223098381 "https://juejin.cn/post/6844904065223098381")
-
-[《【建议星星】要就来 45 道 Promise 面试题一次爽到底 (1.1w 字用心整理)》](https://juejin.cn/post/6844904077537574919 "https://juejin.cn/post/6844904077537574919")
-
-[《【建议👍】再来 40 道 this 面试题酸爽继续 (1.2w 字用手整理)》](https://juejin.cn/post/6844904083707396109 "https://juejin.cn/post/6844904083707396109")
-
-[《【何不三连】比继承家业还要简单的 JS 继承题 - 封装篇 (牛刀小试)》](https://juejin.cn/post/6844904094948130824 "https://juejin.cn/post/6844904094948130824")
-
-[《【何不三连】做完这 48 道题彻底弄懂 JS 继承 (1.7w 字含辛整理 - 返璞归真)》](https://juejin.cn/post/6844904098941108232 "https://juejin.cn/post/6844904098941108232")
-
-[《霖呆呆的近期面试 128 题汇总 (含超详细答案) | 掘金技术征文》](https://juejin.cn/post/6844904151369908232 "https://juejin.cn/post/6844904151369908232")
