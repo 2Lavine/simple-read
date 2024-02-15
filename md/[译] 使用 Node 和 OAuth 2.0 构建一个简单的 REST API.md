@@ -15,54 +15,13 @@ JavaScript 也可以用于浏览器的上下文之外的任何事情，从托管
 
 构建你的 Node 服务器
 -------------
-
 使用 [Express JavaScript 库](https://link.juejin.cn?target=https%3A%2F%2Fexpressjs.com%2F "https://expressjs.com/") 在 Node 中设置 web 服务器非常简单。创建一个包含服务器的新文档夹。
 
 ```
 $ mkdir rest-api
 ```
 
-Node 使用 `package.json` 来管理依赖并定义你的项目。我们使用 `npm init` 来新建该文档。该命令会在帮助你初始化项目时询问你一些问题。现在你可以使用[标准 JS](https://link.juejin.cn?target=https%3A%2F%2Fstandardjs.com%2F "https://standardjs.com/") 来强制执行编码标准，并将其用作测试。
-
-```
-$ cd rest-api
-
-$ npm init
-这个实用工具将引导你创建 package.json 文档。
-它只涵盖最常见的项目，并试图猜测合理的默认值。
-
-请参阅 `npm help json` 来获取关于这些字段的确切文档以及它们所做的事情。
-
-使用 `npm install <pkg>` 命令来安装一个 npm 依赖，并将其保存在 package.json 文档中。
-
-Press ^C at any time to quit.
-package name: (rest-api)
-version: (1.0.0)
-description: A parts catalog
-entry point: (index.js)
-test command: standard
-git repository:
-keywords:
-author:
-license: (ISC)
-About to write to /Users/Braden/code/rest-api/package.json:
-
-{
-  "name": "rest-api",
-  "version": "1.0.0",
-  "description": "A parts catalog",
-  "main": "index.js",
-  "scripts": {
-    "test": "standard"
-  },
-  "author": "",
-  "license": "ISC"
-}
-
-
-Is this OK? (yes)
-```
-
+Node 使用 `package.json` 来管理依赖并定义你的项目。我们使用 `npm init` 来新建该文档。
 默认的入口端点是 `index.js`，因此，你应当创建一个 `index.js` 文档。下面的代码将为你提供一个出了默认监听 3000 端口以外什么也不做的非常基本的服务器。
 
 **index.js**
@@ -719,15 +678,8 @@ $ node client http://localhost:3000/parts | json
 -----------------------------------------
 
 希望你已经看到了在 Node 中创建 REST API 并对未经授权的用户进行安全保护是多么容易的。现在，你已经有机会创建自己的示例项目了，请查看有关 Node、OAuth 2.0 和 Okta 的其他一些优秀资源。你还可以浏览 Okta 开发者博客，以获取其他优秀文章。
-
 *   [客户端证书流的实现](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.okta.com%2Fauthentication-guide%2Fimplementing-authentication%2Fclient-creds "https://developer.okta.com/authentication-guide/implementing-authentication/client-creds")
 *   [验证访问令牌](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.okta.com%2Fauthentication-guide%2Ftokens%2Fvalidating-access-tokens "https://developer.okta.com/authentication-guide/tokens/validating-access-tokens")
 *   [自定义授权服务器](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.okta.com%2Fauthentication-guide%2Fimplementing-authentication%2Fset-up-authz-server "https://developer.okta.com/authentication-guide/implementing-authentication/set-up-authz-server")
 *   [教程：用 Node.js 构建一个基本的 CRUD App](/blog/2018/06/28/tutorial-build-a-basic-crud-app-with-node "/blog/2018/06/28/tutorial-build-a-basic-crud-app-with-node")
 *   [使用 OAuth 2.0 客户端证书保护 Node API](/blog/2018/06/06/node-api-oauth-client-credentials "/blog/2018/06/06/node-api-oauth-client-credentials")
-
-和以前一样，你可以在下面的评论中或在 Twitter [@oktadev](https://link.juejin.cn?target=https%3A%2F%2Ftwitter.com%2FOktaDev "https://twitter.com/OktaDev") 给我们提供反馈或者提问，我们期待收到你的来信！
-
-> 如果发现译文存在错误或其他需要改进的地方，欢迎到 [掘金翻译计划](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner "https://github.com/xitu/gold-miner") 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 **本文永久链接** 即为本文在 GitHub 上的 MarkDown 链接。
-
-> [掘金翻译计划](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner "https://github.com/xitu/gold-miner") 是一个翻译优质互联网技术文章的社区，文章来源为 [掘金](https://juejin.cn "https://juejin.cn") 上的英文分享文章。内容覆盖 [Android](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner%23android "https://github.com/xitu/gold-miner#android")、[iOS](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner%23ios "https://github.com/xitu/gold-miner#ios")、[前端](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner%23%25E5%2589%258D%25E7%25AB%25AF "https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF")、[后端](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner%23%25E5%2590%258E%25E7%25AB%25AF "https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF")、[区块链](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner%23%25E5%258C%25BA%25E5%259D%2597%25E9%2593%25BE "https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE")、[产品](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner%23%25E4%25BA%25A7%25E5%2593%2581 "https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81")、[设计](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner%23%25E8%25AE%25BE%25E8%25AE%25A1 "https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1")、[人工智能](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner%23%25E4%25BA%25BA%25E5%25B7%25A5%25E6%2599%25BA%25E8%2583%25BD "https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD")等领域，想要查看更多优质译文请持续关注 [掘金翻译计划](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fxitu%2Fgold-miner "https://github.com/xitu/gold-miner")、[官方微博](https://link.juejin.cn?target=http%3A%2F%2Fweibo.com%2Fjuejinfanyi "http://weibo.com/juejinfanyi")、[知乎专栏](https://link.juejin.cn?target=https%3A%2F%2Fzhuanlan.zhihu.com%2Fjuejinfanyi "https://zhuanlan.zhihu.com/juejinfanyi")。

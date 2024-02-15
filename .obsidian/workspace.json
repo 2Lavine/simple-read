@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "ad5e0cec3aa4a3bd",
+        "id": "d098e69bf700066e",
         "type": "tabs",
         "children": [
           {
-            "id": "8c6ec655adffb5bc",
+            "id": "5b8ff33728a732b0",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/[译] 使用 Node 和 OAuth 2.0 构建一个简单的 REST API.md",
+                "file": "Course/1-8. 编译过程.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/[译] 使用 Node 和 OAuth 2.0 构建一个简单的 REST API.md"
+                "file": "Course/1-8. 编译过程.md"
               }
             }
           },
@@ -96,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/[译] 使用 Node 和 OAuth 2.0 构建一个简单的 REST API.md",
+                "file": "Course/1-8. 编译过程.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/[译] 使用 Node 和 OAuth 2.0 构建一个简单的 REST API.md",
+                "file": "Course/1-8. 编译过程.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -165,13 +165,26 @@
       "daily-notes:Open today's daily note": false,
       "command-palette:Open command palette": false,
       "workspaces:Manage workspace layouts": false,
-      "obsidian-excalidraw-plugin:Create new drawing": false,
       "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
     }
   },
-  "active": "8c6ec655adffb5bc",
+  "active": "5b8ff33728a732b0",
   "lastOpenFiles": [
+    "Course/路径.md",
+    "Course/1-10. 入口和出口的最佳实践.md",
+    "md/React 的 Suspense 和 ErrorBoundary 还有这种关系？.md",
     "md/webpack 详解.md",
+    "done/Tailwind CSS + cva 实现样式变体组件.md",
+    "md/简单易懂的 webpack 打包后 JS 的运行过程.md",
+    "done/认识Oauth2.md",
+    "_resources/Pasted image 20240215111519.png",
+    "md/[译] 使用 Node 和 OAuth 2.0 构建一个简单的 REST API.md",
+    "md/浅谈 SAML, OAuth, OpenID 和 SSO, JWT 和 Session.md",
+    "Course/微信三方应用登录实现.md",
+    "Course/三方应用实现github授权.md",
+    "Course/获取令牌的四种方式.md",
+    "Course",
+    "md/repaint, reflowrelayout, restyle.md",
     "output/2024-2-7 08-54-53.html",
     "achieve/探秘神奇的 IntersectionObserver：释放网页性能的黑科技！.md",
     "achieve/带你深度解锁 Webpack 系列 (基础篇).md",
@@ -186,17 +199,6 @@
     "md/Hbase 的核心概念、架构、写逻辑详细讲解！.md",
     "md/Compound Pattern.md",
     "done/利用 WebSocket 和 EventSource 实现服务端推送.md",
-    "md/React 的 Suspense 和 ErrorBoundary 还有这种关系？.md",
-    "done/React 期许的未来（RSC）可不能并不是国内前端想要的未来.md",
-    "done/关于 useEffect 中请求数据以及竞态.md",
-    "done/受控和非受控组件真的那么难理解吗？(React 实际案例详解).md",
-    "md/Tailwind CSS + cva 实现样式变体组件.md",
-    "md/[译] 使用 Node 和 OAuth 2.0 构建一个简单的 REST API.md",
-    "md/简单易懂的 webpack 打包后 JS 的运行过程.md",
-    "done/带你深度解锁 Webpack 系列 (基础篇).md",
-    "done/探秘神奇的 IntersectionObserver：释放网页性能的黑科技！.md",
-    "done/Session、Token 和 OAuth.md",
-    "done/HTTP 灵魂之问，巩固你的 HTTP 知识体系.md",
     "output/2024-1-29 15-36-53.html",
     "_resources/2ebd036e77414665b6baefb4117cb8ea_MD5.png",
     "_resources/2f7adc00aedf34a9e33061465bb5efe9_MD5.png",
@@ -209,13 +211,11 @@
     "_resources/b038f8791d9133f3d5a795818f786c32_MD5.png",
     "_resources/a6cfdb3598dbac74b649118ddaf32346_MD5.png",
     "_resources/9e308c7ebd562b79cda2b6b6a7d697b8_MD5.png",
-    "_resources/744956e7d19238ded9b1e77ce7c19db5_MD5.png",
     "output/2024-1-20 19-31-58.html",
     "done",
     "output/2024-1-12 08-56-44.html",
     "output/2024-1-10 09-35-14.html",
     "done",
-    "output/2023-12-28 09-35-53.html",
     "未命名.canvas"
   ]
 }
