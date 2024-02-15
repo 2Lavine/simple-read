@@ -1,0 +1,278 @@
+<h1>Tailwind CSS + cva 实现样式变体组件</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/7290802328722276352?searchId=20240122143239B11DED69928146E57425">juejin.cn</a></p>
+</blockquote>
+<h2>需求</h2>
+<p>为了方便演示，我们先来简单定义一下我们的基本需求：</p>
+<ul>
+<li>button 组件有几种语义类型 type：primary、secondary、success、danger 等</li>
+<li>button 组件有三种大小 size：small、medium、large</li>
+<li>button 组件有三种填充 fill：solid、outline、text</li>
+<li>button 组件有两种形状 shape：方形（小圆角）、胶囊形（full rounded）</li>
+<li>button 组件支持 disabled</li>
+<li>button 组件支持 Icon</li>
+<li>button 组件支持 loading</li>
+</ul>
+<p>简单分析一下需求，
+前四个需求都是对应按钮的不同样式变体（variants）</p>
+<ul>
+<li>只需要给每种变体指定自己特有的样式即可。
+而 disabled 和 loading 对应按钮的不同状态。</li>
+<li>我们使用组合的方式构建 Button 组件，
+<ul>
+<li>因此 Icon 的逻辑不必写在 Button 组件内部。</li>
+<li>loading 态也可以分解成一个 loading-icon + disabled 的组合。</li>
+</ul>
+</li>
+</ul>
+<h2>初步实现</h2>
+<p>我们会用到一个 <a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Flukeed%2Fclsx" title="https://github.com/lukeed/clsx">clsx</a> 库，它可以帮助我们更方便的通过条件去控制样式的变化。
+但他有这些问题</p>
+<ol>
+<li>clsx 中大量的条件判断代码，使代码看起来很臃肿，没有组织性，不利于代码的阅读与维护。</li>
+<li>我们无法保证 tailwind 中 class 的优先级，我们无法保证写在后面的样式可以覆盖前面的样式，比如 shape 为 round 的情况下，我们希望<code>rounded-full</code>更够覆盖基本样式中<code>rounded-lg</code>, 但是我们无法保证这一点。只能通过<code>!rounded-full</code>来覆盖<code>rounded-lg</code>，<code>!important</code>的使用会导致样式的不可预测性，不利于代码的维护。</li>
+</ol>
+<h2>使用 cva + tailwind-merge 改写</h2>
+<p><a href="https://link.juejin.cn?target=https%3A%2F%2Fcva.style%2Fdocs" title="https://cva.style/docs">cva 是 Class Variance Authority 的缩写</a>，cva 是一个用于管理样式变体的库，它可以帮助我们更好的组织样式变体，使得代码更加清晰，更加易于维护。我们可以使用 cva 来重写我们的 Button 组件，使得代码更加清晰。具体的用法，可以去看官方文档。这里就不做过多用法介绍了。
+<a href="https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fdcastil%2Ftailwind-merge" title="https://github.com/dcastil/tailwind-merge">tailwind-merge</a> 用来处理 tailwind 样式冲突问题，它可以让写在后面的样式覆盖前面的样式，这样我们就不需要使用<code>!important</code>来覆盖样式了。</p>
+<p>以下是重构后的代码：</p>
+<pre><code class="language-jsx">const buttonVariants = cva(
+  &quot;inline-flex rounded-lg items-center justify-center text-sm font-medium disabled:opacity-50&quot;,
+  {
+    variants: {
+      type: {
+        primary: &quot;bg-primary text-primary border-primary&quot;,
+        success: &quot;bg-success text-success border-success&quot;,
+        danger: &quot;bg-danger text-danger border-danger&quot;,
+      },
+      size: {
+        middle: &quot;h-10 px-4 py-2&quot;,
+        small: &quot;h-8  px-2 py-2&quot;,
+        large: &quot;h-12 px-6 py-2&quot;,
+      },
+      fill: {
+        solid: &quot;text-white&quot;,
+        outline: &quot;border bg-white&quot;,
+        text: &quot;bg-white&quot;,
+      },
+      shape: {
+        round: &quot;rounded-full&quot;,
+        square: &quot;rounded-lg&quot;,
+      },
+    },
+    defaultVariants: {
+      type: &quot;primary&quot;,
+      size: &quot;middle&quot;,
+      fill: &quot;solid&quot;,
+      shape: &quot;square&quot;,
+    },
+  }
+);
+
+export const Button = ({
+  type,
+  size,
+  fill,
+  shape,
+  children,
+  ...props
+}: Props) =&gt; {
+  return (
+    &lt;button
+      className={twMerge(clsx(buttonVariants({ type, size, fill, shape })))}
+      {...props}
+    &gt;
+      {children}
+    &lt;/button&gt;
+  );
+};
+</code></pre>
+<p>可以看到，改写后的 Button 组件清晰简洁了很多，我们把样式变体的定义和组件的实现分离开来，使得代码更加清晰，更加易于维护。
+使用 twMerge 来处理样式冲突问题，使得我们可以更加方便的控制样式的优先级。</p>
+<h2>一些优化点</h2>
+<ol>
+<li>如果组件的使用场景是 PC 端，可以添加<code>focus-visible</code>伪类，美化键盘聚焦 Button 时的样式。还可以给不同的 type 加上对应的 hover 态样式。</li>
+<li>如果组件的使用场景是移动端，可以添加<code>active</code>伪类，美化点击 Button 时的样式。</li>
+<li>如果希望外部对 Button 组件的样式进行覆盖，可以使用<code>className</code>属性，这样可以让 Button 组件更加灵活。代码如下：</li>
+</ol>
+
+<h1>认识Oauth2</h1><h3>认识OAuth2.0</h3>
+<h4>什么是OAuth？</h4>
+<blockquote>
+<p><a href="http://en.wikipedia.org/wiki/OAuth">OAuth</a>是一个关于授权（authorization）的开放网络标准协议，简单理解就是一种授权机制。</p>
+</blockquote>
+<p>它是在客户端和资源所有者之间的授权层，用来分离两种不同的角色。在资源所有者同意并向客户端颁发令牌后，客户端携带令牌可以访问资源所有者的资源。
+OAuth2.0 是OAuth 协议的一个版本，<strong>2.0版本不兼容1.0版本，相当于1.0版本已经废弃</strong></p>
+<h4>令牌的特点</h4>
+<p>（1）短期的，到期会自动失效，用户自己无法修改。
+（2）可以被数据所有者撤销，会立即失效。
+（3）有权限范围（scope），对于网络服务来说，只读令牌就比读写令牌更安全。</p>
+<blockquote>
+<p>令牌既可以让第三方应用获得权限，同时又随时可控，不会危及系统安全。这也是 OAuth 2.0 的优点。</p>
+<p><strong>注意</strong>，只要知道了令牌，就能进入系统。系统一般不会再次确认身份，所以<strong>令牌必须保密，泄漏令牌与泄漏密码的后果是一样的。</strong> 这也是为什么令牌的有效期，一般都设置得很短的原因。</p>
+</blockquote>
+<h3>获取令牌四种实现方式</h3>
+<ul>
+<li>授权码（authorization-code）</li>
+<li>隐藏式（implicit）</li>
+<li>密码式（password）：</li>
+<li>客户端凭证（client credentials）</li>
+</ul>
+<blockquote>
+<p>不管哪一种授权方式，第三方应用申请令牌之前，<strong>都必须先到系统备案</strong>，说明自己的身份，然后会拿到两个身份识别码：<strong>客户端 ID（client ID）和客户端密钥（client secret）</strong>。这是为了防止令牌被滥用，没有备案过的第三方应用，是不会拿到令牌的；</p>
+</blockquote>
+<h4>授权码</h4>
+<p><strong>授权码（authorization code）方式，指的是第三方应用先申请一个授权码，然后再用该码获取令牌（适合前后端分离，最常用的方式）。</strong></p>
+<blockquote>
+<p>这种方式是最常用的流程，安全性也最高，它适用于有后端的 Web 应用。授权码通过前端传送，令牌则是储存在后端，而且所有与资源服务器的通信都在后端完成。这样的前后端分离，可以避免令牌泄漏。</p>
+</blockquote>
+<p>实现流程</p>
+<ol>
+<li>
+<p><strong>A 网站提供一个链接，用户点击后就会跳转到 B 网站，授权用户数据给 A 网站使用。</strong></p>
+<pre><code class="language-javascript">https://b.com/oauth/authorize?
+response_type=code&amp; 
+client_id=CLIENT_ID&amp;
+redirect_uri=CALLBACK_URL&amp;
+scope=read
+</code></pre>
+<ul>
+<li>response_type=code     <em>code参数表示要求返回授权码</em></li>
+<li>client_id=CLIENT_ID     <em>参数让B知道是谁在请求数据</em></li>
+<li>redirect_uri = CALLBACK_URL   <em>当B网站处理完成链接请求后的跳转地址</em></li>
+<li>scope=read     <em>表示要授权的范围，read代表对授权资源进行只读操作</em></li>
+</ul>
+</li>
+<li>
+<p><strong>跳转成功，B 网站会要求用户登录，然后询问是否同意给予 A 网站授权。用户表示同意，这时 B 网站就会跳回<code>redirect_uri</code>参数指定的网址。跳转时，会传回一个授权码</strong></p>
+<pre><code class="language-js"></code></pre>
+</li>
+</ol>
+<p>https://a.com/callback?code=AUTHORIZATION_CODE     // code 代表授权码</p>
+<pre><code>3. **A 网站拿到授权码以后，就可以在后端，向 B 网站请求令牌。**
+```html
+https://b.com/oauth/token?
+client_id=CLIENT_ID&amp;
+client_secret=CLIENT_SECRET&amp;
+grant_type=authorization_code&amp;
+code=AUTHORIZATION_CODE&amp;//*第二步中获取到的code值*
+redirect_uri=CALLBACK_URL//*令牌颁发后的回调地址*
+</code></pre>
+<ol start="4">
+<li><strong>B 网站收到请求以后，就会颁发令牌。具体做法是向<code>redirect_uri</code>指定的网址，发送一段 JSON 数据。</strong></li>
+</ol>
+<pre><code class="language-javascript">{    
+  &quot;access_token&quot;:&quot;ACCESS_TOKEN&quot;,
+  &quot;token_type&quot;:&quot;bearer&quot;,
+  &quot;expires_in&quot;:2592000,
+  &quot;refresh_token&quot;:&quot;REFRESH_TOKEN&quot;,
+  &quot;scope&quot;:&quot;read&quot;,
+  &quot;uid&quot;:100101,
+  &quot;info&quot;:{...}
+}
+</code></pre>
+<h4>隐藏式</h4>
+<blockquote>
+<p>适用于纯前端的WEB应用，必须将令牌储存在前端。允许直接向前端颁发令牌。这种方式没有授权码这个中间步骤，所以称为（授权码）&quot;隐藏式&quot;（implicit）。<strong>由于前端直接获取token，安全性较低，一般适用于比较信任的网站，并且令牌的有效期，也相对较短，一般是界面关闭及失效</strong>
+实现流程</p>
+</blockquote>
+<ol>
+<li><strong>A 网站提供一个链接，要求用户跳转到 B 网站，授权用户数据给 A 网站使用</strong><pre><code class="language-html">https://b.com/oauth/authorize?
+  response_type=token&amp;
+  client_id=CLIENT_ID&amp;
+  redirect_uri=CALLBACK_URL&amp;
+  scope=read
+</code></pre>
+<blockquote>
+<p>response_type=token  表示直接返回令牌</p>
+</blockquote>
+</li>
+<li><strong>用户跳转到 B 网站，登录后同意给予 A 网站授权。B 网站就会跳回<code>redirect_uri</code>参数指定的跳转网址，并且把令牌作为 URL 参数，传给 A 网站。</strong><pre><code class="language-js">https://a.com/callback#token=ACCESS_TOKEN
+</code></pre>
+</li>
+</ol>
+<p>token参数为令牌，<strong>令牌的位置是 URL 锚点（fragment），而不是查询字符串（querystring），这是因为 OAuth 2.0 允许跳转网址是 HTTP 协议，因此存在&quot;中间人攻击&quot;的风险，而浏览器跳转时，锚点不会发到服务器，就减少了泄漏令牌的风险。</strong></p>
+<h4>密码式</h4>
+<blockquote>
+<p>如果你高度信任某个应用，RFC 6749 也允许用户把用户名和密码，直接告诉该应用。该应用就使用你的密码，申请令牌，这种方式称为&quot;密码式&quot;（password）。</p>
+</blockquote>
+<p>实现流程</p>
+<ol>
+<li>
+<p>第一步，A 网站要求用户提供 B 网站的用户名和密码。拿到以后，A 就直接向 B 请求令牌。</p>
+<pre><code class="language-js">https://oauth.b.com/token?
+  grant_type=password&amp;
+  username=USERNAME&amp;
+  password=PASSWORD&amp;
+  client_id=CLIENT_ID
+</code></pre>
+<ul>
+<li>grant_type = password   <em>授权方式为密码的形式进行授权</em></li>
+<li>username &amp;&amp; userpassword <em>B网站的登录用户名及密码</em></li>
+<li>client_id     <em>用户申请令牌的身份标识</em></li>
+</ul>
+</li>
+<li>
+<p>B 网站验证身份通过后，直接给出令牌。注意，这时不需要跳转，而是把令牌放在 JSON 数据里面，作为 HTTP 回应，A 因此拿到令牌。</p>
+<blockquote>
+<p>这种方式需要用户给出自己的用户名/密码，显然风险很大，因此只适用于其他授权方式都无法采用的情况，而且必须是用户高度信任的应</p>
+</blockquote>
+</li>
+</ol>
+<hr>
+<h4>凭证式</h4>
+<blockquote>
+<p>凭证式和密码式很相似，主要适用于那些没有前端的命令行应用，可以用最简单的方式获取令牌，在请求响应的 <code>JSON</code> 结果中返回 <code>token</code>。</p>
+</blockquote>
+<p>实现流程</p>
+<ol>
+<li><strong>第一步，A 应用在命令行向 B 发出请求。</strong></li>
+</ol>
+<pre><code class="language-html">https://oauth.b.com/token?
+  grant_type=client_credentials&amp;
+  client_id=CLIENT_ID&amp;
+  client_secret=CLIENT_SECRET
+</code></pre>
+<p>​	<code>grant_type</code> 为 <code>client_credentials</code> 表示凭证式授权，<code>client_id</code> 和 <code>client_secret</code> 用来识别身份。</p>
+<ol start="2">
+<li>B 网站验证通过以后，直接返回令牌。</li>
+</ol>
+<h3>令牌的使用/更新</h3>
+<p>使用</p>
+<blockquote>
+<p>A 网站拿到令牌以后，就可以向 B 网站的 API 请求数据了。使用方法为在请求头中将 <code>token</code> 放在 <code>http</code> 请求头部的一个<code>Authorization</code>字段里。</p>
+</blockquote>
+<p>更新</p>
+<blockquote>
+<p><code>token</code>是有时效性的，一旦过期就需要重新获取，令牌的有效期到了，如果让用户重新走一遍上面的流程，再申请一个新的令牌，很可能体验不好，而且也没有必要。OAuth 2.0 允许用户自动更新令牌</p>
+</blockquote>
+<p>实现方法</p>
+<blockquote>
+<p>具体方法是，B 网站颁发令牌的时候，一次性颁发两个令牌，一个用于获取数据，另一个用于获取新的令牌（refresh token 字段）。令牌到期前，用户使用 refresh token 发一个请求，去更新令牌。</p>
+</blockquote>
+<pre><code class="language-js">https://b.com/oauth/token?
+  grant_type=refresh_token&amp;
+  client_id=CLIENT_ID&amp;
+  client_secret=CLIENT_SECRET&amp;
+  refresh_token=REFRESH_TOKEN
+</code></pre>
+<p><code>grant_type</code>参数为<code>refresh_token</code>表示要求更新令牌；
+<code>client_id</code>参数和<code>client_secret</code>参数用于确认身份；
+<code>refresh_token</code>参数就是用于更新令牌的令牌。
+B 网站验证通过以后，就会颁发新的令牌</p>
+<h2>授权码模式</h2>
+<p>授权码模式（Authorization Code）是 OAuth 功能最齐全、流程最严谨，也是最常用的授权模式。</p>
+<p>假设我们要用微信账号登录网易云音乐，需要以下五步： 1. 访问网易云音乐客户端，客户端跳转到微信授权页面，询问用户是否同意授权，微信会提供授权的URL。</p>
+<p>用户选择是否同意授权
+假设用户同意授权，微信端将向网易云音乐跳转重定向 URL，同时附上授权码（code）
+网易云音乐收到授权码后，附上重定向 URL，向微信端申请令牌（token）
+微信端传回网易云音乐令牌，由此网易云音乐就可以拿着访问令牌访问微信用户信息</p>
+<p>在用户将微信信息授权给网易云音乐登录后，此时后端开始处理，前端不再参与。此时需要微信的服务器将 token 传给网易云音乐的后端，后端携带 token 去访问被授权的微信信息。在授权成功后，需要重定向 URL 通知用户授权成功，也就是说，建立起微信前端和网易云音乐前端的关联。</p>
+<p>code 的作用在于让 token 不经过用户的浏览器直接传递，保护了 token 的安全。因为 code 只能用一次，且有时间限制，超时会失效，所以即使被截也未必能用。</p>
+<p>其次，要获得 token，除了需要 code，还需要 client id/client secret。所以即使 code 被盗，也是无法获得 token 的。</p>
+<h3>为什么一定要有授权码</h3>
+<ol>
+<li>安全需求</li>
+<li>用户可以返回浏览器
+<img src="file://Mac/Home/myGitHubMac/simple-read/_resources/Pasted image 20240215111519.png" />
+如果没有授权码，则小明一直处于京东的授权平台，无法返回前端浏览器</li>
+</ol>

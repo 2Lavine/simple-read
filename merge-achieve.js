@@ -8,7 +8,7 @@ const options = {
 };
 const obsidianImages = require("markdown-it-obsidian-images")(options);
 const md = require("markdown-it")({ html: true }).use(obsidianImages);
-const directoryPath = "./course"; // 替换为目标目录的路径
+const directoryPath = "./done"; // 替换为目标目录的路径
 const resourcesPath = "./_resources"; // 替换为目标目录的路径
 let now = new Date()
   .toLocaleString("zh-CN", {
@@ -39,7 +39,7 @@ function readDirectory(readPath) {
       //   // 如果是目录，则递归读取
       //   readDirectory(filePath);
       // }
-      if (path.extname(file) !== "html") {
+      if (path.extname(file) !== "html" && path.extname(file) == ".md") {
         // 如果是 md 文件，则转换为html
         const fileContent = fs.readFileSync(filePath, "utf8");
         const content =
