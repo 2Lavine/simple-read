@@ -1,0 +1,969 @@
+<h1>01. Promise基础</h1><blockquote>
+<p>本节课的任务：</p>
+<ol>
+<li>理解Promise A+规范的基本概念</li>
+<li>学会创建Promise</li>
+<li>学会针对Promise进行后续处理</li>
+</ol>
+</blockquote>
+<h1>Promise规范</h1>
+<p>Promise是一套专门处理异步场景的规范，它能有效的避免回调地狱的产生，使异步代码更加清晰、简洁、统一</p>
+<p>这套规范最早诞生于前端社区，规范名称为<a href="https://promisesaplus.com/">Promise A+</a></p>
+<p>Promise A+ 规定：</p>
+<ol>
+<li>
+<p>所有的异步场景，都可以看作是一个异步任务，每个异步任务，在JS中应该表现为一个<strong>对象</strong>，该对象称之为<strong>Promise对象</strong>，也叫做任务对象</p>
+</li>
+<li>
+<p>每个任务对象，都应该有两个阶段、三个状态</p>
+<p>两个阶段</p>
+<ul>
+<li>未决阶段unsettled</li>
+<li>已决阶段settled</li>
+</ul>
+<p>根据常理，它们之间存在以下逻辑：</p>
+<ul>
+<li>任务总是从未决阶段变到已决阶段，无法逆行</li>
+<li>任务总是从挂起状态变到完成或失败状态，无法逆行</li>
+<li>时间不能倒流，历史不可改写，任务一旦完成或失败，状态就固定下来，永远无法改变</li>
+</ul>
+</li>
+<li>
+<p><code>挂起-&gt;完成</code>，称之为<code>resolve</code>；<code>挂起-&gt;失败</code>称之为<code>reject</code>。</p>
+<ol>
+<li>任务完成时，可能有一个相关数据；任务失败时，可能有一个失败原因。</li>
+</ol>
+</li>
+<li>
+<p>可以针对任务进行后续处理，针对完成状态的后续处理称之为onFulfilled，针对失败的后续处理称之为onRejected</p>
+</li>
+</ol>
+<p>可以把Promise 看做一个合同，resolve 和 reject 在合同内表明 何时成功（resolve）何时失败（reject）</p>
+<p>我们可以通过 then 中的 onfulfilled 表明成功时做什么，obrejected 失败时做什么</p>
+<h1>Promise API</h1>
+<p>ES6提供了一套API，实现了Promise A+规范</p>
+<p>基本使用如下：</p>
+<pre><code class="language-js">// 创建一个任务对象，该任务立即进入 pending 状态
+const pro = new Promise((resolve, reject) =&gt; {
+  // 任务的具体执行流程，该函数会立即被执行
+  // 调用 resolve(data)，可将任务变为 fulfilled 状态， data 为需要传递的相关数据
+  // 调用 reject(reason)，可将任务变为 rejected 状态，reason 为需要传递的失败原因
+});
+
+pro.then(
+  (data) =&gt; {
+    // onFulfilled 函数，当任务完成后，会自动运行该函数，data为任务完成的相关数据
+  },
+  (reason) =&gt; {
+    // onRejected 函数，当任务失败后，会自动运行该函数，reason为任务失败的相关原因
+  }
+);
+</code></pre>
+<h2>delay 函数</h2>
+<pre><code class="language-js">/**
+
+ * 延迟一段指定的时间
+ * @param {Number} duration 等待的时间
+ * @returns {Promise} 返回一个任务，该任务在指定的时间后完成
+   */
+   function delay(duration) {
+     return new Promise((resolve) =&gt; {
+   setTimeout(() =&gt; {
+     resolve();
+   }, duration);
+     });
+   }
+
+// 2. 按照要求，调用delay函数，完成程序
+
+// 利用delay函数，等待1秒钟，输出：finish
+delay(1000).then(() =&gt; {
+  console.log('finish');
+});
+</code></pre>
+<h2>动态添加图片返回 promise</h2>
+<pre><code class="language-js">function createImage(imgUrl) {
+        return new Promise((resolve, reject) =&gt; {
+          const img = document.createElement('img');
+          img.src = imgUrl;
+          img.onload = () =&gt; {
+            // 图像加载完成
+            resolve(img);
+          };
+          img.onerror = (e) =&gt; {
+            // 图像加载失败
+            reject(e);
+          };
+        });
+      }
+
+      // 使用createImage函数创建一个图像，图像路径自行定义
+      // 当图像成功加载后，将图像宽高显示在p元素中，当图像加载失败后，输出加载失败的原因
+      const url1 =
+        'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=155346741,3953923104&amp;fm=26&amp;gp=0.jpg';
+      createImage(url1).then(
+        (img) =&gt; {
+          const p = document.querySelector('.label');
+          p.innerHTML = `${img.width} * ${img.height}`;
+        },
+        (reason) =&gt; {
+          console.log(reason);
+        }
+      );
+</code></pre>
+<p>根据这个案例，我们可以发现我们可以把一些提前对一些事件进行判断，</p>
+<ul>
+<li>根据事件的结果来执行 onResolved 函数还是 onRejected 函数。</li>
+</ul>
+
+<h1>02. Promise的链式调用</h1><h1>catch方法</h1>
+<p><code>.catch(onRejected)</code> = <code>.then(null, onRejected)</code></p>
+<h1>链式调用</h1>
+<p><img src="http://mdrs.yuanjin.tech/img/20210621103501.png" alt="image-20210621103501094"></p>
+<ol>
+<li>
+<p>then方法必定会返回一个新的Promise</p>
+<p>可理解为<code>后续处理也是一个任务</code></p>
+</li>
+<li>
+<p>新的Promise的状态取决于后续处理：后续处理即 then 的onFulfilled或者 onRejected的函数</p>
+<ul>
+<li>
+<p>若没有相关的后续处理，新任务的状态和前任务一致，数据为前任务的数据</p>
+<ul>
+<li>
+<p>没有后续处理即 then 方法没有传入对应的onFulfilled或者 onRejected的后续处理函数</p>
+</li>
+<li>
+<p>这样设计可以让我们在 then 中不处理 onRejected而是在后面调用 catch 方法来处理</p>
+<ul>
+<li>这样 catch 可以捕捉前面所有的错误</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>若有后续处理但还未执行，新任务挂起（也就是 pending 状态）。</p>
+</li>
+<li>
+<p>若后续处理执行了，则根据后续处理的情况确定新任务的状态</p>
+<ul>
+<li>后续处理返回的不是 promise 对象
+<ul>
+<li>后续处理执行无错，新任务的状态为完成，数据为后续处理的返回值</li>
+<li>后续处理执行有错，新任务的状态为失败，数据为异常对象</li>
+</ul>
+</li>
+<li>后续执行后返回的是一个promise对象，
+<ul>
+<li>新任务的状态和数据与该promise对象一致</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>由于链式任务的存在，异步代码拥有了更强的表达力</p>
+<pre><code class="language-js">// 常见任务处理代码
+
+/*
+ * 任务成功后，执行处理1，失败则执行处理2
+ */
+pro.then(处理1).catch(处理2)
+
+/*
+ * 任务成功后，依次执行处理1、处理2
+ */
+pro.then(处理1).then(处理2)
+
+/*
+ * 任务成功后，依次执行处理1、处理2，若任务失败或前面的处理有错，执行处理3
+ */
+pro.then(处理1).then(处理2).catch(处理3)
+</code></pre>
+
+<h1>5-1. 性能优化概述</h1><h1>性能优化概述</h1>
+<p>本章所讲的性能优化主要体现在三个方面：</p>
+<div>
+<img src="assets/2020-02-12-09-53-01.png" width="400">
+</div>
+<p><strong>构建性能</strong></p>
+<p>这里所说的构建性能，是指在<strong>开发阶段的构建性能</strong>，而不是生产环境的构建性能</p>
+<p>优化的目标，<strong>是降低从打包开始，到代码效果呈现所经过的时间</strong></p>
+<p>构建性能会影响开发效率。构建性能越高，开发过程中时间的浪费越少</p>
+<p><strong>传输性能</strong></p>
+<p>传输性能是指，打包后的JS代码传输到浏览器经过的时间</p>
+<p>在优化传输性能时要考虑到：</p>
+<ol>
+<li>总传输量：所有需要传输的JS文件的内容加起来，就是总传输量，重复代码越少，总传输量越少</li>
+<li>文件数量：当访问页面时，需要传输的JS文件数量，文件数量越多，http请求越多，响应速度越慢</li>
+<li>浏览器缓存：JS文件会被浏览器缓存，被缓存的文件不会再进行传输</li>
+<li></li>
+</ol>
+<p><strong>运行性能</strong></p>
+<p>运行性能是指，JS代码在浏览器端的运行速度</p>
+<p>它主要取决于我们如何书写高性能的代码</p>
+<p><strong>永远不要过早的关注于性能</strong>，因为你在开发的时候，无法完全预知最终的运行性能，过早的关注性能会极大的降低开发效率</p>
+<hr>
+<p>性能优化主要从上面三个维度入手</p>
+<p><strong>性能优化没有完美的解决方案，需要具体情况具体分析</strong></p>
+<p>构建性能：</p>
+<ul>
+<li>减少模块解析</li>
+<li>优化 loader 性能</li>
+<li>热更新</li>
+</ul>
+<p>传输性能</p>
+<ul>
+<li>减少传输的链接
+<ul>
+<li>分包</li>
+</ul>
+</li>
+<li>减少传输的体积
+<ul>
+<li>代码压缩</li>
+<li>tree shaking</li>
+</ul>
+</li>
+<li>按需加载（懒加载）</li>
+</ul>
+
+<h1>5-10. ESLint</h1><h1>ESLint {ignore}</h1>
+<p>ESLint是一个针对JS的代码风格<strong>检查</strong>工具，当不满足其要求的风格时，会给予警告或错误</p>
+<p>官网：https://eslint.org/</p>
+<p>民间中文网：https://eslint.bootcss.com/</p>
+<h1>使用</h1>
+<p>ESLint通常配合编辑器使用</p>
+<ol>
+<li>在vscode中安装<code>ESLint</code></li>
+</ol>
+<ul>
+<li>该工具会自动检查工程中的JS文件</li>
+<li>你可以在插件中配置自动 fix 一些错误</li>
+</ul>
+<p>检查的工作交给<code>eslint</code>库，如果当前工程没有，则会去全局库中查找，如果都没有，则无法完成检查</p>
+<p>另外，检查的依据是<code>eslint</code>的配置文件<code>.eslintrc</code>，如果找不到工程中的配置文件，也无法完成检查</p>
+<p>eslint会识别工程中的<code>.eslintrc.*</code>文件，也能够识别<code>package.json</code>中的<code>eslintConfig</code>字段</p>
+<ol start="2">
+<li>安装<code>eslint</code></li>
+</ol>
+<p><code>npm i [-g] eslint</code></p>
+<ol start="3">
+<li>创建配置文件</li>
+</ol>
+<p>可以通过<code>eslint</code>交互式命令创建配置文件 npx eslint --init`</p>
+<h1>配置</h1>
+<h2>ESLintConfig parserOptions</h2>
+<p>该配置指定<code>eslint</code>对哪些语法的支持</p>
+<ul>
+<li>ecmaVersion: 支持的ES语法版本</li>
+<li>sourceType
+<ul>
+<li>script：传统脚本</li>
+<li>module：模块化脚本</li>
+</ul>
+</li>
+</ul>
+<h2>ESLintConfig parser</h2>
+<p><code>eslint</code>的工作原理是先将代码进行解析，然后按照规则进行分析</p>
+<p><code>eslint</code> 默认使用<code>Espree</code>作为其解析器，你可以在配置文件中指定一个不同的解析器。</p>
+<h2>ESLintConfig globals</h2>
+<p>配置可以使用的额外的全局变量</p>
+<pre><code class="language-json">{
+  &quot;globals&quot;: {
+    &quot;var1&quot;: &quot;readonly&quot;,
+    &quot;var2&quot;: &quot;writable&quot;
+  }
+}
+</code></pre>
+<p><code>eslint</code>支持注释形式的配置，在代码中使用下面的注释也可以完成配置</p>
+<pre><code class="language-js">/* global var1, var2 */
+/* global var3:writable, var4:writable */
+</code></pre>
+<h2>ESLintConfig extends</h2>
+<p>该配置继承自哪里</p>
+<p>它的值可以是字符串或者数组</p>
+<p>比如：</p>
+<pre><code class="language-json">{
+  &quot;extends&quot;: &quot;eslint:recommended&quot;
+}
+</code></pre>
+<p>表示，该配置缺失的位置，使用<code>eslint</code>推荐的规则</p>
+<h2>ESLintConfig ignoreFiles</h2>
+<p>排除掉某些不需要验证的文件</p>
+<p><code>.eslintignore</code></p>
+<pre><code>dist/**/*.js
+node_modules
+</code></pre>
+<h2>ESLintConfig rules</h2>
+<p><code>eslint</code>规则集 ruels</p>
+<p>每条规则影响某个方面的代码风格</p>
+<p>每条规则都有下面几个取值：</p>
+<ul>
+<li>off 或 0 或 false: 关闭该规则的检查</li>
+<li>warn 或 1 或 true：警告，不会导致程序退出</li>
+<li>error 或 2：错误，当被触发的时候，程序会退出</li>
+</ul>
+<p>除了在配置文件中使用规则外，还可以在注释中使用：</p>
+<pre><code class="language-js">/* eslint eqeqeq: &quot;off&quot;, curly: &quot;error&quot; */
+    &quot;rules&quot;: {
+        &quot;semi&quot;: &quot;error&quot;, 
+        &quot;quotes&quot;: [&quot;error&quot;, &quot;double&quot;]
+    }
+</code></pre>
+<blockquote>
+<p>https://eslint.bootcss.com/docs/rules/</p>
+</blockquote>
+
+<h1>5-11. bundle analyzer</h1><p>使用 webpack-bundle-analyzer 包对打包效果进行可视化</p>
+<p>stat尺寸：源代码尺寸</p>
+<p>Parsed 尺寸：打包后的尺寸</p>
+
+<h1>5-12. gzip</h1><h1>B/S结构中的压缩传输</h1>
+<p>基本的流程</p>
+<ol>
+<li>
+<p>浏览器发送给服务器的 header 头: Accept-Encoding:gzip</p>
+</li>
+<li>
+<p>服务器读取文件并且用 gzip 压缩</p>
+</li>
+<li>
+<p>服务器返回 heade 头 Content-Encoding:gzip</p>
+</li>
+</ol>
+<p>优点：传输效率可能得到大幅提升</p>
+<p>缺点：服务器的压缩需要时间，客户端的解压需要时间</p>
+<p>我们可以使用使用webpack进行预压缩</p>
+<p>如使用<code>compression-webpack-plugin</code>插件对打包结果进行预压缩，可以移除服务器的压缩时间</p>
+
+<h1>5-2. 减少模块解析</h1><h1>减少模块解析 {ignore}</h1>
+<h2>什么叫做模块解析？</h2>
+<p><img src="assets/2020-02-13-16-26-41.png" alt=""></p>
+<p>模块解析包括：抽象语法树分析、依赖分析、模块语法(比如把 require 替换成webpack_require)替换</p>
+<h2>不做模块解析会怎样？</h2>
+<p><img src="assets/2020-02-13-16-28-10.png" alt=""></p>
+<p>如果某个模块不做解析，该模块经过loader处理后的代码就是最终代码。</p>
+<ul>
+<li>也就是仍然需要 loader 解析</li>
+</ul>
+<p>如果没有loader对该模块进行处理，该模块的源码就是最终打包结果的代码。</p>
+<p>如果不对某个模块进行解析，可以缩短构建时间</p>
+<h2>哪些模块不需要解析？</h2>
+<p>模块中无其他依赖：一些已经打包好的第三方库，比如jquery</p>
+<h2>如何让某个模块不要解析？</h2>
+<p>配置<code>module.noParse</code>，它是一个正则，被正则匹配到的模块不会解析</p>
+
+<h1>5-3. 优化loader性能</h1><h1>优化loader性能 {ignore}</h1>
+<h2>进一步限制loader的应用范围</h2>
+<p>思路是：对于某些库，不使用loader</p>
+<p>例如：babel-loader可以转换ES6或更高版本的语法，可是有些库本身就是用ES5语法书写的，不需要转换，使用babel-loader反而会浪费构建时间</p>
+<p>lodash就是这样的一个库</p>
+<blockquote>
+<p>lodash是在ES5之前出现的库，使用的是ES3语法</p>
+</blockquote>
+<p>通过<code>module.rule.exclude</code>或<code>module.rule.include</code>，排除或仅包含需要应用loader的场景</p>
+<pre><code class="language-js">module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /lodash/,
+                use: &quot;babel-loader&quot;
+            }
+        ]
+    }
+}
+</code></pre>
+<p>如果暴力一点，甚至可以排除掉<code>node_modules</code>目录中的模块，或仅转换<code>src</code>目录的模块</p>
+<pre><code class="language-js">module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                //或
+                // include: /src/,
+                use: &quot;babel-loader&quot;
+            }
+        ]
+    }
+}
+</code></pre>
+<blockquote>
+<p>这种做法是对loader的范围进行进一步的限制，和noParse不冲突，想想看，为什么不冲突</p>
+</blockquote>
+<h2>缓存loader的结果</h2>
+<p>我们可以基于一种假设：如果某个文件内容不变，经过相同的loader解析后，解析后的结果也不变</p>
+<p>于是，可以将loader的解析结果保存下来，让后续的解析直接使用保存的结果</p>
+<p><code>cache-loader</code>可以实现这样的功能</p>
+<pre><code class="language-js">module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: ['cache-loader', ...loaders]
+      },
+    ],
+  },
+};
+</code></pre>
+<p>有趣的是，<code>cache-loader</code>放到最前面，却能够决定后续的loader是否运行</p>
+<p>实际上，loader的运行过程中，还包含一个过程，即<code>pitch</code></p>
+<p><img src="assets/2020-02-21-13-32-36.png" alt=""></p>
+<p><code>cache-loader</code>还可以实现各自自定义的配置，具体方式见文档</p>
+<h2>为loader的运行开启多线程</h2>
+<p><code>thread-loader</code>会开启一个线程池，线程池中包含适量的线程</p>
+<p>它会把后续的loader放到线程池的线程中运行，以提高构建效率</p>
+<p>由于后续的loader会放到新的线程中，所以，后续的loader不能：</p>
+<ul>
+<li>使用 webpack api 生成文件</li>
+<li>无法使用自定义的 plugin api</li>
+<li>无法访问 webpack options</li>
+</ul>
+<p>必须是非常纯粹的进行转换代码</p>
+<blockquote>
+<p>在实际的开发中，可以进行测试，来决定<code>thread-loader</code>放到什么位置</p>
+</blockquote>
+<p><strong>特别注意</strong>，开启和管理线程需要消耗时间，在小型项目中使用<code>thread-loader</code>反而会增加构建时间</p>
+<p>（注意 happy pack 已经不再维护了）</p>
+
+<h1>5-4. 热替换</h1><h1>热替换 HMR {ignore}</h1>
+<blockquote>
+<p>热替换并不能降低构建时间（可能还会稍微增加），但可以降低代码改动到效果呈现的时间</p>
+</blockquote>
+<p>当使用<code>webpack-dev-server</code>时，考虑代码改动到效果呈现的过程。 代码变动后重新打包，浏览器会刷新重新请求所有资源</p>
+<p>而使用了热替换后，流程发生了变化。浏览器变成了仅请求改动的资源</p>
+<h1>使用和原理</h1>
+<ol>
+<li>更改配置</li>
+</ol>
+<pre><code class="language-js">module.exports = {
+  devServer:{
+    hot:true // 开启HMR
+  },
+  plugins:[ 
+    // 可选，4 之后会自动添加
+    new webpack.HotModuleReplacementPlugin()
+  ]
+}
+</code></pre>
+<ol start="2">
+<li>更改代码</li>
+</ol>
+<pre><code class="language-js">// index.js
+
+if(module.hot){ // 是否开启了热更新
+  module.hot.accept() // 接受热更新
+}
+</code></pre>
+<p>首先，这段代码会参与最终运行！</p>
+<p>当开启了热更新后，<code>webpack-dev-server</code>会向打包结果中注入<code>module.hot</code>属性，因此就可以最终代码就会执行accept函数</p>
+<p>默认情况下，<code>webpack-dev-server</code>不管是否开启了热更新，当重新打包后，都会调用<code>location.reload</code>刷新页面</p>
+<p>但如果运行了<code>module.hot.accept()</code>，将改变这一行为</p>
+<p><code>module.hot.accept()</code>的作用是让<code>webpack-dev-server</code>通过<code>socket</code>管道，把服务器更新的内容发送到浏览器</p>
+<p><img src="assets/2020-02-21-14-34-05.png" alt="|300"></p>
+<p>然后，将结果交给插件<code>HotModuleReplacementPlugin</code>注入的代码执行</p>
+<p>插件<code>HotModuleReplacementPlugin</code>会根据覆盖原始代码，然后让代码重新执行</p>
+<p><strong>所以，热替换发生在代码运行期</strong></p>
+<h1>样式热替换</h1>
+<p>对于样式也是可以使用热替换的，但需要使用<code>style-loader</code></p>
+<p>因为热替换发生时，<code>HotModuleReplacementPlugin</code>只会简单的重新运行模块代码</p>
+<p>因此<code>style-loader</code>的代码一运行，就会重新设置<code>style</code>元素中的样式</p>
+<p>而<code>mini-css-extract-plugin</code>，由于它生成文件是在<strong>构建期间</strong>，运行期间并会也无法改动文件，因此它对于热替换是无效的</p>
+
+<h1>5-5. 手动分包</h1><h1>手动分包 {ignore}</h1>
+<p>什么时候要分包？</p>
+<p>在多个entry都调用了大型的公共模块时</p>
+<h1>基本原理</h1>
+<p>手动分包的总体思路是：</p>
+<ol>
+<li>先单独的打包公共模块</li>
+</ol>
+<p><img src="assets/2020-02-24-13-24-57.png" alt="单独打包公共模块"></p>
+<p>公共模块会被打包成为动态链接库(dll Dynamic Link Library)，并生成资源清单</p>
+<p>资源清单包含的信息：</p>
+<ul>
+<li>该公共模块暴露的变量和打包后的实际路径</li>
+</ul>
+<ol start="2">
+<li>根据入口模块进行正常打包</li>
+</ol>
+<p>打包时，如果发现模块中使用了资源清单中描述的模块，则不会形成下面的代码结构</p>
+<pre><code class="language-js">//源码，入口文件index.js
+import $ from &quot;jquery&quot;
+import _ from &quot;lodash&quot;
+_.isArray($(&quot;.red&quot;));
+</code></pre>
+<p>由于资源清单中包含<code>jquery</code>和<code>lodash</code>两个模块，因此打包结果的大致格式是：</p>
+<pre><code class="language-js">(function(modules){
+  //...
+})({
+  // index.js文件的打包结果并没有变化
+  &quot;./src/index.js&quot;:
+  function(module, exports, __webpack_require__){
+    var $ = __webpack_require__(&quot;./node_modules/jquery/index.js&quot;)
+    var _ = __webpack_require__(&quot;./node_modules/lodash/index.js&quot;)
+    _.isArray($(&quot;.red&quot;));
+  },
+  // 由于资源清单中存在，jquery的代码并不会出现在这里
+  &quot;./node_modules/jquery/index.js&quot;:
+  function(module, exports, __webpack_require__){
+    module.exports = jquery;
+  },
+  // 由于资源清单中存在，lodash的代码并不会出现在这里
+  &quot;./node_modules/lodash/index.js&quot;:
+  function(module, exports, __webpack_require__){
+    module.exports = lodash;
+  }
+})
+</code></pre>
+<h1>打包公共模块</h1>
+<p>打包公共模块是一个<strong>独立的</strong>打包过程</p>
+<ol>
+<li>单独打包公共模块，暴露变量名</li>
+</ol>
+<pre><code class="language-js">// webpack.dll.config.js
+module.exports = {
+  mode: &quot;production&quot;,
+  entry: {
+    jquery: [&quot;jquery&quot;],
+    lodash: [&quot;lodash&quot;]
+  },
+  output: {
+    filename: &quot;dll/[name].js&quot;,
+    library: &quot;[name]&quot;
+  }
+};
+
+</code></pre>
+<p>可以看到 entry 可以是一个数组，表示从多个路径打包得到一个chunk</p>
+<ol start="2">
+<li>利用<code>DllPlugin</code>生成资源清单</li>
+</ol>
+<p>webpack.DllPlugin是webpack 自带插件</p>
+<pre><code class="language-js">// webpack.dll.config.js
+module.exports = {
+  plugins: [
+    new webpack.DllPlugin({
+      path: path.resolve(__dirname, &quot;dll&quot;, &quot;[name].manifest.json&quot;), //资源清单的保存位置
+      name: &quot;[name]&quot;//资源清单中，暴露的变量名
+    })
+  ]
+};
+
+</code></pre>
+<p>运行后，即可完成公共模块打包</p>
+<h1>使用公共模块</h1>
+<ol>
+<li>在页面中手动引入公共模块</li>
+</ol>
+<pre><code class="language-html">&lt;script src=&quot;./dll/jquery.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./dll/lodash.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<ol start="2">
+<li>重新设置<code>clean-webpack-plugin</code></li>
+</ol>
+<p>如果使用了插件<code>clean-webpack-plugin</code>，为了避免它把公共模块清除，需要做出以下配置</p>
+<pre><code class="language-js">new CleanWebpackPlugin({
+  // 要清除的文件或目录
+  // 排除掉dll目录本身和它里面的文件
+  cleanOnceBeforeBuildPatterns: [&quot;**/*&quot;, '!dll', '!dll/*']
+})
+</code></pre>
+<blockquote>
+<p>目录和文件的匹配规则使用的是<a href="https://github.com/sindresorhus/globby#globbing-patterns">globbing patterns</a></p>
+</blockquote>
+<ol start="3">
+<li>使用<code>DllReferencePlugin</code>控制打包结果</li>
+</ol>
+<pre><code class="language-js">module.exports = {
+  plugins:[
+    new webpack.DllReferencePlugin({
+      manifest: require(&quot;./dll/jquery.manifest.json&quot;)
+    }),
+    new webpack.DllReferencePlugin({
+      manifest: require(&quot;./dll/lodash.manifest.json&quot;)
+    })
+  ]
+}
+
+</code></pre>
+<h1>总结</h1>
+<p><strong>手动打包的过程</strong>：</p>
+<ol>
+<li>开启<code>output.library</code>暴露公共模块</li>
+<li>用<code>DllPlugin</code>创建资源清单</li>
+<li>用<code>DllReferencePlugin</code>使用资源清单</li>
+</ol>
+<p><strong>手动打包的注意事项</strong>：</p>
+<ol>
+<li>资源清单不参与运行，可以不放到打包目录中</li>
+<li>记得手动引入公共JS，以及避免被删除</li>
+<li>不要对小型的公共JS库使用</li>
+</ol>
+<p><strong>优点</strong>：</p>
+<ol>
+<li>极大提升自身模块的打包速度</li>
+<li>极大的缩小了自身文件体积</li>
+<li>有利于浏览器缓存第三方库的公共代码</li>
+</ol>
+<p><strong>缺点</strong>：</p>
+<ol>
+<li>使用非常繁琐</li>
+<li>如果第三方库中包含重复的公共代码，则效果不太理想</li>
+</ol>
+
+<h1>5-6. 自动分包</h1><h1>自动分包 {ignore}</h1>
+<h1>基本原理</h1>
+<p>不同与手动分包，自动分包是从<strong>实际的角度</strong>出发，从一个更加<strong>宏观的角度</strong>来控制分包，而一般不对具体哪个包要分出去进行控制</p>
+<p>因此使用自动分包，不仅非常方便，而且更加贴合实际的开发需要</p>
+<p>要控制自动分包，关键是要配置一个合理的<strong>分包策略</strong></p>
+<p>有了分包策略之后，不需要额外安装任何插件，webpack会自动的按照策略进行分包</p>
+<blockquote>
+<p>实际上，webpack在内部是使用<code>SplitChunksPlugin</code>进行分包的
+过去有一个库<code>CommonsChunkPlugin</code>也可以实现分包，不过由于该库某些地方并不完善，到了<code>webpack4</code>之后，已被<code>SplitChunksPlugin</code>取代</p>
+</blockquote>
+<p><img src="assets/2020-02-24-17-19-47.png" alt="分包简单流程"></p>
+<p>从分包流程中至少可以看出以下几点：</p>
+<ul>
+<li>分包策略至关重要，它决定了如何分包</li>
+<li>分包时，webpack开启了一个<strong>新的chunk</strong>，对分离的模块进行打包</li>
+<li>打包结果中，公共的部分被提取出来形成了一个单独的文件，它是新chunk的产物</li>
+</ul>
+<h1>分包策略的基本配置</h1>
+<p>webpack提供了<code>optimization</code>配置项，用于配置一些优化信息</p>
+<p>其中<code>splitChunks</code>是分包策略的配置</p>
+<pre><code class="language-js">module.exports = {
+  optimization: {
+    splitChunks: {
+      // 分包策略
+    }
+  }
+}
+</code></pre>
+<p>事实上，分包策略有其默认的配置，我们只需要轻微的改动，即可应对大部分分包场景</p>
+<ol>
+<li>chunks</li>
+</ol>
+<p>该配置项用于配置需要应用分包策略的chunk</p>
+<p>我们知道，分包是从已有的chunk中分离出新的chunk，那么哪些chunk需要分离呢</p>
+<p>chunks有三个取值，分别是：</p>
+<ul>
+<li>all: 对于所有的chunk都要应用分包策略</li>
+<li>async：【默认】仅针对异步chunk应用分包策略</li>
+<li>initial：仅针对普通chunk应用分包策略</li>
+</ul>
+<p>所以，你只需要配置<code>chunks</code>为<code>all</code>即可</p>
+<ol start="2">
+<li>maxSize</li>
+</ol>
+<p>该配置可以控制包的最大字节数</p>
+<p>如果某个包（包括分出来的包）超过了该值，则webpack会尽可能的将其分离成多个包</p>
+<p>但是不要忽略的是，分包的<strong>基础单位是模块</strong>，如果一个完整的模块超过了该体积，它是无法做到再切割的，因此，尽管使用了这个配置，完全有可能某个包还是会超过这个体积</p>
+<p>另外，该配置看上去很美妙，实际意义其实不大</p>
+<ul>
+<li>
+<p>因为分包的目的是<strong>提取大量的公共代码</strong>，从而减少总体积和充分利用浏览器缓存</p>
+</li>
+<li>
+<p>虽然该配置可以把一些包进行再切分，但是实际的总体积和传输量并没有发生变化</p>
+</li>
+<li>
+<p>它主要适用于可以多进程的浏览器进行加载</p>
+</li>
+</ul>
+<p>如果要进一步减少公共模块的体积，只能是压缩和<code>tree shaking</code></p>
+<h1>分包策略的其他配置</h1>
+<p>如果不想使用其他配置的默认值，可以手动进行配置：</p>
+<ul>
+<li>automaticNameDelimiter：新chunk名称的分隔符，默认值~</li>
+<li>minChunks：一个模块被多少个chunk使用时，才会进行分包，默认值1</li>
+<li>minSize：当分包达到多少字节后才允许被真正的拆分，默认值30000</li>
+</ul>
+<h1>缓存组</h1>
+<p>之前配置的分包策略是全局的，而实际上，分包策略是基于缓存组的</p>
+<p>每个缓存组提供一套独有的策略，webpack按照缓存组的优先级依次处理每个缓存组，被缓存组处理过的分包不需要再次分包</p>
+<p>默认情况下，webpack提供了两个缓存组：</p>
+<pre><code class="language-js">module.exports = {
+  optimization:{
+    splitChunks: {
+      //全局配置
+      cacheGroups: {
+        // 属性名是缓存组名称，会影响到分包的chunk名
+        // 属性值是缓存组的配置，缓存组继承所有的全局配置，也有自己特殊的配置
+        vendors: { 
+          test: /[\\/]node_modules[\\/]/, // 当匹配到相应模块时，将这些模块进行单独打包
+          priority: -10 // 缓存组优先级，优先级越高，该策略越先进行处理，默认值为0
+        },
+        default: {
+          minChunks: 2,  // 覆盖全局配置，将最小chunk引用数改为2
+          priority: -20, // 优先级
+          reuseExistingChunk: true // 重用已经被分离出去的chunk
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<p>很多时候，缓存组对于我们来说没什么意义，因为默认的缓存组就已经够用了</p>
+<p>但是我们同样可以利用缓存组来完成一些事情，比如对公共样式的抽离</p>
+<pre><code class="language-js">module.exports = {
+  optimization: {
+    splitChunks: {
+      chunks: &quot;all&quot;,
+      cacheGroups: {
+        styles: {
+          test: /\.css$/, // 匹配样式模块
+          minSize: 0, // 覆盖默认的最小尺寸，这里仅仅是作为测试
+          minChunks: 2 // 覆盖默认的最小chunk引用数
+        }
+      }
+    }
+  },
+  module: {
+    rules: [{ test: /\.css$/, use: [MiniCssExtractPlugin.loader, &quot;css-loader&quot;] }]
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: &quot;./public/index.html&quot;,
+      chunks: [&quot;index&quot;]
+    }),
+    new MiniCssExtractPlugin({
+      filename: &quot;[name].[hash:5].css&quot;,
+      // chunkFilename是配置来自于分割chunk的文件名
+      chunkFilename: &quot;common.[hash:5].css&quot; 
+    })
+  ]
+}
+</code></pre>
+<h1>配合多页应用</h1>
+<p>虽然现在单页应用是主流，但免不了还是会遇到多页应用</p>
+<p>由于在多页应用中需要为每个html页面指定需要的chunk，这就造成了问题</p>
+<pre><code class="language-js">new HtmlWebpackPlugin({
+  template: &quot;./public/index.html&quot;,
+  chunks: [&quot;index~other&quot;, &quot;vendors~index~other&quot;, &quot;index&quot;]
+})
+</code></pre>
+<p>我们必须手动的指定被分离出去的chunk名称，这不是一种好办法</p>
+<p>幸好<code>html-webpack-plugin</code>的新版本中解决了这一问题</p>
+<pre><code class="language-shell">npm i -D html-webpack-plugin@next
+</code></pre>
+<p>做出以下配置即可：</p>
+<pre><code class="language-js">new HtmlWebpackPlugin({
+  template: &quot;./public/index.html&quot;,
+  chunks: [&quot;index&quot;]
+})
+</code></pre>
+<p>它会自动的找到被<code>index</code>分离出去的chunk，并完成引用</p>
+<blockquote>
+<p>目前这个版本仍处于测试解决，还未正式发布</p>
+</blockquote>
+<h1>原理</h1>
+<p>自动分包的原理其实并不复杂，主要经过以下步骤：</p>
+<ol>
+<li>
+<p>检查每个chunk编译的结果</p>
+<ol>
+<li>结果包括 chunk 里面依赖的模块和对应的代码</li>
+</ol>
+</li>
+<li>
+<p>根据分包策略，找到那些满足策略的模块</p>
+</li>
+<li>
+<p>根据分包策略，生成新的chunk打包这些模块（代码有所变化）</p>
+</li>
+<li>
+<p>把打包出去的模块从原始包中移除，并修正原始包代码</p>
+</li>
+</ol>
+<p>在分包的代码会有以下变动</p>
+<ol>
+<li>分包的代码中，加入一个全局变量，类型为数组，其中包含公共模块的代码</li>
+<li>原始包的代码中，使用数组中的公共代码</li>
+</ol>
+
+<h1>5-7. 代码压缩</h1><h1>代码压缩 {ignore}</h1>
+<h1>前言</h1>
+<ol>
+<li><strong>为什么要进行代码压缩</strong></li>
+</ol>
+<p>减少代码体积；破坏代码的可读性，提升破解成本；</p>
+<ol start="2">
+<li><strong>什么时候要进行代码压缩</strong></li>
+</ol>
+<p>生产环境</p>
+<ol start="3">
+<li><strong>使用什么压缩工具</strong></li>
+</ol>
+<p>目前最流行的代码压缩工具主要有两个：<code>UglifyJs</code>和<code>Terser</code></p>
+<p><code>UglifyJs</code>是一个传统的代码压缩工具，已存在多年，曾经是前端应用的必备工具，但由于它不支持<code>ES6</code>语法，所以目前的流行度已有所下降。</p>
+<p><code>Terser</code>是一个新起的代码压缩工具，支持<code>ES6+</code>语法，因此被很多构建工具内置使用。<code>webpack</code>安装后会内置<code>Terser</code>，当启用生产环境后即可用其进行代码压缩。</p>
+<p>因此，我们选择<code>Terser</code></p>
+<p><strong>关于副作用 side effect</strong></p>
+<p>副作用：函数运行过程中，可能会对外部环境造成影响的功能</p>
+<p>如果函数中包含以下代码，该函数叫做副作用函数:</p>
+<ul>
+<li>异步代码</li>
+<li>localStorage</li>
+<li>对外部数据的修改</li>
+</ul>
+<p>如果一个函数没有副作用，同时，<strong>函数的返回结果仅依赖参数</strong>，则该函数叫做纯函数(pure function)</p>
+<p>可以在代码中使用标记 /__Pure__/ 来对函数进行优化</p>
+<h1>Terser</h1>
+<p>在<code>Terser</code>的官网可尝试它的压缩效果</p>
+<blockquote>
+<p>Terser官网：https://terser.org/</p>
+</blockquote>
+<h1>webpack+Terser</h1>
+<p>webpack自动集成了Terser</p>
+<p>如果你想更改、添加压缩工具，又或者是想对Terser进行配置，使用下面的webpack配置即可</p>
+<pre><code class="language-js">const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+module.exports = {
+  optimization: {
+    // 是否要启用压缩，默认情况下，生产环境会自动开启
+    minimize: true, 
+    minimizer: [ // 压缩时使用的插件，可以有多个
+      new TerserPlugin(), 
+      new OptimizeCSSAssetsPlugin()
+    ],
+  },
+};
+``</code></pre>
+
+<h1>5-8. tree shaking</h1><h1>tree shaking {ignore}</h1>
+<blockquote>
+<p>压缩可以移除模块内部的无效代码
+tree shaking 可以移除模块之间的无效代码</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2018/1/4/160bfdcf2a31ce4a?imageslim" alt=""></p>
+<h1>背景</h1>
+<p>某些模块导出的代码并不一定会被用到</p>
+<pre><code class="language-js">// myMath.js
+export function add(a, b){
+  console.log(&quot;add&quot;)
+  return a+b;
+}
+
+export function sub(a, b){
+  console.log(&quot;sub&quot;)
+  return a-b;
+}
+</code></pre>
+<pre><code class="language-js">// index.js
+import {add} from &quot;./myMath&quot;
+console.log(add(1,2));
+</code></pre>
+<p>tree shaking 用于移除掉不会用到的导出</p>
+<h1>使用</h1>
+<p><code>webpack2</code>开始就支持了<code>tree shaking</code></p>
+<p>只要是生产环境，<code>tree shaking</code>自动开启</p>
+<h1>原理</h1>
+<p>webpack会从入口模块出发寻找依赖关系</p>
+<p>当解析一个模块时，webpack会根据ES6的模块导入语句来判断，该模块依赖了另一个模块的哪个导出</p>
+<p>webpack之所以选择ES6的模块导入语句，是因为ES6模块有以下特点：</p>
+<ol>
+<li>
+<p>导入导出语句只能是顶层语句</p>
+<ol>
+<li>commonjs就不是</li>
+</ol>
+</li>
+<li>
+<p>import的模块名只能是字符串常量</p>
+<ol>
+<li>commonjs 的模块名可以是变量，所以必须在运行时才能确定导入的模块</li>
+</ol>
+</li>
+<li>
+<p>import绑定的变量是不可变的</p>
+<ol>
+<li>commonjs 可以对导出的变量进行赋值，而 es6 不能赋值，改变</li>
+</ol>
+</li>
+</ol>
+<p>这些特征都非常有利于分析出稳定的依赖</p>
+<p>在具体分析依赖时，webpack坚持的原则是：<strong>保证代码正常运行，然后再尽量tree shaking</strong></p>
+<p>所以，如果你依赖的是一个导出的对象，由于JS语言的动态特性，以及<code>webpack</code>还不够智能，为了保证代码正常运行，它不会移除对象中的任何信息</p>
+<p>因此，我们在编写代码的时候，<strong>尽量</strong>：</p>
+<ul>
+<li>使用<code>export xxx</code>导出，而不使用<code>export default {xxx}</code>导出</li>
+<li>使用<code>import {xxx} from &quot;xxx&quot;</code>导入，而不使用<code>import xxx from &quot;xxx&quot;</code>导入</li>
+</ul>
+<p>依赖分析完毕后，<code>webpack</code>会根据每个模块每个导出是否被使用，标记其他导出为<code>dead code</code>，然后交给代码压缩工具处理</p>
+<p>代码压缩工具最终移除掉那些<code>dead code</code>代码</p>
+<h2>import obj1 from &quot;xxx&quot;和 import * as obj2 from &quot;xxx&quot;的区别</h2>
+<p>obj2是完全不可修改的</p>
+<p>obj1 是 xxx 导出的对象，可以对对象的属性进行修改</p>
+<h1>使用第三方库</h1>
+<p>某些第三方库可能使用的是<code>commonjs</code>的方式导出，比如<code>lodash</code></p>
+<p>又或者没有提供普通的ES6方式导出</p>
+<p>对于这些库，<code>tree shaking</code>是无法发挥作用的</p>
+<p>因此要寻找这些库的<code>es6</code>版本，好在很多流行但没有使用的<code>ES6</code>的第三方库，都发布了它的<code>ES6</code>版本，比如<code>lodash-es</code></p>
+<h1>作用域分析</h1>
+<p><code>tree shaking</code>本身并没有完善的作用域分析，可能导致在一些<code>dead code</code>函数中的依赖仍然会被视为依赖</p>
+<p>插件<code>webpack-deep-scope-plugin</code>提供了作用域分析，可解决这些问题</p>
+<h1>副作用问题</h1>
+<p>webpack在<code>tree shaking</code>的使用，有一个原则：<strong>一定要保证代码正确运行</strong></p>
+<p>在满足该原则的基础上，再来决定如何<code>tree shaking</code></p>
+<p>因此，当<code>webpack</code>无法确定某个模块是否有副作用时，它往往将其视为有副作用</p>
+<p>因此，某些情况可能并不是我们所想要的</p>
+<pre><code class="language-js">//common.js
+var n  = Math.random();
+
+//index.js
+import &quot;./common.js&quot;
+</code></pre>
+<p>// import &quot;./common.js&quot; 表示直接引入这个代码并且执行</p>
+<p>虽然我们根本没用有<code>common.js</code>的导出，但<code>webpack</code>担心<code>common.js</code>有副作用，如果去掉会影响某些功能</p>
+<p>如果要解决该问题，就需要标记该文件是没有副作用的</p>
+<p>在<code>package.json</code>中加入<code>sideEffects</code></p>
+<pre><code class="language-json">{
+    &quot;sideEffects&quot;: false
+}
+</code></pre>
+<p>有两种配置方式：</p>
+<ul>
+<li>false：当前工程中，所有模块都没有副作用。注意，这种写法会影响到某些css文件的导入</li>
+<li>数组：设置哪些文件拥有副作用，例如：<code>[&quot;!src/common.js&quot;]</code>，表示只要不是<code>src/common.js</code>的文件，都有副作用</li>
+</ul>
+<blockquote>
+<p>这种方式我们一般不处理，通常是一些第三方库在它们自己的<code>package.json</code>中标注</p>
+</blockquote>
+<h1>css tree shaking</h1>
+<p><code>webpack</code>无法对<code>css</code>完成<code>tree shaking</code>，因为<code>css</code>跟<code>es6</code>没有半毛钱关系</p>
+<p>因此对<code>css</code>的<code>tree shaking</code>需要其他插件完成</p>
+<p>例如：<code>purgecss-webpack-plugin</code></p>
+<blockquote>
+<p>注意：<code>purgecss-webpack-plugin</code>对<code>css module</code>无能为力</p>
+</blockquote>
+<ul>
+<li>因为这个插件是用正则来进行 类等选择器的匹配</li>
+</ul>
+
+<h1>5-9. 懒加载</h1><pre><code class="language-js">btn.onclick = async function() {
+  //动态加载
+  //import 是ES6的草案
+  //浏览器会使用JSOP的方式远程去读取一个js模块
+  //import()会返回一个promise   （* as obj）
+  const { chunk } = await import(/* webpackChunkName:&quot;lodash&quot; */&quot;lodash-es&quot;);
+  const result = chunk([3, 5, 6, 7, 87], 2);
+  console.log(result);
+};
+
+</code></pre>
+<p>但这个方法有个缺点：</p>
+<ol>
+<li>由于 import 是动态加载，需要再运行时确定，所以他不会执行 tree shaking.  所以会把loadsh 所有都加载下来</li>
+</ol>
+<p>解决方法是在另外一个文件内进行静态导入</p>
+<pre><code class="language-js">// utils.js
+export { chunk } from &quot;lodash-es&quot;;
+// index.js
+const { chunk } = await import(&quot;./util&quot;);
+</code></pre>
