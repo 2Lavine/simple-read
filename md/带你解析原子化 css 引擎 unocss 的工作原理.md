@@ -1,55 +1,17 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7186867331132293177)
 
-@unocss/core
-============
-
-首先，你得知道什么是 [unocss](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss "https://github.com/unocss/unocss")
-
-你能学到什么?
--------
-
-*   [x]  属于你自己的原子化 css 引擎
-
-我的代码将会提交到这个 [github 仓库](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2FSnowingFox%2Fmini-unocss "https://github.com/SnowingFox/mini-unocss")
-
-预备知识
-----
-
-这些东西都是构建一个原子化引擎必不可少的内容，也是 unocss 的所有特性，我们将一一实现它们，不过在此之前你应该知道怎么去用他们
-
-*   [Custom Rules](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss%23custom-rules "https://github.com/unocss/unocss#custom-rules")
-*   [Shortcuts](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss%23shortcuts "https://github.com/unocss/unocss#shortcuts")
-*   [Preflight](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss%23preflight "https://github.com/unocss/unocss#preflight")
-*   [Custom variants](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss%23custom-variants "https://github.com/unocss/unocss#custom-variants")
-*   [Theme](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss%23extend-theme "https://github.com/unocss/unocss#extend-theme")
-*   [Layers](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss%23layers "https://github.com/unocss/unocss#layers")
-*   [Utilities Preprocess & Prefixing](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss%23utilities-preprocess--prefixing "https://github.com/unocss/unocss#utilities-preprocess--prefixing")
-
-我们将围绕上述功能来实现一个 mini-unocss
-
 工作流程
 ----
-
-在了解此之前我希望你能读完 unocss 作者的构思 unocss 的一篇博客 [antfu.me/posts/reima…](https://link.juejin.cn?target=https%3A%2F%2Fantfu.me%2Fposts%2Freimagine-atomic-css-zh "https://antfu.me/posts/reimagine-atomic-css-zh")
-
 [@unocss/core](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss%2Ftree%2Fmain%2Fpackages%2Fcore "https://github.com/unocss/unocss/tree/main/packages/core") 是一个 css 原子化引擎，它并不包含任何预设
-
-举个最简单的例子
 
 ```
 const fixture = `<div class="text-red">hello</div>`
-
 const uno = creaeteGenerator({
-  rules: [
-    ['text-red', { color: 'red' }]
-  ]
+  rules: [['text-red', { color: 'red' }]]
 })
-
 const { css } = uno.generate(fixture)
 ```
-
 css 的内容
-
 ```
 /* layer: default */
 .text-red{color:red;}
@@ -61,8 +23,7 @@ css 的内容
 <div class="text-red">hello</div>
 ```
 
-可以发现最后提取出我们自定义的规则`text-red`，具体做法就是用正则匹配，后面会说到，这里不作赘述
-
+可以发现最后提取出我们自定义的规则`text-red`，
 我们把提取出来的`text-red`叫做`token`，而后我们会解析一遍这个 token 所包含的信息，发现它有如下规则
 
 ```
@@ -74,8 +35,6 @@ css 的内容
 ```
 .text-red{color:red;}
 ```
-
-其实原理就是这么简单，很多框架的原理都很简单，跟着我的脚步，到了最后你也能写出一个原子化 css 引擎
 
 extractor tokens -- 抓取 token
 ----------------------------

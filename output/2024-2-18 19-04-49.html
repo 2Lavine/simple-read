@@ -1,0 +1,525 @@
+<h1>03. Promise的静态方法</h1><h1>邓哥的新问题</h1>
+<p>邓嫂出门时，给邓哥交待了几个任务：</p>
+<ol>
+<li>
+<p>做饭</p>
+<p>可交给电饭煲完成</p>
+</li>
+<li>
+<p>洗衣服</p>
+<p>可交给洗衣机完成</p>
+</li>
+<li>
+<p>打扫卫生</p>
+<p>可交给扫地机器人完成</p>
+</li>
+</ol>
+<p>邓哥需要在所有任务结束后给邓嫂汇报工作，哪些成功了，哪些失败了</p>
+<p>为了最大程度的节约时间，邓哥希望这些任务同时进行，最终汇总结果统一处理</p>
+<img src="http://mdrs.yuanjin.tech/img/20210621142519.png" alt="image-20210621142519937" style="zoom:50%;" />
+<p>每个任务可以看做是一个返回Promise的函数</p>
+<pre><code class="language-js">// 做饭
+function cook() {
+  return new Promise((resolve, reject) =&gt; {
+    console.log('邓哥打开了电饭煲');
+    setTimeout(() =&gt; {
+      if (Math.random() &lt; 0.5) {
+        resolve('饭已ok');
+      } else {
+        reject('做饭却忘了加水，米饭变成了爆米花');
+      }
+    }, 2000);
+  });
+}
+
+// 洗衣服
+function wash() {
+  return new Promise((resolve, reject) =&gt; {
+    console.log('邓哥打开了洗衣机');
+    setTimeout(() =&gt; {
+      if (Math.random() &lt; 0.5) {
+        resolve('衣服已经洗好');
+      } else {
+        reject('洗衣服时停水了，洗了个寂寞');
+      }
+    }, 2500);
+  });
+}
+
+// 打扫卫生
+function sweep() {
+  return new Promise((resolve, reject) =&gt; {
+    console.log('邓哥打开了扫地机器人');
+    setTimeout(() =&gt; {
+      if (Math.random() &lt; 0.5) {
+        resolve('地板扫的非常干净');
+      } else {
+        reject('扫地机器人被哈士奇一爪掀翻了');
+      }
+    }, 3000);
+  });
+}
+
+</code></pre>
+<p>如何利用这三个函数实现邓哥的要求呢？</p>
+<h1>Promise的静态方法</h1>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Promise.resolve(data)</td>
+<td>直接返回一个完成状态的任务</td>
+</tr>
+<tr>
+<td>Promise.reject(reason)</td>
+<td>直接返回一个拒绝状态的任务</td>
+</tr>
+<tr>
+<td>Promise.all(任务数组)</td>
+<td>返回一个任务<br />任务数组全部成功则成功<br />任何一个失败则失败</td>
+</tr>
+<tr>
+<td>Promise.any(任务数组)</td>
+<td>返回一个任务<br />任务数组任一成功则成功<br />任务全部失败则失败</td>
+</tr>
+<tr>
+<td>Promise.allSettled(任务数组)</td>
+<td>返回一个任务<br />任务数组全部已决则成功<br />该任务不会失败</td>
+</tr>
+<tr>
+<td>Promise.race(任务数组)</td>
+<td>返回一个任务<br />任务数组任一已决则已决，状态和其一致</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1>邓哥的解决方案</h1>
+<pre><code class="language-js">Promise.allSettled([cook(), wash(), sweep()]).then((result) =&gt; {
+  // 处理汇总结果
+  const report = result
+    .map((r) =&gt; (r.status === 'fulfilled' ? r.value : r.reason))
+    .join(';');
+  console.log(report);
+});
+</code></pre>
+
+<h1>04. async和await</h1><p><img src="http://mdrs.yuanjin.tech/img/20210618161125.png" alt="image-20210618161125894"></p>
+<h1>消除回调</h1>
+<p>有了Promise，异步任务就有了一种统一的处理方式</p>
+<p>有了统一的处理方式，ES官方就可以对其进一步优化</p>
+<p>ES7推出了两个关键字<code>async</code>和<code>await</code>，用于更加优雅的表达Promise</p>
+<h2>async</h2>
+<p>async关键字用于修饰函数，被它修饰的函数，一定返回Promise</p>
+<ul>
+<li>
+<p>如果整个函数没有执行完成，则返回的 Promise 状态是pending</p>
+</li>
+<li>
+<p>函数执行完成，查看函数的返回值</p>
+<ul>
+<li>若函数返回的是Promise对象，则method得到的Promise状态和其一致（相当于没有加async）
+<ul>
+<li>该函数的返回值不是 Promise对象。 则该值就是返回的Promise的数据，</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>执行过程报错，则任务是rejected</p>
+</li>
+</ul>
+<pre><code class="language-js">async function method1(){
+  return 1; // 该函数的返回值是Promise完成后的数据
+}
+
+method1(); // Promise { 1 }
+
+async function method2(){
+  return Promise.resolve(1); // 若返回的是Promise，则method得到的Promise状态和其一致
+}
+
+method2(); // Promise { 1 }
+
+async function method3(){
+  throw new Error(1); // 若执行过程报错，则任务是rejected
+}
+
+method3(); // Promise { &lt;rejected&gt; Error(1) }
+</code></pre>
+<h2>await</h2>
+<p><code>await</code>关键字表示等待某个Promise完成，<strong>它必须用于<code>async</code>函数中</strong></p>
+<ul>
+<li>他通过把后面的代码加入到微队列当中来实现等待的效果</li>
+</ul>
+<pre><code class="language-js">async function method(){
+  const n = await Promise.resolve(1);
+  console.log(n); // 1
+}
+
+// 上面的函数等同于
+function method(){
+  return new Promise((resolve, reject)=&gt;{
+    Promise.resolve(1).then(n=&gt;{
+      console.log(n);
+      resolve(1)
+    })
+  })
+}
+</code></pre>
+<p>如果<code>await</code>后面不是 promise，则会调用 Promise.resolve返回一个resolved 的 Promise，</p>
+<p>（也就是当前会在resolve后面结束）</p>
+<pre><code class="language-js">async function method(){
+  const n = await 1; // 等同于 await Promise.resolve(1)
+}
+</code></pre>
+<p>如果需要针对失败的任务进行处理，可以使用<code>try-catch</code>语法</p>
+<pre><code class="language-js">async function method(){
+  try{
+    const n = await Promise.reject(123); // 这句代码将抛出异常
+    console.log('成功', n)
+  }
+  catch(err){
+    console.log('失败', err)
+  }
+}
+
+method(); // 输出： 失败 123
+</code></pre>
+<h2>Promise 的 then 处理</h2>
+<p>必须给 then 传递函数</p>
+<p>如果传递的不是函数，相当于没有后续处理，也就是 then 返回的 promise 数据状态和之前的 promise 一致</p>
+<p>p2=p1.then(1) p1.status ==p2</p>
+
+<h1>05. Promise相关面试题</h1><h2>事件循环</h2>
+<p>根据目前所学，进入事件队列的函数有以下几种：</p>
+<ul>
+<li><code>setTimeout</code>的回调，宏任务（macro task）(也就是在 n秒后会执行函数fn1,执行前将 fn1 插入宏任务队列)</li>
+<li><code>setInterval</code>的回调，宏任务（macro task）</li>
+<li>Promise的<code>then</code>函数回调，<strong>微任务</strong>（micro task）</li>
+<li><code>requestAnimationFrame</code>的回调，宏任务（macro task）</li>
+<li>事件处理函数，宏任务(macro task)</li>
+<li>new Promise(fn)的 fn 是不进入事件队列的</li>
+</ul>
+<p>微队列优先于宏队列执行</p>
+<h1>面试题</h1>
+<ol>
+<li>
+<p>下面代码的输出结果是什么</p>
+<pre><code class="language-js">const promise = new Promise((resolve, reject) =&gt; {
+    console.log(1); 
+    resolve(); //这里只改变状态，还没有执行后续的 then 处理
+    console.log(2);
+})
+
+promise.then(() =&gt; {
+    console.log(3);
+})
+
+console.log(4);
+</code></pre>
+</li>
+<li>
+<p>下面代码的输出结果是什么</p>
+<pre><code class="language-js">const promise = new Promise((resolve, reject) =&gt; {
+    console.log(1); 
+    setTimeout(()=&gt;{
+      console.log(2)
+      resolve(); 
+    	console.log(3);
+    })
+})
+
+promise.then(() =&gt; {
+    console.log(4);
+})
+
+console.log(5);
+</code></pre>
+</li>
+<li>
+<p>下面代码的输出结果是什么</p>
+<pre><code class="language-js">const promise1 = new Promise((resolve, reject) =&gt; {
+	setTimeout(() =&gt; {
+    resolve()//reject()
+  }, 1000)
+})
+const promise2 = promise1.catch(() =&gt; {
+  return 2;
+})
+
+console.log('promise1', promise1) 
+console.log('promise2', promise2) 
+
+setTimeout(() =&gt; {
+  console.log('promise1', promise1) 
+  console.log('promise2', promise2) 
+}, 2000)
+</code></pre>
+</li>
+<li>
+<p>下面代码的输出结果是什么</p>
+<pre><code class="language-js">async function m(){
+  const n = await 1;
+  console.log(n);
+}
+
+m();
+console.log(2);
+</code></pre>
+</li>
+<li>
+<p>下面代码的输出结果是什么</p>
+<pre><code class="language-js">async function m(){
+  const n = await 1;
+  console.log(n);
+}
+
+(async ()=&gt;{
+  await m();
+  console.log(2);
+})();
+
+console.log(3);
+</code></pre>
+</li>
+<li>
+<p>下面代码的输出结果是什么</p>
+<pre><code class="language-js">async function m1(){
+  return 1;
+}
+
+async function m2(){
+  const n = await m1();
+  console.log(n)
+  return 2;
+}
+
+async function m3(){
+  const n = m2();
+  console.log(n);
+  return 3;
+}
+
+m3().then(n=&gt;{
+  console.log(n);
+});
+
+m3();
+
+console.log(4);
+</code></pre>
+</li>
+<li>
+<p>下面代码的输出结果是什么</p>
+<pre><code class="language-js">Promise.resolve(1)	
+  .then(2)
+  .then(Promise.resolve(3))
+  .then(console.log)
+</code></pre>
+</li>
+<li>
+<p>下面代码的输出结果是什么</p>
+<pre><code class="language-js">var a;
+var b = new Promise((resolve, reject) =&gt; {
+  console.log('promise1');
+  setTimeout(()=&gt;{
+    resolve();
+  }, 1000);
+}).then(() =&gt; {
+  console.log('promise2');
+}).then(() =&gt; {
+  console.log('promise3');
+}).then(() =&gt; {
+  console.log('promise4');
+});
+
+a = new Promise(async (resolve, reject) =&gt; {
+  console.log(a);
+  await b;
+  console.log(a);
+  console.log('after1');
+  await a
+  resolve(true);
+  console.log('after2');
+});
+
+console.log('end');
+</code></pre>
+</li>
+<li>
+<p>下面代码的输出结果是什么</p>
+<pre><code class="language-js">async function async1() {
+    console.log('async1 start');
+    await async2();
+    console.log('async1 end');
+}
+async function async2() {
+	console.log('async2');
+}
+
+console.log('script start');
+
+setTimeout(function() {
+    console.log('setTimeout');
+}, 0)
+
+async1();
+
+new Promise(function(resolve) {
+    console.log('promise1');
+    resolve();
+}).then(function() {
+    console.log('promise2');
+});
+console.log('script end');
+</code></pre>
+</li>
+</ol>
+
+<h1>06. 手写Promise</h1><p>手写 Promise 课程资料，仅提供最终的完整代码</p>
+<p>至于每节课的代码，请同学们理解视频课程内容，然后自行手写，以达到最好的学习效果</p>
+<h2>状态变化</h2>
+<ol>
+<li>
+<p>class 中私有的属性方法 下划线_ 开头</p>
+</li>
+<li>
+<p>我们写 promise 方法中 resolve 和 reject 是直接调用的,因此 this 指向全局对象，</p>
+<ol>
+<li>但我们希望 resolve 的时候改变返回的promise状态，因此 我们要对 resolve 进行 bind操作</li>
+</ol>
+</li>
+<li>
+<p>constuctor 中对 error 进行 catch</p>
+</li>
+</ol>
+<h2>then 函数</h2>
+<ol>
+<li>
+<p>Params： 2 个函数  Return：一个新的 Promise</p>
+</li>
+<li>
+<p>then 链式调用时，由于我们无法判断合适执行对应的后续操作函数（onFulfuilled函数），因此我们在 then 中用一个队列把所有对应的函数收集起来. 在发生状态改变的时候执行对应的函数</p>
+</li>
+<li>
+<p>由于then 函数返回的 Promise 的状态改变和then 里面的操作函数相关，因此我们将 Promise 的 resolve 和 reject也和对应的操作函数一起收集起来</p>
+<p>我们可以得到一个handler对象，存储了这些值。 把所有的 handler 存储到队列中</p>
+<pre><code class="language-js">{
+  exector:fn
+  state:&quot;fulfilled&quot;
+  _resolve:resolve,
+}
+</code></pre>
+<p>具体执行 onFulfuilled 函数的时候要注意用结构的语法，否则会改变 this 的指向</p>
+</li>
+</ol>
+<p>Pro.then(fn1,fn2)</p>
+<p>Pro.then(fn3.fn4)</p>
+<p>Promise 支持同一个 promise 调用多个 then 方法，因此在任务改变的时候我们需要对所有这些操作进行处理</p>
+<h2>什么时候handler队列</h2>
+<ul>
+<li>
+<p>在 State 状态发生改变的时候我们会执行对应的 then 队列（异步任务）</p>
+</li>
+<li>
+<p>也有可能之前的 promise 直接返回一个 resolved 的任务（同步），因此也需要在then方法内执行对应的队列</p>
+</li>
+</ul>
+<h2>如何遍历handler执行代码</h2>
+<p>我们仅仅会在非 pending 下执行对应的后续处理任务</p>
+<p>我们在执行完对应的操作之后需要将对应操作删除</p>
+<pre><code class="language-js">for (const item of arr){
+  console.log(item)
+  arr.shift()
+}
+这个方法并不能删除所有 arr，因为item 实际上指向的是 arr 的第 i 个元素。 shift 之后会改变当前 item 的取值
+while (this._handlers[0]) {
+  const handler = this._handlers[0];
+  this._runOneHandler(handler);
+  this._handlers.shift();
+}
+
+</code></pre>
+<h2>处理一个handler</h2>
+<ol>
+<li>处理具体的 handler 时我们要把这个放到微队列当中
+<ol>
+<li>node 环境下 通过process.nextTick（fn） 把 fn 插入到微队列</li>
+<li>browser 环境下 通过 MutationObserver 把 fn 插入到微队列</li>
+</ol>
+</li>
+<li>由于有两个状态的 handler 要对状态进行匹配</li>
+<li>如果 handler 不是函数，我们要将当前的 promise 状态和数据进行传递
+<ol>
+<li>根据状态调用then返回对应Promise的 resolve 还是 reject</li>
+</ol>
+</li>
+<li>如果当前 handler 是函数
+<ol>
+<li>如果返回结果是 promise，则把resolve和 reject传递给当前的promise ，让返回结果觉得</li>
+<li>如果返回结果不是 promise 则resolve 对应的结果</li>
+</ol>
+</li>
+</ol>
+<h2>判断是否是 Promise</h2>
+<p>Obj是一个对象，且 obj.then是是一个函数</p>
+<h2>finally</h2>
+<p>无论成功还是失败都会执行，而且返回调用 finally 的 Promise的状态和数据</p>
+<p>如 p1.finally(fn)  的状态和数据 和p1相同</p>
+<h2>Promise.resolve</h2>
+<p>特殊情况：</p>
+<ol>
+<li>
+<p>传递的data本身就是ES6的Promise对象,则直接返回</p>
+</li>
+<li>
+<p>传递的data是PromiseLike（Promise A+），返回新的Promise，状态和其保持一致即可</p>
+</li>
+<li>
+<p>否则之间 resolve（data）</p>
+</li>
+</ol>
+<pre><code class="language-js">return new Promise((resolve, reject) =&gt; {
+      if (isPromise(data)) {
+        data.then(resolve, reject);
+      } else {
+        resolve(data);
+      }
+    });
+</code></pre>
+<p>类似的可以得到 reject</p>
+<pre><code class="language-js">
+   reject(reason) {
+    return new MyPromise((resolve, reject) =&gt; {
+      reject(reason);
+    });
+  }
+</code></pre>
+<h2>Promise ALL</h2>
+<p>他还支持迭代器，而迭代器还支持 for of循环，不支持下标循环</p>
+<p>空数组要特殊处理 因为不会进入 for of</p>
+<p>关键是用计数而不是 push</p>
+<h2>Promise AllSettled</h2>
+<p>为了确保正确错误都能执行，对每个promise的onfulfilled和 onRejected 都进行必定成功的处理，得到一个必定成功的 Promise</p>
+<p>然后使用 Promise.all得到所有结果</p>
+<pre><code class="language-js">p.then(
+  (value) =&gt; ({
+    status: FULFILLED,
+    value,
+  }),
+  (reason) =&gt; ({
+    status: REJECTED,
+    reason,
+  })
+)
+Promise.resolve(p).then(...同上)
+</code></pre>
+<p>为了避免 p 不是 Promise 而是一个数值或其他. 我们调用 Promise.resolve来确保他是一个 Promise</p>
