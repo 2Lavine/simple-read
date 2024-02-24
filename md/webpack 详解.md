@@ -188,7 +188,7 @@ order.consumerInfoAsync('user007', '1024')
 
 #### Tapable 详解
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/3/10/1620fec61c16507b~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.awebp)
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/1620fec61c16507b%7Etplv-t2oaga2asx-jj-mark%3A3024%3A0%3A0%3A0%3Aq75.awebp?token=AKMX3HSFLG5F2W6473BPAXLF2Q2PO)
 
 对于
 

@@ -1,4 +1,4 @@
-> 本章是手写 React Scheduler 异步任务调度源码系列的第三篇文章，前两篇可以点击下面链接查看：1.[哪些 API 适合用于任务调度](./%E5%93%AA%E4%BA%9BAPI%E9%80%82%E5%90%88%E7%94%A8%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6.md)。2.[scheduler 用法详解](./scheduler%E7%94%A8%E6%B3%95%E8%AF%A6%E8%A7%A3.md)。来看看为啥采用 MessageChannel 而不是 setTimeout 等 api 实现异步任务调度。任务切片，时间切片这些概念听着吓人，但原理其实很简单。实际上这篇文章不需要 react 背景即可看懂，给我们提供了一种解决耗时长的任务的思路。
+> 本章是手写 React Scheduler 异步任务调度源码系列的第三篇文章，前两篇可以点击下面链接查看：1.[哪些 API 适合用于任务调度](哪些API适合用于任务调度.md)。2.[scheduler 用法详解](scheduler用法详解.md)。来看看为啥采用 MessageChannel 而不是 setTimeout 等 api 实现异步任务调度。任务切片，时间切片这些概念听着吓人，但原理其实很简单。实际上这篇文章不需要 react 背景即可看懂，给我们提供了一种解决耗时长的任务的思路。
 
 ## 学习目标
 
@@ -10,7 +10,7 @@
 
 ## 前置基础知识
 
-如果对 `requestAnimationFrame`、`requestIdleCallback`、`setTimeout`、`MessageChannel`、`MutationObserver`、`Promise`等 API 还不熟悉的，可以先看[这篇文章](./%E5%93%AA%E4%BA%9BAPI%E9%80%82%E5%90%88%E7%94%A8%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6.md)熟悉一下。如果对 React Scheduler 用法还不熟悉的，可以先看[这篇文章](./scheduler%E7%94%A8%E6%B3%95%E8%AF%A6%E8%A7%A3.md)熟悉一下。当然，不看也不影响理解本章的内容
+如果对 `requestAnimationFrame`、`requestIdleCallback`、`setTimeout`、`MessageChannel`、`MutationObserver`、`Promise`等 API 还不熟悉的，可以先看[这篇文章](哪些API适合用于任务调度.md)熟悉一下。如果对 React Scheduler 用法还不熟悉的，可以先看[这篇文章](scheduler用法详解.md)熟悉一下。当然，不看也不影响理解本章的内容
 
 ## 故事从一个动画开始
 

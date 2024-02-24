@@ -1,4 +1,4 @@
-> 本章是手写 React Scheduler 源码系列的第二篇文章，第一篇查看[哪些 API 适合用于任务调度](./%E5%93%AA%E4%BA%9BAPI%E9%80%82%E5%90%88%E7%94%A8%E4%BA%8E%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6.md)。React Scheduler 是 react 提供的一个可以独立使用的包，可以单独使用。由于 React 官网对于这个包的用法介绍较少，因此本章全面介绍 react scheduler 的基本用法，熟练使用可以为后续手写源码奠定坚实的基础。
+> 本章是手写 React Scheduler 源码系列的第二篇文章，第一篇查看[哪些 API 适合用于任务调度](哪些API适合用于任务调度.md)。React Scheduler 是 react 提供的一个可以独立使用的包，可以单独使用。由于 React 官网对于这个包的用法介绍较少，因此本章全面介绍 react scheduler 的基本用法，熟练使用可以为后续手写源码奠定坚实的基础。
 
 ## 学习目标
 
@@ -62,7 +62,7 @@
 </html>
 ```
 
-[schedule.js](./schedule.js)文件可以在[这里](./schedule.js)获取
+[schedule.js](schedule.js)文件可以在[这里](schedule.js)获取
 
 ## Scheduler 简介
 

@@ -1,41 +1,18 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [juejin.cn](https://juejin.cn/post/7186867331132293177)
 
-工作流程
-----
-[@unocss/core](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Funocss%2Funocss%2Ftree%2Fmain%2Fpackages%2Fcore "https://github.com/unocss/unocss/tree/main/packages/core") 是一个 css 原子化引擎，它并不包含任何预设
-
-```
-const fixture = `<div class="text-red">hello</div>`
-const uno = creaeteGenerator({
-  rules: [['text-red', { color: 'red' }]]
-})
-const { css } = uno.generate(fixture)
-```
-css 的内容
-```
-/* layer: default */
-.text-red{color:red;}
-```
-
 首先我们需要`extractor`(提取器) 将下列文本进行解析提取
-
 ```
 <div class="text-red">hello</div>
 ```
-
-可以发现最后提取出我们自定义的规则`text-red`，
-我们把提取出来的`text-red`叫做`token`，而后我们会解析一遍这个 token 所包含的信息，发现它有如下规则
-
+我们把提取出来的`text-red`叫做`token`，
+我们会通过 rules 检查这个 token 所包含的信息，发现它有如下规则
 ```
 ['text-red', { color: 'red' }]
 ```
-
 最后根据这个规则生成一个 css 文本内容
-
 ```
 .text-red{color:red;}
 ```
-
 extractor tokens -- 抓取 token
 ----------------------------
 

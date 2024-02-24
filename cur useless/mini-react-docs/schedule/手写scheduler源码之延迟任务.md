@@ -403,4 +403,4 @@ btn.onclick = () => {
 
 ## 小结
 
-至此，我们已经实现延迟任务的问题，完整源码可以看[这里](./schedule_delay.html)。
+至此，我们已经实现延迟任务的问题，完整源码可以看[这里](schedule_delay.html)。

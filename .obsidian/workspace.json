@@ -4,22 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "5a77210b45d95b06",
+        "id": "9b531ca39e0b0f8c",
         "type": "tabs",
         "children": [
           {
-            "id": "563c3b36699a51c6",
+            "id": "19f0ecb4e85292da",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/带你解析原子化 css 引擎 unocss 的工作原理.md",
+                "file": "md/浏览器缓存 从原理到实战.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "22902e75d59bbd44",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "md/2024-02-24.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -38,7 +51,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/带你解析原子化 css 引擎 unocss 的工作原理.md"
+                "file": "md/2024-02-24.md"
               }
             }
           },
@@ -58,7 +71,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#五彩插件",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": true,
                 "collapseAll": true,
@@ -96,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/带你解析原子化 css 引擎 unocss 的工作原理.md",
+                "file": "md/2024-02-24.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +126,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/带你解析原子化 css 引擎 unocss 的工作原理.md",
+                "file": "md/2024-02-24.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -164,12 +177,30 @@
       "graph:Open graph view": false,
       "daily-notes:Open today's daily note": false,
       "command-palette:Open command palette": false,
-      "workspaces:Manage workspace layouts": false,
-      "obsidian-local-images-plus:Local Images Plus  0.15.7\r\nDownload media files": false
+      "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "563c3b36699a51c6",
+  "active": "22902e75d59bbd44",
   "lastOpenFiles": [
+    "md/2024-02-24.md",
+    "md/带你解析原子化 css 引擎 unocss 的工作原理.md",
+    "done/2024-02-20.md",
+    "done/2024-02-22.md",
+    "PDFsam_merge.md",
+    "Spark/SPARK 核心.md",
+    "Spark/SPARK SQL.md",
+    "Spark/SPARK基础.md",
+    "_resources/Pasted image 20240220154831.png",
+    "_resources/Pasted image 20240220143547.png",
+    "_resources/Pasted image 20240220141924.png",
+    "_resources/Pasted image 20240220140331.png",
+    "_resources/Pasted image 20240220140325.png",
+    "done/简单易懂的 webpack 打包后 JS 的运行过程.md",
+    "md/webpack 详解.md",
+    "Spark",
+    "cur useless/problems/0027.移除元素.md",
+    "md/重新构想原子化 CSS.md",
+    "md/聊聊 webpack 异步加载（一）：webpack 如何加载拆包后的代码.md",
     "md/缓存必知必会.md",
     "md/Animating View Transitions.md",
     "md/谈谈复杂应用的状态管理（下）：基于 Zustand 的渐进式状态管理实践.md",
@@ -178,25 +209,12 @@
     "md/Next.js 13 全解析 - Paranoid_K's Blog.md",
     "md/Islands 架构原理和实践.md",
     "course/2024-2-17/5-6. 自动分包.md",
-    "done/简单易懂的 webpack 打包后 JS 的运行过程.md",
     "md/浏览器缓存 从原理到实战.md",
-    "md/带你解析原子化 css 引擎 unocss 的工作原理.md",
     "done/2024-2-15/认识Oauth2.md",
     "done/location.md",
     "done/2024-2-15/Tailwind CSS + cva 实现样式变体组件.md",
     "course/2024-2-15/1-10. 入口和出口的最佳实践.md",
     "output/2024-2-17 20-51-54.html",
-    "course/2024-2-17/5-9. 懒加载.md",
-    "course/2024-2-17/5-8. tree shaking.md",
-    "course/2024-2-17/5-7. 代码压缩.md",
-    "course/2024-2-17/5-5. 手动分包.md",
-    "course/2024-2-17/5-3. 优化loader性能.md",
-    "course/2024-2-17/5-4. 热替换.md",
-    "course/2024-2-17/5-2. 减少模块解析.md",
-    "course/2024-2-17/5-12. gzip.md",
-    "course/2024-2-17/5-11. bundle analyzer.md",
-    "course/2024-2-17/5-10. ESLint.md",
-    "course/2024-2-17/5-1. 性能优化概述.md",
     "course/2024-2-17",
     "output/2024-2-15 22-08-34.html",
     "output/2024-2-15 22-08-07.html",
@@ -206,16 +224,10 @@
     "course/assets/2020-01-09-12-47-43.png",
     "course/assets/2020-01-09-12-43-52.png",
     "course/assets/2020-01-09-12-39-16.png",
-    "course/assets/2020-01-09-12-35-05.png",
-    "course/assets/2020-01-09-12-32-38.png",
-    "course/assets/2020-01-09-11-54-08.png",
-    "course/assets/2020-01-09-10-53-28.png",
-    "course/assets/2020-01-09-10-26-15.png",
     "course/assets",
     "course",
     "output/2024-2-15 22-05-29.html",
     "done/2024-2-15",
-    "output/2024-2-15 22-04-39.html",
     "未命名.canvas"
   ]
 }
