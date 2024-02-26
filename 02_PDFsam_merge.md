@@ -6725,7 +6725,7 @@ FAIR scheduler mode is a good way to optimize the execution time of multiple job
 ## Managing the Big Data
 ## Learning Objectives
 
-#Bigideahuangig Data Management
+ Data Management
 
 - Big data management incorporates the policies, techniques, and processes used for data collection, storage, administration, and the delivery of large repositories
 - Major management concerns are around:
