@@ -8,7 +8,9 @@ const options = {
 };
 const obsidianImages = require("markdown-it-obsidian-images")(options);
 const md = require("markdown-it")({ html: true }).use(obsidianImages);
-const directoryPath = "./course"; // 替换为目标目录的路径
+// get path from cli
+const directoryPath = process.argv[2];// 替换为目标目录的路径
+// const directoryPath = "./course"; should be input like 
 // const directoryPath = "./done"; // 替换为目标目录的路径
 const resourcesPath = "./_resources"; // 替换为目标目录的路径
 let now = new Date()

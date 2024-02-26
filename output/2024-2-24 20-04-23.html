@@ -1,0 +1,499 @@
+<h1>12. 核心概念-原型</h1><h1>原型</h1>
+<h2>原型要解决的问题</h2>
+<img src="http://mdrs.yuanjin.tech/img/20211210142340.png" alt="image-20211210142340406" style="zoom:50%;" />
+<p>上图中通过构造函数可以创建一个用户对象</p>
+<p>这种做法有一个严重的缺陷，就是每个用户对象中都拥有一个<code>sayHi</code>方法，对于每个用户而言，<code>sayHi</code>方法是完全一样的，没必要为每个用户单独生成一个。</p>
+<p>这可以通过原型来解决，我们把方法赋值到构造函数的 prototype 上，让所有实例共享</p>
+<h2>原型是如何解决的</h2>
+<img src="http://mdrs.yuanjin.tech/img/20211210141850.png" alt="image-20211210141850465" style="zoom:50%;" />
+<ol>
+<li>
+<p><strong>原型</strong></p>
+<p>每个函数都会自动附带一个属性<code>prototype</code>，这个属性的值是一个普通对象，称之为原型对象</p>
+</li>
+<li>
+<p><strong>实例</strong></p>
+<p>instance，通过<code>new</code>产生的对象称之为实例。</p>
+<blockquote>
+<p>由于 JS 中所有对象都是通过<code>new</code>产生的，因此，严格来说，JS 中所有对象都称之为实例</p>
+</blockquote>
+</li>
+<li>
+<p><strong>隐式原型</strong></p>
+<p>每个实例都拥有一个特殊的属性<code>__proto__</code>，称之为隐式原型，它指向构造函数的原型</p>
+</li>
+</ol>
+<h2>公共函数共享(在构造函数上使用原型)</h2>
+<p>我们在在构造函数上使用原型</p>
+<p><strong>当访问实例成员时，先找自身，如果不存在，会自动从隐式原型中寻找</strong></p>
+<p><strong>这样一来，我们可以把那些公共成员，放到函数的原型中，即可被所有实例共享</strong></p>
+<img src="http://mdrs.yuanjin.tech/img/20211210143328.png" alt="image-20211210143328533" style="zoom:50%;" />
+<h2>检验是在原型链上的还是在对象本身上的</h2>
+<p>obj.hasOwnProperty('name') // 检查 obj 本身
+name in obj // 检查 obj 本身和原型链上</p>
+
+<h1>14. 核心概念-原型链</h1><h1>原型链</h1>
+<h2>什么是原型链</h2>
+<p><strong>所有的对象都是通过<code>new 函数</code>的方式创建的</strong></p>
+<pre><code class="language-js">var u1 = new User('邓', '旭明'); // 对象 u1 通过 new User 创建
+var u2 = { // 对象 u2 通过 new Object 创建
+  firstName: '莫',
+  lastName: '妮卡'
+}
+// 等效于
+var u2 = new Object();  
+u2.firstName = '莫';
+u2.lastName = '妮卡';
+</code></pre>
+<p>上面的代码形成的原型图如下</p>
+<p><img src="http://mdrs.yuanjin.tech/img/20210903081220.png" alt="image-20210903081220607"></p>
+<p>原型对象本身也是一个对象，因此原型对象也有对应的 Object 原型对象</p>
+<img src="http://mdrs.yuanjin.tech/img/20210903082540.png" alt="image-20210903082540379" style="zoom:50%;" />
+<p><code>Object.prototype.__proto__</code>比较特殊，它固定指向null</p>
+<p>从原型链可以看出</p>
+<ul>
+<li>
+<p>一个实例和所有的构造函数的原型对象组成里一条链</p>
+</li>
+<li>
+<p>当读取对象成员时，会先看对象自身是否有该成员，如果没有，就依次在其原型链上查找</p>
+</li>
+</ul>
+<h2>完整的链条</h2>
+<p>注意Object 是一个构造函数 所以 typeof Object == function</p>
+<ul>
+<li>
+<p>而函数本身也是一个对象，而所有的对象都是通过<code>new 函数</code>的方式创建的</p>
+</li>
+<li>
+<p>所以 Object 这个函数对象也有原型链</p>
+</li>
+<li>
+<p>Object 对象是通过 new Function 来创建的，他可以获取 Function 原型对象的属性</p>
+</li>
+</ul>
+<p>Function 也是一个构造函数是最特殊的，</p>
+<ul>
+<li>他作为一个对象，proto原型应该执行 Object 对象原型
+<ul>
+<li>但实际指向的是 Function 原型</li>
+</ul>
+</li>
+<li>作为一个构造函数，prototype指向 Function 原型对象</li>
+</ul>
+<p><img src="http://mdrs.yuanjin.tech/img/20210903152359.png" alt="image-20210903152359095"></p>
+<h2>对开发的影响</h2>
+<h3>在原型上更改会产生多大影响</h3>
+<p>更改构造函数的原型会对所有原型链上有该构造函数的原型的对象产生影响</p>
+<h3>学会利用原型链判断类型</h3>
+<ol>
+<li>
+<p><code>instanceof</code>关键字【常用】</p>
+<p>// 判断object的原型链中，是否存在constructor这个构造函数的原型对象</p>
+<pre><code class="language-js">object instanceof constructor
+</code></pre>
+</li>
+<li>
+<p><code>Object.getPrototypeOf()</code>【不常用】</p>
+<pre><code class="language-js">Object.getPrototypeOf(object);
+// 返回object的隐式原型
+</code></pre>
+</li>
+</ol>
+<h3>学会创建空原型的对象</h3>
+<ol>
+<li>
+<p>利用<code>Object.create()</code></p>
+<pre><code class="language-js">Object.create(target);
+// 返回一个新对象，新对象以target作为隐式原型
+</code></pre>
+</li>
+<li>
+<p>利用<code>Object.setPrototypeOf()</code></p>
+<pre><code class="language-js">Object.setPrototypeOf(obj, prototype);
+// 设置obj的隐式原型为prototype
+</code></pre>
+</li>
+</ol>
+<h2>为什么 Array 的 toString打印</h2>
+<pre><code class="language-js">让 array 用 Object.toString方法打印
+Object.prototype.toString.call(array)
+</code></pre>
+
+<h1>15. 核心概念-继承</h1><h1>继承</h1>
+<h2>会员系统</h2>
+<p>视频网站有两种会员：</p>
+<ul>
+<li>普通会员
+<ul>
+<li>属性：用户名、密码</li>
+<li>方法：观看免费视频</li>
+</ul>
+</li>
+<li>VIP会员
+<ul>
+<li>属性：普通会员的所有属性、会员到期时间</li>
+<li>方法：普通会员的所有方法、观看付费视频</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>
+<p>VIPUser的构造函数中包含重复代码</p>
+<pre><code class="language-js">this.username = username;
+this.password = password;
+</code></pre>
+</li>
+<li>
+<p>VIPUser的原型上包含了重复代码</p>
+<pre><code class="language-js">VIPUser.prototype.playFreeVideo = function(){
+  console.log('观看免费视频')
+}
+</code></pre>
+</li>
+</ol>
+<blockquote>
+<p>如何解决上述两处重复？</p>
+</blockquote>
+<h2>实现继承</h2>
+<ul>
+<li>处理构造器内部的重复</li>
+</ul>
+<p>可以将VIPUser构造器改写为</p>
+<pre><code class="language-js">function VIPUser(username, password, expires){
+  User.call(this, username, password);
+  this.expires = expires;
+}
+</code></pre>
+<ul>
+<li>处理原型上的重复</li>
+</ul>
+<p>只需要将原型链设置为下面的结构即可</p>
+<img src="http://mdrs.yuanjin.tech/img/20211214155347.png" alt="image-20211214155342118" style="zoom:50%;" />
+<pre><code class="language-js">VIPUser.Prototype.__proto__ = User.prototype
+或者
+Object.setPrototypeOf(VIPUser.prototype, User.prototype)
+// 官方希望我们不调用这个隐形原型属性，而是采用Object 的方法来get 和 set
+</code></pre>
+<h2>封装继承 处理原型上的重复</h2>
+<pre><code class="language-js">function inherit(Child, Parent){
+  // 在原型链上完成继承 
+  Object.setPrototypeOf(Child.prototype, Parent.prototype);
+}
+</code></pre>
+<p>（没有处理 构造器的重复）</p>
+
+<h1>16. 标准库-数字和字符串</h1><h1>标准库</h1>
+<h2>包装类</h2>
+<p>如果尝试着把原始类型（number、string、boolean）当做对象使用，JS会自动将其转换为对应包装类的实例</p>
+<h3>Number</h3>
+<ul>
+<li>Number.isNaN 这种是静态方法</li>
+<li>Number.prototype.toFixed() 是实例方法
+<ul>
+<li>将当前数字保留指定位数的小数</li>
+</ul>
+</li>
+</ul>
+<h3>String</h3>
+<p>String.fromCharCode() 根据编码值得到一个字符</p>
+<p><strong><code>padStart()</code></strong> 方法用另一个字符串填充当前字符串(重复，如果需要的话)，以便产生的字符串达到给定的长度</p>
+<p>实例方法</p>
+<ul>
+<li>String.prototype.charCodeAt() 得到某个下标的字符编码
+<ul>
+<li>'a'.chatCodeAt(0)</li>
+</ul>
+</li>
+<li>includes</li>
+<li>subString (而不是 slice)</li>
+</ul>
+<h2>数学</h2>
+<p>Math.round 来返回四舍五入的结果</p>
+<h2>Number.parseInt 和 Math.ceil的区别</h2>
+<p>parseInt 是向 0 取整</p>
+<h2>日期</h2>
+<h2>GMT和UTC</h2>
+<p>世界划分为24个时区，北京在东8区，格林威治在0时区。</p>
+<p><strong>GMT</strong>：Greenwish Mean Time 格林威治世界时。太阳时，精确到毫秒。</p>
+<p><strong>UTC</strong>：Universal Time Coodinated 世界协调时。以原子时间为计时标准，精确到纳秒。</p>
+<p>国际标准中，已全面使用UTC时间，而不再使用GMT时间</p>
+<p>GMT和UTC时间在文本表示格式上是一致的，均为<code>星期缩写, 日期 月份 年份 时间 GMT</code>，例如：</p>
+<pre><code>Thu, 27 Aug 2020 08:01:44 GMT
+</code></pre>
+<p>另外，ISO 8601标准规定，建议使用以下方式表示时间：</p>
+<pre><code>YYYY-MM-DDTHH:mm:ss.msZ
+例如：
+2020-08-27T08:01:44.000Z
+</code></pre>
+<p>GMT、UTC、ISO 8601都表示的是零时区的时间，是全球统一的</p>
+<p>​	也就是换算到北京时间要+8h</p>
+<h2>Unix 时间戳</h2>
+<blockquote>
+<p>Unix 时间戳（Unix Timestamp）是Unix系统最早提出的概念</p>
+</blockquote>
+<p>它将UTC时间1970年1月1日凌晨作为起始时间，到指定时间经过的秒数（毫秒数）</p>
+<p>程序对时间的计算、存储务必使用UTC时间，或者时间戳**</p>
+<h3>日期API</h3>
+<p>构造函数：</p>
+<pre><code class="language-js">new Date(); // 得到一个当前日期对象 UTC字符串
+new Date(value); // 根据时间戳得到一个日期对象
+new Date(dateString); // 根据一个标准日期字符串得到一个日期对象
+new Date(year, monthIndex [, day [, hours [, minutes [, seconds [, milliseconds]]]]]); // 根据年、月、日、小时、分钟、秒、毫秒得到一个日期对象
+</code></pre>
+<p>Date.now() 获取时间戳</p>
+<p>奇怪的 API</p>
+<ul>
+<li>getFullYear</li>
+<li>getMonth</li>
+<li>getDate(返回的具体的日)</li>
+</ul>
+<p>toLocalString</p>
+<h2>数组</h2>
+<p>splice 删除、修改、插入任何位置的值</p>
+<ul>
+<li>删除时返回删除的结果，可以用这个方法来浅拷贝数组</li>
+</ul>
+<p>slice 返回数组的一部分</p>
+<p>concat()  把多个数组拼接成一个</p>
+<h2>sort函数</h2>
+<p>compare(left,right)</p>
+<p>如果希望是升序排列，我们需要数组左侧小于右侧</p>
+<ul>
+<li>如果left大于right则返回 1（正数）表示需要变换
+|</li>
+</ul>
+<h1>回调函数</h1>
+<p>作为参数传递给另一个函数的函数被称为回调函数</p>
+
+<h1>CSS</h1><p>text-align 使用规则：</p>
+<p>只在快元素中使用，直接用在内联元素上不生效。
+会对块元素中的所有内联内容对齐。</p>
+<h2>浮动的问题</h2>
+<h2>清除浮动</h2>
+<ol>
+<li>
+<p>父元素高度塌陷 问题</p>
+<ol>
+<li>
+<p>父元素结束标签之前插入清除浮动的块级元素</p>
+<ol>
+<li>可以为父元素添加伪元素,清除浮动 :after 会在结束标签之前插入</li>
+</ol>
+</li>
+<li>
+<p>父元素添加 overflow: hidden(即创建 BFC)</p>
+<ol>
+<li>Flex 里面的 item 也是创建了 BFC</li>
+<li>inline-block 和 Absolute 也是创建了 BFC</li>
+</ol>
+</li>
+</ol>
+<p>为什么 BFC 可以实现</p>
+<p>BFC 在计算高度的时候，内部浮动元素的高度也要计算在内</p>
+</li>
+<li>
+<p>兄弟元素重叠</p>
+<ol>
+<li>给非浮动的兄弟元素添加 clear 属性,表示清楚浮动</li>
+<li>给兄弟元素添加 BFC</li>
+</ol>
+<ul>
+<li>构建 BFC 区域的元素紧接着一个浮动盒子时，即，是该浮动盒子的兄弟节点，BFC 区域会首先尝试在浮动盒子的旁边渲染，但若宽度不够，就在浮动元素的下方渲染</li>
+</ul>
+</li>
+</ol>
+<h2>相邻的行盒(或行快和) 直接没对齐</h2>
+<pre><code>- 使用vertical-align对某个行盒进行微调
+</code></pre>
+<h2>Model 的样式</h2>
+<p>Position: fixed
+top: 0 bottom:100%
+background-color: rgba(0,0,0,0.5)</p>
+<p>Model 的内容是相对视口的,所以用 fixed</p>
+<ul>
+<li>absolute 参考有定位的父元素</li>
+<li>fixed 参考视口(viewport)</li>
+</ul>
+<h2>绝对 position 的宽高</h2>
+<p>一个元素是绝对定位的时候,他会自动变成一个 block 元素
+- 他的宽高是自动适应内容的
+- (float 也是)
+如对一个 a 元素设置绝对定位,他会自动变成一个 block 元素
+relative 的宽度是占据整行的(和参考系一直)</p>
+<h2>精灵图</h2>
+<p>用 background-position 来调整显示的位置
+backgound: url() no-repeat 来显示图片</p>
+<h2>CSS 冲突</h2>
+<ol>
+<li>作者样式覆盖用户样式</li>
+<li>按照下列的出现个数计算
+<ul>
+<li>内联选择 ID 类(属性,伪类) 元素
+body .h1  /* (0,0, 1, 1) */</li>
+</ul>
+</li>
+</ol>
+
+<h1>HTML</h1><h2>尺寸的百分比</h2>
+<p>绝大部分可以书写尺寸的地方，都可以书写百分比</p>
+<p>百分比是一个相对单位，其相对于元素的<strong>参考系</strong>，比如：</p>
+<ul>
+<li>普通元素的参考系为<strong>父元素的内容区域</strong></li>
+<li>绝对（固定）定位元素的参考系为父元素链中<strong>第一个定位的元素父元素的padding区域</strong>
+(content 区域, padding 区域, border 区域, margin 区域)</li>
+</ul>
+<p>下面罗列常见的百分比情况</p>
+<table>
+<thead>
+<tr>
+<th>css属性</th>
+<th>百分比相对于</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>width</td>
+<td>参考系的<strong>宽度</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>height</td>
+<td>参考系的<strong>高度</strong></td>
+<td>参考系高度受本身宽度影响时，设置无效</td>
+</tr>
+<tr>
+<td>padding border margin都是相对于参考系的宽度</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>设置 height 为百分比是要父元素的高度是确定的不能是百分比</li>
+</ul>
+<h2>最大最小宽高</h2>
+<ul>
+<li>最大宽度：<code>max-width</code>，最大高度：<code>max-height</code></li>
+<li>最小宽度：<code>min-width</code>，最小高度：<code>min-height</code></li>
+</ul>
+<p>当一个元素的尺寸会自动变化时，设置最大最小宽高，可以让它不至于变得过小或过大。</p>
+<p>在实际开发中，我们通常为PC端的页面设置一个最小宽度，通常此宽度为设计稿的宽度</p>
+<pre><code class="language-css">html {
+  min-width: 1226px;
+}
+</code></pre>
+<p>又或者，我们会为页面中的所有图片设置一个最大宽度，让其不至于超过容器</p>
+<pre><code class="language-css">img {
+  max-width: 100%;
+}
+</code></pre>
+
+<h1>this</h1><h1>this</h1>
+<ol>
+<li>This 返回的是一个对象</li>
+<li>this 的指向取决于他是如何被调用的</li>
+</ol>
+<p>两个作用域中的 this 指向</p>
+<ul>
+<li>
+<p>在全局作用域中使用this，指代全局对象</p>
+</li>
+<li>
+<p><strong>在函数作用域中使用this，它的指向完全取决于函数是如何被调用的</strong></p>
+<table>
+<thead>
+<tr>
+<th>调用方式</th>
+<th>示例</th>
+<th>函数中的this指向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>通过new调用</strong></td>
+<td><code>new method()</code></td>
+<td>新对象</td>
+</tr>
+<tr>
+<td><strong>直接调用</strong></td>
+<td><code>method()</code></td>
+<td>全局对象</td>
+</tr>
+<tr>
+<td><strong>通过对象调用</strong></td>
+<td><code>obj.method()</code></td>
+<td>前面的对象</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h2>给所有对象添加方法</h2>
+<p>添加print方法 让打印所有属性</p>
+<pre><code class="language-js">Object.prototype.print = function(){
+  for(const key in this){
+    if(this.hasOwnProperty(key)){
+         console.log(this[key])
+    }
+  }
+}
+</code></pre>
+<h2>不用 new 创建对象</h2>
+<pre><code class="language-js">function User(){}
+u = {}
+User.call(u)
+</code></pre>
+
+<h1>作用域</h1><ol>
+<li>
+<p>JS 有两种作用域：全局作用域和函数作用域</p>
+<ul>
+<li>内部的作用域能访问外部，反之不行。访问时从内向外依次查找。</li>
+<li>如果在内部的作用域中访问了外部，则会产生闭包。</li>
+<li>内部作用域能访问的外部，取决于函数定义的位置，和调用无关</li>
+</ul>
+</li>
+<li>
+<p>作用域内变量、函数声明会提升到作用域顶部</p>
+<ol>
+<li>无论声明在哪里</li>
+<li>函数作用域和全局作用域都可以</li>
+</ol>
+<p>变量声明和函数声明</p>
+<pre><code class="language-js">let a = b
+这里的声明是 let a
+function m(){} 函数声明
+</code></pre>
+</li>
+</ol>
+<h2>题 1</h2>
+<pre><code class="language-js">var a = 1,
+  b = 2;
+
+function m1() {
+  console.log(a);
+  var a = 3;
+  function m2() {
+    console.log(a, b);
+  }
+  m2();
+}
+// undefined
+// 3 2
+m1();
+</code></pre>
+<p>像 if(){},for(){} 的大括号并不包括作用域</p>
+<p>内部作用域能访问的外部，取决于函数定义的位置，和调用无关</p>
+<pre><code class="language-js">var a = 1;
+function m() {
+  a++;
+}
+function m2() {
+  var a = 3;
+  m();
+  console.log(a);
+}
+</code></pre>
+<p>m 函数定义在全局作用域，所以这里的 a=1 而不是等于 3</p>

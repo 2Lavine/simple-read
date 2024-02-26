@@ -1,0 +1,114 @@
+<h1>2024-02-20</h1><p>breakdown 详细信息</p>
+
+<h1>2024-02-22</h1><p>Supervised: classification and regression 的区别</p>
+<ul>
+<li>classification 是离散的， regression 是 continue 的
+Unsupervised:</li>
+<li>clustering</li>
+<li>generalization(dimension reduction)</li>
+<li>Association</li>
+</ul>
+
+<h1>简单易懂的 webpack 打包后 JS 的运行过程</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="https://juejin.cn/post/6844903520378814471?searchId=2024013109533719B9C5AE5C320162A1DF">juejin.cn</a></p>
+</blockquote>
+<h2>简单配置</h2>
+<p>既然需要用到 <code>webpack</code>，还是需要简单配置一下的，这里就简单贴一下代码，首先是 <code>webpack.config.js</code>:</p>
+<pre><code>const path = require('path');
+const webpack = require('webpack');
+//用于插入html模板
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+//清除输出目录，免得每次手动删除
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+module.exports = {
+  entry: {
+    index: path.join(__dirname, 'index.js'),
+  },
+  output: {
+    path: path.join(__dirname, '/dist'),
+    filename: 'js/[name].[chunkhash:4].js'
+  },
+  module: {},
+  plugins: [
+    new CleanWebpackPlugin(['dist']),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'index.html',
+    }),
+    //持久化moduleId，主要是为了之后研究加载代码好看一点。
+    new webpack.HashedModuleIdsPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+    })
+  ]
+};
+</code></pre>
+<p>之后是两个简单的 <code>js</code> 文件：</p>
+<pre><code>// test.js
+const str = 'test is loaded';
+module.exports = str;
+
+// index.js
+const test = require('./src/js/test');
+console.log(test);
+</code></pre>
+<h2>从 <code>index.js</code> 开始看代码</h2>
+<p>先从打包后的 <code>index.html</code> 文件看看两个 <code>JS</code> 文件的加载顺序：</p>
+<pre><code>&lt;body&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;js/manifest.2730.js&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; src=&quot;js/index.5f4f.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<p>打包后 <code>js</code> 文件的加载顺序是先 <code>manifest.js</code>，之后才是 <code>index.js</code>，
+我们先看看 <code>index.js</code> 的内容是什么</p>
+<pre><code class="language-js">// index.js
+webpackJsonp([0], {
+  &quot;JkW7&quot;: (function(module, exports, __webpack_require__) {
+    const test = __webpack_require__(&quot;zFrx&quot;);
+    console.log(test);
+  }),
+  &quot;zFrx&quot;: (function(module, exports) {
+    const str = 'test is loaded';
+    module.exports = str;
+  })
+}, [&quot;JkW7&quot;]);
+
+在 manifest.js可以发现这些代码
+window[&quot;webpackJsonp&quot;] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
+    var moduleId, result;
+    for (moduleId in moreModules) {
+      if (Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+        modules[moduleId] = moreModules[moduleId];
+      }
+    }
+    if (executeModules) {
+      for (i = 0; i &lt; executeModules.length; i++) {
+        result = __webpack_require__(executeModules[i]);
+      }
+    }
+    return result;
+  };
+</code></pre>
+<ul>
+<li>首先 <code>minifest.js</code> 会定义一个 <code>webpackJsonp</code> 方法，待其他打包后的文件（也可称为 <code>chunk</code>）调用。</li>
+<li>当调用 <code>chunk</code> 时，会先将该 <code>chunk</code> 中所有的 <code>moreModules</code>， 也就是每一个依赖的文件也可称为 <code>module</code> （如 <code>test.js</code>）存起来。</li>
+<li>之后通过 <code>executeModules</code> 判断这个文件是不是入口文件，决定是否执行第一次 <code>__webpack_require__</code>。</li>
+</ul>
+<h2><code>__webpack_require__</code> 代码阅读</h2>
+<p>而 <code>__webpack_require__</code> 的作用，就是根据这个 <code>module</code> 所 <code>require</code> 的东西，不断递归调用 <code>__webpack_require__</code>，<code>__webpack_require__</code>函数返回值后供 <code>require</code> 使用。当然，模块是不会重复加载的，因为 <code>installedModules</code> 记录着 <code>module</code> 调用后的 <code>exports</code> 的值，只要命中缓存，就返回对应的值而不会再次调用 <code>module</code>。<code>webpack</code> 打包后的文件，就是通过一个个函数隔离 <code>module</code> 的作用域，以达到不互相污染的目的。</p>
+<pre><code class="language-js">(function(modules) {
+  var installedModules = {};
+
+  function __webpack_require__(moduleId) {
+    if (installedModules[moduleId]) {
+      return installedModules[moduleId].exports;
+    }
+    var module = installedModules[moduleId] = {
+      exports: {}
+    };
+    modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+    return module.exports;
+  }
+})([]);
+</code></pre>

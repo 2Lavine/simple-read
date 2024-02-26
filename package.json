@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "merge": "node merge-achieve.js ",
     "convert": "node webp2jpg.js",
-    "all": "node merge-achieve.js && node webp2jpg.js"
+    "all": "node merge-achieve.js ./course && node webp2jpg.js",
+    "allDone": "node merge-achieve.js ./done && node webp2jpg.js"
   },
   "author": "",
   "license": "ISC",

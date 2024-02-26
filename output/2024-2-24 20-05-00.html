@@ -1,0 +1,540 @@
+<h1>SPARK SQL</h1><h2>SPARK SQL</h2>
+<p>是Spark的一个模块, 用于处理结构化数据
+使用SparkSQL直接计算并生成Hive数据表, SPARK</p>
+<h2>SPARK vs HIVE</h2>
+<h2>数据抽象</h2>
+<p>Pandas - DataFrame
+• 二维表数据结构
+• 单机(本地)集合
+SparkCore - RDD
+• 无标准数据结构，存储什么数据均可
+• 分布式集合(分区)
+SparkSQL 的DataFrame
+• 二维表数据结构
+• 分布式集合(分区
+DataFrame和RDD都是:弹性的、分布式的、数据集
+<img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402211155398.png?token=AKMX3HTSEPCUQ5FABFIGOO3F2V2HM" alt=""></p>
+<h2>SparkSql的数据抽象对象</h2>
+<p>• SchemaRDD对象(已废弃)
+• DataSet对象:可用于Java、Scala语言
+• DataFrame对象:可用于Java、Scala、Python 、R</p>
+<h2>Spark Session</h2>
+<p>在RDD阶段，程序的执行入口对象是: SparkContext
+在Spark 2.0后，推出了SparkSession对象，作为Spark编码的统一入口对象。
+SparkSession对象可以:</p>
+<ul>
+<li>用于SparkSQL编程作为入口对象</li>
+<li>用于SparkCore编程，可以通过SparkSession对象中获取到SparkContext</li>
+</ul>
+<h2>DataFrame的组成</h2>
+<p>在结构层面:</p>
+<ul>
+<li>StructType对象描述整个DataFrame的表结构</li>
+<li>StructField对象描述一个列的信息
+在数据层面</li>
+<li>Row对象记录一行数据</li>
+<li>Column对象记录一列数据并包含列的信息</li>
+</ul>
+<h2>DataFrame 代码构建</h2>
+<p>DataFrame对象可以从RDD转换而来，都是分布式数据集 其实就是转换一下内部存储的结构，转换为二维表结构</p>
+<ol>
+<li>df = spark.createDataFrame(rdd, schema = ['name', 'age'])
+<ol>
+<li>这里只传入列名称，类型从RDD中进行推断</li>
+</ol>
+</li>
+<li>也可以创建 schema</li>
+</ol>
+<pre><code class="language-python">schema = StructType()
+			.add(&quot;id&quot;, IntegerType(), nullable=False)
+			.add(&quot;name&quot;, StringType(), nullable=True)
+</code></pre>
+<ol start="3">
+<li>也可以直接使用使用RDD的toDF方法转换RDD
+<ol>
+<li>df = rdd.toDF(['id', 'subject', 'score'])
+读取外部数据可以直接指定 inferSchema 为 true</li>
+</ol>
+</li>
+</ol>
+<h2>DSL风格和 SQL风格</h2>
+<p>DSL风格意思就是以调用API的方式来处理Data 比如:df.where().limit()
+SQL风格就是使用SQL语句处理DataFrame的数据</p>
+<h2>DSL基本方法</h2>
+<ul>
+<li>df.show 默认展示20条</li>
+<li>df.printSchema() 输出df的schema信息</li>
+<li>select:选择DataFrame中的指定列(通过传入参数进行指定</li>
+<li>df.filter()df.where() where和filter功能上是等价的</li>
+<li>groupBy按照指定的列进行数据的分组 返回值是GroupedData对象</li>
+</ul>
+<h3>groupedData 对象</h3>
+<ul>
+<li>GroupedData对象其实也有很多API，
+<ul>
+<li>比如前面的count方法就是这个对象的内置方法 除此之外，</li>
+<li>像:min、max、avg、sum等等许多方法都存在</li>
+</ul>
+</li>
+</ul>
+<h2>DF数据清洗</h2>
+<p>dropDuplicates可以去重
+dropna可以删除缺失值
+fillna可以填 充缺失值</p>
+<h2>UDF函数</h2>
+<ul>
+<li>第一种：UDF(User-Defined-Function)函数
+<ul>
+<li>一对一的关系，输入一个值经过函数以后输出一个值；</li>
+</ul>
+</li>
+<li>第二种：UDAF(User-Defined Aggregation Function)聚合函数
+<ul>
+<li>多对一的关系，输入多个值输出一个值，通常与groupBy联合使用；</li>
+</ul>
+</li>
+</ul>
+<h2>SparkSQL 定义UDF函数</h2>
+<p>udf对象 = sparksession.udf.register(参数1，参数2，参数3)</p>
+<ul>
+<li>参数1:UDF名称，可用于SQL风格</li>
+<li>参数2:被注册成UDF的方法名</li>
+<li>参数3:声明UDF的返回值类型</li>
+<li>udf对象: 返回值对象，是一个UDF对象，可用于DSL风格</li>
+</ul>
+<p>udf对象 = F.udf(参数1， 参数2)</p>
+<ul>
+<li>参数1:被注册成UDF的方法名</li>
+<li>参数2:声明UDF的返回值类型</li>
+<li>udf对象: 返回值对象，是一个UDF对象，可用于DSL风格</li>
+</ul>
+<h2>窗口函数</h2>
+<ul>
+<li>窗口函数只用于SQL风格,
+开窗函数的是为了既显示聚集前的数据，又显示聚集后的数据。它能够不适用 Groupby 而同一行中同时返回基础行的列和聚合列。</li>
+<li>聚合函数和开窗函数
+<ul>
+<li>聚合函数是将多行变成一行，count,avg...</li>
+<li>开窗函数是将一行变成多行；
+<ul>
+<li>聚合函数如果要显示其他的列必须将列加入到group by中</li>
+<li>开窗函数可以不使用group by,直接将所有信息显示出来
+开窗函数分类
+1.聚合开窗函数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>聚合函数（列）OVER(选项）选项可以是PARTITION BY子句
+2.排序开窗函数</li>
+<li>排序函数（列）OVER(选项）可以是ORDER BY，PARTITION BY子句。
+3.分区类型
+NTILE(number) Over (options)</li>
+</ul>
+<h2>SParkSQL 自动优化</h2>
+<p>为什么SparkSQL可以自动优化 而RDD不可以?</p>
+<ul>
+<li>RDD:内含数据类型不限格式和结构</li>
+<li>DataFrame:100% 是二维表结构，可以被针对</li>
+<li>SparkSQL的自动优化，依赖于:Catalyst优化 器</li>
+</ul>
+<h2>Catalyst优化器</h2>
+<p><img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402221636050.png" alt=""></p>
+<h2>优化总结</h2>
+<ul>
+<li>行过滤，提前执行where
+<ul>
+<li>谓词下推（Predicate Pushdown)：将逻辑判断提前到前面，以减少shuffle阶段的数据量.</li>
+</ul>
+</li>
+<li>列过滤，提前规划select的字段数量
+<ul>
+<li>列值裁剪（Column Pruning):将加载的列进行裁剪，尽量减少被处理数据的宽度
+大白话：</li>
+</ul>
+</li>
+</ul>
+<h2>SPARK ON HIVE</h2>
+<p>SPARK SQL 执行的数据从哪里来？</p>
+<ul>
+<li>表是来自DataFrame注册的.DataFrame中有数据，有字段，有类型，足够Spark用来翻译RDD用.
+我们希望不从 DATAFRAME 注册 直接从文件获取数据</li>
+<li>Spark自己没有元数据管理功能</li>
+<li>因此采用了 HIVE的元数据管理能力</li>
+</ul>
+<h2>分布式SQL执行引擎</h2>
+<p>分布式SQL执行引擎使用Spark提供的ThriftServer服务，以“后台 进程”的模式持续运行，对外提供端口。</p>
+<ul>
+<li>可以通过客户端工具或者代码，以JDBC协议连接使用。</li>
+<li>SQL提交后，底层运行的就是Spark任务。
+相当于构建了一个以MetaStore服务为元数据，Spark为执行引擎的数据库服务，像操作数据库那样方便的操作SparkSQL进行分布式的SQL 计算。</li>
+</ul>
+
+<h1>SPARK 核心</h1><h2>RDD</h2>
+<p>Resilient Distributed Dataset)叫做弹性分布式数据集
+Dataset:一个数据集合，用于存放数据的。
+Distributed:RDD中的数据是分布式存储的，可用于分布式计算。
+Resilient:RDD中的数据可以存储在内存中或者磁盘中</p>
+<h2>RDD 五大特性</h2>
+<ul>
+<li>可分区、一份 RDD 被分成多个分区
+<ul>
+<li>分区规划靠近服务器</li>
+<li>RDD 可以根据键对数据进行分区</li>
+</ul>
+</li>
+<li>RDD 的方法作用在所有分区上
+<ul>
+<li>元素可并行计算的集合</li>
+</ul>
+</li>
+<li>RDD直接具有依赖关系</li>
+</ul>
+<p>RDD是分布式的列表List或数组Array，但他不可变
+抽象的数据结构</p>
+<ul>
+<li>抽象类Abstract Class和泛型Generic Type</li>
+</ul>
+<h2>RDD 编程</h2>
+<p>入口对象是SparkContext对象</p>
+<ul>
+<li>他的主要功能就是创建第一个RDD</li>
+</ul>
+<h2>RDD创建方式</h2>
+<p>• 通过并行化集合创建</p>
+<ul>
+<li>本地 对象 转 分布式RDD</li>
+<li>分布式的开始
+• 读取外部数据源 ( 读取文件 )</li>
+</ul>
+<h2>RDD算子</h2>
+<p>方法函数：本地对象的API,叫做方法\函数
+算子：分布式对象的API,叫做算子</p>
+<p>Transformation算子</p>
+<ul>
+<li>定义：RDD的算子，返回值仍旧是一个RDD的，称之为转换算子</li>
+<li>特性：这类算子是Lazy懒加载的.如果没有action算子，Transformation算子是不工作的.
+Action算子</li>
+<li>定义：返回值不是rdd的就是action算子.</li>
+<li>collect()就是一个典型的 action 算子</li>
+</ul>
+<h2>RDD 持久化</h2>
+<p>RDD的数据是过程数据，只在处理的过程中存在，一旦处理完成，就不见了.
+这个特性可以最大化的利用资源，老旧RDD没用了就从内存中清理，给后续的计算腾出内存空间.</p>
+<p>当我们需要对同一个 RDD 同时做不同操作的时候，为了防止重复计算就需要缓存</p>
+<h2>RDD缓存特点</h2>
+<p>分区自行保存到 内存硬盘上</p>
+<ul>
+<li>缓存的数据在设计上是认为有丢失风险的.</li>
+<li>所以缓存需要其保留RDD之间的血缘（依赖）关系
+<ul>
+<li>一旦缓存丢失，可以基于血缘关系的记录，重新计算这个RDD的数据
+checkPoint 保存</li>
+</ul>
+</li>
+<li>CheckPoint存储RDD数据是集中收集各个分区数据进行存储.而缓存是分散存储</li>
+<li>用的时候直接使用rdd.checkpoint()</li>
+</ul>
+<h2>分布式变量问题</h2>
+<p>Driver 进程上运行一些本地代码</p>
+<ul>
+<li>他把 RDD 运算交给其他进程</li>
+<li>其他代码运算本地运行
+Executor 进程主要运行 RDD 的一些分布式的运算</li>
+<li>RDD会被分为不同的分区，RDD 的运算是基于分区的</li>
+<li>Exec会把管理多个不同的分区(分为多个线程)</li>
+</ul>
+<p>分区线程运算的时候可能会需要 Driver 变量</p>
+<ul>
+<li>而我们知道进程之间的数据是共享的，但是分区可能会同时需要获取一些外部的数据来进行比较运算，此时同一份进程就有多份数据</li>
+</ul>
+<h2>解决分布式变量问题</h2>
+<ol>
+<li>广播变量
+<ol>
+<li>将分区需要的变量标记为广播变量对象。</li>
+<li>主动调用这个变量来表示避免重复传递</li>
+</ol>
+</li>
+</ol>
+<h2>SPARK 内核调度</h2>
+<p>Spark 的任务调度就是如何组织任务去处理RDD中每个分区的数据，</p>
+<ul>
+<li>DAG 调度器
+<ul>
+<li>将逻辑的DAG图进行处理，最终得到逻辑上的Task划分</li>
+</ul>
+</li>
+<li>Task 调度器
+<ul>
+<li>Task应该在哪些物理的executor上运行，</li>
+<li>监控管理TASK的运行</li>
+</ul>
+</li>
+</ul>
+<h2>DAG</h2>
+<p>有向无环图
+<img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402221717823.png" alt=""></p>
+<p>Action是不返回 RDD 的算子，他会把一串 RDD 执行起来</p>
+<ul>
+<li>因此一个action 就会产生一个 DAG</li>
+<li>一个 DAG 就对应会产生一个 JOB
+所以每一个 JOB 会有一个 DAG 图，他是由一个 Action 产生的
+RDD总体运算是基于分区的</li>
+</ul>
+<h2>DAG 的宽窄依赖</h2>
+<p>窄依赖</p>
+<ul>
+<li>Input and output stays in same partition</li>
+<li>父RDD的一个分区，
+<ul>
+<li>分区将所有数据发给子RDD的一个分区
+宽依赖</li>
+</ul>
+</li>
+<li>父RDD的一个分区，
+<ul>
+<li>分区将数据发给子RDD的多个分区</li>
+</ul>
+</li>
+<li>宽依赖还有一个别名：shuffle
+即数据传递时</li>
+<li>只给一个分区时窄依赖</li>
+<li>给多个分区时宽依赖</li>
+</ul>
+<h2>DAG 的阶段划分</h2>
+<p>DAG 会从后向前，遇到宽依赖就划分出一个阶段.</p>
+<ul>
+<li>称之为stage</li>
+<li>stage 内部一定都是窄依赖
+<img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402221728055.png" alt=""></li>
+</ul>
+<h2>内存迭代计算：窄依赖与运算</h2>
+<p><img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402221736686.png" alt=""></p>
+<p>由于窄依赖是线性的，所以我们可以把这一条运算由一个task(线程完成）减少通信之间的消耗</p>
+<ul>
+<li>这一阶段的这一条线，就是内存计算管道，是纯内存计算.</li>
+<li>如上图，task1 task2 task3,就形成了三个并行的内存计算管道.
+因此我们可以得到</li>
+<li>一个 task来负责一个分区，他是一个线程</li>
+<li>就是一条窄依赖链，</li>
+<li>我们根据窄依赖链划分内存计算管道</li>
+</ul>
+<h2>SPARK 并行度</h2>
+<p>Spark的并行：在同一时间内，有多少个task在同时运行</p>
+<ul>
+<li>在有了6个task并行的前提下，说明我们至多有 6 个窄依赖链</li>
+<li>rdd的分区就被规划成6个分区了.</li>
+</ul>
+<p>SPARK 并行度和 exector 数量是两个不同的概念</p>
+<ul>
+<li>一个 exector 可以有多个 task 同时运行</li>
+<li>为了避免 task 线程之间通信损耗，建议一个服务器一个 exector
+<ul>
+<li>不然同一个服务器有多个 exector 进程，他们之间的 task 走的不是进程内存交换而是本地网络通信</li>
+</ul>
+</li>
+</ul>
+<h2>集群中如何规划并行度</h2>
+<p>结论：设置为CPU总核心的2~10倍
+比如集群可用CPU核心是100个，我们建议并行度是200~1000</p>
+<ul>
+<li>过低会导致一些 task执行时间过长
+<ul>
+<li>概率上导致 各个task 之间时间波动大</li>
+<li>导致 cpu核心空闲时间大</li>
+<li>task 时间变短可以让空闲时间变小</li>
+</ul>
+</li>
+<li>过高会导致 各个线程之间管理通信资源变大</li>
+</ul>
+<h2>为什么不在 RDD 上再设置并行度</h2>
+<p>回导致增加宽依赖，从而导致窄依赖链变短</p>
+<h2>SPARK为什么 比 MAPreduce 块</h2>
+<ul>
+<li>编程模型上Spark占优（算子够多）</li>
+<li>算子交互上，和计算上可以尽量多的内存计算而非磁盘迭代</li>
+</ul>
+
+<h1>SPARK基础</h1><h2>RDD</h2>
+<p>A distributed memory abstraction that lets programmers perform in-memory computations
+on large clusters in a fault-tolerant manner.</p>
+<ul>
+<li>是整个 Spark 的核心数据结构，Spark 整个平台都围绕着RDD进行</li>
+</ul>
+<h2>Spark</h2>
+<p>Spark是一款分布式内存计算的统一分析引擎。</p>
+<ul>
+<li>其特点就是对任意类型的数据进行自定义计算</li>
+</ul>
+<h2>Spark VS Hadoop</h2>
+<p>Spark仅做计算，而Hadoop生态圈不仅有计算(MR)也有存储(HDFS)和资源管理调度(YARN)</p>
+<ul>
+<li>进程和线程的区别
+Hadoop中的MR中每个map/reduce task都是一个java进程方式运行，</li>
+<li>好处在于进程之间是互相独立的，每个task独享进程资源，没有互相干扰，监控方便，</li>
+<li>问题在于task之间不方便共享数据，执行效率比较低。比如多个map task读取不同数据源文件需要将数据源加 载到每个map task中，造成重复加载和浪费内存。</li>
+</ul>
+<p>Spark采用了线程的最小的执行 单位，</p>
+<ul>
+<li>线程是CPU的基本调度单位</li>
+<li>而基于线程的方式计算是为了数据共享和提高执行效率，</li>
+<li>但缺点是线程之间会有资源竞争。</li>
+</ul>
+<h2>Spark 模式</h2>
+<ul>
+<li>本地模式(单机)
+本地模式就是以一个独立的进程，通过其内部的多个线程来模拟整个Spark运行时环境</li>
+<li>Standalone模式(集群)
+<ul>
+<li>Standalone模 式是真实地在多个机器之间搭建Spark集群的环境</li>
+<li>Spark中的各个角色以独立进程的形式存在，并组成Spark集群环境</li>
+<li>运行在 linux 上而不是 yarn 上</li>
+</ul>
+</li>
+<li>Hadoop YARN模式(集群)
+Spark中的各个角色运行在YARN的容器内部，并组成Spark集群环境
+运行在 yarn 上而不是 Linux 上</li>
+</ul>
+<p>Spark Standalone集群是Master-Slaves架构的集群模式，和大部分的Master-Slaves结构集群一样，存在着Master 单点故障(SPOF)的问题</p>
+<h2>Spark 角色</h2>
+<p>资源管理层面</p>
+<ul>
+<li>集群资源管理者(Master):ResourceManager</li>
+<li>单机资源管理者(Worker):NodeManager
+<ul>
+<li>资源信息包含内存Memory和CPU Cores核数
+任务计算层面</li>
+</ul>
+</li>
+<li>单任务管理者(Driver):ApplicationMaster</li>
+<li>单任务执行者(Executor):Task(容器内计算框架的工作角色)</li>
+</ul>
+<p>Master角色以Master进程存在, Worker角色以Worker进程存在
+Driver和Executor运行于Worker进程内, 由Worker提供资源供给它们运行
+<img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/Pasted%20image%2020240220141924.png?token=AKMX3HUJZ3APKBI2VB5FQCDF2RMZM" alt="Pasted image 20240220141924"></p>
+<h2>Spark模块</h2>
+<p>核心SparkCore、SQL计算(SparkSQL)、流计算(SparkStreaming )、图计算(GraphX)、机器学习(MLlib)</p>
+<h2>Local 模式原理</h2>
+<p>Local模式就是以一个独立进程配合其内部线程来提供完成Spark运行时环境.
+Local 模式可以通过spark-shell/pyspark/spark-submit等来开启</p>
+<h2>Local下的 Spark 角色</h2>
+<p>注意: Local模式只能运行一个Spark程序, 如果执行多个Spark程序, 那就是由多个相互独立的Local进程在执行</p>
+<p>Local 下的角色分布:
+资源管理:</p>
+<ul>
+<li>Master:Local进程本身</li>
+<li>Worker:Local进程本身
+任务执行:
+Driver:Local进程本身
+Executor:不存在，没有独立的Executor角色, 由Local进程(也就是Driver)内的线程提供计算能力</li>
+<li>Driver也算一种特殊的Executor,</li>
+<li>只不过多数时候, 我们将Executor当做纯Worker对待, 这样和Driver好区分(一类是管理 一类是工人)</li>
+</ul>
+<h2>Spark应用架构</h2>
+<p><img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/Pasted%20image%2020240220143547.png?token=AKMX3HRHYAMNH2TL56MOAULF2RMZO" alt="Pasted image 20240220143547"></p>
+<ol>
+<li>Driver Program
+整个应用管理者，负责应用中所有Job的调度执行;
+运行JVM Process，运行程序的MAIN函数，必须创建SparkContext上下文对象;
+一个SparkApplication仅有一个 Driver Program;</li>
+<li>Executors
+相当于一个线程池，运行JVM Process，其中有很多线程，</li>
+</ol>
+<ul>
+<li>每个线程运行一个Task任务，</li>
+<li>一个Task任务运行需要1 Core CPU，</li>
+<li>所有可以认为Executor中线程数就等于CPU Core核数;</li>
+<li>一个Spark Application可以有多个exectuors，可以设置个数和资源信息</li>
+</ul>
+<p>Driver创建 SparkContext ，</p>
+<ul>
+<li>SparkContext 实例会连接到 ClusterManager。
+<ul>
+<li>Cluster Manager 会根据用户 提交时设置的 CPU 和内存等信息为本次提交分配计算资源，启动 Executor。</li>
+</ul>
+</li>
+</ul>
+<h2>程序运行层次结构</h2>
+<p>一个Spark Application中，包含多个Job，</p>
+<ul>
+<li>每个Job执行按照DAG图进行的</li>
+<li>每个Job有多个Stage组成，
+Driver会将Job划分为不同的执行阶段Stage，</li>
+<li>每个执行阶段Stage由一组完全相同Task组成，
+<ul>
+<li>这些Task分别作用于待处 理数据的不同分区。</li>
+<li>这些 task 以线程来并行运行
+Task分为两种</li>
+<li>一种是Shuffle Map Task，它实现数据的重新 洗牌，洗牌的结果保存到Executor 所在节点的文件系统中;</li>
+<li>一种是Result Task，它负责生成结果数据;</li>
+</ul>
+</li>
+</ul>
+<p>Driver会向Executor发送 Task,Executor在接收到Task，</p>
+<ul>
+<li>执行Task，并且将Task的运行状态 汇报给Driver;
+Driver会根据收到的Task的运行状态来处理不同的状态更新。</li>
+</ul>
+<p>Driver 会不断地调用Task，将Task发送到Executor执行，在所有的Task 都正确执行或者超过执行次数的限制仍然没有执行成 功时停止;</p>
+<h2>SparkAlone HA</h2>
+<p>Spark Standalone集群是Master-Slaves架构的集群模式，和大部分的Master-Slaves结构集群一样，存在着Master 单点故障(SPOF)的问题</p>
+<p>ZooKeeper提供了一个Leader Election机制
+在集群中存在多个 Master 节点</p>
+<ul>
+<li>虽然存在多个Master，但是只有一个是Active 的，其他的都是Standby。</li>
+<li>当Active的Master出现故障时，另外的一个Standby Master会被选举出来。（被 zookeeper cluster）</li>
+<li>由于集群的信息 ，包括Worker， Driver和Application的信息都已经持久化到文件系统，因此在切换的过程中只会影响新Job的提交，对 于正在进行的Job没有任何的影响。加入ZooKeeper的集群整体架构如下图所示</li>
+</ul>
+<h2>zookeeper</h2>
+<p>为什么需要Zookeeper?
+分布式进程是分布在多个服务器上的, 状态之间的同步需要协调,比如谁是master,谁 是worker.谁成了master后要通知worker等, 这些需要中心化协调器Zookeeper来 进行状态统一协调</p>
+<h2>Spark on yarn</h2>
+<p>在已有YARN集群的前提下在单独准备Spark StandAlone集群,对资源的利用就不高. 所以, 在企业中,多数场景下,会将Spark运行到YARN集群中</p>
+<p>Spark On YARN, 无需部署Spark集群, 只要找一台服务器, 充当Spark的客户端, 即可提交任务到YARN集群 中运行</p>
+<h2>Spark On Yarn的本质?</h2>
+<p>由于有 yarn，所以不需要资源层次的管理(Master)，只需要具体任务上的管理(Driver)</p>
+<p>Master角色由YARN的ResourceManager担任.
+Worker角色由YARN的NodeManager担任.
+Driver角色运行在YARN容器内 或 提交任务的客户端进程中</p>
+<ul>
+<li>并没有替代 ApplicationMaster
+真正干活的Executor运行在YARN提供的容器内
+<img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/Pasted%20image%2020240220154831.png?token=AKMX3HXX6O47LFW4CWRH5PDF2RMZO" alt="Pasted image 20240220154831"></li>
+</ul>
+<h2>Spark On YARN运行模式的,</h2>
+<p>两种模式的区别就是Driver运行的位置.
+Cluster模式即:Driver运行在YARN容器内部, 和ApplicationMaster在同一个容器内</p>
+<ul>
+<li>在容器中，所以和Exector 的通信效率更高
+Client模式即:Driver运行在客户端进程中, 比如Driver运行在spark-submit程序的进程中</li>
+<li>在客户端进程中，更方便查看 log</li>
+<li>但容易受客户端进程影响，不时候生成环境</li>
+<li>（客户端暂时理解是运行时的终端）</li>
+</ul>
+<h2>SPARK YARN 具体运行步骤</h2>
+<ol>
+<li>ResourceManager分配Container，在合适的NodeManager上启动ApplicationMaster，此时的 ApplicationMaster就是Driver;
+<ol>
+<li>如果是客户端模式则Driver在任务提交的本地机器上</li>
+<li>但是仍然要 APplicationMaster 来管理提交容器的资源申请</li>
+</ol>
+</li>
+<li>Driver启动后向ResourceManager申请Executor内存</li>
+<li>ResourceManager接到ApplicationMaster的资源申请 后会分配Container,然后在合适的NodeManager上启动Executor进程;</li>
+<li>Executor进程启动后Driver注册;</li>
+<li>Executor开始执行main函数
+<ol>
+<li>执行到Action算子时触发一个job，并根据宽依赖开始划分stage，</li>
+<li>每个stage生成对应的taskSet，之后将task分发到各个Executor上执行;</li>
+</ol>
+</li>
+</ol>
+<h2>PySpark和bin/pyspark 程序有何区别?</h2>
+<p>PySpark是一个Python的类库, 提供Spark的操作API</p>
+<ul>
+<li>只支持本地调试</li>
+<li>不能再daemon（守护进程）上运行
+bin/pyspark 是一个交互式的程序,可以提供交互式编程并执行Spark计算</li>
+<li>属于标准Spark框架，支持分布式集群运行</li>
+</ul>
