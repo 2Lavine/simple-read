@@ -201,374 +201,185 @@ Stream Processing (using Kafka streams API)
 De-coupling of System Dependencies
 Integration with Spark, Flink, Storm, Hadoop and many other Big Data technologies
 Micro services Pub/Sub
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261107469.png)
 
 
 
-## Examples…
-
-| | Uses Kafka to apply recommendations in real- time while you are watching TV shows. |
-| :-: | :-: |
-| | Uses Kafka to gather user, taxi and trip data in real-time to compute and forecast demand for surge-pricing. |
-| | Uses Kafka to prevent spam, collect user interactions to make better connection recommendations in real-time. |
-
-
-
-Streaming Platform: Architecture & Deployment
-
-- Through Analogy
-
-
-
-## Architecture and Deployment -1
-
-The Restaurant Kitchen Problem
-
-
-
-Waiter and Queue
-
-Marshal the Data
-
-Keep the sequence
-
-Manage queues
-
-
-
-Order from chaos
-
-
-
-And look at scaling options . . .
-
-
-
-Topic = Salad
-
-Topic = Pizza
-
-ATA/S-IAARDTDS/InoturorsdeuCctoionndutoctR/DealtaTiWmaerSeyhsotuemses
-
-© 2019-2024, NUS. All Rights Reserved
-
-Implementation Platform Concepts
-
-- with Kafka
-
-
-
+# Streaming Platform: Architecture & Deployment
+## Architecture and Deployment 
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261109384.png)
+# Implementation Platform Concepts
 ## Kafka Terms & Terminologies
-
-Producer: Application that sends the messages. (Add a pinch of salt here in Kafka terms!)
-
-Consumer : Application that receives the messages. (Add a pinch of salt here in Kafka terms!)
-
+Producer: Application that sends the messages. 
+Consumer : Application that receives the messages. 
 Message : Information that is sent from the producer to a consumer through Apache Kafka.
-
-Connection : A connection is a TCP connection between your application and the Kafka broker.
-
+**Connection : A connection is a TCP connection between your application and the Kafka broker.**
 Topic : A Topic is a category/feed name to which messages are stored and published.
-
 Partition : Kafka topics are divided into a number of partitions, which allows you to split data across multiple brokers.
-
 Replicas : A replica of a partition is a "backup" of a partition. Replicas never read or write data.
-
-They are used to prevent data loss.
-
+- They are used to prevent data loss.
 Consumer Group: A consumer group includes the set of consumer processes that are subscribing to a specific topic.
 
-Offset: The offset is a unique identifier of a record within a partition. It denotes the position of
+Offset: The offset is a unique identifier of a record within a partition. It denotes the position of the consumer in the partition.
 
-the consumer in the partition.
 
 Node: A node is a single computer in the Apache Kafka cluster.
-
 Cluster : A cluster is a group of nodes i.e., a group of computers.
 
-
-
 ## Producer
-
-* A producer is a component of an application that sends data to Kafka Queue
- * Typically this is aa Kafka component API used by the consumer application
-* to send messages.
-* Examples of producers could be:
+A producer is a component of an application that sends data to Kafka Queue
+ * Typically this is aa Kafka component API used by the consumer application to send messages.
+Examples of producers could be:
  * Sensor application sending temperature data at periodic information
  * A website sending user log in data
  * A stock trading information sending stock prices
-
-
-
 ## Consumer
-
-* A consumer is a component of an application that reads data from Kafka Queue
+A consumer is a component of an application that reads data from Kafka Queue
  * Typically a Kafka component API used by a client to read messages.
-
-* Examples of consumers can be:
+Examples of consumers can be:
  * A Meteorological application that publishes weather data on its website
  * A audit trail application that monitors possible intrusions in the form of unauthorised logins.
  * An analytics application that provides real time stock price trends
-
-
-
 ## Kafka Topics
-
-* Topics: A particular stream of data
- * A topic is identified by its name .
- * A topic has a particular type of data (message)
- * Similar to a table in a database (without constraints)
+Topics: A particular stream of data
+ You cannot query topics, so we use producers and consumers. (Explained later)
+ * A topic is identified by its **name** .
+ * A topic has a particular type of data (**message**)
+ * Similar to a table in a database (**without constraints**)
  * You can have as many topics as you want
- * Contain any message format
- * The sequence of messages is called data stream
- * You cannot query topics, so we use producers and consumers. (Explained later)
-
-| Topic Example<br />(Names) |
-| :-: |
-| logs |
-| purchases |
-| tweets |
-| trucksgps |
-
-
+ * The sequence of messages is called **data stream**
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261119912.png)
 
 ## Partitions in Topics
-
-* Topics are split in partitions
+Topics are split in partitions
  * Messages in each partition is ordered
  * Each message within a partition gets an incremental id, called offset
-* Messages are immutable – i.e., cannot be updated.
-
-
+Messages are immutable – i.e., cannot be updated.
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261121543.png)
 
 ## Example: trucksGPS
-
-Consider that you have a feet of trucks, each reports its GPS Position
-
+- Consider that you have a feet of trucks, each reports its GPS Position
 You can setup a topic called trucksGPS that contains the position of ALL trucks
-
-Each truck will send a message to Kafka for example every 20 seconds and each message contain the Truck ID and Truck Position (Latitude & Longitude)
-
+- Each truck will send a message to Kafka for example every 20 seconds 
+- each message contain the Truck ID and Truck Position (Latitude & Longitude)
 We can create that topic with 10 partitions (arbitrary, as per your choice)
-
-
-
 ## Offsets in Topic Partitions - Details
-
-* Offset only have a meaning for a specific partition
+Offset only have a meaning for a specific partition
  * That is: Offset 2 in Partition 0 does not have the same data as offset 2 in Partition 1
-* Offset is guaranteed only within a partition (not across partitions)
-* Data is kept only for a limited time (default is one week)
-* Data is immutable; i.e. once the data is written to a partition, it cannot be changed.
-
-
+Data is kept only for a limited time (default is one week)
+Data is immutable; i.e. once the data is written to a partition, it cannot be changed.
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261127810.png)
 
 ## Brokers
+A broker can be thought of as a **Server** that 
+- hosts message queues and facilitates as node 
+- where producers write messages and consumers read messages.
 
-A broker can be thought of as a Server that hosts message queues and facilitates as node where producers write messages and consumers read messages.
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261128257.png)
 
-Hence, as seen a broker will comprise of topics, which in turn compresses of partition(s)
-
-Broker
-
-| 1 | 2 | 3 | 4 | 5 |
-| :-: | :-: | :-: | :-: | :-: |
-
-
-Partition
-
-Note : The above is illustrative. Typically there can be multiple topics in a Broker and multiple partitions within each topic.
-
-
-
+Typically there can be multiple topics in a Broker and multiple partitions within each topic
 ## Brokers in Kafka Cluster
-
 A Kafka cluster is composed of multiple brokers (servers)
+- Each broker is identified with its ID (integer only)
+- Each broker contains certain topic partitions
 
-Each broker is identified with its ID (integer only)
-
-Each broker contains certain topic partitions
-
-After connecting to any broker (called a bootstrap broker), you will be connected to the entire cluster
-
-A good choice is to start with 3 brokers, but some large clusters can be 100+
-
-brokers.
-
-Broker numbers can start with an arbitrary number. Here we chose 101
-
-
-
-## Brokers with multiple Topics having several partitions
-
-
+After connecting to any broker (called a bootstrap broker), you will be connected to the - entire cluster
+- A good choice is to start with 3 brokers, but some large clusters can be 100+ brokers.
+- Broker numbers can start with an arbitrary number. Here we chose 101
 
 ## Topic Replication Factor
-
 Topics should have a replication factor > 1 (usually 2 or 3)
-
 This is for failover purposes; i.e., if a broker is down another broker serves data
-
 Example: Topic-A with 2 partitions and replication factor of 2
-
-
-
-## Handling Failover through Replication
-
-Example
-
-Broker 102 fails
-
-Broker 101 and 103 still contains the data to serve.
-
-
-
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261132685.png)
 ## Concept of Leaders in Kafka
-
 A “leader” in Kafka is typically a Master in traditional replication terminology
-
-An ‘In-Sync-Replica” in Kafka is typically the slave
-
-There can be one leader broker and several in-sync-replica brokers
-
-At any time, ONLY ONE broker can be a leader for a given partition
-
-ONLY THAT LEADER can receive and serve data for the partition
-
-
-
+- An ‘In-Sync-Replica” in Kafka is typically the slave
+- There can be one leader broker and several in-sync-replica brokers
+At any time, ONLY ONE broker can be a leader for a given partiion ONLY THAT LEADER can receive and serve data for the partition
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261135074.png)
 ## Producers in Multi-broker context
-
 Producers write data to topics (which is made up of several partitions)
-
-Producers automatically know to which brokers & partition to write
-
+Producers **automatically** know to which brokers & partition to write
 In case of Broker failures Producers will automatically recover
 
-
-
 ## Producers and acknowledgement
-
 Producer can choose to receive an acknowledgement
-
-| acks | = | 0 : Producer will not wait for acknowledgement (possible data loss) |
-| :-: | :-: | :-: |
-| acks | = | 1 : Producer will wait for Leader acknowledgement (limited data loss) |
-| acks | = | all : Producer will await Leader + replica acknowledgement (no data loss) |
-
-
+- acks = 0 : Producer will not wait for acknowledgement (possible data loss)
+- acks = 1 : Producer will wait for Leader acknowledgement (limited data loss)
+- acks = all : Producer will await Leader + replica acknowledgement (no data loss)
 
 ## Producers and Key
-
 Producer can choose to send a key with the message (string, number, etc.)
-
-If key is null (not specified) data is sent round robin (broker 101 then 102, 103 …)
-
-If a key is sent, then all messages for that key will always go to the same partition
-
-A key is basically sent if you need message ordering for a specific field (eg: truckid)
-
-
-
+- If key is null (not specified) data is sent round robin (broker 101 then 102, 103 …)
+- If a key is sent, then all messages for that key will always go to the same partition
+A key is basically sent if you need **message ordering for a specific field (eg: truckid)**
 ## Consumers reading from a partitions
-
-* Consumers read data from a topic (identified by a name)
-* Data is read in order within each partition.
-* A consumer can be read by only one partition (loosely queue belonging to a Topic)
+Consumers read data from a topic (identified by a name)
+Data is read in order within **each partition.**
+A consumer can be read by **only one partition** 
  * This will ensure that a message is not re-read and processed in by two consumers.
- * This means there should be as many number of consumers as there are partitions.
-
-Note: Consumers know which broker to read from. In case of broker failures, consumers know how to recover
-
-
-
-## Consumers more than Partitions
-
-If you have more consumers than partition some consumers may be inactive
-
-
+ * This means there should be **as many number of consumers as there are partitions.**
+	 * If you have more consumers than partition some consumers may be inactive
+ * Two comsumers in same Comsuerm groups can not read same partition
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261150608.png)
 
 ## Consumer Groups
-
-* A particular message may need to be read by multiple applications
- * Example: The temperature data may need to be read by a meterelogical website as well as by an analytics system and also by a dashboard displaying data.
- * Since a message in partition can be read by only one partition to avoid duplicate processing Kafka introduced Consumer Groups.
- * This way each message is read by a Consumer from each Group from its
-* allotted partition independently of other consumer Groups.
-* So a Consumer Group essentially represents an Application.
-* A consumer is a component in that application that uses kafka api to read data from its allotted partition
-
-
-
-## Consumer Groups illustrated
-
+A particular message may need to be read by multiple applications
 Each consumer within a group reads from exclusive partitions
+ Example: 
+ * The temperature data may need to be read by a meterelogical website as well as by an analytics system and also by a dashboard displaying data.
+ * Since a message in partition can be read by only one partition to avoid duplicate processing Kafka introduced Consumer Groups.
+ * This way each message is read by a Consumer from each Group from its allotted partition independently of other consumer Groups.
+So a Consumer Group essentially represents an Application.
 
 
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261155773.png)
 
 ## Consumer Offsets
-
 Kafka stores the offsets at which a consumer group has been reading.
-
-The offsets gets committed live in a Kafka topic named:
-
-consumeroffsets
-
-When a consumer group has processed data received from Kafka, it should be committing the offsets.
-
-If a consumer dies, it will be able to recommencing reading back from
-
-where it left off; thanks to the committed consumer offsets!
-
-
+The offsets gets committed live in **a Kafka topic named: consumeroffsets**
+- When a consumer group has processed data received from Kafka, it should be committing the offsets.
+- If a consumer dies, it will be able to recommencing reading back from where it left off; thanks to the committed consumer offsets
 
 ## Delivery Semantics for consumers
-
-* Consumers choose when to commit offsets
-* There are three delivery semantics
+Consumers choose when to commit offsets
+There are three delivery semantics
  * At most once:
- * Offsets are committed as soon as the message is received.
- * If processing goes wrong, the message will be lost (i.e. it wont read again).
+	 * Offsets are committed as soon as the message is received.
+	 * If processing goes wrong, the message will be lost (i.e. it wont read again).
  * At least once:
- * Offsets are committed after the message is processed (preferred option) .
- * If the process goes wrong, the message will be read again.
- * This can result in duplicate processing of message. Hence client has to make sure that the processing is idempotent (i.e., reprocessing will not impact the application)
+	 * Offsets are committed after the message is processed (preferred option) .
+	 * If the process goes wrong, the message will be read again.
+	 * This can result in duplicate processing of message. 
+		 * Hence client has to make sure that the processing is idempotent (i.e., reprocessing will not impact the application)
  * Exactly once:
- * Can be achieved using Kafka -> Kafka workflows using Kafka streams API.
- * For Kafka -> External System workflows, use an idempotent consumer.
-
-
+	 * Can be achieved using Kafka -> Kafka workflows using Kafka streams API.
+	 * For Kafka -> External System workflows, use an idempotent consumer.
 
 ## Kafka Broker Discovery
-
 * Every Kafka broker is also called a bootstrap server.
- * This means the you connect to one broker , and you will get connected to
-* the entire cluster!
+	 - This means the you connect to one broker , and you will get connected to the entire cluster!
 * Each broker knows about all brokers, topics and partitions,
- * That is, the brokers contain the full cluster metadata.
-
-
+	* That is, the brokers contain the full cluster metadata.
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261202640.png)
 
 ## Zookeeper
+Kafka Zookeeper is a distributed coordination service for distributed systems. It maintains configuration information, naming and helps distributed synchronisation by coordinating between the brokers in Kafka cluster.
 
-* Kafka Zookeeper is a distributed coordination service for distributed systems. It maintains configuration information, naming and helps distributed synchronisation by coordinating between the brokers in Kafka cluster.
 * Zookeeper manages brokers
- * Keeps a list of brokers, their locations, their replicas, the partitions in them etc.
+	* Keeps a list of brokers, their locations, their replicas, the partitions in them etc.
 * Zookeeper helps in performing leader election for partitions.
 * Zookeeper assigns leaders and monitors which brokers are down.
 * Zookeeper sends notifications to Kafka in case of changes.
- * Example, new topic created, broker dies, broker comes up, topic deleted etc.
-* Kafka CANNOT work without Zookeeper
- * Things due to change with v4.0 when KRaft will evolve.
-* ZooZookeeper has a leader (handles writes) the rest of the servers are
-* followers (handles reads).
+	* Example, new topic created, broker dies, broker comes up, topic deleted etc.
+
+Kafka CANNOT work without Zookeeper
+* Things due to change with v4.0 when KRaft will evolve.
+* ZooZookeeper has a leader (handles writes) the rest of the servers are followers (handles reads).
 * Zookeeper does NOT store consumer offsets (initial versions did).
 
-
-
-
-
 ## Kafka Guarantees
-
 * Messages are appended to a topic-partition in the order they are sent
 * Consumers read messages in the order stored in a topic-partition
 * With a replication factor of N, producers and consumers can tolerate up to (N - 1) brokers being down
@@ -577,182 +388,57 @@ where it left off; thanks to the committed consumer offsets!
  * Protects against system crash when another broker fails
 * As long as the number of partitions remains same for a topic (i.e. No new partitions get created) , the same key will go to the same partition
 
-
-
 ## Case example of Architecture & Deployment
-
-Same concept on a time series weather processing system
-
-Broker
-
-Topic = Temperature
-
-Temperature Processor
-
-Topic = Precipitation
-
-Precipitation Processor
-
-
-
-Scaling up with partitions within a Topic
-
-Broker
-
-Topic = Temperature
-
-| | <br />Temp | | <br />Temp | | <br />Temp | | <br />Temp | | <br />Temp | | <br />Temp |
-| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| Partition 0 | 1 | | 2 | | 3 | | 4 | | 5 | | 6 |
-
-Temperature Processor
-
-Topic = Temperature
-
-Topic = Precipitation
-
-| | <br />Precip | | <br />Precip | | <br />Precip | | <br />Precip | | <br />Precip | | <br />Precip |
-| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| Partition 0 | 1 | | 2 | | 3 | | 4 | | 5 | | 6 |
-
-Precipitation Processor
-
-
-
-More Parallelism
-
-Topic = Temperature
-
-Temperature Processor
-
-Topic = Precipitation
-
-| Precip 1 | Precip<br />2 | Precip<br />3 | Precip 4 | | Precip<br />5 |
-| :-: | :-: | :-: | :-: | :-: | :-: |
-
-
-Temperature
-
-Processor
-
-Topic = Temperature
-
-Topic Temperature
-
-Replication Factor = 2
-
-| Temp 1 | Temp 2 | | Temp 3 | | Temp 4 | Temp 5 |
-| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| Temp 1 | Temp 2 | | Temp 3 | | Temp 4 | Temp 5 |
-
-Precipitation Processor
-
-Topic = Precipitation
-
-Topic Precipitation Replication Factor = 2
-
-| Precip 1 | Precip 2 | Precip 3 | Precip 4 | | Precip 5 |
-| :-: | :-: | :-: | :-: | :-: | :-: |
-
-
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261208911.png)
 
 
 ## Overall View of Kafka
 
 
-
-## Activity
-
-* Read the Messaging Architecture Design Workshop (ARTS course notes).
-* Refer the Rebu Taxi case study already provided in this GC IADD course (if required).
-* Derive an RTS architecture that would depict
- * Source & Destination Systems
- * Kafka architectural design consisting of:
- * Producers & Consumers
- * Brokers, Topics & Partitions
- * Stream data flow
- * Data Formats
- * Identify any two Data Analysis functions that you can perform using the RTS.
- * This activity is divided into three tasks:
-* You should do Task 1 only now .
-* Task 2 & 3 are take home activity after discussing Task 1 solutions in class.
-
-Discuss as a team and arrive at your solution to Task 1:
-
-You may make enhancements/simplifications/assumptions where info is inadequate.
-
-Time: 40 minutes group discussion & preparation, 20 minutes for presentation
-
-
-
 ## Data Analysis - Stream Data Queries
-
-
-
 ## Data Analytics: Querying the data
-
 Conventional Data Processing vs Stream Data Processing
-
 Conventional Processing: Static Data
-
 Real Time Processing: Streaming Data
-
-
-
 ## Traditional vs Stream Data Queries
-
-* One-time vs Continuous queries
+One-time vs Continuous queries
  * Traditional Databases query issued once and result obtained.
  * Real Time system Query is Registered and periodically executed.
-* Notion of time
+Notion of time
  * Traditional Databases do not have a notion of time. Data is written and remains until updated again.
- * Stream Databases the data represent sequence of data for same entity and
-* queries are executed over time (eg: Average speed of cars in last 5 min)
-* Unbounded Data Sets
+ * Stream Databases the data represent sequence of data for same entity and queries are executed over time (eg: Average speed of cars in last 5 min)
+Unbounded Data Sets
  * In traditional database the data rarely grow when the query is executed, and if it does then cursor stability handles
  * In streaming data the data is continuously growing and query should be executed on unbounded datasets
-
-
-
-* Unreliable Data
+Unreliable Data
  * Traditional Database work with generally reliable data
  * Streaming Applications must be capable of working with unreliable data. This may be due to dropped messages or delays or data coming out of order.
-* Reactive Capability
- * Traditional databases are passive. Generally a human initiates the query
-* and receives the results.
+Reactive Capability
+ * Traditional databases are passive. Generally a human initiates the query and receives the results.
  * Streaming Applications (though may have human interactions) generally receive data from sensors and require (or have) self monitoring nature. Example if the traffic in a road is high, the system may direct drivers to alternate routes which is the reactive capability of Streaming Systems.
-
-
-
 ## Stream Data Models & Query Languages
-
-* Timestamp
+Timestamp
  * Implicit Timestamp
- * Is assigned to an arriving tuple by the stream management system.
- * This may simply be a sequence number that imposes a total order on the tuples in the stream.
+	 * Is assigned to an arriving tuple by the stream management system.
+	 * This may simply be a sequence number that imposes a total order on the tuples in the stream.
  * Explicit Timestamp
- * It is a property of the tuple itself
- * Typically the data is sent with a timestamp attribute which has real-world meaning
-* Windows
+	 * It is a property of the tuple itself
+	 * Typically the data is sent with a timestamp attribute which has real-world meaning
+Windows
  * For unbounded data streams the queries are executed over subset or part of the data.
- * This requires specification of a window that could be the number of tuples or a time
-* window (based on timestamp).
+ * This requires specification of a window that could be the number of tuples or a time window (based on timestamp).
 
 
 
 ## Query Comparison: Data Store vs Streams
 
-* Data Store
+Data Store
  * Assume data has been persisted in a table and we wish to get the average speed of the car on a particular date (for an expressway segment+direction)
-* SELECT expway, dir, seg, AVG(speed)
-* FROM CarTable WHERE TravelDate = '10-Mar-2022'
-* GROUP BY expway, dir, seg
-* Streams
+ ![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261459134.png)
+
+Streams
  * Assume we are processing a real time stream and are evaluating current traffic speed (for an expressway segment+direction); where current = 5 minute window
-* SELECT expway, dir, seg, AVG(speed) FROM CarStream [RANGE 5 MINUTES]
-* GROUP BY expway, dir, seg
-
-
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261459153.png)
 
 ## Summary
 
@@ -2270,11 +1956,7 @@ Institute of Systems Science, National University of Singapore
 
 Total: 80 Slides
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Learning Objectives
 
@@ -2288,11 +1970,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * Stateless Versus Stateful Processing
  * Stateless Processing
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Agenda
 
@@ -2306,11 +1984,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
 * KStreams, KTable and Practices
 * Summary
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 Kafka Components
 
@@ -2318,45 +1992,20 @@ Kaf k a A r chite c t u r e , Core a n d No n - Core C o mpon e n ts
 
 Producer and Consumer Configurations
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kappa Architecture
-
-Kappa architecture finds its applications in real-time processing of distinct events.	(As conceived by Jay Kreps @ 2014)
-
-Reference: [https://events.static.linuxfound.org/sites/events/files/slides/ASPgems%20-%20Kappa%20Architecture.pdf](https://events.static.linuxfound.org/sites/events/files/slides/ASPgems%20-%20Kappa%20Architecture.pdf)
-
-Architecting Systems for Real Time Data Processing
-
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
+Kappa architecture finds its applications in real-time processing of distinct events.
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261555172.png)
 
 ## Kappa Useful In . . .
-
 Kappa architecture can be deployed for those data processing enterprise models where:
-
-Multiple data events or queries are logged in a queue to be catered against a distributed file system storage or history.
-
-The order of the events and queries is not predetermined. Stream processing platforms can interact with database at any time.
-
-It is resilient and highly available as handling Terabytes of storage is required for each node of the system to support replication.
-
-Architecting Systems for Real Time Data Processing
-
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
-
+- Multiple data events or queries are logged in a queue to be catered against a distributed file system storage or history.
+- The order of the events and queries is not predetermined. Stream processing platforms can interact with database at any time.
+- It is resilient and highly available as handling Terabytes of storage is required for each node of the system to support replication.
 ## Pros and Cons of Kappa architecture
-
-* Pros
- * Kappa architecture can be used to develop data systems that are online learners
-* and therefore don’t need the batch layer.
+Pros
+ * Kappa architecture can be used to develop data systems that are online learners and therefore don’t need the batch layer.
  * Kappa architecture can be deployed with fixed memory.
  * Re-processing is required only when the code changes.
  * Kappa Architecture can be used for horizontally scalable systems.
@@ -2365,115 +2014,20 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * Effective machine learning done on the real time basis.
  * Real-time or near-real-time processing easily possible using frameworks.
  * Detecting patterns in time-series data is easy.
-* Cons
+Cons
  * Absence of batch layer might result in errors during data processing or while updating the database that requires having an exception manager to reprocess the data or reconciliation.
-
-Architecting Systems for Real Time Data Processing
-
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
-
 ## Core	and Non-core Kafka
+![](https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/202402261557972.png)
 
-ZooKeeper
-
-(Core Dependency)
-
-Kafka Co n sume r s
-
-Kafka P r o d u ce r s
-
-Apache Core KAFKA
-
-Log Aggregation
-
-Metrics
-
-KPIs
-
-Batch Imports
-
-Audit Trail
-
-User Activity Logs
-
-Web logs
-
-. . .
-
-Analytics
-
-Data Store
-
-Machine Learning
-
-Deep Learning
-
-Dashboards
-
-Indexes
-
-Business Intelligence
-
-. . .
-
-Apache Kafka Core
-
-Not part of core
-
-Server / Broker
-
-Scripts to start libs
-
-Script to start up
-
-Zookeeper scripts
-
-Utils to create topics
-
-Utils to monitor stats
-
-Schema Registry
-
-Avro
-
-KAFKA REST Proxy
-
-K a f k a C onn ect
-
-K a f k a St r eam s
-
-K a f k a S e c urity
-
-Architecting Systems for Real Time Data Processing
-
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka Core APIs
-
 The [Producer API](https://kafka.apache.org/documentation.html#producerapi) [ ](https://kafka.apache.org/documentation.html#producerapi)allows an application to publish a stream of records to one or more Kafka topics.
-
 The [Consumer ](https://kafka.apache.org/documentation.html#consumerapi) [API](https://kafka.apache.org/documentation.html#consumerapi) [ ](https://kafka.apache.org/documentation.html#consumerapi)allows an application to subscribe to one or more topics and process the stream of records produced to them.
-
 The [Streams API](https://kafka.apache.org/documentation/streams) [ ](https://kafka.apache.org/documentation/streams)allows an application to act as a stream processor , consuming an input stream from one or more topics and producing an output stream to one or more output topics, effectively transforming the input streams to output streams.
-
 The [Connector](https://kafka.apache.org/documentation.html#connect) [ ](https://kafka.apache.org/documentation.html#connect) [API](https://kafka.apache.org/documentation.html#connect) [ ](https://kafka.apache.org/documentation.html#connect)allows building and running reusable producers or consumers that connect Kafka topics to existing applications or data systems. For example, a connector to a relational database might capture every change to a table.
 
-In Kafka the communication between the clients and the servers is done with a simple, high-performance, language agnostic TCP protocol .
-
-Reference: [https://kafka.apache.org/](https://kafka.apache.org/)
-
-Architecting Systems for Real Time Data Processing
-
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
-
+In Kafka the communication between the clients and the servers is done with a simple, high-performance, language agnostic **TCP protocol .**
 ## Message Topics Configuration
-
 * Retention Period : The messages in the topic need to be stored for a defined period of time to save space irrespective of throughput.
 * Space Retention Policy : We can also configure Kafka topics to clear messages when
 * the size reaches the threshold mentioned in the configuration.
@@ -2485,13 +2039,6 @@ ATA/S-ARTS/Real Time Processing via Kafka
 * Leader : Partitions are replicated across the Kafka cluster based on the replication factor specified. One is a leader and the rest follows.
 * Buffering : Kafka buffers messages both at the producer and consumer side to
 * increase throughput and reduce Input Output (IO).
-
-Architecting Systems for Real Time Data Processing
-
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
-
 ## Recollection Slide
 
 Kafka Partitions
@@ -2502,11 +2049,7 @@ Partitions are fault-tolerant; they are replicated across the Kafka brokers.
 
 Kafka partitions (Ref: https://kafka.apache.org/documentation/)
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Message Partitions
 
@@ -2518,11 +2061,7 @@ Each partition has its leader that serves messages to the consumer that wants to
 * High availability issue : Kafka is known as high-availability, high- throughput, and distributed messaging system.
  * Brokers in Kafka store thousands of partitions of different topics. Reading and writing to partitions happens through the leader of that partition. Generally, if the leader fails, electing a new leader takes only a few milliseconds with help of Controllers (one of the elected brokers).
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Replication Configurations
 
@@ -2535,11 +2074,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * The last committed message offset is called the High Watermark. When a client requests to write a message to partition, it first picks the leader of the partition from Zookeeper and creates a write request.
  * Read : All the reads happen through the leader only. The message that is acknowledged successfully by the leader will be available for the client to read.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Role of Zoo Keeper
 
@@ -2556,11 +2091,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
 * Kafka topic ACLs:
  * Kafka has an in-built authorization module that is defined as Access Control Lists ( ACLs ). These ACLs determine user roles and what kind of read and write permissions each of these roles has on respective topics. Kafka uses Zookeeper to store all ACLs.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 Recollection Slide
 
@@ -2578,19 +2109,11 @@ Recollection Slide
 
 Internal implementation or the sequence of steps in Producer APIs may differ for respective programming languages. Some of the steps can be done in parallel using threads or callbacks.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Sequence diagram of delivery time breakdown inside Kafka Producer
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 Recollection Slide
 
@@ -2607,11 +2130,7 @@ Recollection Slide
 
 With Kafka, every consumer has a unique identity and they are in full control of how they want to read data from each Kafka topic partition. Every consumer has its own consumer offset that is maintained in Zookeeper and they set it to the next location when they read data from a Kafka topic.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Commits and Offset
 
@@ -2619,11 +2138,7 @@ If the committed offset is smaller than the offset of the last message the clien
 
 If the committed offset is larger than the offset of the last message the client actually processed, all messages between the last processed offset and the committed offset will be missed by the consumer group.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Other Configurations
 
@@ -2639,11 +2154,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
 * AdminClient Configs
  * Configurations used by an administrative client
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka Schema
 
@@ -2655,11 +2166,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
 
 Images from [https://docs.confluent.io/platform/current/schema-registry/index.htm](https://docs.confluent.io/platform/current/schema-registry/index.html) [l](https://docs.confluent.io/platform/current/schema-registry/index.html)[ ](https://docs.confluent.io/platform/current/schema-registry/index.html)and [https://yokota.blog/2020/07/11/putting-several-event-types-in-the-same-topic-revisited/](https://yokota.blog/2020/07/11/putting-several-event-types-in-the-same-topic-revisited/)
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka Use-Cases	- 1
 
@@ -2672,11 +2179,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * Example: applications sending notifications (such as emails) to users.
  * A single application can then read all the messages to be sent and handle them consistently, including formatting, collecting multiple messages and apply preferences.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 * Metrics and Logging, Commit Logs
  * Example: Collect system metrics and logs from multiple applications
@@ -2687,34 +2190,18 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * Example: functional pipelines on Kafka streams.
  * Streams operate on Kafka messages, performing tasks such as counting metrics, partitioning messages for efficient processing by other applications, or transforming messages using data from multiple sources.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Windows Tools
 JDK, Scala, Kafka, Zookeeper and Offset Explorer
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Confluent Control Center
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
 
-ATA/S-ARTS/Real Time Processing via Kafka
 
-Architecting Systems for Real Time Data Processing
-
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 Kafka Core Processing
 
@@ -2722,11 +2209,7 @@ Comm a n d L ine T o ol and Of f s e t Vis u a l is e r
 
 Application to show end-to-end producer/subscriber Demo and W o rkshop
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Events
 
@@ -2740,21 +2223,13 @@ Each event is associated with a timestamp.
 
 The value contains the actual message contents, encoded as a byte array. It’s up to clients to deserialize the raw bytes into a more meaningful structure (e.g., a JSON object or Avro record).
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka as Hub - 1
 
 Reference: Kafka Streams in Action
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka as Message Broker - 2
 
@@ -2762,19 +2237,11 @@ Kafka is a message broker. Producers send messages to Kafka, and those messages 
 
 available to consumers via subscriptions to topics.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka as Streams – 3.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka Producer Components
 
@@ -2790,11 +2257,7 @@ be used to serialize the values of the records
 
 Properties kafkaProps = new Properties(); kafkaProps.put("bootstrap.servers", "broker1:9092,broker2:9092"); kafkaProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer"); kafkaProps.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer"); producer = new KafkaProducer<String, String>(kafkaProps);
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Creating a Kafka Producer
 
@@ -2811,11 +2274,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * Produce r accepts the ProducerRecor d object to send records to the ProducerRecord topic. It contains a topic name, partition number, timestamp, key, and value.
  * Kafka callback interface send() can accept an object that implements the callback interface.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Producer Example
 
@@ -2855,11 +2314,7 @@ producer.close();
 
 }
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Additional Producer Configurations
 
@@ -2879,11 +2334,7 @@ Other optional configuration properties available for Kafka producer
 | partitioner.class | Custom partitioner for producer if any |
 | timeout.ms | Amount of time a leader will wait for its followers to acknowledge the message |
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Common messaging publishing patterns
 
@@ -2895,21 +2346,13 @@ ATA/S-ARTS/Real Time Processing via Kafka
 
 (Ref: https://kafka.apache.org/documentation/)
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka Consumer Components
 
 https:/[/w](http://www.confluent.io/blog/cooperative-rebalancing-in-kafka-streams-consumer-ksqldb/)w[w.confluent.io/blog/cooperative-rebalancing-in-kafka-streams-consumer-ksqldb/](http://www.confluent.io/blog/cooperative-rebalancing-in-kafka-streams-consumer-ksqldb/)
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Creating a Kafka Consumer
 
@@ -2925,11 +2368,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * KafkaConsumer tell the consumer object about brokers IP to connect, the group name, deserialization and offset strategy.
  * Subscription , Polling and Committing : Consumer has to subscribe to some topic to receive data. Polling is fetching data from the Kafka topic. Kafka commits the offset of messages that it reads successfully.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Consumer Example - 1
 
@@ -2955,11 +2394,7 @@ Properties consumerProperties = new Properties(); consumerProperties.put("bootst
 
 consumerProperties.put("session.timeout.ms", "30000");
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Consumer Example – 2.
 
@@ -3001,11 +2436,7 @@ try { demoKafkaConsumer.commitSync();
 
 }
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Additional Consumer Configurations
 
@@ -3019,11 +2450,7 @@ Other optional configuration properties available for Kafka consumer
 | session.timeout.ms | Consumer sends heartbeat (within configured period) to the consumer group coordinator to tell it that it is alive and restrict triggering the rebalancer. |
 | max.partition.fetch. bytes | the maximum amount of data that the server will return per partition. |
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Common messaging consuming patterns
 
@@ -3037,11 +2464,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
 
 (Ref: https://kafka.apache.org/documentation/)
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Event Processing
 
@@ -3057,11 +2480,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * Event enrichment with additional data
  * Event composition (aggregation) to produce a new event from two or more events
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Reader and Writer
 
@@ -3103,11 +2522,7 @@ ProducerRecord<String, String> pr = new ProducerRecord<String, String>(topic, me
 
 }
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Message Validation
 
@@ -3115,11 +2530,7 @@ The processing application reads events from the raw-messages topic, validates t
 
 messages topic and the correct ones to the valid-messages topic.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Example Validator - 1
 
@@ -3159,11 +2570,7 @@ pr = new ProducerRecord<String, String>(this.goodTopic, MAPPER.writeValueAsStrin
 
 } catch (IOException e) {
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 } catch (IOException e) {
 
@@ -3207,11 +2614,7 @@ In 3, if the message doesn't have any required fields, an error message is sent 
 
 In 5, if the message is not in JSON format, an error message is sent to the bad messages topic
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Message Enrichment
 
@@ -3235,23 +2638,11 @@ Taxi Passenger Capacity Taxi Make Model Driver Name
 
 Driver Phone Number
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
 
-ATA/S-ARTS/Real Time Processing via Kafka
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
 
-ATA/S-ARTS/Real Time Processing via Kafka
-
-Architecting Systems for Real Time Data Processing
-
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 Kafka Streams and ksqlDB
 
@@ -3261,27 +2652,15 @@ Stateful vs Stateless Processing Wi n d o w s a n d T ime
 
 A n i n t r o d u c t ion to k s q lDB
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka Streaming platform
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Homogeneous, or Heterogeneous Topic
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka Streams
 
@@ -3289,11 +2668,7 @@ Kafka Streams is the “brain” of the Kafka ecosystem, consuming records from 
 
 Reference: Mastering Kafka Streams and ksqlDB
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Secured Streaming
 
@@ -3315,11 +2690,7 @@ Data Access Tier
 
 Long Term Storage
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Data Processing Patterns
 
@@ -3329,21 +2700,13 @@ Unbounded data processing via ad hoc fixed windows with a classic batch engine .
 
 Unbounded data processing into sessions via ad hoc fixed windows with a classic batch engine. An unbounded dataset is collected up front into finite, fixed-size windows of bounded data that are then subdivided into dynamic session windows via successive runs a of classic batch engine.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Micro-batching
 
 Micro-batching involves grouping records into small batches and emitting them to downstream processors at a fixed interval; event-at-a-time processing allows each event to be processed at soon as it comes in, instead of waiting for a batch to materialize
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Bounded and Unbounded
 
@@ -3351,11 +2714,7 @@ Unbounded streams have a start but no definite end. Unbounded streams do not ter
 
 [https://www.tutorialandexample.com/apache-flink-tutorial/](https://www.tutorialandexample.com/apache-flink-tutorial/)
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Time Agnostic Processing
 
@@ -3365,11 +2724,7 @@ Example 1 - Filtering unbounded data. A collection of data (flowing left to righ
 
 Example 2 - Performing an inner join on unbounded data. Joins are produced when matching elements from both sources are observed.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Approximate Algorithms
 
@@ -3377,21 +2732,13 @@ Approximation algorithms, such as approximate Top-N, streaming k-means, and so o
 
 Computing approximations on unbounded data. Data are run through a complex algorithm, yielding output data that look more or less like the desired result on the other side.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Windowing Patterns - 1
 
 Windowing strategies. Each example is shown for three different keys, highlighting the difference between aligned windows (which apply across all the data) and unaligned windows (which apply across a subset of the data).
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Windowing Patterns – 2
 
@@ -3403,29 +2750,17 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * The session window type has no predetermined window length. Rather, it is determined usually by a gap of inactivity that is greater than some threshold.
  * For example, the length of a session window on Facebook is determined by the duration of activities that a user does, such as browsing the user feeds, sending messages, and so on.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 Windowing into fixed windows by processing time . Data are collected into windows based on the order they arrive in the pipeline.
 
 Windowing into fixed windows by event time . Data are collected into windows based on the times at which they occurred. The black arrows call out example data that arrived in processing-time windows that differed from the event-time windows to which they belonged.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 Windowing into session windows by event time. Data are collected into session windows capturing bursts of activity based on the times that the corresponding events occurred. The black arrows again call out the temporal shuffle necessary to put the data into their correct event-time locations.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Kafka Streams
 
@@ -3437,20 +2772,12 @@ Kafka Streams has a friendlier learning curve and a simpler deployment model tha
 
 Kafka Streams is great for solving problems that require or benefit from real-time decision making and data processing. Furthermore, it is reliable, maintainable, scalable, and elastic.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Example:
 Four Kafka Streams tasks running in four threads
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## APIs and Data Structure
 
@@ -3462,11 +2789,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * This is similar to a KTable, except each GlobalKTable contains a complete
 * (i.e., unpartitioned) copy of the underlying data.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Stateless Versus Stateful Processing
 
@@ -3477,11 +2800,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * Applications need to remember information about previously seen events in one or more steps of our processor topology, usually for the purpose of aggregating, windowing, or joining event streams.
  * These applications are more complex under the hood since they need to track additional data, or state .
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Example - Twitter
 
@@ -3499,11 +2818,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
 
 Reference: Mastering Kafka Streams and ksqlDB
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Remote Queries
 
@@ -3515,33 +2830,17 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * Enrich data in more sophisticated ways
 * using joins
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
 
-ATA/S-ARTS/Real Time Processing via Kafka
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
 
-ATA/S-ARTS/Real Time Processing via Kafka
-
-Architecting Systems for Real Time Data Processing
-
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Practices and Tips
 
 Comm o n Be s t P ractic e s
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Producer Common Best Practices
 
@@ -3556,11 +2855,7 @@ ATA/S-ARTS/Real Time Processing via Kafka
  * For highly reliable systems, persist messages that are passing through producer applications.
  * Avoid adding partitions to existing topics when using key-based partitioning for message distribution
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Consumer Common Best Practices
 
@@ -3576,21 +2871,13 @@ Automatic offset commits: Choosing an auto-commit is also an option to go with w
 
 Keeping the auto-commit interval low will always result in avoiding less processing of duplicate messages.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Direct Approach to Spark Kafka Integration
 
 (Ref: https://kafka.apache.org/documentation/)
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Direct Approach Features
 
@@ -3602,19 +2889,11 @@ No Zookeeper : Spark uses a checkpoint mechanism to deal with data loss and to s
 
 Exactly one processing : Direct approach provides opportunity to achieve exactly one processing, which means that no data is processed twice and no data is lost.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Summary
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Concluding Remarks
 
@@ -3626,19 +2905,11 @@ ATA/S-ARTS/Real Time Processing via Kafka
 * We discussed Kafka Producer APIs, Kafka Consumer APIs and
 * different components around.
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## References
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 Apache Kafka Quick Start Guide by Raul Estrada Published by Packt Publishing, 2018
 
@@ -3648,11 +2919,7 @@ Mastering Kafka Streams and ksqlDB by Mitch Seymour, Publisher: O'Reilly Media, 
 
 Kafka Documentation [https://kafka.apache.org/](https://kafka.apache.org/)
 
-Architecting Systems for Real Time Data Processing
 
-© 2019-24, NUS. All Rights Reserved
-
-ATA/S-ARTS/Real Time Processing via Kafka
 
 ## Master Of Technology
 
