@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "9b531ca39e0b0f8c",
+        "id": "b6ab1cd88c384497",
         "type": "tabs",
         "children": [
           {
-            "id": "22902e75d59bbd44",
+            "id": "57e825a8128a4ec4",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -80,8 +80,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 279.5,
-    "collapsed": true
+    "width": 279.5
   },
   "right": {
     "id": "c998dc817f697143",
@@ -168,8 +167,10 @@
       "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "22902e75d59bbd44",
+  "active": "57e825a8128a4ec4",
   "lastOpenFiles": [
+    "md/2024-02-27.md",
+    "ASRT_merge.md",
     "md/Java 的动态分派和静态分派.md",
     "md/带你解析原子化 css 引擎 unocss 的工作原理.md",
     "md/Compound Pattern.md",
@@ -177,7 +178,6 @@
     "md/NueKit.md",
     "md/浏览器缓存 从原理到实战.md",
     "done/2024-02-26.md",
-    "ASRT_merge.md",
     "02_PDFsam_merge.md",
     "md/2024-02-24.md",
     "done/2024-02-20.md",
@@ -201,7 +201,6 @@
     "md/谈谈复杂应用的状态管理（下）：基于 Zustand 的渐进式状态管理实践.md",
     "md/Service Worker 从入门到出门.md",
     "md/全新的 React 组件设计理念 Headless UI.md",
-    "md/Next.js 13 全解析 - Paranoid_K's Blog.md",
     "output/2024-2-17 20-51-54.html",
     "course/2024-2-17",
     "output/2024-2-15 22-08-34.html",
