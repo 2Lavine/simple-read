@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ASRT_merge.md",
+                "file": "md/1.kafka - 原理和安装以及操作.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "ASRT_merge.md"
+                "file": "md/1.kafka - 原理和安装以及操作.md"
               }
             }
           },
@@ -80,7 +80,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 279.5
+    "width": 279.5,
+    "collapsed": true
   },
   "right": {
     "id": "c998dc817f697143",
@@ -96,7 +97,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "ASRT_merge.md",
+                "file": "md/1.kafka - 原理和安装以及操作.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +114,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "ASRT_merge.md",
+                "file": "md/1.kafka - 原理和安装以及操作.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -169,8 +170,8 @@
   },
   "active": "57e825a8128a4ec4",
   "lastOpenFiles": [
-    "md/2024-02-27.md",
     "ASRT_merge.md",
+    "md/2024-02-27.md",
     "md/Java 的动态分派和静态分派.md",
     "md/带你解析原子化 css 引擎 unocss 的工作原理.md",
     "md/Compound Pattern.md",
