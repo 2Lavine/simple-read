@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "md/1.kafka - 原理和安装以及操作.md",
+                "file": "md/2.kafka 之 producer.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "md/1.kafka - 原理和安装以及操作.md"
+                "file": "md/2.kafka 之 producer.md"
               }
             }
           },
@@ -80,8 +80,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 279.5,
-    "collapsed": true
+    "width": 279.5
   },
   "right": {
     "id": "c998dc817f697143",
@@ -97,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "md/1.kafka - 原理和安装以及操作.md",
+                "file": "md/2.kafka 之 producer.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -114,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "md/1.kafka - 原理和安装以及操作.md",
+                "file": "md/2.kafka 之 producer.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -170,6 +169,10 @@
   },
   "active": "57e825a8128a4ec4",
   "lastOpenFiles": [
+    "WuCai/24-02-28-我醒了唱一会儿  雾氧Uo  哔哩哔哩直播二次元弹幕直播平台-H8D5K35.md",
+    "md/2024-02-28.md",
+    "md/2.kafka 之 producer.md",
+    "md/1.kafka - 原理和安装以及操作.md",
     "ASRT_merge.md",
     "md/2024-02-27.md",
     "md/Java 的动态分派和静态分派.md",
@@ -198,10 +201,6 @@
     "md/重新构想原子化 CSS.md",
     "md/聊聊 webpack 异步加载（一）：webpack 如何加载拆包后的代码.md",
     "md/缓存必知必会.md",
-    "md/Animating View Transitions.md",
-    "md/谈谈复杂应用的状态管理（下）：基于 Zustand 的渐进式状态管理实践.md",
-    "md/Service Worker 从入门到出门.md",
-    "md/全新的 React 组件设计理念 Headless UI.md",
     "output/2024-2-17 20-51-54.html",
     "course/2024-2-17",
     "output/2024-2-15 22-08-34.html",
