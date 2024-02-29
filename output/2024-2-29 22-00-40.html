@@ -1,0 +1,195 @@
+<h1>01. JSX</h1><h1>JSX</h1>
+<h2>什么是JSX</h2>
+<ul>
+<li>Facebook起草的JS扩展语法</li>
+<li>本质是一个JS对象，会被babel编译，最终会被转换为React.createElement</li>
+<li>每个JSX表达式，有且仅有一个根节点
+<ul>
+<li>React.Fragment</li>
+</ul>
+</li>
+<li>每个JSX元素必须结束（XML规范）</li>
+</ul>
+<h2>在JSX中嵌入表达式</h2>
+<p>表达式作为两个部分</p>
+<ul>
+<li>节点元素内容</li>
+<li>节点元素属性</li>
+</ul>
+<ol>
+<li>
+<p>将表达式作为节点元素内容的</p>
+<ul>
+<li>
+<p>只有null、undefined、false不会显示</p>
+<ul>
+<li>
+<p>0可以显示</p>
+</li>
+<li>
+<p>对象作为元素内容</p>
+<ul>
+<li>普通对象不可以作为节点元素，不能直接放入表达式</li>
+<li>但是React元素对象可以作为节点元素</li>
+<li>Array 对象可以，在表达式内会自动遍历</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>防止注入攻击</p>
+<ul>
+<li>自动编码
+<ul>
+<li>dangerouslySetInnerHTML 传入有__html属性的对象</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>将表达式作为节点元素属性</p>
+<ul>
+<li>
+<p>属性使用小驼峰命名法</p>
+</li>
+<li>
+<p>可以使用普通对象</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2>元素的不可变性</h2>
+<ul>
+<li>虽然JSX元素是一个对象，但是该对象中的所有属性不可更改，都是可读的
+<ul>
+<li>使用 Object.freeze 冻结了</li>
+</ul>
+</li>
+<li>如果确实需要更改元素的属性，需要重新创建JSX元素</li>
+</ul>
+
+<h1>03. 组件和组件属性</h1><h1>组件和组件属性</h1>
+<p>组件：包含内容、样式和功能的UI单元</p>
+<h2>创建一个组件</h2>
+<p><strong>特别注意：组件的名称首字母必须大写</strong></p>
+<ul>
+<li>如果小写会被认为一个普通的 html 元素</li>
+</ul>
+<ol>
+<li>函数组件</li>
+</ol>
+<ul>
+<li>返回一个React元素</li>
+</ul>
+<ol start="2">
+<li>类组件</li>
+</ol>
+<ul>
+<li>
+<p>必须继承React.Component</p>
+</li>
+<li>
+<p>必须提供render函数，用于渲染组件</p>
+</li>
+</ul>
+<h2>使用组件的两种方式</h2>
+<ol>
+<li>&lt;MyComponent /&gt;</li>
+<li>{MyComponent()}
+<ol>
+<li>这个方法不会被 react dev tool 插件检查到，不容易调试</li>
+</ol>
+</li>
+</ol>
+<h2>组件的属性</h2>
+<ol>
+<li>对于函数组件，属性会作为一个对象的属性，传递给函数的参数</li>
+<li>对于类组件，属性会作为一个对象的属性，传递给构造函数的参数</li>
+</ol>
+<p>注意：组件的属性，应该使用小驼峰命名法</p>
+<p><strong>组件无法改变自身的属性</strong>。</p>
+<p>属性甚至可以是一个 节点元素</p>
+<p>之前学习的React元素，本质上，就是一个组件（内置组件）</p>
+<p>React中的哲学：数据属于谁，谁才有权力改动</p>
+<ul>
+<li>组件的属性不是组件创建的，组件没有权力修改</li>
+</ul>
+<p><strong>React中的数据，自顶而下流动</strong></p>
+
+<h1>05. 组件状态</h1><h1>组件状态</h1>
+<p>组件状态：组件可以自行维护的数据</p>
+<p>组件状态仅在类组件中有效</p>
+<p>状态（state），本质上是类组件的一个属性，是一个对象</p>
+<p><strong>状态初始化</strong></p>
+<p><strong>状态的变化</strong></p>
+<p>不能直接改变状态：因为React无法监控到状态发生了变化</p>
+<p>必须使用this.setState({})改变状态</p>
+<p>一旦调用了this.setState，会导致当前组件重新渲染</p>
+<p><strong>组件中的数据</strong></p>
+<ol>
+<li>props：该数据是由组件的使用者传递的数据，所有权不属于组件自身，因此组件无法改变该数组</li>
+<li>state：该数组是由组件自身创建的，所有权属于组件自身，因此组件有权改变该数据</li>
+</ol>
+
+<h1>07. 事件</h1><h1>事件</h1>
+<p>在React中，组件的事件，本质上就是一个属性</p>
+<ul>
+<li>原生 html 组件的事件才会处理BOM 相关的事件</li>
+</ul>
+<p>按照之前React对组件的约定，由于事件本质上是一个属性，因此也需要使用小驼峰命名法</p>
+<p><strong>如果没有特殊处理，在事件处理函数中，this指向undefined</strong></p>
+<ol>
+<li>使用bind函数，绑定this</li>
+</ol>
+<pre><code class="language-js">constructor(){
+  this.handle = this.handle.bind(this)
+}
+保证了原型对象上的函数都绑定了 this
+</code></pre>
+<ol>
+<li>使用箭头函数</li>
+</ol>
+
+<h1>09. 深入认识setState</h1><h1>深入认识setState</h1>
+<p>setState，它对状态的改变，<strong>可能</strong>是异步的</p>
+<p>如果改变状态的代码处于某个HTML元素的事件中，则其是异步的，否则是同步</p>
+<ul>
+<li>如在 click 事件的回调函数中他是异步的</li>
+<li>而在setTimeout的回调函数中是同步的</li>
+</ul>
+<pre><code>this.setState({
+ n:this.state.n+1
+})
+this.setState({
+ n:this.state.n+1
+})
+</code></pre>
+<p>上面的代码是异步执行的，因此 两次执行的 setState 等价于</p>
+<pre><code class="language-js">this.setState({
+ n:0+1
+})
+this.setState({
+ n:0+1
+})
+</code></pre>
+<h2>最佳实践：</h2>
+<ol>
+<li>把所有的setState当作是异步的</li>
+<li>永远不要信任setState调用之后的状态</li>
+<li>如果要使用改变之后的状态，需要使用回调函数（setState的第二个参数）</li>
+<li>如果新的状态要根据之前的状态进行运算，使用函数的方式改变状态（setState的第一个函数）</li>
+</ol>
+<p>React会对异步的setState进行优化，</p>
+<ul>
+<li>
+<p>即对将同一浏览器事件内的 setState 进行优化</p>
+</li>
+<li>
+<p>将多次setState进行合并（将多次状态改变完成后，再统一对state进行改变，然后触发render）</p>
+</li>
+<li>
+<p>回调函数也在合并执行完成之后执行</p>
+</li>
+</ul>

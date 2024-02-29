@@ -1,0 +1,579 @@
+<h1>1.kafka - 原理和安装以及操作</h1><h2>什么是消息队列<a href="#2.%E4%BB%80%E4%B9%88%E6%98%AF%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97">#</a></h2>
+<p>消息队列：是在消息的传输过程中保存消息的容器。
+消息在原始的传输过程中是直接传输的，端对端的数据传递，但是有的时候我们需要将消息数据进行部分的缓冲存储，以达到方便使用的目的，中间的组件可以做消息的传输中间介质，这个组件就是消息队列。更像是一个消息的蓄水池一样的功能</p>
+<p>类比现实中更像是高速公路的休息区</p>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/2.png" alt=""></p>
+<h2>消息队列的好处<a href="#3.%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E5%A5%BD%E5%A4%84">#</a></h2>
+<p>消息队列其实就是一个数据传输过程中的缓冲区，能够存储数据，在流程中作为一个中间的介质，承上启下，在特定的情景下起到解耦，缓冲，异步的功能。</p>
+<ul>
+<li>缓冲</li>
+<li>解耦</li>
+<li>异步</li>
+<li>抵挡洪峰</li>
+</ul>
+<h3>缓冲</h3>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/3-1674896225303.png" alt=""></p>
+<h3>解耦</h3>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/4.png" alt=""></p>
+<h3>异步</h3>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/5.png" alt=""></p>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/6.png" alt=""></p>
+<p>如果是同步服务，那么用户的体验度是非常差的，</p>
+<ul>
+<li>因为需要将短信发送完毕然后在返回成功通知，页面才会跳转，
+<ul>
+<li>但是如果短信发送遇见网络等问题，没有办法直接发送，这个时候客户需要等待很长的时间</li>
+</ul>
+</li>
+<li>直接将需要发送的消息放入到消息队列中，然后消息服务会不停的扫描队列中需要发送的消息将数据发送出去，但是不会让客户等待，用户会大大的增加体验度</li>
+</ul>
+<h2>抵挡洪峰</h2>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/7.png" alt=""></p>
+<p>如上图，我们需要处理流量的波峰和抖动，那么我们需要设定整个集群的处理能力达到最大的 5M/s 才可以，但是大多数时候这个处理能力都是浪费的，我们用不到</p>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/8.png" alt=""></p>
+<p>我们可以使用消息队列进行数据的存储，然后计算服务慢慢去消息队列中拉取数据进行消费就可以了，可以在一定程度节省成本</p>
+<h2>消息消费模式<a href="#4.%E6%B6%88%E6%81%AF%E6%B6%88%E8%B4%B9%E6%A8%A1%E5%BC%8F">#</a></h2>
+<p>下游拉取数据的组件称之为消费者，自己拉取想要的数据并且进行数据的计算和处理，</p>
+<p>消费者和消费者以及 kafka 是三个部分，大家一定要注意，他们不是一个整体</p>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/9.png" alt=""></p>
+<p>其中生产者只是发送数据到队列中，但是消费者在消费数据的时候却有两种不同的方式</p>
+<p><strong>1. 点对点消费</strong></p>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/10.png" alt=""></p>
+<p>点对点的方式，在队列中的数据有且<strong>只有一个消费者可以</strong>消费数据，</p>
+<ul>
+<li>在消费完毕数据以后会将数据从队列中删除，这个数据有且只有一次消费</li>
+<li>适合做短信，因为只有一个消费者</li>
+</ul>
+<p><strong>2. 发布订阅模式</strong></p>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/11-1674899354658.png" alt=""></p>
+<p>发布定语模式中<strong>每个人</strong>可以消费数据，这个数据会在队列中存储七天，
+每个订阅这个数据的人都可以消费到相应的数据，并且可以重复的进行消费数据，
+在大多数情况下我们都使用发布订阅模式</p>
+<h2>5.kafka 的基础架构<a href="#5.kafka%E7%9A%84%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84">#</a></h2>
+<p>架构要求</p>
+<ul>
+<li>具备数据的稳定性和可靠性，
+<ul>
+<li>保证可靠性数据一定要做副本备份</li>
+</ul>
+</li>
+<li>存储数据量和吞吐量以及数据的检索速度一定要有所保证，
+<ul>
+<li>保证性能一定要多台机器</li>
+</ul>
+</li>
+</ul>
+<p>kafka 的集群组成结构</p>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/12.png" alt="">
+在 kafka 集群中每个节点都称之为 broker
+其中每个节点都存在一个 kafka_controller 组件，</p>
+<ul>
+<li>只有一台节点的 controller 组件是活跃状态的，其他的都是 standby 状态，</li>
+<li>只有主节点宕机了，那么从节点才会选举成为主节点，
+<ul>
+<li>外部协调管理组件 zookeeper 进行集群选举谁是主节点</li>
+<li>用独享锁来实现</li>
+</ul>
+</li>
+</ul>
+<p>但是 kafka 的整体又不是一个主从集群，需要选举出来一个 broker 节点为主节点，管理整个集群中所有的数据和操作，以及所有节点的协同工作。</p>
+<ul>
+<li>每个 broker 上面都存在一个 controller 组件，这个组件就是主节点管理组件，负责整个集群的管理，</li>
+<li>但是只有一个机器是 active 状态的，这个需要 zookeeper 进行协调和选举</li>
+</ul>
+<hr>
+<p>主从集群</p>
+<ul>
+<li>
+<p>主从集群中节点有的天生就是主节点不能被其他的从节点替代
+kafka 不是一个主从集群</p>
+</li>
+<li>
+<p>在非主从集群中每个节点都可以作为主节点</p>
+</li>
+<li>
+<p>如果一个节点宕机那么其他的节点可以选举为主节点管理整个集群，</p>
+</li>
+</ul>
+<h2>6.kafka 集群的搭建<a href="#6.kafka%E9%9B%86%E7%BE%A4%E7%9A%84%E6%90%AD%E5%BB%BA">#</a></h2>
+<p>启动实验，并且启动 zookeeper 集群</p>
+<pre><code># 选在nn1机器切换到 hadoop 用户并且启动zookeeper集群
+su - hadoop
+ssh_all_zk.sh /usr/local/zookeeper/bin/zkServer.sh start
+# 查看启动情况
+ssh_all_zk.sh /usr/local/zookeeper/bin/zkServer.sh status
+</code></pre>
+<p>集群规划</p>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/14-1674901590128.png" alt=""></p>
+<pre><code class="language-shell"># 安装 kafka
+略
+# 修改权限
+ssh_root.sh chown hadoop:hadoop -R /usr/local/kafka_2.12-3.3.2/
+# 创建软连接（方便不用写小脚本号）
+ssh_root.sh ln -s /usr/local/kafka_2.12-3.3.2/ /usr/local/kafka
+# 配置环境变量
+export KAFKA_HOME=/usr/local/kafka
+</code></pre>
+<p>到现在为止集群的初始化安装已经完毕，我们下面做 kafka 的自定义设置</p>
+<pre><code># 修改server.properties配置文件
+vim /usr/local/kafka/config/server.properties
+</code></pre>
+<p>修改如下的配置</p>
+<pre><code class="language-properties">broker.id=0 #节点编号，每个节点的编号都不能相同
+log.dirs=/data/kafka-logs # kafka存放数据的位置
+zookeeper.connect=nn1:2181,nn2:2181,s1:2181 #zookeeper集群的链接地址
+</code></pre>
+<h2>7.kafka 的组件结构<a href="#7.kafka%E7%9A%84%E7%BB%84%E4%BB%B6%E7%BB%93%E6%9E%84">#</a></h2>
+<h2><strong>broker</strong>:</h2>
+<p>每个 kafka 的机器节点都会运行一个进程，</p>
+<ul>
+<li>这个进程叫做 broker，负责管理自身的 topic 和 partition，以及数据的存储和处理</li>
+<li>因为 kafka 是集群形式的，所以一个集群中会存在多个 broker，</li>
+</ul>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/16.png" alt=""></p>
+<h2><strong>topic</strong>:</h2>
+<ul>
+<li>当我们很多业务(producer)需要使用 kafka 进行消息队列的消息缓存和处理的时候我们会将消息进行分类处理，
+<ul>
+<li>不能让多种类的数据放入到一起，这样使用特别混乱，所以 topic 主主题进行分类</li>
+<li>可以类比现实中的主播。一个主播在直播的时候都会创建一个自己的房间，每个主播都不会相互干扰。各自主播自己的内容。
+<img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/image-20230128194146293.png" alt=""></li>
+</ul>
+</li>
+</ul>
+<h2><strong>partition:</strong> 分区，</h2>
+<ul>
+<li>数据如果默认只给一个 broker 进行处理，那么这个 broker 的压力会太大，因此数据应该交给不同的 broker 进行处理</li>
+<li>所以每个 topic 都会分为不同的分区，
+<ul>
+<li>一个分区是一个 topic 数据真正的物理存储方式，让数据分为不同的部分，在多个节点上存储和管理。</li>
+<li>分区是 kafka 物理存储最小的负载均衡单位，Topic 只是逻辑上的分类</li>
+<li>消费者也可以在消费数据的时候从不同的分区读取数据</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/image-20230128194632177.png" alt=""></p>
+<p>Partition 分区如何存储</p>
+<ul>
+<li>每个 broker 节点会按照 topic 的名称和分区的名称组合在一起形成一个文件夹进行文件内容的存储</li>
+<li>一个 broker 会管理多个 topic 的不同分区的数据</li>
+</ul>
+<h2>Replica备份：</h2>
+<p><img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/2024/02/28/image-20230128194913141_10-33-58.png" alt="">
+**在一个 topic 中存在多个分区，</p>
+<ul>
+<li>每个分区存储一部分这个 topic 的数据，</li>
+<li>但是因为存在多个机器上，不能够保证数据的稳定性，所以数据需要进行备份管理，所以分区是存在备份的
+主从备份：</li>
+<li>数据在存储的时候需要备份多个，那么这些数据就要保证数据的一致性，
+<ul>
+<li>所以我们不能再存放数据的时候随意的向任何副本写入，因为这样集群中一个分区的多个副本没有办法保证数据的一致性，</li>
+</ul>
+</li>
+<li>所以我们只能<strong>写入数据到一个副本，这个副本叫做主副本</strong>，其他的副本会从主副本同步数据，从而保证数据的一致性，
+<ul>
+<li>副本数&lt;= broker数量，分区数无限制</li>
+<li>那么这个主从的选举是 broker 的主节点进行选举的和 zookeeper 没有关系</li>
+<li>读写分离</li>
+</ul>
+</li>
+</ul>
+<h2>Kafka 其他组件</h2>
+<p><strong>zookeeper:</strong> 帮助选举 broker 为主，</p>
+<ul>
+<li>记录哪个是主 broker，集群存在几个 topic, 每个 topic 存在几个分区，</li>
+<li>分区存在几个副本，每个分区分别在哪个机器节点上</li>
+</ul>
+<p><strong>producer:</strong> 生产者，将数据远程发送到 kafka 集群，一般都是 flume 进行数据采集，并且发送到集群，producer 一般只能发送数据到一个 topic 中，和一个主播只能在自己的房间直播一样</p>
+<p><strong>consumer</strong>：消费者，消费数据并且参加计算处理，一般都是 spark，flink 等计算框架充当。但是一个消费者可以同时消费多个分区的数据，就如一个观众可以一起看多个小姐姐直播一样</p>
+<p>大家一定要知道一个重要的问题就是数据不管是生产者还是消费者，都是一条一条的操作，这个才是消息队列，</p>
+<ul>
+<li>消息队列更加偏向于流式处理，并不是整体存取. 这也是消息队列和 hdfs 等存储介质不同的地方，</li>
+</ul>
+<h2>8.kafka 的 shell 操作<a href="#8.kafka%E7%9A%84shell%E6%93%8D%E4%BD%9C">#</a></h2>
+<p><strong>首先是 topic 的管理命令</strong></p>
+<p>kafka-topics.sh</p>
+<h1>创建Topic</h1>
+<p>参数如下：</p>
+<pre><code>kafka-topics.sh 
+--bootstrap-server nn1:9092 
+--create （--delete --alter修改分区）
+--topic topic_a 
+--partitions 3 
+--replication-factor 2
+</code></pre>
+<p>--bootstrap-server 指定集群地址，</p>
+<ul>
+<li>因为每个节点都存在controller所以想要获取元数据只需要<strong>指定集群中的一台机器就行了</strong>
+--create是创建命令
+--topic 指定topic的名称
+--partitions 分区数量，分区数量没有限定
+--replication-factor 副本数量，</li>
+<li>副本数量必须小于等集群的机器的个数，因为一个节点上面不能存在多个副本</li>
+<li>分区在修改的时候只能增多不能减少，否则会导致数据丢失</li>
+</ul>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/image-20230128203345527.png" alt=""></p>
+<h1>描述 desc</h1>
+<pre><code>kafka-topics.sh 
+--bootstrap-server nn1:9092 
+--describe 
+--topic topic_a
+</code></pre>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/18/image-20230128203525775.png" alt=""></p>
+<p>describe 命令展示的 topic 信息如下：</p>
+<pre><code>topic名称
+topic_id随机id
+partition_count 分区数量
+replicationFactor 副本数量
+Topic: topic_a  Partition: 0    Leader: 1       Replicas: 1,2   Isr: 1,2
+内容解释：topic_a,0号分区在，leader分区在brokerid为1的broker上面，副本在brokerid为1和2两个节点上面
+isr是数据的备份情况，先进broker1然后进入到broker2
+</code></pre>
+<h2><strong>数据的生产消费命令</strong></h2>
+<pre><code># 生产者命令
+kafka-console-producer.sh 
+--bootstrap-server nn1:9092 
+--topic topic_a
+
+
+</code></pre>
+<pre><code># 消费者命令
+# 指定分区，并且消费历史数据
+kafka-console-consumer.sh 
+--bootstrap-server nn1:9092 
+--topic topic_a  
+--from-beginning --partition 2
+
+--from-beginning 从头消费数据 
+--partition 指定分区消费
+</code></pre>
+
+<h1>2. kafka producer 01</h1><blockquote>
+<p>本文由 <a href="http://ksria.com/simpread/">简悦 SimpRead</a> 转码， 原文地址 <a href="http://www.hainiubl.com/topics/76179">www.hainiubl.com</a></p>
+</blockquote>
+<h2>1.kafka 的整体框架<a href="#1.kafka%E7%9A%84%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6">#</a></h2>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/19/image-20230129103051612.png" alt=""></p>
+<p>首先 kafka 启动以后所有的 broker 都会向 zookeeper 进行注册，</p>
+<ul>
+<li>在 / brokers/ids 中以列表的形式展示所有的节点，</li>
+<li>在 / controller 节点中使用独享锁实现 broker 的选举
+其中一个broker为主节点。其他的为从节点，选举的根本原则就是谁先来的谁就是主节点</li>
+</ul>
+<p>broker0 现在是 controller 节点，</p>
+<ul>
+<li>他会监听所有的 broker 节点的动态变化，</li>
+<li>会选举出所有的 topic 的分区副本的主从，这个选举完毕以后，
+<ul>
+<li>所有的操作都会指向主分区，不管是生产数据还是消费数据都是主分区在管理，从分区只是同步数据的</li>
+</ul>
+</li>
+<li>选举完毕以后将数据上传到 zookeeper 中，记录在 / broker/topics 这个目录中
+<ul>
+<li>具体的 topic 信息都会被其他的 broker 节点进行同步过去，多个 broker 都会识别选举出来的主从分区信息</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/19/image-20230129104400723.png" alt=""></p>
+<p>在 zookeeper 中的 ISR（In-Sync Replicas）是指与 leader 节点保持数据同步的副本节点。</p>
+<ul>
+<li>数据的传输顺序在 ZooKeeper 中通常是按照以下步骤进行的：</li>
+<li>客户端向 ZooKeeper 集群发送数据请求。</li>
+<li>请求会首先发送到 leader 节点。</li>
+<li>Leader 节点接收到请求后，将数据更新应用到其本地状态，并将更新的数据同步给 ISR 中的副本节点。</li>
+<li>一旦大多数 ISR 中的副本节点确认收到了数据更新，ZooKeeper 将此更新视为已提交（committed），然后向客户端发送确认响应。</li>
+</ul>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/19/image-20230129105129450.png" alt=""></p>
+<p>数据生产和传输都会走主节点，topic 正常对外提供服务</p>
+<h2>2.kafka 的基础数据结构<a href="#2.kafka%E7%9A%84%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">#</a></h2>
+<p><img src="http://www.hainiubl.com/uploads/md_images/202302/03/19/image-20230129105926163.png" alt=""></p>
+<p>kafka 中的数据存储分为 k-v 两个部分</p>
+<ul>
+<li>存储的数据都是二进制的，
+<ul>
+<li>我们在存储数据的时候要转换为二进制存储，使用的时候读出来也是二进制的，
+<ul>
+<li>我们需要人为转换成自己想要的数据类型才能使用，</li>
+<li>二进制就不用管具体的存储格式，因为她只是一个暂存的作用</li>
+</ul>
+</li>
+<li>这个和 hbase 的存储及其相似，但是其中的 k 一般我们都不会做任何操作，直接放空值，只放入 value 的值</li>
+</ul>
+</li>
+</ul>
+<p>虽然数据分为 k-v 两个部分，但是不要把它当成 map 集合，相同的 key 的数据 value 不会被去重掉</p>
+<h2>3.producer 的结构<a href="#3.producer%E7%9A%84%E7%BB%93%E6%9E%84">#</a></h2>
+<p><img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/2024/02/28/202402281324188_13-24-43_13-28-40.png" alt=""></p>
+<p>producer它由三个部分组成</p>
+<ul>
+<li>
+<p>serialiazer：序列化器  (required)</p>
+<ul>
+<li>kafka 中存储的数据是二进制的，所以数据必须经过序列化器进行处理</li>
+<li>将用户的数据转换为 byte[] 的工具类，其中 k 和 v 要分别指定</li>
+</ul>
+</li>
+<li>
+<p>partitioner: 分区器 (required)</p>
+<ul>
+<li>主要是控制发送的数据到 topic 的哪个分区中，这个默认也是存在的</li>
+</ul>
+</li>
+<li>
+<p>interceptor：拦截器，(optional)</p>
+<ul>
+<li>能拦截到数据，处理完毕以后发送给下游，</li>
+<li>它和过滤器不同并不是丢弃数据，而是将数据处理完毕再次发送出去，这个默认是不存在的</li>
+</ul>
+</li>
+</ul>
+<h2><strong>record accumulator</strong></h2>
+<p>本地缓冲累加器 默认 32M
+<img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/2024/02/28/202402281324188_13-24-43_13-28-40.png" alt="">
+producer 的数据不能直接发送到 kafka 集群中</p>
+<ul>
+<li>因为 producer 和 kafka 集群并不在一起，远程发送的数据不是一次发送一条这样太影响发送的速度和性能，所以我们发送都是攒一批数据发一次，</li>
+</ul>
+<p>record accumulator 就是一个本地缓冲区，</p>
+<ul>
+<li>producer 将发送的数据放入到缓冲区中</li>
+<li>另外一个线程会去拉取其中的数据，远程发送给 kafka 集群，
+<ul>
+<li>这个异步线程会根据 linger.ms 和 batch-size 进行拉取数据
+如果record accumulator中的数据达到 batch-size 或者是 linger.ms 的大小阈值就会拉取数据到 kafka 集群中</li>
+</ul>
+</li>
+<li>linger.ms 默认为 0</li>
+<li>这个本地缓冲区不仅仅可以适配两端的效率，还可以批次形式执行任务，增加效率</li>
+</ul>
+<p>为什么batch-size 默认 16KB而 accumulator 是32M?</p>
+<ul>
+<li>producer 产生的数据比较快，而 sender 数据比较慢</li>
+</ul>
+<h2><strong>生产者部分的整体流程</strong></h2>
+<p>首先 producer 将发送的数据准备好
+经过 interceptor 的拦截器进行处理，如果有的话
+然后经过序列化器进行转换为相应的 byte[]
+经过 partitioner 分区器分类在本地的 record accumulator 中缓冲
+sender 线程会自动根据 linger.ms 和 batch-size 双指标进行管控，复制数据到 kafka</p>
+<h2>4.producer 简单代码<a href="#4.producer%E7%AE%80%E5%8D%95%E4%BB%A3%E7%A0%81">#</a></h2>
+<p>引入 maven 依赖</p>
+<pre><code>&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.kafka&lt;/groupId&gt;
+        &lt;artifactId&gt;kafka-clients&lt;/artifactId&gt;
+        &lt;version&gt;3.3.2&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+        &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+        &lt;version&gt;1.7.30&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;log4j&lt;/groupId&gt;
+        &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+        &lt;version&gt;1.2.17&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<p>在 resources 文件中创建 log4j.properties</p>
+<pre><code>log4j.rootLogger=info,console
+log4j.appender.console=org.apache.log4j.ConsoleAppender
+log4j.appender.console.target=System.out
+log4j.appender.console.layout=org.apache.log4j.PatternLayout
+log4j.appender.console.layout.ConversionPattern=%d{yy/MM/dd HH:mm:ss} %p %c %M(): %m%n
+</code></pre>
+<p>生产者中的设定参数</p>
+<table><thead><tr><th>参数</th><th>含义</th></tr></thead><tbody><tr><td>bootstrap.servers</td><td>kafka 集群的地址</td></tr><tr><td>key.serializer</td><td>key 的序列化器，这个序列化器必须和 key 的类型匹配</td></tr><tr><td>value.serializer</td><td>value 的序列化器，这个序列化器必须和 value 的类型匹配</td></tr><tr><td>batch.size</td><td>批次拉取大小默认是 16KB</td></tr><tr><td>linger.ms</td><td>拉取的间隔时间默认为 0，没有延迟</td></tr><tr><td>partitioner</td><td>分区器存在默认值</td></tr><tr><td>interceptor</td><td>拦截器选的</td></tr></tbody></table>
+<p>全部代码如下</p>
+<pre><code class="language-java">package com.hainiu.kafka;
+
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+import java.util.Properties;
+
+public class Producer1 {
+    public static void main(String[] args) {
+        Properties pro = new Properties();
+		pro.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,&quot;nn1:9092&quot;);
+        //设定集群地址
+        pro.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        pro.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        //设定两个序列化器，其中StringSerializer是系统自带的序列化器，要和数据的类型完全一致
+        pro.put(ProducerConfig.BATCH_SIZE_CONFIG, 16*1024);
+        //batch-size默认是16KB，参数的单位是byte
+        pro.put(ProducerConfig.LINGER_MS_CONFIG, 0);
+        //默认等待批次时长是0
+        KafkaProducer&lt;String, String&gt; producer = new KafkaProducer&lt;String, String&gt;(pro);
+        ProducerRecord&lt;String, String&gt; record = new ProducerRecord&lt;&gt;(&quot;topic_a&quot;, &quot;this is hainiu&quot;);
+        //发送数据的时候有kv两个部分，但是一般k我们什么都不放，只放value的值
+        producer.send(record);
+        producer.close();
+    }
+}
+</code></pre>
+<h2>5.producer 端的回调和 ack<a href="#5.producer%E7%AB%AF%E7%9A%84%E5%9B%9E%E8%B0%83%E5%92%8Cack">#</a></h2>
+<p><img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/2024/02/28/image-20230129124450428_13-58-16.png" alt=""></p>
+<p>sender 线程会异步的拉取数据到 kafka 集群中</p>
+<ul>
+<li>sender 有一个回调函数来确定sender 线程拉取并且复制 kafka 集群是否成功，
+<ul>
+<li>回调函数指的是作为参数的一个函数</li>
+<li>sender 发送完成之后会调用这个回调函数</li>
+</ul>
+</li>
+<li>如果我们在 producer 中设定了 retries 开关，那么失败以后 sender 线程还会多次重新复制尝试拉取数据
+<ul>
+<li>失败尝试和 producer 端没有任何关系，producer 端只是将数据放入到本地累加器中而已，失败尝试是由 sender 线程重新尝试的</li>
+</ul>
+</li>
+</ul>
+<p>ack 的级别：</p>
+<ul>
+<li>ack = 0 ；sender 线程认为拉取过去的数据 kafka 一定会收到</li>
+<li>ack = 1 ; sender 线程拉取过去的数据 leader 节点接收到，并且存储到自己的本地</li>
+<li>ack = -1 ; sender 线程拉取数据，leader 节点收到存储到本地，所有 follower 节点全部都接收到并且存储到本地
+<ul>
+<li>或者设置为all
+综上所述 ack = -1 的级别是数据稳定性最高的，因为能够保证数据全部都同步完毕再返回给 sender 线程</li>
+</ul>
+</li>
+</ul>
+<p>带有确认应答的代码：</p>
+<ul>
+<li>其中回调函数中的 metadata 对象可以知道发送数据到哪里了，exception 用于区分是不是本条数据发送成功</li>
+</ul>
+<p>但是这个回调函数不能做出任何的反馈操作，只能起到通知的作用</p>
+<pre><code class="language-java">producer.send(record, new Callback() {
+            //发送方法中增加回调代码
+            @Override
+	public void onCompletion(RecordMetadata metadata, Exception exception) {
+		//metadata中包含所有的发送数据的元数据信息
+		//哪个topic的那个分区的第几个数据
+		String topic = metadata.topic();
+		int partition = metadata.partition();
+		long offset = metadata.offset();
+		if(exception == null ){
+			System.out.println(&quot;success&quot;+&quot; &quot;+topic+&quot; &quot;+partition+&quot; &quot;+offset);
+		}else{
+			System.out.println(&quot;fail&quot;+&quot; &quot;+topic+&quot; &quot;+partition+&quot; &quot;+offset);
+    }
+}
+</code></pre>
+<h2>6 自定义拦截器<a href="#6.%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8B%A6%E6%88%AA%E5%99%A8">#</a></h2>
+<p>interceptor 是拦截器，可以拦截到发送到 kafka 中的数据进行二次处理，它是 producer 组成部分的第一个组件</p>
+<pre><code class="language-java">public static class MyInterceptor implements ProducerInterceptor&lt;String,String&gt;{
+        @Override
+        public ProducerRecord&lt;String, String&gt; onSend(ProducerRecord&lt;String, String&gt; record) {return null;}
+        @Override
+        public void onAcknowledgement(RecordMetadata metadata, Exception exception) {}
+        @Override
+        public void close() {}
+        @Override
+        public void configure(Map&lt;String, ?&gt; configs) {}
+    }
+</code></pre>
+<p>实现拦截器需要实现 ProducerInterceptor 这个接口，其中的泛型要和 producer 端发送的数据的类型一致</p>
+<ul>
+<li>onSend 方法是最主要的方法用户拦截数据并且处理完毕发送</li>
+<li>onAcknowledgement 获取确认应答的方法，这个方法和 producer 端的差不多，只能知道结果通知</li>
+<li>close 是执行完毕拦截器最后执行的方法</li>
+<li>configure 方法是用于获取配置文件信息的方法</li>
+</ul>
+<p>我们拦截器的实现基于场景是获取到 producer 端的数据然后给数据加上时间戳
+整体代码如下：</p>
+<pre><code class="language-java">pro.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,MyInterceptor.class.getName());
+</code></pre>
+<p>拦截器一般很少人为定义，比如一般 producer 在生产环境中都是有 flume 替代，一般 flume 会设定自己的时间戳拦截器，指定数据采集时间，相比 producer 更加方便实用</p>
+<h2>7.自定义序列化器<a href="#7.%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BA%8F%E5%88%97%E5%8C%96%E5%99%A8">#</a></h2>
+<p>kafka 中的数据存储是二进制的 byte 数组形式，所以我们在存储数据的时候要使用序列化器进行数据的转换，序列化器的结构要和存储数据的 kv 的类型一致</p>
+<ul>
+<li>正常send 的数据打印是没有 value 值的</li>
+</ul>
+<p>比如我们要实现系统的 String 类型序列化器
+<strong>整体代码如下</strong></p>
+<pre><code class="language-java">
+    public static class MyStringSerializer implements Serializer&lt;String&gt;{
+        @Override
+        public byte[] serialize(String topic, String data) {
+            return data.getBytes(StandardCharsets.UTF_8);
+        }
+    }
+</code></pre>
+<p>序列化对象整体</p>
+<pre><code class="language-java">    对象序列化
+			byteOS =new ByteArrayOutputStream();
+			objectOS = new ObjectOutputStream(byteOS);
+			objectOS.writeObject(data);
+			return byteOS.toByteArray();
+</code></pre>
+<p>ByteArrayOutputStream 对象 byteOS，</p>
+<ul>
+<li>字节数组输出流，用于将串行化后的字节流写入到内存中的字节数组中。
+ObjectOutputStream 对象 objectOS，</li>
+<li>它是一个对象输出流，用于将对象串行化并写入到 byteOS 中。
+byteOS.toByteArray() 获取 byteOS 中的字节数组，即串行化后的对象表示形式，然后将其返回。</li>
+</ul>
+<p>内容序列化
+整体代码如下：</p>
+<pre><code class="language-java">    public static class StudentSeria implements Serializer&lt;Student&gt; {
+
+        @Override
+        public byte[] serialize(String topic, Student data) {
+            String line =data.getId()+&quot; &quot;+data.getName()+&quot; &quot;+data.getAge();
+            //获取student对象中的所有数据信息
+            return line.getBytes(Charset.forName(&quot;utf-8&quot;));
+            //转换为byte数组返回
+        }
+    }
+}
+</code></pre>
+<p>shell 消费者端打印的结果信息</p>
+
+<h1>2024-02-24</h1><pre><code class="language-python">def findLeft(n):
+	left = 0
+	right=len(result)-1
+	while left&lt;=right:
+		mid = (left+right+1)//2
+		# print(n,left,right,result[mid])
+		if n&gt;=result[mid]:
+			left = mid+1
+		if result[mid]&gt;n:
+			right = mid-1
+	return left-1
+</code></pre>
+<p>找到 [left,right] 中第一个大于等于 n 的值</p>
+<ul>
+<li>result[mid]&gt;n 显然 mid 不会再我们要探寻的区间内，所以right = mid-1</li>
+<li>n&gt;=result[mid]
+<ul>
+<li>此时 mid 可能在我们探寻的区间内
+<ul>
+<li>一般来说left 应该等于 mid</li>
+<li>但这容易造成死循环
+<ul>
+<li>可以对死循环的情况进行判断</li>
+<li>或者我们可以记录一个变量表示上一次的mid值
+<ul>
+<li>由于有且仅有一个地方影响 left 值所以我们直接 mid+1</li>
+<li>当跳出循环时返回 left-1 返回我们记录的上一次的 mid 值</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<h1>2024-02-26</h1><p>估计到达时间（Estimated Time of Arrival） ETA</p>
+
+<h1>2024-02-27</h1><p>1、想要教育别人，最重要的是身份和人设，其次才是知识和道理；</p>
+<p>2、成年人是无法被唤醒的，只能被痛醒；</p>
+<p>3、意识被痛醒后，谁帮他止痛，他就听谁的。</p>
+<p>如果想唤醒一个低认知的人，首先你要有超出对方好几倍的综合实力，其次要在他擅长的领域比他强很多，足以让他产生尊重或崇拜，如此才有可能。</p>
+
+<h1>2024-02-28</h1><p>在 zookeeper 中的 ISR（In-Sync Replicas）是指与 leader 节点保持数据同步的副本节点。</p>
