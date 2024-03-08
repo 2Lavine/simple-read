@@ -15,9 +15,7 @@
 ```
 extractor tokens -- 抓取 token
 ----------------------------
-
 假设我们现在有如下 rule
-
 ```
 rules: [
     ['text-red', { color: 'red' }]
@@ -25,7 +23,6 @@ rules: [
 ```
 
 而我们需要解析的文本如下
-
 ```
 <div class="text-red" />
 ```
@@ -121,9 +118,7 @@ export class UnoGenerator<Theme extends {} = {}> {
 
 parseTokens -- 解析 token
 -----------------------
-
 ok, 接下来就是解析 token 了，先放源码
-
 ```
 const layerSet = new Set<string>([DEFAULT_LAYER])
 const sheet = new Map<string, SheetUtils>()
