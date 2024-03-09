@@ -8,6 +8,7 @@ const options = {
 };
 const obsidianImages = require("markdown-it-obsidian-images")(options);
 const md = require("markdown-it")({ html: true }).use(obsidianImages);
+// const open = require("open");
 // get path from cli
 const directoryPath = process.argv[2];// 替换为目标目录的路径
 // const directoryPath = "./course"; should be input like 
@@ -76,6 +77,8 @@ function readDirectory(readPath) {
       );
       // .replace(/.awebp"/g, ".jpg\"");
       fs.writeFileSync(outputFilePath, newFileContent);
+      // open the file using browser
+      // open(outputFilePath);
     }
   });
 }
