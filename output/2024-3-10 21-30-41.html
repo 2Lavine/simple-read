@@ -1,0 +1,381 @@
+<h1>01. Redux核心概念</h1><h1>Redux核心概念</h1>
+<p>action  reducer  store</p>
+<h2>MVC</h2>
+<p>它是一个UI的解决方案，用于降低UI，以及UI关联的数据的复杂度。</p>
+<h2><strong>传统的服务器端的</strong>服务端渲染</h2>
+<p><img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/2024/03/10/2019-08-20-13-18-58_21-30-11.png" alt=""></p>
+<p>环境：</p>
+<ol>
+<li>服务端需要响应一个完整的HTML</li>
+<li>该HTML中包含页面需要的数据</li>
+<li>浏览器仅承担渲染页面的作用
+以上的这种方式叫做<strong>服务端渲染</strong>，即服务器端将完整的页面组装好之后，一起发送给客户端。
+服务器端需要处理UI中要用到的数据，并且要将数据嵌入到页面中，最终生成一个完整的HTML页面响应。</li>
+</ol>
+<h2>服务端MVC模式</h2>
+<p>为了降低处理这个过程的复杂度，出现了MVC模式。</p>
+<p><img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/2024/03/10/2019-08-20-13-29-14_21-30-11.png" alt=""></p>
+<p><strong>Controller</strong>: 处理请求，判断是否成功组装这次请求需要的数据
+<strong>Model</strong>：需要用于UI渲染的数据模型
+<strong>View</strong>：视图，用于将模型组装到界面中</p>
+<p>View视图层组装过于复杂，后面 View 层由专门的前端开发负责，进行了前后端分离。</p>
+<ul>
+<li>前端不在服务器端而是在客户端
+由此产生了 MVVM 模式，从数据出发来产生页面</li>
+</ul>
+<h2>**前端MVC模式</h2>
+<p>controller层面</p>
+<ol>
+<li>前端中的controller处理的是用户的操作，而用户的操作场景是复杂的。
+<ol>
+<li>这比服务端的复杂很多，服务端仅仅是针对不同请求进行处理</li>
+</ol>
+</li>
+</ol>
+<p>Model 数据层面
+对于那些组件化的框架（比如vue、react），它们使用的是单向数据流。
+2. 若需要共享数据，则必须将数据提升到顶层组件，然后数据再一层一层传递，极其繁琐。
+1. 虽然可以使用上下文来提供共享数据，但对数据的操作难以监控，容易导致调试错误的困难，以及数据还原的困难。
+2. 并且，若开发一个大中型项目，共享的数据很多，会导致上下文中的数据变得非常复杂。
+比如，上下文中有如下格式的数据：</p>
+<pre><code class="language-js">value = {
+    users:[{},{},{}],
+    addUser: function(u){},
+    deleteUser: function(u){},
+    updateUser: function(u){}
+}
+</code></pre>
+<p>因此前端需要一个前端需要一个独立的数据解决方案，即解决 control ler 和 model</p>
+<h2>前端需要一个独立的数据解决方案</h2>
+<p><strong>Flux</strong> 数据解决方案，它的最大历史意义，在于它引入了action的概念</p>
+<ul>
+<li>服务端的controller 是可以通过 url 和方法名来确定分类</li>
+<li>我们把用户的操作抽象为对应的 action 来确定分类</li>
+</ul>
+<p>action是一个普通的对象，用于描述要干什么。</p>
+<ul>
+<li><strong>action是触发数据变化的唯一原因</strong>
+store表示数据仓库，用于存储共享数据。</li>
+<li>可以根据不同的action更改仓库中的数据</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-js">var loginAction = {
+    type: &quot;login&quot;,
+    payload: {
+        loginId:&quot;admin&quot;,
+        loginPwd:&quot;123123&quot;
+    }
+}
+
+var deleteAction = {
+    type: &quot;delete&quot;,
+    payload: 1  // 用户id为1
+}
+</code></pre>
+<p>在Flux基础上，Redux引入了reducer的概念
+reducer：处理器，用于根据action来处理数据，处理后的数据会被仓库重新保存。</p>
+<ul>
+<li>reducer 就是相当于服务器端的 controller</li>
+<li>action 就是请求地址和方法，用来区分不同的操作
+<img src="https://raw.githubusercontent.com/2Lavine/ImgRep/main/img/2024/03/10/2019-08-20-14-23-05_21-30-11.png" alt=""></li>
+</ul>
+
+<h1>02. 用 redux 管理数据</h1><p>redux 中的store,action,reducer和 react 无关</p>
+<p>一个 action 是一个普通对象</p>
+<ul>
+<li>包括 type 和和 payload</li>
+</ul>
+<pre><code class="language-js">const action1={
+	type:&quot;increase&quot;
+}
+</code></pre>
+<p>一个  reducer是一个普通的函数</p>
+<ul>
+<li>接受参数state 和 action</li>
+</ul>
+<pre><code class="language-js">function reducer(state,action){
+	if(action.type=='increase'){
+		return state+1
+	}
+	if(action.type=='SET'){
+		return action.payload
+	}
+}
+</code></pre>
+<p>创建store</p>
+<ul>
+<li>调用redux中的 createStore</li>
+<li>createStore 接受一个 reducer 和一个store 存储的对象/值</li>
+</ul>
+<pre><code class="language-js">import {creatStore} from &quot;redux&quot;
+const store = createStore(reducer,10)
+</code></pre>
+<p>如何触发 action</p>
+<ul>
+<li>通过store.dispatch(action1)来触发 action</li>
+<li>store 的 dispatch 方法实际上是调用 reducer 来调用的</li>
+<li>在触发完之后会根据返回值来更新 store 中的值</li>
+</ul>
+<pre><code class="language-js">store.dispatch(action1 )
+</code></pre>
+
+<h1>03. Action</h1><h1>Action</h1>
+<p>action必须是一个plain-object（平面对象）</p>
+<ol>
+<li>它的__proto__指向Object.prototype</li>
+<li>因此必须使用字面量或者xx来创建</li>
+</ol>
+<p>Action 属性</p>
+<ol>
+<li>通常使用payload属性表示附加数据（没有强制要求）</li>
+<li>action中必须有type属性，该属性用于描述操作的类型
+<ol>
+<li>type的类型可以是任意的，可以是数组，对象</li>
+<li>它类似于一个请求地址</li>
+</ol>
+</li>
+</ol>
+<p>type的注意事项</p>
+<ul>
+<li>在大型项目操作类型非常多，为了避免硬编码（hard code），会将action的类型单独存放。</li>
+<li>由于 type 可以是任意类型，我们甚至可以使用 Symbol 来避免类型重复</li>
+</ul>
+<h2>action 创建函数</h2>
+<p>为了方面传递action，通常会使用action创建函数(action creator)来创建action</p>
+<ol>
+<li>action创建函数应为无副作用的纯函数</li>
+</ol>
+<pre><code class="language-js">function getIncreaseAction(){
+	return {
+		type: ACTIONTYPE
+	}
+}
+store.dispatch(getIncreaseAction())
+</code></pre>
+<p>为了方便利用action创建函数来分发（触发）action，redux提供了一个函数<code>bindActionCreators</code></p>
+<ul>
+<li>他接受一个属性为创建函数的对象，返回一个新对象</li>
+<li>新对象的属性名和传入的一直，</li>
+<li>但调用新对象会帮助我们直接创建action，并且创建后会自动完成分发,而不是使用store.dispatch来分发</li>
+</ul>
+<pre><code class="language-js">const allActions = bindActionCreators({getIncreaseAction,getSetAction},store.dispatch)
+allActions.getIncreaseAction()// 直接调用
+allActions.getSetActions(3)// 
+
+</code></pre>
+<h2>纯函数</h2>
+<ol>
+<li>不能以任何形式改动传入的值</li>
+<li>不可以有异步</li>
+<li>不可以对外部环境中的数据造成影响
+<ol>
+<li>不能有存储</li>
+</ol>
+</li>
+</ol>
+
+<h1>06. demo 轮播图</h1><p>两种方法来切换图片</p>
+<ol>
+<li>通过 state来控制容器的margin-left</li>
+<li>直接通过 ref 来获取容器对象，来控制 margin-left
+<ol>
+<li>我们甚至可以通过 ref 来获取子组件的方法
+<ol>
+<li>获得子组件的方法后可以对一些数据进行改变，改变李数据流
+通过 margin-left来切换的好处</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<ul>
+<li>可以实现缓慢修改，达到一些动画效果</li>
+</ul>
+
+<h1>07. ref转发</h1><h1>Ref转发</h1>
+<p>当给函数组件添加 ref 属性的时候获得不到对应的 Dom 元素</p>
+<ul>
+<li>类组件和 html 元素可以获取对应的元素
+因此需要对函数组件A 使用 forwardRef ，</li>
+<li>他返回的新组件newA将原来A 接受到的 ref 参数和调用时的 ref 属性进行连接</li>
+<li>这样我们可以修改组件 A 的 ref
+<ul>
+<li>这里就是 img 的 ref 而不是h1活着 fragment 的元素</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-js">function A(props,ref){
+	return &lt;&gt;
+	&lt;h1&gt;&lt;/h1&gt;
+	&lt;img ref={ref}/&gt;
+	&lt;/&gt;
+}
+const newA = forwardRef(A)
+&lt;newA ref=&quot;&quot;&gt; &lt;/newA&gt;
+</code></pre>
+<p>forwardRef方法：</p>
+<ol>
+<li>参数，传递的是函数组件，不能是类组件，并且，函数组件需要有第二个参数来得到ref</li>
+<li>返回值，返回一个新的组件</li>
+</ol>
+<p>常见用途</p>
+<ol>
+<li>在高阶组件的时候，我们会对原来的组件进行一些包装。但是我们不希望暴露包装之后的 ref 而是让 ref 仍然指向原来的组件，此时我们可以用forwardRef 进行修改</li>
+</ol>
+
+<h1>08.context</h1><h1>Context</h1>
+<p>上下文：Context，表示做某一些事情的环境</p>
+<p>React中的上下文特点：</p>
+<ol>
+<li>当某个组件创建了上下文后，上下文中的数据，会被所有后代组件共享</li>
+<li>如果某个组件依赖了上下文，会导致该组件不再纯粹（外部数据仅来源于属性props）</li>
+<li>一般情况下，用于第三方组件（通用组件）</li>
+</ol>
+<h2>旧的Context API</h2>
+<p>1  <strong>创建上下文</strong>
+只有类组件才可以创建上下文</p>
+<ol>
+<li>数据类型约束：静态属性 childContextTypes</li>
+<li>添加实例方法 getChildContext，该方法返回的对象，即为上下文中的数据，该数据必须满足类型约束，该方法会在每次render之后运行。</li>
+</ol>
+<p>2 <strong>使用上下文中的数据</strong>
+数据类型约束：</p>
+<ul>
+<li>如果要使用上下文中的数据，组件必须有一个静态属性 contextTypes，</li>
+<li>该属性描述了需要获取的上下文中的数据类型
+具体获取数据:</li>
+</ul>
+<ol>
+<li>类组件的构造函数中的第二个参数会获取上下文数据，并且自动赋值给 this.context
+<ol>
+<li><strong>从组件的context属性中获取</strong> 也就是 this.context来获取</li>
+</ol>
+</li>
+<li>在函数组件中，通过第二个参数，获取上下文数据</li>
+</ol>
+<p>3 <strong>上下文的数据变化</strong>
+上下文中的数据不可以直接变化，</p>
+<ul>
+<li>上下文的数据通常来自根部状态（创建时所在组件的状态）最终都是通过状态改变
+如何让子组件修改上下文</li>
+<li>在上下文中可以加入一个处理函数，可以用于后代组件更改上下文的数据</li>
+</ul>
+<h2>新版API</h2>
+<p>旧版API存在严重的效率问题，并且容易导致滥用</p>
+<p><strong>创建上下文</strong>
+上下文对象是一个独立于组件的对象，这个对象在各个组件中共享.</p>
+<ul>
+<li>通过React.createContext(默认值)创建</li>
+<li>包含provider 和 consumer两个属性</li>
+</ul>
+<ol>
+<li>Provider属性：生产者。
+<ol>
+<li>他是一个组件，该组件有一个value属性，通过该属性，可以为其数据赋值</li>
+<li>他会创建一个上下文</li>
+<li>同一个Provider，不能使用多次（即不要用到多个组件中）
+<ol>
+<li>如果需要在其他组件中使用该数据，应该考虑将数据提升到更高的层次</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Consumer属性：
+<ol>
+<li>用于子组件进行获取上下文的获取</li>
+</ol>
+</li>
+</ol>
+<p><strong>使用上下文中的数据</strong></p>
+<ol>
+<li>在类组件中，直接使用this.context获取上下文数据
+<ol>
+<li>要求：必须拥有静态属性 contextType , 他的值应该是父组件创建的上下文对象(也就是createContext生成的对象)</li>
+</ol>
+</li>
+<li>在函数组件中，需要使用Consumer来获取上下文数据
+<ol>
+<li>Consumer是一个组件</li>
+<li>它的组件内容，是一个函数（组件的props.children需要传递一个函数）</li>
+</ol>
+</li>
+</ol>
+<pre><code class="language-jsx">
+export const ctx123 = createContext()
+class A {
+	render(){
+		&lt;ctx.provider value={this.state}&gt;
+			&lt;Child/&gt;
+		&lt;/ctx.provider&gt;
+	}
+}
+import {ctx123} from &quot;xxx&quot;
+function Childr(){
+	 return (
+	 &lt;h1&gt;&lt;/h1&gt;
+	 &lt;div&gt;
+	 &lt;ctx.Consumer&gt;
+		 { contextValue=&gt;
+			 &lt;h1&gt;{contextValue.title} &lt;/h1&gt;
+		 }
+	 &lt;/...&gt;
+	 &lt;/div&gt;
+	 )
+}
+</code></pre>
+<p>新版的 API 就不存在了 Context 的覆盖，因为我们可以通过不同context的 provider 和 consumer 进行区分</p>
+<pre><code class="language-jsx">&lt;ctx1.provider&gt;
+	&lt;ctx2.provider&gt;
+		&lt;c1.consumer&gt;&lt;/c1&gt;
+		&lt;c2.consumer&gt;&lt;/c2&gt;
+	&lt;/ctx2.pro&gt;
+&lt;/ctx1.pro&gt;
+</code></pre>
+<h2>上下文修改与渲染</h2>
+<p><strong>注意细节</strong>
+如果，上下文提供者（Context.Provider）中的value属性发生变化(通过Object.is比较)，</p>
+<ul>
+<li>会进行强制更新，忽略该子元素是否有优化（无论shouldComponentUpdate函数返回什么结果）</li>
+<li>导致该上下文提供的所有后代元素全部重新渲染，</li>
+</ul>
+<p>value属性发生变化(通过Object.is比较)，因此尽量让他是同一个对象。</p>
+
+<h1>09. demo表单组件组合</h1><p>上下文的应用场景
+编写一套组件（有多个组件），这些组件之间需要相互配合才能最终完成功能
+比如，我们要开发一套表单组件，使用方式如下
+我们只需要创建一个 FormContext包括这些数据即可</p>
+<pre><code class="language-json">{
+	formData,
+	changeData(),
+	submit()
+}
+</code></pre>
+<pre><code class="language-js">
+render(){
+    return (
+        &lt;Form onSubmit={datas=&gt;{
+            console.log(datas); //获取表单中的所有数据（对象）
+            /*
+                {
+                    loginId:xxxx,
+                    loginPwd:xxxx
+                }
+            */
+        }}&gt;
+            &lt;div&gt;
+               账号： &lt;Form.Input name=&quot;loginId&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+               密码： &lt;Form.Input name=&quot;loginPwd&quot; type=&quot;password&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;Form.Button&gt;提交&lt;/Form.Button&gt;
+            &lt;/div&gt;
+        &lt;/Form&gt;
+    );
+}
+
+</code></pre>
+<p>非受控组件
+当 input 的value为 undefined 时，他仍然是非受控的
+可以传空字符或者其他让其受控</p>
