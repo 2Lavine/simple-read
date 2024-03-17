@@ -169,6 +169,7 @@
   },
   "active": "57e825a8128a4ec4",
   "lastOpenFiles": [
+    "test/replacePipeSign.sh",
     "achieve/Docker 核心概念总结JavaGuide(Java 面试 + 学习指南).md",
     "achieve/Maven 核心概念总结 JavaGuide(Java 面试 + 学习指南).md",
     "cur useless/Docker 实战 JavaGuide(Java 面试 + 学习指南).md",
@@ -201,7 +202,6 @@
     "done/2. kafka producer 01.md",
     "md/2. kafka producer 01.md",
     "md/2. kafka producer 01",
-    "md/深入理解 Node.js 中的进程与线程.md",
     "_resources/Pasted image 20240220154831.png",
     "_resources/Pasted image 20240220143547.png",
     "_resources/Pasted image 20240220141924.png",
