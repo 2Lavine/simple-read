@@ -161,6 +161,9 @@
   },
   "active": "57e825a8128a4ec4",
   "lastOpenFiles": [
+    "curuseless/problems/problems/回溯算法去重问题的另一种写法.mdatmaster·youngyangyang04/leetcode-master.md",
+    "curuseless/problems/problems/回溯算法去重问题的另一种写法.mdatmaster·youngyangyang04",
+    "curuseless/problems/problems",
     "Spark/2024-2-24/SPARK核心.md",
     "Spark/2024-2-24/SPARKSQL.md",
     "assets/Pastedimage20230612231921.png",
@@ -188,7 +191,6 @@
     "achieve/傻傻分不清之Cookie、Session、Token、JWT.md",
     "achieve/300行代码实现React的调度器Scheduler.md",
     "achieve/A+手写Promise.md",
-    "achieve/Vitest组件测试.md",
     "achieve/Vue为什么要禁用undefined？-掘金.txt",
     "md/webpack打包原理",
     "_resources/Pastedimage20230829122004.png",
@@ -205,8 +207,6 @@
     "curuseless/mini-react-docs/schedule/schedule.js",
     "curuseless/problems/problems ",
     "curuseless/mini-react-docs/译文",
-    "curuseless/mini-react-docs/异常",
-    "curuseless/mini-react-docs/合成事件",
     "未命名.canvas"
   ]
 }
