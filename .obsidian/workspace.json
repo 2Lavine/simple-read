@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "星标.md",
+                "file": "achieve/在网页上呈现  |  Articles  |  web.dev.md",
                 "mode": "source",
                 "source": false
               }
@@ -38,7 +38,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "星标.md"
+                "file": "achieve/在网页上呈现  |  Articles  |  web.dev.md"
               }
             }
           },
@@ -96,7 +96,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "星标.md",
+                "file": "achieve/在网页上呈现  |  Articles  |  web.dev.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "星标.md",
+                "file": "achieve/在网页上呈现  |  Articles  |  web.dev.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": false
               }
@@ -169,6 +169,10 @@
   },
   "active": "57e825a8128a4ec4",
   "lastOpenFiles": [
+    "achieve/Docker 核心概念总结JavaGuide(Java 面试 + 学习指南).md",
+    "achieve/Maven 核心概念总结 JavaGuide(Java 面试 + 学习指南).md",
+    "cur useless/Docker 实战 JavaGuide(Java 面试 + 学习指南).md",
+    "星标.md",
     "course/11. 传递元素内容.md",
     "course/10. 生命周期 1.md",
     "course/10. 生命周期.md",
@@ -198,10 +202,6 @@
     "md/2. kafka producer 01.md",
     "md/2. kafka producer 01",
     "md/深入理解 Node.js 中的进程与线程.md",
-    "md/重新构想原子化 CSS.md",
-    "md/webpack 详解.md",
-    "done/1.kafka - 原理和安装以及操作.md",
-    "md/2023-12-07.md",
     "_resources/Pasted image 20240220154831.png",
     "_resources/Pasted image 20240220143547.png",
     "_resources/Pasted image 20240220141924.png",
